@@ -2,7 +2,7 @@
 
 function deck_river_init() {
 
-	elgg_register_library('elgg:river_extended', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_functions.php');
+	elgg_register_library('elgg:river_extended', dirname(__FILE__). '/lib/river_functions.php');
 	elgg_load_library('elgg:river_extended');
 
 	elgg_extend_view('css/elgg','deck_river/css');

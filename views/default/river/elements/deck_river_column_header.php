@@ -18,6 +18,7 @@
 				'text' => elgg_view_icon('settings-alt'),
 				'title' => elgg_echo('widget:edit'),
 				'href' => "#widget-edit-$widget->guid",
+				'rel' => 'popup',
 				'class' => "elgg-toggler elgg-column-edit-button",
 			);
 			echo elgg_view('output/url', $params);

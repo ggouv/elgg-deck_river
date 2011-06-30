@@ -32,7 +32,8 @@ if (elgg_is_logged_in() && $context) {
 	}
 	$tabs['plus'] = array(
 		'text' => '+',
-		'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "$context/$name",
+		'href' => '#add-deck-river-tab',
+		'rel' => 'popup',
 		'selected' => 0,
 		'priority' => $priority * 100,
 	);
