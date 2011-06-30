@@ -88,10 +88,24 @@ foreach ($user_river_options['default'] as $tab_options) {
 	$options['subject_guid'] = $tab_options['subject_guid'];
 	$options['relationship_guid'] = $tab_options['relationship_guid'];
 	$options['relationship'] = $tab_options['relationship'];
-	$options['including'] = $tab_options['including'];
 	$options['pagination'] = FALSE;
 
-	$activity .= '<li class="column-river">' . elgg_view('river/elements/deck_river_column_header', $options) . elgg_list_river_including($options) . '</li>';
+	$options['including'] = sanitise_string($tab_options['including']);
+
+	if (	$tab_options['including'] ) {
+		$options['joins'] = array(',entities e',',objects_entity o');
+		$wheres = array();
+		$i = 0;
+		foreach ( $tab_options['including'] as $include) {
+			$include = sanitise_string($include);
+			if ($i > 0 ) $or = '( (1 = 1) ) OR';
+			$wheres[] = $or . " e.guid=o.guid AND rv.object_guid=o.guid AND o.description LIKE '%" . $include . "%'";
+			$i++;
+		}
+		$options['wheres'] = $wheres;
+	}
+
+	$activity .= '<li class="column-river">' . elgg_view('river/elements/deck_river_column_header', $options) . elgg_list_river($options) . '</li>';
 }
 $activity .= '</ul>';
 /*
