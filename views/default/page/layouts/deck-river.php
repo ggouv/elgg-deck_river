@@ -44,7 +44,7 @@ $params = $vars;
 $params['content'] = $footer_content;
 $footer = elgg_view('page/layouts/content/footer', $params);
 
-$body = '<div class="elgg-main deck-river">' . $header . $filter . $content . '</div>' . $footer;
+$body = '<div class="deck-river">' . $header . $filter . $content . '</div>' . $footer;
 
 $params = array(
 	'content' => $body,

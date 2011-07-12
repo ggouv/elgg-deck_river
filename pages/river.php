@@ -83,14 +83,14 @@ $page_filter = 'default';
 
 $activity = '<ul class="deck-river-lists">'; $options = array();
 //$options['type_subtype_pairs'] = array('object'=> array('thewire','bookmarks'));
+$column_number = 1;
 foreach ($user_river_options['default'] as $tab_options) {
 	$options['title'] = $tab_options['title'];
 	$options['subject_guid'] = $tab_options['subject_guid'];
 	$options['relationship_guid'] = $tab_options['relationship_guid'];
 	$options['relationship'] = $tab_options['relationship'];
-	$options['pagination'] = FALSE;
 
-	$options['including'] = sanitise_string($tab_options['including']);
+	//$options['including'] = sanitise_string($tab_options['including']);
 
 	if (	$tab_options['including'] ) {
 		$options['joins'] = array(',entities e',',objects_entity o');
@@ -104,8 +104,8 @@ foreach ($user_river_options['default'] as $tab_options) {
 		}
 		$options['wheres'] = $wheres;
 	}
-
-	$activity .= '<li class="column-river">' . elgg_view('river/elements/deck_river_column_header', $options) . elgg_list_river($options) . '</li>';
+	$activity .= "<li class='column-river' rel='column-{$column_number}'>" . elgg_view('river/elements/deck_river_column_header', $options) . "<ul class='elgg-river elgg-list'>" . elgg_view('graphics/ajax_loader', array('hidden' => false)) . '</ul></li>';
+	$column_number++;
 }
 $activity .= '</ul>';
 /*

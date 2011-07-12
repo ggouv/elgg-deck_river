@@ -1,8 +1,11 @@
 body {
 	width: 100%;
 }
-.deck-river {
+.elgg-main {
 	padding: 10px 0 0;
+}
+.deck-river {
+	/*padding: 10px 0 0;*/
 }
 
 .elgg-menu-deck-river {
@@ -68,6 +71,15 @@ body {
 }
 .elgg-river .elgg-module {
 	margin-bottom: 0;
+}
+.elgg-river .elgg-ajax-loader {
+	height: 100%;
+}
+.elgg-menu-river {
+	opacity: 0;
+}
+.elgg-list-item:hover .elgg-menu-river {
+	opacity: 1;
 }
 .elgg-river-comments-tab {
 	float:left;
