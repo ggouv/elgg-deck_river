@@ -22,7 +22,10 @@ require_once(dirname(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))
 $site_url = elgg_get_site_url();
 
 // Get callback type (list or picker)
-$column = get_input('settings', 'false');
+$column = get_input('column', 'false');
+$time_method = get_input('time_method', 'false');
+$time_posted = get_input('time_posted', 'false');
+
 
 // Get the settings of the current user. If not, set it to defaults.
 $owner = elgg_get_logged_in_user_guid();
@@ -55,7 +58,7 @@ $defaults = array('default' => array(
 	'column-6' => array(
 		'title' => '#nrstauie',
 		'page_filter' => 'mention',
-		'including' => array('#nrstauie'),
+		'including' => array('#nrst', '!test'),
 	),
 ));
 
@@ -98,13 +101,17 @@ if (	$options['including'] ) {
 
 	$options = array_merge($defaults, $options);
 
-	//$options['count'] = TRUE;
-	//$count = elgg_get_river($options);
+if ($time_method == 'lower') {
+	$options['posted_time_lower'] = (int)$time_posted+1;
+} elseif ($time_method == 'upper') {
+	$options['posted_time_upper'] = (int)$time_posted-1;
+}
 
 	$options['count'] = FALSE;
+
 	$items = elgg_get_river($options);
 //global $fb;
-//$fb->warn($items);
+//$fb->warn($options['posted_time_lower']);
 //print_r($options);
 
 	//$options['count'] = $count;
@@ -152,7 +159,7 @@ if (is_array($items)) {
 		} else {
 			$id = "item-{$item->getType()}-{$item->id}";
 		}
-		$html .= "<li id=\"$id\" class=\"$item_class\">";
+		$html .= "<li id=\"$id\" class=\"$item_class\" datetime=\"{$item->posted}\">";
 		$html .= elgg_view_list_item($item, $vars);
 		$html .= '</li>';
 	}

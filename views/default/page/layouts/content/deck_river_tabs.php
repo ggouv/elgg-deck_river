@@ -21,6 +21,14 @@ if (elgg_is_logged_in() && $context) {
 
 	// generate a list of default tabs
 	$tabs = array(); $priority = 2;
+	$tabs['refresh-all'] = array(
+		'text' => elgg_view_icon('refresh'),
+		'href' => '#',
+		'class' => "elgg-refresh-all-button",
+		'selected' => 1,
+		'priority' => $priority * 100,
+	);
+	$priority++;
 	foreach ($vars['user_river_options'] as $name => $tab) {
 		$tabs[$name] = array(
 			'text' => $name,

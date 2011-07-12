@@ -81,7 +81,7 @@ $user_river_options = array_merge($defaults, (array)$user_river_options);
 //$fb->info($page_type,'page_type');
 $page_filter = 'default';
 
-$activity = '<ul class="deck-river-lists">'; $options = array();
+$activity = '<div class="deck-river-lists"><ul class="deck-river-lists-container">'; $options = array();
 //$options['type_subtype_pairs'] = array('object'=> array('thewire','bookmarks'));
 $column_number = 1;
 foreach ($user_river_options['default'] as $tab_options) {
@@ -107,7 +107,7 @@ foreach ($user_river_options['default'] as $tab_options) {
 	$activity .= "<li class='column-river' rel='column-{$column_number}'>" . elgg_view('river/elements/deck_river_column_header', $options) . "<ul class='elgg-river elgg-list'>" . elgg_view('graphics/ajax_loader', array('hidden' => false)) . '</ul></li>';
 	$column_number++;
 }
-$activity .= '</ul>';
+$activity .= '</ul></div>';
 /*
 switch ($page_type) {
 	case 'mine':

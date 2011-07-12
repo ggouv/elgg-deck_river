@@ -25,7 +25,6 @@ body {
 	overflow-x: scroll;
 	overflow-y: hidden;
 	width: 100%;
-	display: -moz-inline-box;
 }
 .deck-river-lists .elgg-river {
 	height: 100%;
@@ -54,13 +53,17 @@ body {
 }
 .column-river .column-header > li a {
 	position: absolute;
-	top: 3px;
+	top: 4px;
 	display: inline-block;
 	width: 18px;
 	height: 18px;
 }
 .column-river .column-header > li a.elgg-column-refresh-button {
 	right: 45px;
+}
+.column-river .column-header > li a.elgg-column-refresh-button .elgg-icon {
+	height: 18px;
+	width: 18px;
 }
 .column-river .column-header > li a.elgg-column-edit-button {
 	right: 20px;
@@ -74,6 +77,18 @@ body {
 }
 .elgg-river .elgg-ajax-loader {
 	height: 100%;
+}
+.newRiverItem {
+	display: none;
+	border-right: 2px solid #4690D6;
+}
+.moreItem {
+	background-color: #EEE;
+	cursor: pointer;
+	text-align: center;
+}
+.moreItem:hover {
+	color: #4690D6;
 }
 .elgg-menu-river {
 	opacity: 0;
@@ -94,6 +109,7 @@ body {
 	border-radius: 0 0 5px 5px;
 }
 .elgg-avatar-small > a > img {
+	background-size: 32px !important;
 	width: 32px;
 	height: 32px;
 	border-radius: 0;
