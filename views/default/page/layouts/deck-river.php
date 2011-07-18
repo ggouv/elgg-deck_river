@@ -33,7 +33,6 @@ if (isset($vars['filter'])) {
 }
 
 $filter = elgg_view('page/layouts/content/deck_river_tabs', $vars);
-$filter .= elgg_view('page/layouts/content/deck_river_add_tab', $vars);
 
 // the all important content
 $content = elgg_extract('content', $vars, '');

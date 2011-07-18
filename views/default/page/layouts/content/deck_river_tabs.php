@@ -20,15 +20,22 @@ if (elgg_is_logged_in() && $context) {
 	$filter_context = elgg_extract('filter_context', $vars, 'all');
 
 	// generate a list of default tabs
-	$tabs = array(); $priority = 2;
+	$tabs = array();
 	$tabs['refresh-all'] = array(
 		'text' => elgg_view_icon('refresh'),
 		'href' => '#',
 		'class' => "elgg-refresh-all-button",
 		'selected' => 1,
-		'priority' => $priority * 100,
+		'priority' => 200,
 	);
-	$priority++;
+	$tabs['plus-column'] = array(
+		'text' => elgg_view_icon('settings-alt'),
+		'href' => '#',
+		'rel' => 'popup',
+		'selected' => 1,
+		'priority' => 300,
+	);
+	$priority = 4;
 	foreach ($vars['user_river_options'] as $name => $tab) {
 		$tabs[$name] = array(
 			'text' => $name,

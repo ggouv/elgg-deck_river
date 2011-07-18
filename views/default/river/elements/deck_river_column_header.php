@@ -1,4 +1,7 @@
 <?php
+/**
+ * @uses $vars['title']       String of the column header
+**/
 ?>
 
 <ul class='column-header'>
@@ -18,7 +21,6 @@
 				'text' => elgg_view_icon('settings-alt'),
 				'title' => elgg_echo('deck_river:edit'),
 				'href' => "#",
-				'rel' => 'popup',
 				'class' => "elgg-column-edit-button",
 			);
 			echo elgg_view('output/url', $params);

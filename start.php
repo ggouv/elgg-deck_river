@@ -15,10 +15,13 @@ function deck_river_init() {
 	$deck_river_original_activity_page_handler = $CONFIG->pagehandler['activity'];
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
 
+	// register actions
+	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
+	elgg_register_action('deck_river/column_settings', "$action_path/column/settings.php");
+
 
 	$CONFIG->mentions_user_match_regexp = '/[\b]?@([\p{L}\p{M}_\.0-9]+)[\b]?/iu';
 	$CONFIG->mentions_group_match_regexp = '/[\b]?!([\p{L}\p{M}_\.0-9]+)[\b]?/iu';
-
 	//register_plugin_hook('output', 'page', 'mentions_user_rewrite');
 	//register_plugin_hook('output', 'page', 'mentions_group_rewrite');
 
@@ -26,21 +29,22 @@ function deck_river_init() {
 }
 
 function deck_river_page_handler($page) {
-	global $CONFIG, $deck_river_original_activity_page_handler;
+	global $CONFIG, $deck_river_original_activity_page_handler, $fb;
 
-	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
+	$owner = elgg_get_logged_in_user_guid();
+
+	elgg_set_page_owner_guid($owner);
+
+	$user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
 
 	$page_type = elgg_extract(0, $page, 'all');
-	if ($page_type == 'owner') {
-		$page_type = 'mine';
+
+	if (array_key_exists($page_type,$user_river_options) || $page_type == 'all') {
+		require_once dirname(__FILE__) . '/pages/river.php';
+		return true;
+	} else {
+		return call_user_func($deck_river_original_activity_page_handler, $segments, $handle);
 	}
-
-	// content filter code here
-	$entity_type = '';
-	$entity_subtype = '';
-
-	require_once dirname(__FILE__) . '/pages/river.php';
-	return true;
 }
 
 function mentions_user_rewrite($hook, $entity_type, $returnvalue, $params) {

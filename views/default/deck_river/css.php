@@ -8,6 +8,7 @@ body {
 	/*padding: 10px 0 0;*/
 }
 
+/* deck tabs */
 .elgg-menu-deck-river {
 	margin: 0;
 }
@@ -20,6 +21,25 @@ body {
 .elgg-menu-deck-river > .elgg-state-selected > a {
 	background-color: #EEE;
 }
+.elgg-menu-deck-river > .elgg-menu-item-refresh-all {
+	border-radius: 5px 0 0 0;
+	border-style: solid none none solid;
+}
+.elgg-menu-deck-river > .elgg-menu-item-refresh-all > a {
+	padding-right: 0;
+}
+.elgg-menu-deck-river > .elgg-menu-item-plus-column {
+	border-radius: 0 5px 0 0;
+	border-style: solid solid none none;
+	margin: 0;
+}
+.elgg-menu-deck-river > .elgg-menu-item-refresh-all:hover,
+.elgg-menu-deck-river > .elgg-menu-item-plus-column:hover,
+.elgg-menu-deck-river > .elgg-menu-item-refresh-all:hover > a,
+.elgg-menu-deck-river > .elgg-menu-item-plus-column:hover > a {
+	background-color: #EEE;
+}
+
 
 .deck-river-lists {
 	overflow-x: scroll;
@@ -39,6 +59,8 @@ body {
 .column-river {
 	float: left;
 }
+
+/* column header */
 .column-river .column-header {
 	cursor: move;
 	height: 26px;
@@ -96,6 +118,7 @@ body {
 .elgg-list-item:hover .elgg-menu-river {
 	opacity: 1;
 }
+/* comment */
 .elgg-river-comments-tab {
 	float:left;
 }
@@ -107,10 +130,31 @@ body {
 }
 .elgg-river-item form {
 	border-radius: 0 0 5px 5px;
+	height: 100%;
+}
+.elgg-river-item input[type="text"] {
+	width: 100%;
+}
+.elgg-river-item input[type="submit"] {
+	margin: 5px 0 0;
+}
+
+/* misc */
+.elgg-icon-arrow-right {
+	margin: 5px;.elgg-icon-arrow-right
 }
 .elgg-avatar-small > a > img {
 	background-size: 32px !important;
 	width: 32px;
 	height: 32px;
 	border-radius: 0;
+}
+
+/* settings */
+#column-settings {
+	left: 40%;
+	position: fixed;
+	top: 25%;
+	width: 200px;
+	z-index: 9999;
 }
