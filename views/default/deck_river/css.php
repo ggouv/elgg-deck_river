@@ -155,6 +155,48 @@ body {
 	left: 40%;
 	position: fixed;
 	top: 25%;
-	width: 200px;
 	z-index: 9999;
+}
+#column-settings .elgg-head {
+	background-color: #EEE;
+	margin: -5px -5px 5px;
+	padding-bottom: 5px;
+}
+#column-settings .elgg-head h3 {
+	color: #666666;
+	float: left;
+	padding: 4px 30px 0 5px;
+}
+#column-settings .elgg-head a {
+	display: inline-block;
+	height: 18px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	width: 18px;
+	cursor: pointer;
+}
+#column-settings #deck-column-settings {
+	float:left;
+	padding: 5px;
+}
+#column-settings .filter {
+	float:left;
+	border-right: 2px solid #EEE;
+	padding-right: 10px;
+	margin-right: 10px;
+}
+#column-settings .elgg-input-checkboxes label {
+	font-weight: normal;
+}
+#column-settings .box-settings {
+	width: 200px;
+	float: left;
+}
+#column-settings .box-settings .elgg-input-dropdown, #column-settings .box-settings li {
+	float: left;
+}
+#column-settings .box-settings .search-type {
+	opacity: 0;
+	margin-top: 5px;
 }

@@ -8,23 +8,19 @@ $owner = elgg_get_logged_in_user_guid();
 $defaults = array('default' => array(
 	'column-1' => array(
 		'title' => elgg_echo('river:all'),
+		'type' => 'all'
 	),
 	'column-2' => array(
 		'title' => elgg_echo('river:friends'),
-		'relationship_guid' => $owner,
-		'relationship' => 'friend',
+		'type' => 'friends'
 	),
 	'column-3' => array(
 		'title' => elgg_echo('river:mine'),
-		'subject_guid' => $owner,
+		'type' => 'mine'
 	),
 	'column-4' => array(
 		'title' => '@' . get_entity($owner)->name,
-		'including' => array('@' . get_entity($owner)->name),
-	),
-	'column-5' => array(
-		'title' => '#test',
-		'including' => array('#test'),
+		'type' => 'mention'
 	)
 ));
 

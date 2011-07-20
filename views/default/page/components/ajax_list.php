@@ -31,11 +31,22 @@ $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
 
 // Set column user settings
+switch ($user_river_options[$page_filter][$column]['type']) {
+	case 'friends':
+		$options['relationship_guid'] = $owner;
+		$options['relationship'] = 'friend';
+		break;
+	case 'mine':
+		$options['subject_guid'] = $owner;
+		break;
+	case 'mention':
+		$options['search'] = array('@' . get_entity($owner)->name);
+		break;
+	case 'search':
+		$options['search'] = $user_river_options[$page_filter][$column]['search'];
+		break;
+}
 $options['title'] = $user_river_options[$page_filter][$column]['title'];
-$options['subject_guid'] = $user_river_options[$page_filter][$column]['subject_guid'];
-$options['relationship_guid'] = $user_river_options[$page_filter][$column]['relationship_guid'];
-$options['relationship'] = $user_river_options[$page_filter][$column]['relationship'];
-$options['including'] = $user_river_options[$page_filter][$column]['including'];
 $options['types_filter'] = $user_river_options[$page_filter][$column]['types_filter'];
 $options['subtypes_filter'] = $user_river_options[$page_filter][$column]['subtypes_filter'];
 
@@ -66,9 +77,9 @@ if ($options['types_filter']) {
 
 
 // Prepare joins and wheres clause for multiple query
-if ($options['including']) {
+if ($options['search']) {
 	$options['joins'] = array(',entities e',',objects_entity o');
-	$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . implode('|',$options['including']) . ")')";
+	$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . implode('|',$options['search']) . ")')";
 }
 
 $defaults = array(
@@ -79,11 +90,6 @@ $defaults = array(
 );
 $options = array_merge($defaults, $options);
 
-$options2['pagination'] = FALSE;
-//$options2['subtypes'] = array('page','page_top','file','bookmarks');
-//$options2['types'] = array('user','object');
-$options2['joins'] = array(',entities e',',objects_entity o');
-$options2['wheres'] = array("((rv.type = 'group') OR ((rv.type = 'object') AND (rv.subtype IN ('page_top','bookmarks'))))");
 $items = elgg_get_river($options);
 
 $html = "";

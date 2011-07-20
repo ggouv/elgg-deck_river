@@ -3,22 +3,30 @@ global $fb;
 //$fb->info($vars);
 
 // Get tab and column
-$tab = $vars['deck-river']['page_filter'];
+$tab = $vars['deck-river']['tab'];
 $column = $vars['deck-river']['column'];
+$new = $vars['deck-river']['new'];
 // Get the settings of the current user
 $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
 $user_river_column_options = $user_river_options[$tab][$column];
 ?>
 
-<div id='add-deck-column-settings' class='elgg-module elgg-module-popup clearfix'>
-	<?php echo elgg_view('input/hidden', array('name' => 'column', 'value' => $column)); ?>
-	<?php echo elgg_view('input/hidden', array('name' => 'tab', 'value' => $tab)); ?>
-	<div>
-		<label><?php echo elgg_echo('title'); ?></label><br />
-		<?php echo elgg_view('input/text', array('name' => 'title', 'value' => $user_river_column_options['title'])); ?>
-	</div><br />
-	<div>
+<?php echo elgg_view('input/hidden', array('name' => 'column', 'value' => $column)); ?>
+<?php echo elgg_view('input/hidden', array('name' => 'tab', 'value' => $tab)); ?>
+
+<div class='elgg-head'>
+	<h3><?php echo elgg_echo('deck_river:settings', array($user_river_column_options['title'])); ?></h3>
+	<?php
+		$params = array(
+			'text' => elgg_view_icon('delete-alt'),
+		);
+		echo elgg_view('output/url', $params);
+	?>
+</div>
+
+<div id='deck-column-settings'>
+	<div class='filter'>
 		<label><?php echo elgg_echo('filter'); ?></label><br />
 		<?php
 		// create checkboxes array
@@ -51,16 +59,51 @@ $user_river_column_options = $user_river_options[$tab][$column];
 								'value' => $subtypes_value,
 								'options' => $subtypes_label,
 								));
-		}
-		?>
-	</div><br />
-	<?php echo elgg_view('input/submit', array(
-				'value' => elgg_echo('save'),
-				'name' => 'save'
-		));
-		echo elgg_view('input/submit', array(
-				'value' => elgg_echo('delete'),
-				'name' => 'delete',
-				'class' => 'mls'
+		} ?>
+	</div>
+	<ul class='box-settings'>
+	<li>
+		<label><?php echo elgg_echo('deck_river:type'); ?></label><br />
+		<?php echo elgg_view('input/dropdown', array(
+			'name' => 'type',
+			'value' => $user_river_column_options['type'],
+			'class' => 'column-type',
+			'options_values' => array(
+					'all' => elgg_echo('river:all'),
+					'friends' => elgg_echo('river:friends'),
+					'mine' => elgg_echo('river:mine'),
+					'mention' => 'Mention @' . get_entity($owner)->name,
+					'search' => elgg_echo('search')
+				)
+			)); ?>
+	</li>
+	<li class='search-type'>
+		<label><?php echo elgg_echo('title'); ?></label><br />
+		<?php echo elgg_view('input/text', array(
+			'name' => 'title',
+			'value' => $user_river_column_options['title']
 		)); ?>
+	</li>
+	<li class='search-type'>
+		<label><?php echo elgg_echo('search'); ?></label><br />
+		<?php echo elgg_view('input/text', array(
+			'name' => 'search',
+			'default' => 'search',
+			'value' => $user_river_column_options['search']
+		)); ?>
+	</li>
+	</ul>
+</div>
+<div>
+<?php echo elgg_view('input/submit', array(
+		'value' => elgg_echo('save'),
+		'name' => 'save'
+));
+if ($new != 'true') {
+	echo elgg_view('input/submit', array(
+			'value' => elgg_echo('delete'),
+			'name' => 'delete',
+			'class' => 'mls'
+	));
+} ?>
 </div>

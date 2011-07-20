@@ -2,7 +2,9 @@
 global $fb;
 $tab = get_input('tab');
 $column = get_input('column');
+$type = get_input('type');
 $column_title = get_input('title');
+$search = get_input('search');
 $types_filter = get_input('filters_types');
 $subtypes_filter = get_input('filters_subtypes');
 
@@ -17,16 +19,44 @@ if ($delete) {
 	unset($user_river_options[$tab][$column]);
 	echo "delete,$column,";
 } else {
+	if (!array_key_exists($column, $user_river_options[$tab])) {
+		$column_container_change = 'new';
+	} else {
+		$column_container_change = 'no';
+	}
 	$user_river_column_options = $user_river_options[$tab][$column];
-	$column_container_change = 'no';
+
+	if ($user_river_column_options['type'] != $type) {
+		if ($column_container_change == 'no') $column_container_change = 'change';
+		$user_river_options[$tab][$column]['type'] = $type;
+		switch ($type) {
+			case 'all':
+				$column_title = elgg_echo('river:all');
+				break;
+			case 'friends':
+				$column_title = elgg_echo('river:friends');
+				break;
+			case 'mine':
+				$column_title = elgg_echo('river:mine');
+				break;
+			case 'mention':
+				$column_title = '@' . get_entity($owner)->name;
+				break;
+		}
+	}
 
 	if ($user_river_column_options['title'] != $column_title) {
 		$column_title_change = true;
 		$user_river_options[$tab][$column]['title'] = $column_title;
 	}
 
+	if ($type == 'search' && $user_river_column_options['search'] != $search) {
+		if ($column_container_change == 'no') $column_container_change = 'change';
+		$user_river_options[$tab][$column]['search'] = explode(' ', $search);
+	}
+
 	if ($user_river_column_options['subtypes_filter'] != $subtypes_filter || $user_river_column_options['types_filter'] != $types_filter) {
-		$column_container_change = 'change';
+		if ($column_container_change == 'no') $column_container_change = 'change';
 		if (in_array('All', $types_filter)) {
 			unset($user_river_options[$tab][$column]['types_filter']);
 			unset($user_river_options[$tab][$column]['subtypes_filter']);
@@ -49,3 +79,4 @@ if ($delete) {
 }
 
 set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));
+$fb->info(unserialize(get_private_setting($owner, 'deck_river_settings')));
