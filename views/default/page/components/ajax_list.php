@@ -29,7 +29,7 @@ $refresh_title = get_input('refreshTitle', 'false');
 // Get the settings of the current user.
 $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
-$fb->info($user_river_options);
+
 // Set column user settings
 $options['title'] = $user_river_options[$page_filter][$column]['title'];
 $options['subject_guid'] = $user_river_options[$page_filter][$column]['subject_guid'];

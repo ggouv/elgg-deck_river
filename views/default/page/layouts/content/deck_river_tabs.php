@@ -26,22 +26,22 @@ if (elgg_is_logged_in() && $context) {
 		'href' => '#',
 		'class' => "elgg-refresh-all-button",
 		'selected' => 1,
-		'priority' => 200,
+		'priority' => 100,
 	);
 	$tabs['plus-column'] = array(
 		'text' => elgg_view_icon('settings-alt'),
 		'href' => '#',
-		'rel' => 'popup',
+		'class' => "elgg-add-new-column",
 		'selected' => 1,
-		'priority' => 300,
+		'priority' => 110,
 	);
-	$priority = 4;
+	$priority = 12;
 	foreach ($vars['user_river_options'] as $name => $tab) {
 		$tabs[$name] = array(
 			'text' => $name,
 			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "$context/$name",
 			'selected' => ($filter_context == $name),
-			'priority' => $priority * 100,
+			'priority' => $priority * 10,
 		);
 		$priority++;
 	}
@@ -50,7 +50,7 @@ if (elgg_is_logged_in() && $context) {
 		'href' => '#add-deck-river-tab',
 		'rel' => 'popup',
 		'selected' => 0,
-		'priority' => $priority * 100,
+		'priority' => $priority * 10,
 	);
 
 	foreach ($tabs as $name => $tab) {

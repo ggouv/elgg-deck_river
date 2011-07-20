@@ -2,10 +2,6 @@
 
 // Load Elgg engine
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . "/engine/start.php");
-global $fb;
-$site_url = elgg_get_site_url();
-
-
 
 // Get callbacks
 $vars['deck-river'] = array(
