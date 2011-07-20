@@ -1,5 +1,4 @@
 <?php
-global $fb;
 $tab = get_input('tab');
 $column = get_input('column');
 $type = get_input('type');
@@ -79,4 +78,3 @@ if ($delete) {
 }
 
 set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));
-$fb->info(unserialize(get_private_setting($owner, 'deck_river_settings')));

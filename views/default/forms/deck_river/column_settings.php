@@ -1,6 +1,4 @@
 <?php
-global $fb;
-//$fb->info($vars);
 
 // Get tab and column
 $tab = $vars['deck-river']['tab'];
@@ -88,7 +86,6 @@ $user_river_column_options = $user_river_options[$tab][$column];
 		<label><?php echo elgg_echo('search'); ?></label><br />
 		<?php echo elgg_view('input/text', array(
 			'name' => 'search',
-			'default' => 'search',
 			'value' => $user_river_column_options['search']
 		)); ?>
 	</li>

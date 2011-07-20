@@ -29,7 +29,7 @@ function deck_river_init() {
 }
 
 function deck_river_page_handler($page) {
-	global $CONFIG, $deck_river_original_activity_page_handler, $fb;
+	global $CONFIG, $deck_river_original_activity_page_handler;
 
 	$owner = elgg_get_logged_in_user_guid();
 

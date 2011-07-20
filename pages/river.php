@@ -29,7 +29,6 @@ if ( !$user_river_options || !is_array($user_river_options) ) set_private_settin
 $user_river_options = array_merge($defaults, (array)$user_river_options);
 
 // @todo : get page to make many tabs
-//$fb->info($page_type,'page_type');
 $page_filter = 'default';
 
 $column_number = 1;

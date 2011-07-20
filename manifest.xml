@@ -6,8 +6,8 @@
 	<category>Enhancements</category>
 	<blurb>River plugin</blurb>
 	<description>Make river like a deck.</description>
-	<website>http://manutopik.net</website>
-	<copyright>See COPYRIGHT.txt</copyright>
+	<website>https://github.com/ManUtopiK/elgg-deck_river</website>
+	<copyright></copyright>
 	<license>GNU Public License version 2</license>
 	<requires>
 		<type>elgg_version</type>
