@@ -3,12 +3,6 @@
 function deck_river_init() {
 	global $CONFIG, $deck_river_original_activity_page_handler;
 
-	elgg_register_library('elgg:river_extended', dirname(__FILE__). '/lib/deck_river_functions.php');
-	elgg_load_library('elgg:river_extended');
-
-	elgg_register_library('elgg:deck_river_user_settings', dirname(__FILE__). '/lib/user_settings.php');
-	elgg_load_library('elgg:deck_river_user_settings');
-
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js');
 
