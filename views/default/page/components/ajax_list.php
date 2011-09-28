@@ -18,6 +18,7 @@
 
 // Load Elgg engine
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))))))) . "/engine/start.php");
+global $CONFIG;
 
 // Get callbacks
 $page_filter = get_input('tab', 'default');
@@ -78,7 +79,7 @@ if ($options['types_filter']) {
 
 // Prepare joins and wheres clause for multiple query
 if ($options['search']) {
-	$options['joins'] = array(',entities e',',objects_entity o');
+	$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
 	$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . implode('|',$options['search']) . ")')";
 }
 
