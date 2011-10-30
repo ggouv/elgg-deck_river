@@ -25,7 +25,7 @@ $user_river_column_options = $user_river_options[$tab][$column];
 
 <div id='deck-column-settings'>
 	<div class='filter'>
-		<label><?php echo elgg_echo('filter'); ?></label><br />
+		<label><?php echo elgg_echo('deck_river:filter'); ?></label><br />
 		<?php
 		// create checkboxes array
 		$types_value = array();
@@ -76,14 +76,14 @@ $user_river_column_options = $user_river_options[$tab][$column];
 			)); ?>
 	</li>
 	<li class='search-type'>
-		<label><?php echo elgg_echo('title'); ?></label><br />
+		<label><?php echo elgg_echo('deck_river:title'); ?></label><br />
 		<?php echo elgg_view('input/text', array(
 			'name' => 'title',
 			'value' => $user_river_column_options['title']
 		)); ?>
 	</li>
 	<li class='search-type'>
-		<label><?php echo elgg_echo('search'); ?></label><br />
+		<label><?php echo elgg_echo('deck_river:search'); ?></label><br />
 		<?php echo elgg_view('input/text', array(
 			'name' => 'search',
 			'value' => $user_river_column_options['search']

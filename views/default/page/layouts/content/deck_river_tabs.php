@@ -27,6 +27,7 @@ if (elgg_is_logged_in() && $context) {
 		'class' => "elgg-refresh-all-button",
 		'selected' => 1,
 		'priority' => 100,
+		'title' => elgg_echo('deck_river:refresh-all')
 	);
 	$tabs['plus-column'] = array(
 		'text' => elgg_view_icon('settings-alt'),
@@ -34,6 +35,7 @@ if (elgg_is_logged_in() && $context) {
 		'class' => "elgg-add-new-column",
 		'selected' => 1,
 		'priority' => 110,
+		'title' => elgg_echo('deck_river:add-column')
 	);
 	$priority = 12;
 	foreach ($vars['user_river_options'] as $name => $tab) {
@@ -51,6 +53,7 @@ if (elgg_is_logged_in() && $context) {
 		'rel' => 'popup',
 		'selected' => 0,
 		'priority' => $priority * 10,
+		'title' => elgg_echo('deck_river:add-tab')
 	);
 
 	foreach ($tabs as $name => $tab) {
