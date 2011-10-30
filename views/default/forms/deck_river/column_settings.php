@@ -93,13 +93,13 @@ $user_river_column_options = $user_river_options[$tab][$column];
 </div>
 <div>
 <?php echo elgg_view('input/submit', array(
-		'value' => elgg_echo('save'),
-		'name' => 'save'
+		'value' => 'save',
+		'name' => elgg_echo('save')
 ));
 if ($new != 'true') {
 	echo elgg_view('input/submit', array(
-			'value' => elgg_echo('delete'),
-			'name' => 'delete',
+			'value' => 'delete',
+			'name' => elgg_echo('delete'),
 			'class' => 'mls'
 	));
 } ?>

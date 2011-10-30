@@ -1,4 +1,5 @@
 <?php
+
 $tab = get_input('tab');
 $column = get_input('column');
 $type = get_input('type');
@@ -8,13 +9,13 @@ $types_filter = get_input('filters_types');
 $subtypes_filter = get_input('filters_subtypes');
 
 // save or delete
-$delete = (bool)get_input('delete');
+$delete = get_input('submit');
 
 // Get the settings of the current column of the current user
 $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
 
-if ($delete) {
+if ($delete === 'delete') {
 	unset($user_river_options[$tab][$column]);
 	echo "delete,$column,";
 } else {
