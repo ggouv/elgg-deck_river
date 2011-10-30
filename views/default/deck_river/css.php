@@ -156,6 +156,7 @@ body {
 	position: fixed;
 	top: 25%;
 	z-index: 9999;
+	min-width: 372px;
 }
 #column-settings .elgg-head {
 	background-color: #EEE;
