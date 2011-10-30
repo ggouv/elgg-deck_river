@@ -38,7 +38,11 @@ $(document).ready(function() {
 				elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 			} else {
 				if (!$('#column-settings').length) { $(this).parent().append('<div id="column-settings" class="elgg-module-popup"></div>'); }
-				ColumnSettings('column-' + (NbrColumn+1));
+				NumColumn = [];
+				$('.column-river').each(function(){
+					NumColumn.push($(this).attr('rel').split('-')[1]);
+				});
+				ColumnSettings( 'column-' + ( ( Math.max.apply(null, NumColumn) ) +1 ) );
 			}
 		});
 	}
