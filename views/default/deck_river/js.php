@@ -97,13 +97,13 @@ function ColumnSettings(column) {
 			$('#column-settings').remove();
 		});
 		if ($('.column-type option:selected').val() == 'search') {
-			$('#column-settings .search-type').animate({'opacity':1});
+			$('#column-settings .search-type').show('slow');
 		}
 		$('.column-type').change(function() {
 			if ($('.column-type option:selected').val() == 'search') {
-				$('#column-settings .search-type').animate({'opacity':1});
+				$('#column-settings .search-type').show('slow');
 			} else {
-				$('#column-settings .search-type').animate({'opacity':0});
+				$('#column-settings .search-type').hide('slow');
 			}
 		});
 		$('.deck-river-form-column-settings').submit(function() { return false; });

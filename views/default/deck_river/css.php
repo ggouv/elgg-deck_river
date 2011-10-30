@@ -198,6 +198,6 @@ body {
 	float: left;
 }
 #column-settings .box-settings .search-type {
-	opacity: 0;
+	display: none;
 	margin-top: 5px;
 }
