@@ -136,6 +136,7 @@ function ColumnSettings(column) {
 							$('li.column-river[rel="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
 							LoadColumn($('li.column-river[rel="'+TheResponse[1]+'"]'));
 							$('li.column-river[rel="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
+							$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
 						}
 						$('#column-settings').remove();
 						return false;
