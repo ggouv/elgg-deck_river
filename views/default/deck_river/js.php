@@ -35,7 +35,7 @@ $(document).ready(function() {
 		$('.elgg-add-new-column').click(function() {
 			var NbrColumn = $('.column-river').length;
 			if (NbrColumn == '10') {
-				elgg.echo('deck_river:limitColumnReached');
+				elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 			} else {
 				if (!$('#column-settings').length) { $(this).parent().append('<div id="column-settings" class="elgg-module-popup"></div>'); }
 				ColumnSettings('column-' + (NbrColumn+1));
