@@ -18,6 +18,10 @@ $english = array(
 	'deck_river:filter' => 'Filter:',
 	'deck_river:title' => 'Title:',
 	'deck_river:search' => 'Search:',
+	
+	// plugin settings
+	'deck_river:settings:min_width_column' => 'Minimum width of columns',
+	'deck_river:settings:max_nbr_column' => 'Maximum number of column',
 );
 
 add_translation('en', $english);

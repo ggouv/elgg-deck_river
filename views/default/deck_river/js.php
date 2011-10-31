@@ -34,7 +34,7 @@ $(document).ready(function() {
 		// Add new column
 		$('.elgg-add-new-column').click(function() {
 			var NbrColumn = $('.column-river').length;
-			if (NbrColumn == '10') {
+			if (NbrColumn == deck_river_max_nbr_column) {
 				elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 			} else {
 				if (!$('#column-settings').length) { $(this).parent().append('<div id="column-settings" class="elgg-module-popup"></div>'); }
@@ -162,7 +162,7 @@ function SetColumnsWidth() {
 	var WindowWidth = $('.deck-river-lists').width();
 	var CountLists = $('.column-river').length;
 	var ListWidth = 0; var i = 0;
-	while ( ListWidth < 300 ) {
+	while ( ListWidth < deck_river_min_width_column ) {
 		ListWidth = (WindowWidth) / ( CountLists - i );
 		i++;
 	}

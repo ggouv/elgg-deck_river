@@ -34,6 +34,14 @@ if (isset($vars['filter'])) {
 
 $filter = elgg_view('page/layouts/content/deck_river_tabs', $vars);
 
+// Pass plugin options to jQuery
+echo "
+	<script type='text/javascript'>
+   var deck_river_min_width_column = '" . elgg_get_plugin_setting('min_width_column', 'elgg-deck_river') . "';
+   var deck_river_max_nbr_column = '" . elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river') . "';
+   </script>
+	";
+
 // the all important content
 $content = elgg_extract('content', $vars, '');
 

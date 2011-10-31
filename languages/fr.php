@@ -18,6 +18,10 @@ $french = array(
 	'deck_river:filter' => 'Filtre :',
 	'deck_river:title' => 'Titre de la colonne :',
 	'deck_river:search' => 'Recherche :',
+	
+	// plugin settings
+	'deck_river:settings:min_width_column' => 'Largeur minimum des colonnes',
+	'deck_river:settings:max_nbr_column' => 'Nombre maximum de colonne',
 );
 
 add_translation('fr', $french);
