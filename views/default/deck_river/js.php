@@ -166,7 +166,7 @@ function SetColumnsWidth() {
 		ListWidth = (WindowWidth) / ( CountLists - i );
 		i++;
 	}
-	$('.elgg-river, .column-header').width(ListWidth);
+	$('.elgg-river, .column-header').width(ListWidth - 2);
 	$('.deck-river-lists-container').width(ListWidth * CountLists);
 }
 

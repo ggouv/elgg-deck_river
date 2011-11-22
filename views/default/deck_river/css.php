@@ -58,6 +58,8 @@ body {
 }
 .column-river {
 	float: left;
+	border-left: 1px solid #CCC;
+	border-right: 1px solid #CCC;
 }
 
 /* column header */
