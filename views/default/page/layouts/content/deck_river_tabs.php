@@ -30,7 +30,7 @@ if (elgg_is_logged_in() && $context) {
 		'title' => elgg_echo('deck_river:refresh-all')
 	);
 	$tabs['plus-column'] = array(
-		'text' => elgg_view_icon('settings-alt'),
+		'text' => '+',
 		'href' => '#',
 		'class' => "elgg-add-new-column",
 		'selected' => 1,

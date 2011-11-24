@@ -31,7 +31,13 @@ body {
 .elgg-menu-deck-river > .elgg-menu-item-plus-column {
 	border-radius: 0 5px 0 0;
 	border-style: solid solid none none;
+	font-size: 1.5em;
+	font-weight: bold;
+	line-height: 14px;
 	margin: 0;
+}
+.elgg-menu-deck-river > .elgg-menu-item-plus {
+	font-weight: bold;
 }
 .elgg-menu-deck-river > .elgg-menu-item-refresh-all:hover,
 .elgg-menu-deck-river > .elgg-menu-item-plus-column:hover,
