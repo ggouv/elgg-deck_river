@@ -8,14 +8,20 @@ $new = $vars['deck-river']['new'];
 $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
 $user_river_column_options = $user_river_options[$tab][$column];
+$column_title = $user_river_column_options['title'];
 ?>
 
 <?php echo elgg_view('input/hidden', array('name' => 'column', 'value' => $column)); ?>
 <?php echo elgg_view('input/hidden', array('name' => 'tab', 'value' => $tab)); ?>
 
 <div class='elgg-head'>
-	<h3><?php echo elgg_echo('deck_river:settings', array($user_river_column_options['title'])); ?></h3>
 	<?php
+		if ( $column_title == '' ) {
+			echo '<h3>' . elgg_echo('deck_river:add-column') .'</h3>';
+		} else {
+			echo '<h3>' . elgg_echo('deck_river:settings', array($column_title)) .'</h3>';
+		}
+
 		$params = array(
 			'text' => elgg_view_icon('delete-alt'),
 		);
@@ -79,7 +85,7 @@ $user_river_column_options = $user_river_options[$tab][$column];
 		<label><?php echo elgg_echo('deck_river:title'); ?></label><br />
 		<?php echo elgg_view('input/text', array(
 			'name' => 'title',
-			'value' => $user_river_column_options['title']
+			'value' => $column_title
 		)); ?>
 	</li>
 	<li class='search-type'>

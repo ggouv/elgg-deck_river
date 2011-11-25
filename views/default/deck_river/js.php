@@ -37,7 +37,7 @@ $(document).ready(function() {
 			if (NbrColumn == deck_river_max_nbr_column) {
 				elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 			} else {
-				if (!$('#column-settings').length) { $(this).parent().append('<div id="column-settings" class="elgg-module-popup"></div>'); }
+				if (!$('#column-settings').length) { $('.column-river:first .column-header').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
 				NumColumn = [];
 				$('.column-river').each(function(){
 					NumColumn.push($(this).attr('rel').split('-')[1]);
