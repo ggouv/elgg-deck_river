@@ -3,30 +3,15 @@
  * Main activity stream list page
  */
 
+//set_private_setting($owner, 'deck_river_settings', null);
 // Get the settings of the current user. If not, set it to defaults.
 $owner = elgg_get_logged_in_user_guid();
-$defaults = array('default' => array(
-	'column-1' => array(
-		'title' => elgg_echo('river:all'),
-		'type' => 'all'
-	),
-	'column-2' => array(
-		'title' => elgg_echo('river:friends'),
-		'type' => 'friends'
-	),
-	'column-3' => array(
-		'title' => elgg_echo('river:mine'),
-		'type' => 'mine'
-	),
-	'column-4' => array(
-		'title' => '@' . get_entity($owner)->name,
-		'type' => 'mention'
-	)
-));
-
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
-if ( !$user_river_options || !is_array($user_river_options) ) set_private_setting($owner, 'deck_river_settings', serialize($defaults));
-$user_river_options = array_merge($defaults, (array)$user_river_options);
+if ( !$user_river_options || !is_array($user_river_options) ) {
+	$set = str_replace("&gt;", ">", elgg_get_plugin_setting('default_columns', 'elgg-deck_river'));
+	eval("\$defaults = $set;");
+	set_private_setting($owner, 'deck_river_settings', serialize($defaults));
+}
 
 // @todo : get page to make many tabs
 $page_filter = 'default';

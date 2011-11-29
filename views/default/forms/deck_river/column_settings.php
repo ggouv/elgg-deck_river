@@ -36,7 +36,7 @@ $column_title = $user_river_column_options['title'];
 		// create checkboxes array
 		$types_value = array();
 		$registered_entities = elgg_get_config('registered_entities');
-		$types_label[] = 'All';
+		$types_label[elgg_echo('all')] = 'All';
 		if (!array_key_exists('types_filter', $user_river_column_options) && !array_key_exists('subtypes_filter', $user_river_column_options) || $user_river_column_options['types_filter'] == 'All' ) $types_value[] = 'All';
 		if (!empty($registered_entities)) {
 			foreach ($registered_entities as $type => $subtypes) {
