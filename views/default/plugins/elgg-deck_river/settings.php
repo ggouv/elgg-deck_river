@@ -27,7 +27,7 @@ $default = "array('default' => array(
 					'type' => 'mine'
 				),
 				'column-4' => array(
-					'title' => '@' . get_entity(\$owner)->name,
+					'title' => '@' . get_entity(\$user_guid)->name,
 					'type' => 'mention'
 				)
 			))";

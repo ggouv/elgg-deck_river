@@ -12,6 +12,9 @@ $english = array(
 	'deck_river:add-tab' => 'Add a new tab',
 	'deck_river:limitColumnReached' => 'The maximum number of columns is reached.',
 	
+	// add tab form
+	'deck_river:add_tab_title' => 'Add a new tab:',
+	
 	// column-settings form
 	'deck_river:settings' => 'Settings of column "%s"',
 	'deck_river:type' => 'Type:',

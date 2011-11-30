@@ -12,6 +12,9 @@ $french = array(
 	'deck_river:add-tab' => 'Ajouter un nouvel onglet',
 	'deck_river:limitColumnReached' => 'Le nombre maximum de colonne est atteint.',
 	
+	// add tab form
+	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
+	
 	// column-settings form
 	'deck_river:settings' => 'Paramètres de la colonne "%s"',
 	'deck_river:type' => 'Type :',

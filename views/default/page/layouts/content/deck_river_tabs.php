@@ -14,10 +14,8 @@ if (isset($vars['filter_override'])) {
 	return true;
 }
 
-$context = elgg_extract('context', $vars, elgg_get_context());
-
-if (elgg_is_logged_in() && $context) {
-	$filter_context = elgg_extract('filter_context', $vars, 'all');
+if (elgg_is_logged_in()) {
+	$filter_context = elgg_extract('filter_context', $vars, 'default');
 
 	// generate a list of default tabs
 	$tabs = array();
@@ -40,8 +38,8 @@ if (elgg_is_logged_in() && $context) {
 	$priority = 12;
 	foreach ($vars['user_river_options'] as $name => $tab) {
 		$tabs[$name] = array(
-			'text' => $name,
-			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "$context/$name",
+			'text' => ucfirst($name),
+			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "activity/$name",
 			'selected' => ($filter_context == $name),
 			'priority' => $priority * 10,
 		);
@@ -55,7 +53,10 @@ if (elgg_is_logged_in() && $context) {
 		'priority' => $priority * 10,
 		'title' => elgg_echo('deck_river:add-tab')
 	);
-
+	echo "<div id='add-deck-river-tab' class='elgg-module-popup add-deck-river-tab-popup'>" .
+			elgg_view_form('deck_river/add_deck_river_tab') .
+		"</div>";
+	
 	foreach ($tabs as $name => $tab) {
 		$tab['name'] = $name;
 		

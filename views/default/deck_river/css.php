@@ -209,3 +209,15 @@ body {
 	display: none;
 	margin-top: 5px;
 }
+
+#add-deck-river-tab {
+	display:none;
+	width: 260px;
+}
+#add-deck-river-tab .elgg-input-text {
+	width: 200px;
+	float: left;
+}
+#add-deck-river-tab .elgg-button-submit {
+	float: right;
+}
