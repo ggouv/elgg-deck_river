@@ -29,6 +29,9 @@ $french = array(
 	'deck_river:settings:default_column_default_params' => 'Colonnes standards :',
 	'deck_river:settings:keys_to_merge' => 'Entités à combiner dans les paramètres de colonnes',
 	'deck_river:settings:keys_to_merge_string_register_entity' => '<strong>Exemple :</strong> page=page_top (le premier élément sera affiché. Séparez par des virgules)<br /><strong>Entités enregistrées sur ce site :</strong>',
+	'deck_river:settings:reset_user' => "Remettre à zéro les paramètres de colonnes d'un utilisateur. Entrez son ID",
+	'deck_river:settings:reset_user:ok' => "Les paramètres des colonnes de l'utilisateur %s ont été remis à zéro.",
+	'deck_river:settings:reset_user:nok' => "Impossible de remettre à zéro les paramètres des colonnes de l'utilisateur %s.",
 	
 );
 

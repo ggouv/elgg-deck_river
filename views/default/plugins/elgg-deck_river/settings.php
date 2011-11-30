@@ -75,10 +75,21 @@ foreach ($registered_entities as $type => $subtypes) {
 }
 $keys_to_merge_string_register_entity = elgg_echo('deck_river:settings:keys_to_merge_string_register_entity') . '</strong><br />' . implode(' - ', $label);
 
+
+
+$reset_user_string = elgg_echo('deck_river:settings:reset_user');
+$reset_user_view = elgg_view('input/text', array(
+	'name' => 'reset_user',
+	'value' => '',
+	'class' => 'elgg-input-thin',
+));
+
+
 echo <<<__HTML
 <br />
 <div><label>$min_width_column_string</label><br />$min_width_column_view</div>
 <div><label>$max_nbr_column_string</label><br />$max_nbr_column_view</div>
 <div><label>$default_columns_string</label><br />$default_columns_view<br /><span style='font-size:0.85em;color:#999;'>$default_columns_string_default_params</span></div>
 <div><label>$keys_to_merge_string</label><br />$keys_to_merge_view<br /><span style='font-size:0.85em;color:#999;'>$keys_to_merge_string_register_entity</span></div>
+<div><label>$reset_user_string</label><br />$reset_user_view</div>
 __HTML;
