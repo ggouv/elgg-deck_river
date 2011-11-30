@@ -42,17 +42,31 @@ $column_title = $user_river_column_options['title'];
 			foreach ($registered_entities as $type => $subtypes) {
 				// subtype will always be an array.
 				if (!count($subtypes)) {
-					$label = str_replace( 'Show ', '', elgg_echo('river:select', array(elgg_echo("item:$type"))) );
+					$label = elgg_echo("item:$type");
 					$types_label[$label] .= $type;
 					if (in_array($type, $user_river_column_options['types_filter'])) $types_value[] = $type;
 				} else {
 					foreach ($subtypes as $subtype) {
-						$label = str_replace( 'Show ', '', elgg_echo('river:select', array(elgg_echo("item:$type:$subtype"))) );
+						$label = elgg_echo("item:$type:$subtype");
 						$subtypes_label[$label] .= $subtype;
 						if (in_array($subtype, $user_river_column_options['subtypes_filter'])) $subtypes_value[] = $subtype;
 					}
 				}
 			}
+			
+			// merge keys defined by admin
+			$keys_to_merge = explode(',', elgg_get_plugin_setting('keys_to_merge', 'elgg-deck_river'));
+			foreach ($keys_to_merge as $key => $value ) {
+				$key_master = explode('=', $value);
+				foreach ($types_label as $k => $v) {
+					if ($v == $key_master[1]) unset($types_label[$k]);
+				}
+				foreach ($subtypes_label as $k => $v) {
+					if ($v == $key_master[1]) unset($subtypes_label[$k]);
+				}
+			}
+			
+			// show filters
 			echo elgg_view('input/checkboxes', array(
 								'name' => 'filters_types',
 								'value' => $types_value,
@@ -65,38 +79,41 @@ $column_title = $user_river_column_options['title'];
 								));
 		} ?>
 	</div>
+	
 	<ul class='box-settings'>
-	<li>
-		<label><?php echo elgg_echo('deck_river:type'); ?></label><br />
-		<?php echo elgg_view('input/dropdown', array(
-			'name' => 'type',
-			'value' => $user_river_column_options['type'],
-			'class' => 'column-type',
-			'options_values' => array(
-					'all' => elgg_echo('river:all'),
-					'friends' => elgg_echo('river:friends'),
-					'mine' => elgg_echo('river:mine'),
-					'mention' => 'Mention @' . get_entity($owner)->name,
-					'search' => elgg_echo('search')
-				)
+		<li>
+			<label><?php echo elgg_echo('deck_river:type'); ?></label><br />
+			<?php echo elgg_view('input/dropdown', array(
+				'name' => 'type',
+				'value' => $user_river_column_options['type'],
+				'class' => 'column-type',
+				'options_values' => array(
+						'all' => elgg_echo('river:all'),
+						'friends' => elgg_echo('river:friends'),
+						'mine' => elgg_echo('river:mine'),
+						'mention' => 'Mention @' . get_entity($owner)->name,
+						'search' => elgg_echo('search')
+					)
+				)); ?>
+		</li>
+		<li class='search-type'>
+			<label><?php echo elgg_echo('deck_river:title'); ?></label><br />
+			<?php echo elgg_view('input/text', array(
+				'name' => 'title',
+				'value' => $column_title
 			)); ?>
-	</li>
-	<li class='search-type'>
-		<label><?php echo elgg_echo('deck_river:title'); ?></label><br />
-		<?php echo elgg_view('input/text', array(
-			'name' => 'title',
-			'value' => $column_title
-		)); ?>
-	</li>
-	<li class='search-type'>
-		<label><?php echo elgg_echo('deck_river:search'); ?></label><br />
-		<?php echo elgg_view('input/text', array(
-			'name' => 'search',
-			'value' => $user_river_column_options['search']
-		)); ?>
-	</li>
+		</li>
+		<li class='search-type'>
+			<label><?php echo elgg_echo('deck_river:search'); ?></label><br />
+			<?php echo elgg_view('input/text', array(
+				'name' => 'search',
+				'value' => $user_river_column_options['search']
+			)); ?>
+		</li>
 	</ul>
+	
 </div>
+
 <div>
 <?php echo elgg_view('input/submit', array(
 		'value' => 'save',

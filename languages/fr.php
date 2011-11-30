@@ -21,7 +21,12 @@ $french = array(
 	
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Largeur minimum des colonnes',
-	'deck_river:settings:max_nbr_column' => 'Nombre maximum de colonne',
+	'deck_river:settings:max_nbr_column' => 'Nombre maximum de colonnes',
+	'deck_river:settings:default_column' => 'Colonnes par défault pour les nouveaux utilisateurs',
+	'deck_river:settings:default_column_default_params' => 'Colonnes standards :',
+	'deck_river:settings:keys_to_merge' => 'Entités à combiner dans les paramètres de colonnes',
+	'deck_river:settings:keys_to_merge_string_register_entity' => '<strong>Exemple :</strong> page=page_top (le premier élément sera affiché. Séparez par des virgules)<br /><strong>Entités enregistrées sur ce site :</strong>',
+	
 );
 
 add_translation('fr', $french);

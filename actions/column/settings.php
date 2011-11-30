@@ -55,6 +55,18 @@ if ($delete === 'delete') {
 		$user_river_options[$tab][$column]['search'] = explode(' ', $search);
 	}
 
+	// merge keys defined by admin
+	$keys_to_merge = explode(',', elgg_get_plugin_setting('keys_to_merge', 'elgg-deck_river'));
+	foreach ($keys_to_merge as $key => $value ) {
+		$key_master = explode('=', $value);
+		foreach ($types_filter as $k => $v) {
+			if ($v == $key_master[0]) $types_filter[] = $key_master[1];
+		}
+		foreach ($subtypes_filter as $k => $v) {
+			if ($v == $key_master[0]) $subtypes_filter[] = $key_master[1];
+		}
+	}
+
 	if ($user_river_column_options['subtypes_filter'] != $subtypes_filter || $user_river_column_options['types_filter'] != $types_filter) {
 		if ($column_container_change == 'no') $column_container_change = 'change';
 		if (in_array('All', $types_filter)) {
