@@ -27,6 +27,7 @@ $english = array(
 	'deck_river:settings:max_nbr_column' => 'Maximum number of columns',
 	'deck_river:settings:default_column' => 'Columns by default for new user',
 	'deck_river:settings:default_column_default_params' => 'Standards columns :',
+	'deck_river:settings:column_type' => "Type of columns",
 	'deck_river:settings:keys_to_merge' => 'Entities to merge on the column settings',
 	'deck_river:settings:keys_to_merge_string_register_entity' => '<strong>Example:</strong> page=page_top (first element will be displayed. Comma separated)<br /><strong>Entities registered on this site :</strong>',
 	'deck_river:settings:reset_user' => "Reset column's settings of a user. Enter his ID",

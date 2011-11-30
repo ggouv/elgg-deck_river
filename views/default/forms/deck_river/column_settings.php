@@ -5,8 +5,8 @@ $tab = $vars['deck-river']['tab'];
 $column = $vars['deck-river']['column'];
 $new = $vars['deck-river']['new'];
 // Get the settings of the current user
-$owner = elgg_get_logged_in_user_guid();
-$user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
+$user_guid = elgg_get_logged_in_user_guid();
+$user_river_options = unserialize(get_private_setting($user_guid, 'deck_river_settings'));
 $user_river_column_options = $user_river_options[$tab][$column];
 $column_title = $user_river_column_options['title'];
 ?>
@@ -83,17 +83,14 @@ $column_title = $user_river_column_options['title'];
 	<ul class='box-settings'>
 		<li>
 			<label><?php echo elgg_echo('deck_river:type'); ?></label><br />
-			<?php echo elgg_view('input/dropdown', array(
-				'name' => 'type',
-				'value' => $user_river_column_options['type'],
-				'class' => 'column-type',
-				'options_values' => array(
-						'all' => elgg_echo('river:all'),
-						'friends' => elgg_echo('river:friends'),
-						'mine' => elgg_echo('river:mine'),
-						'mention' => 'Mention @' . get_entity($owner)->name,
-						'search' => elgg_echo('search')
-					)
+			<?php
+				$set = str_replace("&gt;", ">", elgg_get_plugin_setting('column_type', 'elgg-deck_river'));
+				eval("\$options_values = $set;");
+				echo elgg_view('input/dropdown', array(
+					'name' => 'type',
+					'value' => $user_river_column_options['type'],
+					'class' => 'column-type',
+					'options_values' => $options_values
 				)); ?>
 		</li>
 		<li class='search-type'>
@@ -115,10 +112,7 @@ $column_title = $user_river_column_options['title'];
 </div>
 
 <div>
-<?php echo elgg_view('input/submit', array(
-		'value' => 'save',
-		'name' => elgg_echo('save')
-));
+<?php  
 if ($new != 'true') {
 	echo elgg_view('input/submit', array(
 			'value' => 'delete',

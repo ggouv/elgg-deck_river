@@ -7,7 +7,6 @@
 // Get the settings of the current user. If not, set it to defaults.
 $user_guid = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($user_guid, 'deck_river_settings'));
-global $fb; $fb->info($user_river_options,'rivri');
 if ( !$user_river_options || !is_array($user_river_options) ) {
 	$set = str_replace("&gt;", ">", elgg_get_plugin_setting('default_columns', 'elgg-deck_river'));
 	eval("\$defaults = $set;");
