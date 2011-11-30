@@ -11,6 +11,7 @@ if ( !$user_river_options || !is_array($user_river_options) ) {
 	$set = str_replace("&gt;", ">", elgg_get_plugin_setting('default_columns', 'elgg-deck_river'));
 	eval("\$defaults = $set;");
 	set_private_setting($owner, 'deck_river_settings', serialize($defaults));
+	$user_river_options = $defaults;
 }
 
 // @todo : get page to make many tabs
