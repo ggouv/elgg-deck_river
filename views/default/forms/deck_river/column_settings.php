@@ -112,7 +112,10 @@ $column_title = $user_river_column_options['title'];
 </div>
 
 <div>
-<?php  
+<?php echo elgg_view('input/submit', array(
+	'value' => 'save',
+	'name' => elgg_echo('save')
+));
 if ($new != 'true') {
 	echo elgg_view('input/submit', array(
 			'value' => 'delete',
