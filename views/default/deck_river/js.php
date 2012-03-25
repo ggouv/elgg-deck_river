@@ -45,7 +45,7 @@ elgg.deck_river.init = function() {
 			// Column settings, use 'live' for new column
 			$('.elgg-column-edit-button').live('click', function() {
 				if (!$('#column-settings').length) { $(this).parent().append('<div id="column-settings" class="elgg-module-popup"></div>'); }
-				elgg.deck_river.ColumnSettings($(this).parents('.column-river').attr('rel'));
+				elgg.deck_river.ColumnSettings($(this).parents('.column-river').attr('id'));
 			});
 
 			// Add new column
@@ -57,7 +57,7 @@ elgg.deck_river.init = function() {
 					if (!$('#column-settings').length) { $('.column-river:first .column-header').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
 					NumColumn = [];
 					$('.column-river').each(function(){
-						NumColumn.push($(this).attr('rel').split('-')[1]);
+						NumColumn.push($(this).attr('id').split('-')[1]);
 					});
 					elgg.deck_river.ColumnSettings( 'column-' + ( ( Math.max.apply(null, NumColumn) ) +1 ) );
 				}
@@ -83,8 +83,8 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  * @return void
  */
 elgg.deck_river.LoadColumn = function(TheColumn) {
-	var tab = $('.deck-river-lists').attr('rel');
-	TheColumn.find('.elgg-river').load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/page/components/ajax_list.php?tab=' + tab + '&column=' + TheColumn.attr('rel'), {}, function() {
+	var tab = $('.deck-river-lists').attr('id');
+	TheColumn.find('.elgg-river').load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/page/components/ajax_list.php?tab=' + tab + '&column=' + TheColumn.attr('id'), {}, function() {
 		if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
 			TheColumn.find('.elgg-river').append('<li class="moreItem">More...</li>');
 
@@ -92,7 +92,7 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 			TheColumn.find('.moreItem').click(function() {
 				TheColumn = $(this).parents('.column-river');
 				TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
-				var column = TheColumn.attr('rel');
+				var column = TheColumn.attr('id');
 				var posted = TheColumn.find('.elgg-river .elgg-list-item:last').attr('datetime');
 				TheColumn.append('<div id="ajax_list" style="display:none;"><div>');
 				$('#ajax_list').load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/page/components/ajax_list.php?tab=' + tab + '&column=' + column + '&time_method=upper&time_posted=' + posted, {}, function(){
@@ -116,8 +116,8 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
-	var tab = TheColumn.parents('.deck-river-lists').attr('rel');
-	var column = TheColumn.attr('rel');
+	var tab = TheColumn.parents('.deck-river-lists').attr('id');
+	var column = TheColumn.attr('id');
 	var posted = TheColumn.find('.elgg-river .elgg-list-item:first').attr('datetime');
 	if (typeof posted == 'undefined') posted = 0; // if there are no item
 	TheColumn.append('<div id="ajax_list'+column+'" style="display:none;"><div>');
@@ -140,7 +140,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
  * @return void
  */
 elgg.deck_river.ColumnSettings = function(TheColumn) {
-	$('#column-settings').draggable().load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/deck_river/column_settings.php?tab='+ $('.deck-river-lists').attr('rel') + '&column=' + TheColumn, {}, function() {
+	$('#column-settings').draggable().load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/deck_river/column_settings.php?tab='+ $('.deck-river-lists').attr('id') + '&column=' + TheColumn, {}, function() {
 		$('#column-settings .elgg-head a').click(function() {
 			$('#column-settings').remove();
 		});
@@ -165,25 +165,25 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 					data: dataString,
 					success: function(json) {
 						TheResponse = json['output'].split(',');
-						if (TheResponse[2]) $('li.column-river[rel="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
+						if (TheResponse[2]) $('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
 						if (TheResponse[0] == 'change') {
-							$('li.column-river[rel="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
-							elgg.deck_river.LoadColumn($('li.column-river[rel="'+TheResponse[1]+'"]'));
+							$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
+							elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
 						}
 						if (TheResponse[0] == 'delete') {
-							$('li.column-river[rel="'+TheResponse[1]+'"]').fadeOut().animate({'width':0},'', function() {
+							$('li.column-river[id="'+TheResponse[1]+'"]').fadeOut().animate({'width':0},'', function() {
 								$(this).remove();
 								elgg.deck_river.SetColumnsWidth();
 							});
 						}
 						if (TheResponse[0] == 'new') {
-							$('.deck-river-lists-container').append('<li class="column-river" rel="'+TheResponse[1]+'"><ul class="column-header"></ul><ul class="elgg-river elgg-list"></ul></li>');
-							$('li.column-river[rel="'+TheResponse[1]+'"] .column-header').html($('li.column-river[rel="column-1"] .column-header').html());
+							$('.deck-river-lists-container').append('<li class="column-river" id="'+TheResponse[1]+'"><ul class="column-header"></ul><ul class="elgg-river elgg-list"></ul></li>');
+							$('li.column-river[id="'+TheResponse[1]+'"] .column-header').html($('li.column-river[id="column-1"] .column-header').html());
 							elgg.deck_river.SetColumnsHeight();
 							elgg.deck_river.SetColumnsWidth();
-							$('li.column-river[rel="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
-							elgg.deck_river.LoadColumn($('li.column-river[rel="'+TheResponse[1]+'"]'));
-							$('li.column-river[rel="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
+							$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
+							elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
+							$('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
 							$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
 						}
 						$('#column-settings').remove();
