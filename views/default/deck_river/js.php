@@ -54,7 +54,7 @@ elgg.deck_river.init = function() {
 				if (NbrColumn == deck_river_max_nbr_column) {
 					elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 				} else {
-					if (!$('#column-settings').length) { $('.column-river:first .column-header').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
+					if (!$('#column-settings').length) { $('.deck-river-lists-container').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
 					NumColumn = [];
 					$('.column-river').each(function(){
 						NumColumn.push($(this).attr('id').split('-')[1]);
@@ -62,6 +62,20 @@ elgg.deck_river.init = function() {
 					elgg.deck_river.ColumnSettings( 'column-' + ( ( Math.max.apply(null, NumColumn) ) +1 ) );
 				}
 			});
+
+			// make columns sortable
+			$(".deck-river-lists-container").sortable({
+				items:                '.column-river',
+				connectWith:          '.deck-river-lists-container',
+				handle:               '.column-header',
+				forcePlaceholderSize: true,
+				placeholder:          'column-placeholder',
+				opacity:              0.8,
+				revert:               500,
+				start: function(event, ui) { $('.column-placeholder').css('width', $('.column-header').width()-3); },
+				stop:                 elgg.deck_river.MoveColumn
+			});
+
 		}
 	});
 	$(window).bind("resize", function() {
@@ -71,7 +85,7 @@ elgg.deck_river.init = function() {
 		}
 	});
 
-}
+};
 elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
 
 /**
@@ -103,7 +117,7 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 			});
 		}
 	});
-}
+};
 
 /**
  * Refresh a column
@@ -128,7 +142,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 		TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 		$('#ajax_list'+column).remove();
 	});
-}
+};
 
 
 /**
@@ -186,7 +200,9 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 							$('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
 							$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
 						}
+console.log($('#column-settings').length);
 						$('#column-settings').remove();
+console.log($('#column-settings').length);
 						return false;
 					}
 				});
@@ -194,7 +210,32 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			}
 		});
 	});
-}
+};
+
+/**
+ * Persist the column's new position
+ *
+ * @param {Object} event
+ * @param {Object} ui
+ *
+ * @return void
+ */
+elgg.deck_river.MoveColumn = function(event, ui) {
+
+	elgg.action('deck_river/column_move', {
+		data: {
+			tab: ui.item.parents('.deck-river-lists').attr('id'),
+			column: ui.item.attr('id'),
+			position: ui.item.index()
+		}
+	});
+
+	// @hack fixes jquery-ui/opera bug where draggable elements jump
+	ui.item.css('top', 0);
+	ui.item.css('left', 0);
+	//event.preventDefault();
+};
+
 
 /**
  * Resize columns height
@@ -215,7 +256,7 @@ elgg.deck_river.SetColumnsHeight = function() {
 	var offset = $('.deck-river-lists').offset();
 	$('.elgg-river').height($(window).height() - offset.top - $('.column-header').height() - scrollbarWidth());
 	$('.deck-river-lists').height($(window).height() - offset.top);
-}
+};
 
 /**
  * Resize columns width
@@ -228,8 +269,8 @@ elgg.deck_river.SetColumnsWidth = function() {
 		ListWidth = (WindowWidth) / ( CountLists - i );
 		i++;
 	}
-	$('.elgg-river, .column-header').width(ListWidth - 2);
+	$('.elgg-river, .column-header, .column-placeholder').width(ListWidth - 2);
 	$('.deck-river-lists-container').width(ListWidth * CountLists);
-}
+};
 
 // End of js for deck-river plugin

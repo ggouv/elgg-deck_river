@@ -67,6 +67,11 @@ body {
 	border-left: 1px solid #CCC;
 	border-right: 1px solid #CCC;
 }
+.column-placeholder {
+	width: 300px;
+	float: left;
+	border: 2px dashed #dedede;
+}
 
 /* column header */
 .column-river .column-header {
