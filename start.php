@@ -13,7 +13,7 @@ function deck_river_init() {
 	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
 	elgg_register_action('deck_river/column_settings', "$action_path/column/settings.php");
 	elgg_register_action('deck_river/column_move', "$action_path/column/move.php");
-	elgg_register_action('deck_river/add_deck_river_tab', "$action_path/tab/add_deck_river_tab.php");
+	elgg_register_action('deck_river/tab/add', "$action_path/tab/add_deck_river_tab.php");
 	elgg_register_action('deck_river/tab/delete', "$action_path/tab/delete.php");
 	elgg_register_action('elgg-deck_river/settings/save', "$action_path/plugins/save.php");
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * add_deck_river_tab popup
+ * add tab popup
  *
  * @package elgg-deck_river
  */

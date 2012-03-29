@@ -55,7 +55,7 @@ if (elgg_is_logged_in()) {
 		'title' => elgg_echo('deck_river:add-tab')
 	);
 	echo "<div id='add-deck-river-tab' class='elgg-module-popup add-deck-river-tab-popup'>" .
-			elgg_view_form('deck_river/add_deck_river_tab') .
+			elgg_view_form('deck_river/tab/add') .
 		"</div>";
 	
 	foreach ($tabs as $name => $tab) {
