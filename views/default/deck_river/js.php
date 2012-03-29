@@ -193,7 +193,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			else {
 				$(this).parent("form").beenSubmitted = true;
 				dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("value");
-				elgg.action('deck_river/column_settings', {
+				elgg.action('deck_river/column/settings', {
 					data: dataString,
 					success: function(json) {
 						TheResponse = json['output'].split(',');
@@ -240,7 +240,7 @@ console.log($('#column-settings').length);
  */
 elgg.deck_river.MoveColumn = function(event, ui) {
 
-	elgg.action('deck_river/column_move', {
+	elgg.action('deck_river/column/move', {
 		data: {
 			tab: ui.item.parents('.deck-river-lists').attr('id'),
 			column: ui.item.attr('id'),
