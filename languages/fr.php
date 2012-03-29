@@ -14,6 +14,11 @@ $french = array(
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
+	'deck_river:add:tab:error' => 'Cannot add a new tab.',
+	
+	// delete tab
+	'deck_river:delete:tab:confirm' => "Êtes-vous sûr de supprimer l'onglet '%s' ?",
+	'deck_river:delete:tab:error' => "Impossible de supprimer l'onglet.",
 	
 	// column-settings form
 	'deck_river:settings' => 'Paramètres de la colonne "%s"',

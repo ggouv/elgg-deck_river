@@ -15,6 +15,6 @@ if (!array_key_exists($tab, $user_river_options)) {
 	set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));
 	forward(elgg_get_site_url() . 'activity/' . $tab);
 } else {
-	register_error('deck_river:add_tab_title_error');
+	register_error('deck_river:add:tab:error');
 	forward(REFERER);
 }

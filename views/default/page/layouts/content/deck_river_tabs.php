@@ -38,10 +38,11 @@ if (elgg_is_logged_in()) {
 	$priority = 12;
 	foreach ($vars['user_river_options'] as $name => $tab) {
 		$tabs[$name] = array(
-			'text' => ucfirst($name),
+			'text' => ($name != 'default' && $filter_context != $name) ? ucfirst($name) . '<a class="delete-tab" href="#">' . elgg_view_icon('deck-river-delete') . '</a>' : ucfirst($name),
 			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "activity/$name",
 			'selected' => ($filter_context == $name),
 			'priority' => $priority * 10,
+			'class' => ($name != 'default') ? 'column-deletable' : "",
 		);
 		$priority++;
 	}

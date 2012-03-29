@@ -14,6 +14,11 @@ $english = array(
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',
+	'deck_river:add:tab:error' => 'Cannot add a new tab.',
+
+	// delete tab
+	'deck_river:delete:tab:confirm' => "Are you sure to delete tab '%s'?",
+	'deck_river:delete:tab:error' => "Cannot delete tab.",
 	
 	// column-settings form
 	'deck_river:settings' => 'Settings of column "%s"',

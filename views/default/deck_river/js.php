@@ -48,6 +48,24 @@ elgg.deck_river.init = function() {
 				elgg.deck_river.ColumnSettings($(this).parents('.column-river').attr('id'));
 			});
 
+			// Delete tabs
+			$('.delete-tab').click(function() {
+				var tab = $(this).closest('li').attr('class');
+				tab = tab.substr(tab.indexOf('elgg-menu-item-') + "elgg-menu-item-".length);
+				if (confirm(elgg.echo('deck_river:delete:tab:confirm', [tab]))) {
+					// delete tab through ajax
+					elgg.action('deck_river/tab/delete', {
+						data: {
+							tab: tab
+						},
+						success: function() {
+							$('li.elgg-menu-item-'+tab).remove();
+						}
+					});
+				}
+				return false;
+			});
+
 			// Add new column
 			$('.elgg-add-new-column').click(function() {
 				var NbrColumn = $('.column-river').length;

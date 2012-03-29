@@ -45,7 +45,20 @@ body {
 .elgg-menu-deck-river > .elgg-menu-item-plus-column:hover > a {
 	background-color: #EEE;
 }
-
+.column-deletable, .delete-tab {
+	float: left;
+}
+.elgg-icon-deck-river-delete {
+	vertical-align: middle;
+	background-size: 100% auto;
+	height: 12px;
+	width: 12px;
+	margin: -3px 0 0 -12px;
+	background-position: 0 -202px;
+}
+.elgg-icon-deck-river-delete:hover {
+	background-position: 0 -189px;
+}
 
 .deck-river-lists {
 	overflow-x: scroll;
