@@ -4,6 +4,9 @@ elgg_register_event_handler('init','system','deck_river_init');
 
 function deck_river_init() {
 
+	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
+	elgg_load_library('deck_river:api');
+
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js');
 
@@ -21,8 +24,16 @@ function deck_river_init() {
 
 function deck_river_page_handler($page) {
 
-	elgg_set_context(elgg_extract(0, $page, 'default'));
-	
-	include_once dirname(__FILE__) . '/pages/river.php';
+	switch ($page[0]) {
+		case "ajax":
+			include_once dirname(__FILE__) . '/pages/ajax/' . $page[1] . '.php';
+			break;
+
+		default:
+			elgg_set_context(elgg_extract(0, $page, 'default'));
+			include_once dirname(__FILE__) . '/pages/river.php';
+			break;
+	}
+
 	return true;
 }
