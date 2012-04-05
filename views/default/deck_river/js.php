@@ -115,24 +115,35 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  * @return void
  */
 elgg.deck_river.LoadColumn = function(TheColumn) {
-	var tab = $('.deck-river-lists').attr('id');
-	TheColumn.find('.elgg-river').load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/page/components/ajax_list.php?tab=' + tab + '&column=' + TheColumn.attr('id'), {}, function() {
-		if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
-			TheColumn.find('.elgg-river').append('<li class="moreItem">More...</li>');
+	elgg.get(elgg.config.wwwroot + 'activity/ajax/river', {
+		data: {
+			tab: $('.deck-river-lists').attr('id'),
+			column: TheColumn.attr('id'),
+		},
+		success: function(response) {
+			TheColumn.find('.elgg-river').html(response);
+			if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
+				TheColumn.find('.elgg-river').append('<li class="moreItem">More...</li>');
 
-			// load more items
-			TheColumn.find('.moreItem').click(function() {
-				TheColumn = $(this).parents('.column-river');
-				TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
-				var column = TheColumn.attr('id');
-				var posted = TheColumn.find('.elgg-river .elgg-list-item:last').attr('datetime');
-				TheColumn.append('<div id="ajax_list" style="display:none;"><div>');
-				$('#ajax_list').load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/page/components/ajax_list.php?tab=' + tab + '&column=' + column + '&time_method=upper&time_posted=' + posted, {}, function(){
-					TheColumn.find('.elgg-river').append($('#ajax_list').html()).append(TheColumn.find('.moreItem'));
+				// load more items
+				TheColumn.find('.moreItem').click(function() {
+					TheColumn = $(this).closest('.column-river');
+					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
+					elgg.get(elgg.config.wwwroot + 'activity/ajax/river', {
+							data: {
+								tab: $('.deck-river-lists').attr('id'),
+								column: TheColumn.attr('id'),
+								time_method: 'upper',
+								time_posted: TheColumn.find('.elgg-river .elgg-list-item:last').attr('datetime')
+							},
+							success: function(response) {
+								TheColumn.find('.elgg-river').append(response);
+								TheColumn.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
+							}
+					});
 					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
-					$('#ajax_list').remove();
 				});
-			});
+			}
 		}
 	});
 };
@@ -148,18 +159,22 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
-	var tab = TheColumn.parents('.deck-river-lists').attr('id');
-	var column = TheColumn.attr('id');
-	var posted = TheColumn.find('.elgg-river .elgg-list-item:first').attr('datetime');
-	if (typeof posted == 'undefined') posted = 0; // if there are no item
-	TheColumn.append('<div id="ajax_list'+column+'" style="display:none;"><div>');
-	$('#ajax_list'+column).load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/page/components/ajax_list.php?tab=' + tab + '&column=' + column + '&time_method=lower&time_posted=' + posted, {}, function(){
-		$('#ajax_list'+column+' .elgg-list-item').addClass('newRiverItem');
-		TheColumn.find('.elgg-river').prepend($('#ajax_list'+column).html());
+	elgg.get(elgg.config.wwwroot + 'activity/ajax/river', {
+		dataType: "html",
+		data: {
+			tab: $('.deck-river-lists').attr('id'),
+			column: TheColumn.attr('id'),
+			time_method: 'lower',
+			time_posted: TheColumn.find('.elgg-river .elgg-list-item:first').attr('datetime') || 0,
+		},
+		success: function(response) {
+		var $response = $('<div>').html(response);
+		$response.find('.elgg-list-item').addClass('newRiverItem');
+		TheColumn.find('.elgg-river').prepend($response.html());
 		TheColumn.find('.newRiverItem').fadeIn('slow');
-		TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
-		$('#ajax_list'+column).remove();
+		}
 	});
+	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 };
 
 
@@ -251,7 +266,6 @@ elgg.deck_river.MoveColumn = function(event, ui) {
 	// @hack fixes jquery-ui/opera bug where draggable elements jump
 	ui.item.css('top', 0);
 	ui.item.css('left', 0);
-	//event.preventDefault();
 };
 
 
