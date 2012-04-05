@@ -19,6 +19,7 @@ if (elgg_is_logged_in()) {
 
 	// generate a list of default tabs
 	$tabs = array();
+
 	$tabs['refresh-all'] = array(
 		'text' => elgg_view_icon('refresh'),
 		'href' => '#',
@@ -27,6 +28,7 @@ if (elgg_is_logged_in()) {
 		'priority' => 100,
 		'title' => elgg_echo('deck_river:refresh-all')
 	);
+
 	$tabs['plus-column'] = array(
 		'text' => '+',
 		'href' => '#',
@@ -35,17 +37,29 @@ if (elgg_is_logged_in()) {
 		'priority' => 110,
 		'title' => elgg_echo('deck_river:add-column')
 	);
+
 	$priority = 12;
 	foreach ($vars['user_river_options'] as $name => $tab) {
 		$tabs[$name] = array(
-			'text' => ($name != 'default' && $filter_context != $name) ? ucfirst($name) . '<a class="delete-tab" href="#">' . elgg_view_icon('deck-river-delete') . '</a>' : ucfirst($name),
-			'href' => (isset($vars['all_link'])) ? $vars['all_link'] : "activity/$name",
+			'text' => ucfirst($name),
 			'selected' => ($filter_context == $name),
-			'priority' => $priority * 10,
-			'class' => ($name != 'default') ? 'column-deletable' : "",
+			'priority' => $priority * 10
 		);
+		if ($name == 'default') {
+			$tabs[$name]['href'] = 'activity';
+		} else {
+			$tabs[$name]['class'] = 'column-deletable';
+			if ($filter_context != $name) {
+				$tabs[$name]['text'] = ucfirst($name) . '<a class="delete-tab" href="#">' . elgg_view_icon('deck-river-delete') . '</a>';
+				$tabs[$name]['href'] = "activity/$name";
+			} else {
+				$tabs[$name]['href'] = '#rename-deck-river-tab';
+				$tabs[$name]['rel'] = 'popup';
+			}
+		}
 		$priority++;
 	}
+
 	$tabs['plus'] = array(
 		'text' => '+',
 		'href' => '#add-deck-river-tab',
@@ -54,8 +68,12 @@ if (elgg_is_logged_in()) {
 		'priority' => $priority * 10,
 		'title' => elgg_echo('deck_river:add-tab')
 	);
-	echo "<div id='add-deck-river-tab' class='elgg-module-popup add-deck-river-tab-popup'>" .
+
+	echo "<div id='add-deck-river-tab' class='elgg-module-popup hidden add-deck-river-tab-popup'>" .
 			elgg_view_form('deck_river/tab/add') .
+		"</div>";
+	echo "<div id='rename-deck-river-tab' class='elgg-module-popup hidden rename-deck-river-tab-popup'>" .
+			elgg_view_form('deck_river/tab/rename', '', $vars) .
 		"</div>";
 	
 	foreach ($tabs as $name => $tab) {

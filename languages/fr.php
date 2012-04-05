@@ -15,6 +15,7 @@ $french = array(
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
 	'deck_river:add:tab:error' => 'Cannot add a new tab.',
+	'deck_river:rename_tab_title' => "renomer l'onglet :",
 	
 	// delete tab
 	'deck_river:delete:tab:confirm' => "Êtes-vous sûr de supprimer l'onglet '%s' ?",

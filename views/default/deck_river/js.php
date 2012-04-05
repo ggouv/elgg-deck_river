@@ -66,6 +66,9 @@ elgg.deck_river.init = function() {
 				return false;
 			});
 
+			// rename column button 
+			$('.elgg-form-deck-river-tab-rename .elgg-button-submit').live('click', elgg.deck_river.tabRename);
+
 			// Add new column
 			$('.elgg-add-new-column').click(function() {
 				var NbrColumn = $('.column-river').length;
@@ -243,6 +246,29 @@ console.log($('#column-settings').length);
 			}
 		});
 	});
+};
+
+/**
+ * Rename a column
+ *
+ * Event callback the uses Ajax to rename the column and change its HTML
+ *
+ * @param {Object} event
+ * @return void
+ */
+elgg.deck_river.tabRename = function(event) {
+	elgg.action('deck_river/tab/rename', {
+		data: $('.elgg-form-deck-river-tab-rename').serialize(),
+		success: function(json) {
+			if (json.status != -1) {
+				$('.deck-river-lists').attr('id', json.output.tab_name);
+				$('.elgg-menu-item-'+json.output.old_tab_name+' a').text(json.output.tab_name.charAt(0).toUpperCase() + json.output.tab_name.slice(1));
+				$('.elgg-menu-item-'+json.output.old_tab_name).removeClass('elgg-menu-item-'+json.output.old_tab_name).addClass('elgg-menu-item-'+json.output.tab_name);
+			}
+		}
+	});
+	$('#rename-deck-river-tab').hide();
+	event.preventDefault();
 };
 
 /**

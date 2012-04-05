@@ -228,14 +228,13 @@ body {
 	margin-top: 5px;
 }
 
-#add-deck-river-tab {
-	display:none;
+#add-deck-river-tab, #rename-deck-river-tab {
 	width: 260px;
 }
-#add-deck-river-tab .elgg-input-text {
+#add-deck-river-tab .elgg-input-text, #rename-deck-river-tab .elgg-input-text {
 	width: 200px;
 	float: left;
 }
-#add-deck-river-tab .elgg-button-submit {
+#add-deck-river-tab .elgg-button-submit, #rename-deck-river-tab .elgg-button-submit {
 	float: right;
 }

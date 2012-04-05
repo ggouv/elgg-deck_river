@@ -15,6 +15,7 @@ $english = array(
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',
 	'deck_river:add:tab:error' => 'Cannot add a new tab.',
+	'deck_river:rename_tab_title' => 'Rename tab:',
 
 	// delete tab
 	'deck_river:delete:tab:confirm' => "Are you sure to delete tab '%s'?",
