@@ -120,7 +120,7 @@ if ($new != 'true') {
 	echo elgg_view('input/submit', array(
 			'value' => 'delete',
 			'name' => elgg_echo('delete'),
-			'class' => 'mls'
+			'class' => 'elgg-button-delete float-alt mls'
 	));
 } ?>
 </div>

@@ -83,7 +83,7 @@ if (is_array($items)) {
 			$id = "item-{$item->getType()}-{$item->id}";
 		}
 		$html .= "<li id=\"$id\" class='elgg-list-item' datetime=\"{$item->posted}\">";
-		$html .= elgg_view_list_item($item, $vars);
+		$html .= elgg_view_list_item($item);
 		$html .= '</li>';
 	}
 }

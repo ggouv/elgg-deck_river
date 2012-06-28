@@ -9,6 +9,8 @@
  *	Elgg-deck_river js
  *
  */
+var deck_river_min_width_column = <?php echo elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); ?>;
+var deck_river_max_nbr_column = <?php echo elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river'); ?>;
 
 /**
  * Elgg-deck_river initialization
@@ -50,8 +52,7 @@ elgg.deck_river.init = function() {
 
 			// Delete tabs
 			$('.delete-tab').click(function() {
-				var tab = $(this).closest('li').attr('class');
-				tab = tab.substr(tab.indexOf('elgg-menu-item-') + "elgg-menu-item-".length);
+				var tab = $(this).closest('li').attr('class').substr(tab.indexOf('elgg-menu-item-') + "elgg-menu-item-".length);
 				if (confirm(elgg.echo('deck_river:delete:tab:confirm', [tab]))) {
 					// delete tab through ajax
 					elgg.action('deck_river/tab/delete', {
@@ -76,7 +77,7 @@ elgg.deck_river.init = function() {
 					elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 				} else {
 					if (!$('#column-settings').length) { $('.deck-river-lists-container').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
-					NumColumn = [];
+					var NumColumn = [];
 					$('.column-river').each(function(){
 						NumColumn.push($(this).attr('id').split('-')[1]);
 					});
@@ -97,6 +98,8 @@ elgg.deck_river.init = function() {
 				stop:                 elgg.deck_river.MoveColumn
 			});
 
+		} else {
+			$('body').css('position','relative');
 		}
 	});
 	$(window).bind("resize", function() {
@@ -118,7 +121,7 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  * @return void
  */
 elgg.deck_river.LoadColumn = function(TheColumn) {
-	elgg.get(elgg.config.wwwroot + 'activity/ajax/river', {
+	elgg.post(elgg.config.wwwroot + 'activity/ajax/river', {
 		data: {
 			tab: $('.deck-river-lists').attr('id'),
 			column: TheColumn.attr('id'),
@@ -130,18 +133,21 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 
 				// load more items
 				TheColumn.find('.moreItem').click(function() {
-					TheColumn = $(this).closest('.column-river');
+					var TheColumn = $(this).closest('.column-river');
+					var LastItem = TheColumn.find('.elgg-river .elgg-list-item:last');
 					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
-					elgg.get(elgg.config.wwwroot + 'activity/ajax/river', {
+					elgg.post(elgg.config.wwwroot + 'activity/ajax/river', {
 							data: {
 								tab: $('.deck-river-lists').attr('id'),
 								column: TheColumn.attr('id'),
 								time_method: 'upper',
-								time_posted: TheColumn.find('.elgg-river .elgg-list-item:last').attr('datetime')
+								time_posted: LastItem.attr('datetime'),
 							},
 							success: function(response) {
 								TheColumn.find('.elgg-river').append(response);
 								TheColumn.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
+								var pos = LastItem.next().position();
+								TheColumn.find('.elgg-river').scrollTo('+='+pos.top+'px', 2500, {easing:'easeOutQuart'});
 							}
 					});
 					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
@@ -162,7 +168,7 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
-	elgg.get(elgg.config.wwwroot + 'activity/ajax/river', {
+	elgg.post(elgg.config.wwwroot + 'activity/ajax/river', {
 		dataType: "html",
 		data: {
 			tab: $('.deck-river-lists').attr('id'),
@@ -171,10 +177,10 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 			time_posted: TheColumn.find('.elgg-river .elgg-list-item:first').attr('datetime') || 0,
 		},
 		success: function(response) {
-		var $response = $('<div>').html(response);
-		$response.find('.elgg-list-item').addClass('newRiverItem');
-		TheColumn.find('.elgg-river').prepend($response.html());
-		TheColumn.find('.newRiverItem').fadeIn('slow');
+			var $response = $('<div>').html(response);
+			$response.find('.elgg-list-item').addClass('newRiverItem');
+			TheColumn.find('.elgg-river').prepend($response.html());
+			TheColumn.find('.newRiverItem').fadeIn('slow');
 		}
 	});
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
@@ -210,7 +216,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				return false;
 			else {
 				$(this).parent("form").beenSubmitted = true;
-				dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("value");
+				var dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("value");
 				elgg.action('deck_river/column/settings', {
 					data: dataString,
 					success: function(json) {
@@ -221,9 +227,11 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 							elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
 						}
 						if (TheResponse[0] == 'delete') {
-							$('li.column-river[id="'+TheResponse[1]+'"]').fadeOut().animate({'width':0},'', function() {
-								$(this).remove();
-								elgg.deck_river.SetColumnsWidth();
+							$('li.column-river[id="'+TheResponse[1]+'"]').css('background-color', '#FF7777').fadeOut(400, function() {
+								$(this).animate({'width':0},'', function() {
+									$(this).remove();
+									elgg.deck_river.SetColumnsWidth();
+								});
 							});
 						}
 						if (TheResponse[0] == 'new') {
@@ -236,9 +244,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 							$('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
 							$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
 						}
-console.log($('#column-settings').length);
 						$('#column-settings').remove();
-console.log($('#column-settings').length);
 						return false;
 					}
 				});
