@@ -22,10 +22,16 @@ switch ($user_river_options[$page_filter][$column]['type']) {
 		$options['subject_guid'] = $owner;
 		break;
 	case 'mention':
-		$options['search'] = array('@' . get_entity($owner)->name);
+		$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
+		$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . '@' . get_entity($owner)->name . ")')";
+		break;
+	case 'group':
+			$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
+			$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND e.container_guid = " . $user_river_options[$page_filter][$column]['group'];
 		break;
 	case 'search':
-		$options['search'] = $user_river_options[$page_filter][$column]['search'];
+		$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
+		$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . implode('|', $user_river_options[$page_filter][$column]['search']) . ")')";
 		break;
 }
 $options['title'] = $user_river_options[$page_filter][$column]['title'];
@@ -57,13 +63,6 @@ if ($options['types_filter']) {
 	$options['wheres'][] = $filters;
 }
 
-
-// Prepare joins and wheres clause for multiple query
-if ($options['search']) {
-	$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
-	$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . implode('|',$options['search']) . ")')";
-}
-
 $defaults = array(
 	'offset'     => (int) max(get_input('offset', 0), 0),
 	'limit'      => (int) max(get_input('limit', 20), 0),
@@ -83,7 +82,8 @@ if (is_array($items)) {
 			$id = "item-{$item->getType()}-{$item->id}";
 		}
 		$html .= "<li id=\"$id\" class='elgg-list-item' datetime=\"{$item->posted}\">";
-		$html .= elgg_view_list_item($item);
+		$html .= elgg_view('river/item', array('item' => $item));
+		//$html .= elgg_view('river/item', array('item' => $item), '', '', 'json');
 		$html .= '</li>';
 	}
 }

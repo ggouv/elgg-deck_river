@@ -5,6 +5,7 @@ $column = get_input('column');
 $type = get_input('type');
 $column_title = get_input('title');
 $search = get_input('search');
+$group = get_input('group');
 $types_filter = get_input('filters_types');
 $subtypes_filter = get_input('filters_subtypes');
 
@@ -42,6 +43,10 @@ if ($delete === 'delete') {
 			case 'mention':
 				$column_title = '@' . get_entity($owner)->name;
 				break;
+			case 'group':
+				$group_entity = get_entity($group);
+				$column_title = elgg_echo('group') . ' ' . $group_entity->name;
+				break;
 		}
 	}
 
@@ -53,6 +58,11 @@ if ($delete === 'delete') {
 	if ($type == 'search' && $user_river_column_options['search'] != $search) {
 		if ($column_container_change == 'no') $column_container_change = 'change';
 		$user_river_options[$tab][$column]['search'] = explode(' ', $search);
+	}
+
+	if ($type == 'group' && $user_river_column_options['group'] != $group) {
+		if ($column_container_change == 'no') $column_container_change = 'change';
+		$user_river_options[$tab][$column]['group'] = $group;
 	}
 
 	// merge keys defined by admin

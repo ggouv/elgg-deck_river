@@ -33,7 +33,7 @@ $default = "array(
 		)
 	)
 )";
-if (!isset($vars['entity']->default_columns)) {
+if (!isset($vars['entity']->default_columns) || empty($vars['entity']->default_columns)) {
 	$vars['entity']->default_columns = $default;
 }
 
@@ -41,9 +41,10 @@ $default = "array('all' => elgg_echo('river:all'),
 	'friends' => elgg_echo('river:friends'),
 	'mine' => elgg_echo('river:mine'),
 	'mention' => 'Mention @' . get_entity(\$user_guid)->name,
+	'group' => elgg_echo('group'),
 	'search' => elgg_echo('search')
 )";
-if (!isset($vars['entity']->column_type)) {
+if (!isset($vars['entity']->column_type) || empty($vars['entity']->column_type)) {
 	$vars['entity']->column_type = $default;
 }
 

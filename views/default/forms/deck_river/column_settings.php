@@ -93,18 +93,25 @@ $column_title = $user_river_column_options['title'];
 					'options_values' => $options_values
 				)); ?>
 		</li>
-		<li class='search-type'>
+		<li class='search-type hidden'>
 			<label><?php echo elgg_echo('deck_river:title'); ?></label><br />
 			<?php echo elgg_view('input/text', array(
 				'name' => 'title',
 				'value' => $column_title
 			)); ?>
 		</li>
-		<li class='search-type'>
+		<li class='search-type hidden'>
 			<label><?php echo elgg_echo('deck_river:search'); ?></label><br />
 			<?php echo elgg_view('input/text', array(
 				'name' => 'search',
 				'value' => $user_river_column_options['search']
+			)); ?>
+		</li>
+		<li class='group-guid hidden'>
+			<label><?php echo elgg_echo('group'); ?></label><br />
+			<?php echo elgg_view('input/text', array(
+				'name' => 'group',
+				'value' => $user_river_column_options['group']
 			)); ?>
 		</li>
 	</ul>

@@ -209,9 +209,14 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			if ($('.column-type option:selected').val() == 'search') {
 				$('#column-settings .search-type').show('slow');
 			}
+			if ($('.column-type option:selected').val() == 'group') {
+				$('#column-settings .group-guid').show('slow');
+			}
 			$('.column-type').change(function() {
 				if ($('.column-type option:selected').val() == 'search') {
 					$('#column-settings .search-type').show('slow');
+				} else if ($('.column-type option:selected').val() == 'group') {
+					$('#column-settings .group-guid').show('slow');
 				} else {
 					$('#column-settings .search-type').hide('slow');
 				}

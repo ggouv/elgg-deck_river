@@ -224,7 +224,6 @@ body {
 	float: left;
 }
 #column-settings .box-settings .search-type {
-	display: none;
 	margin-top: 5px;
 }
 

@@ -20,7 +20,7 @@ $page_filter = elgg_get_context();
 $activity = "<div class='deck-river-lists' id='{$page_filter}'><ul class='deck-river-lists-container'>";
 
 foreach ($user_river_options[$page_filter] as $key => $tab_options) {
-$options['title'] = $tab_options['title'];
+	$options['title'] = $tab_options['title'];
 	$activity .= "<li class='column-river' id='{$key}'>" .
 				elgg_view('river/elements/deck_river_column_header', $options) .
 				'<ul class="elgg-river elgg-list">' .
