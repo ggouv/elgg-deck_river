@@ -10,6 +10,9 @@ function deck_river_init() {
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js');
 
+	elgg_register_ajax_view('deck_river/ajax/column_river');
+	elgg_register_ajax_view('deck_river/ajax/column_settings');
+
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
 
 	// register actions
@@ -26,10 +29,6 @@ function deck_river_init() {
 function deck_river_page_handler($page) {
 
 	switch ($page[0]) {
-		case "ajax":
-			include_once dirname(__FILE__) . '/pages/ajax/' . $page[1] . '.php';
-			break;
-
 		default:
 			elgg_set_context(elgg_extract(0, $page, 'default'));
 			include_once dirname(__FILE__) . '/pages/river.php';

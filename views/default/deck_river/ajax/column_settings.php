@@ -1,8 +1,5 @@
 <?php
 
-// Load Elgg engine
-require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . "/engine/start.php");
-
 // Get callbacks
 $vars['deck-river'] = array(
 					'tab' => get_input('tab', 'false'),

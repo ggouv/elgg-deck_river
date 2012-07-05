@@ -44,9 +44,8 @@ elgg.deck_river.init = function() {
 				});
 			});
 
-			// Column settings, use 'live' for new column
+			// Column settings
 			$('.elgg-column-edit-button').live('click', function() {
-				if (!$('#column-settings').length) { $(this).parent().append('<div id="column-settings" class="elgg-module-popup"></div>'); }
 				elgg.deck_river.ColumnSettings($(this).parents('.column-river').attr('id'));
 			});
 
@@ -76,7 +75,6 @@ elgg.deck_river.init = function() {
 				if (NbrColumn == deck_river_max_nbr_column) {
 					elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 				} else {
-					if (!$('#column-settings').length) { $('.deck-river-lists-container').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
 					var NumColumn = [];
 					$('.column-river').each(function(){
 						NumColumn.push($(this).attr('id').split('-')[1]);
@@ -121,7 +119,7 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  * @return void
  */
 elgg.deck_river.LoadColumn = function(TheColumn) {
-	elgg.post(elgg.config.wwwroot + 'activity/ajax/river', {
+	elgg.post('ajax/view/deck_river/ajax/column_river', {
 		data: {
 			tab: $('.deck-river-lists').attr('id'),
 			column: TheColumn.attr('id'),
@@ -136,7 +134,7 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 					var TheColumn = $(this).closest('.column-river');
 					var LastItem = TheColumn.find('.elgg-river .elgg-list-item:last');
 					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
-					elgg.post(elgg.config.wwwroot + 'activity/ajax/river', {
+					elgg.post('ajax/view/deck_river/ajax/column_river', {
 							data: {
 								tab: $('.deck-river-lists').attr('id'),
 								column: TheColumn.attr('id'),
@@ -168,7 +166,7 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
-	elgg.post(elgg.config.wwwroot + 'activity/ajax/river', {
+	elgg.post('ajax/view/deck_river/ajax/column_river', {
 		dataType: "html",
 		data: {
 			tab: $('.deck-river-lists').attr('id'),
@@ -196,61 +194,70 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
  * @return void
  */
 elgg.deck_river.ColumnSettings = function(TheColumn) {
-	$('#column-settings').draggable().load(elgg.config.wwwroot + 'mod/elgg-deck_river/views/default/deck_river/column_settings.php?tab='+ $('.deck-river-lists').attr('id') + '&column=' + TheColumn, {}, function() {
-		$('#column-settings .elgg-head a').click(function() {
-			$('#column-settings').remove();
-		});
-		if ($('.column-type option:selected').val() == 'search') {
-			$('#column-settings .search-type').show('slow');
-		}
-		$('.column-type').change(function() {
+	elgg.post('ajax/view/deck_river/ajax/column_settings', {
+		dataType: "html",
+		data: {
+			tab: $('.deck-river-lists').attr('id'),
+			column: TheColumn,
+		},
+		success: function(response) {
+			if (!$('#column-settings').length) { $('.deck-river-lists').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
+			$('#column-settings').html(response).draggable();
+			$('#column-settings .elgg-head a').click(function() {
+				$('#column-settings').remove();
+			});
 			if ($('.column-type option:selected').val() == 'search') {
 				$('#column-settings .search-type').show('slow');
-			} else {
-				$('#column-settings .search-type').hide('slow');
 			}
-		});
-		$('.deck-river-form-column-settings').submit(function() { return false; });
-		$(".elgg-button").click(function(event) {
-			if ($(this).parent("form").beenSubmitted) // Prevent double-click
-				return false;
-			else {
-				$(this).parent("form").beenSubmitted = true;
-				var dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("value");
-				elgg.action('deck_river/column/settings', {
-					data: dataString,
-					success: function(json) {
-						TheResponse = json['output'].split(',');
-						if (TheResponse[2]) $('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
-						if (TheResponse[0] == 'change') {
-							$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
-							elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
-						}
-						if (TheResponse[0] == 'delete') {
-							$('li.column-river[id="'+TheResponse[1]+'"]').css('background-color', '#FF7777').fadeOut(400, function() {
-								$(this).animate({'width':0},'', function() {
-									$(this).remove();
-									elgg.deck_river.SetColumnsWidth();
+			$('.column-type').change(function() {
+				if ($('.column-type option:selected').val() == 'search') {
+					$('#column-settings .search-type').show('slow');
+				} else {
+					$('#column-settings .search-type').hide('slow');
+				}
+			});
+			$('.deck-river-form-column-settings').submit(function() { return false; });
+			$(".elgg-button").click(function(event) {
+				if ($(this).parent("form").beenSubmitted) // Prevent double-click
+					return false;
+				else {
+					$(this).parent("form").beenSubmitted = true;
+					var dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("value");
+					elgg.action('deck_river/column/settings', {
+						data: dataString,
+						success: function(json) {
+							TheResponse = json['output'].split(',');
+							if (TheResponse[2]) $('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
+							if (TheResponse[0] == 'change') {
+								$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
+								elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
+							}
+							if (TheResponse[0] == 'delete') {
+								$('li.column-river[id="'+TheResponse[1]+'"]').css('background-color', '#FF7777').fadeOut(400, function() {
+									$(this).animate({'width':0},'', function() {
+										$(this).remove();
+										elgg.deck_river.SetColumnsWidth();
+									});
 								});
-							});
+							}
+							if (TheResponse[0] == 'new') {
+								$('.deck-river-lists-container').append('<li class="column-river" id="'+TheResponse[1]+'"><ul class="column-header"></ul><ul class="elgg-river elgg-list"></ul></li>');
+								$('li.column-river[id="'+TheResponse[1]+'"] .column-header').html($('li.column-river[id="column-1"] .column-header').html());
+								elgg.deck_river.SetColumnsHeight();
+								elgg.deck_river.SetColumnsWidth();
+								$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
+								elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
+								$('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
+								$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
+							}
+							$('#column-settings').remove();
+							return false;
 						}
-						if (TheResponse[0] == 'new') {
-							$('.deck-river-lists-container').append('<li class="column-river" id="'+TheResponse[1]+'"><ul class="column-header"></ul><ul class="elgg-river elgg-list"></ul></li>');
-							$('li.column-river[id="'+TheResponse[1]+'"] .column-header').html($('li.column-river[id="column-1"] .column-header').html());
-							elgg.deck_river.SetColumnsHeight();
-							elgg.deck_river.SetColumnsWidth();
-							$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
-							elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
-							$('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
-							$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
-						}
-						$('#column-settings').remove();
-						return false;
-					}
-				});
-				return false;
-			}
-		});
+					});
+					return false;
+				}
+			});
+		}
 	});
 };
 
