@@ -3,7 +3,7 @@
 $tab = get_input('tab');
 $column = get_input('column');
 $type = get_input('type');
-$column_title = get_input('title');
+$search_column_title = get_input('title');
 $search = get_input('search');
 $group = get_input('group');
 $types_filter = get_input('filters_types');
@@ -47,6 +47,9 @@ if ($delete === 'delete') {
 				$group_entity = get_entity($group);
 				$column_title = elgg_echo('group') . ' ' . $group_entity->name;
 				break;
+			case 'search':
+				$column_title = $search_column_title;
+				break;
 		}
 	}
 
@@ -55,14 +58,22 @@ if ($delete === 'delete') {
 		$user_river_options[$tab][$column]['title'] = $column_title;
 	}
 
-	if ($type == 'search' && $user_river_column_options['search'] != $search) {
-		if ($column_container_change == 'no') $column_container_change = 'change';
-		$user_river_options[$tab][$column]['search'] = explode(' ', $search);
+	// in case of type doesn't changed but search title changed or group changed
+	if ($type == 'search' && $user_river_column_options['title'] != $search_column_title) {
+		$column_title_change = true;
+		$user_river_options[$tab][$column]['title'] = $search_column_title;
 	}
-
 	if ($type == 'group' && $user_river_column_options['group'] != $group) {
+		$column_title_change = true;
 		if ($column_container_change == 'no') $column_container_change = 'change';
 		$user_river_options[$tab][$column]['group'] = $group;
+		$group_entity = get_entity($group);
+		$user_river_options[$tab][$column]['title'] = elgg_echo('group') . ' ' . $group_entity->name;
+	}
+
+	if ($type == 'search' && $user_river_column_options['search'] != explode(' ', $search)) {
+		if ($column_container_change == 'no') $column_container_change = 'change';
+		$user_river_options[$tab][$column]['search'] = explode(' ', $search);
 	}
 
 	// merge keys defined by admin
@@ -76,7 +87,9 @@ if ($delete === 'delete') {
 			if ($v == $key_master[0]) $subtypes_filter[] = $key_master[1];
 		}
 	}
-
+	
+	// filter changed ?
+	if ($types_filter == '0') $types_filter = '';
 	if ($user_river_column_options['subtypes_filter'] != $subtypes_filter || $user_river_column_options['types_filter'] != $types_filter) {
 		if ($column_container_change == 'no') $column_container_change = 'change';
 		if (in_array('All', $types_filter)) {

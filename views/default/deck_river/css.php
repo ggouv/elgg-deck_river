@@ -188,6 +188,7 @@ body {
 	background-color: #EEE;
 	margin: -5px -5px 5px;
 	padding-bottom: 5px;
+	cursor: move;
 }
 #column-settings .elgg-head h3 {
 	color: #666666;
@@ -205,7 +206,6 @@ body {
 }
 #column-settings #deck-column-settings {
 	float:left;
-	padding: 5px;
 }
 #column-settings .filter {
 	float:left;
@@ -223,10 +223,6 @@ body {
 #column-settings .box-settings .elgg-input-dropdown, #column-settings .box-settings li {
 	float: left;
 }
-#column-settings .box-settings .search-type {
-	margin-top: 5px;
-}
-
 #add-deck-river-tab, #rename-deck-river-tab {
 	width: 260px;
 }

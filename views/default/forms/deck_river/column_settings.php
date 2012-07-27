@@ -29,7 +29,7 @@ $column_title = $user_river_column_options['title'];
 	?>
 </div>
 
-<div id='deck-column-settings'>
+<div id='deck-column-settings' class='pas'>
 	<div class='filter'>
 		<label><?php echo elgg_echo('deck_river:filter'); ?></label><br />
 		<?php
@@ -93,26 +93,38 @@ $column_title = $user_river_column_options['title'];
 					'options_values' => $options_values
 				)); ?>
 		</li>
-		<li class='search-type hidden'>
+		<li class='search-options hidden pts'>
 			<label><?php echo elgg_echo('deck_river:title'); ?></label><br />
 			<?php echo elgg_view('input/text', array(
 				'name' => 'title',
 				'value' => $column_title
 			)); ?>
 		</li>
-		<li class='search-type hidden'>
+		<li class='search-options hidden pts'>
 			<label><?php echo elgg_echo('deck_river:search'); ?></label><br />
 			<?php echo elgg_view('input/text', array(
 				'name' => 'search',
 				'value' => $user_river_column_options['search']
 			)); ?>
 		</li>
-		<li class='group-guid hidden'>
+		<li class='group-options hidden pts'>
 			<label><?php echo elgg_echo('group'); ?></label><br />
-			<?php echo elgg_view('input/text', array(
-				'name' => 'group',
-				'value' => $user_river_column_options['group']
-			)); ?>
+			<?php // once autocomplete is working use that
+				$groups = elgg_get_logged_in_user_entity()->getGroups("", 0);
+				$mygroups = array();
+				if (!$user_river_column_options['group']) {
+					$mygroups[0] = '';
+				}
+				foreach ($groups as $group) {
+					$mygroups[$group->guid] = $group->name;
+				}
+				$params = array(
+					'name' => 'group',
+					'value' => $user_river_column_options['group'],
+					'options_values' => $mygroups,
+				);
+				echo elgg_view('input/dropdown', $params);
+				?>
 		</li>
 	</ul>
 	
