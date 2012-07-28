@@ -50,7 +50,7 @@ if (elgg_is_logged_in()) {
 		} else {
 			$tabs[$name]['class'] = 'column-deletable';
 			if ($filter_context != $name) {
-				$tabs[$name]['text'] = ucfirst($name) . '<a class="delete-tab" href="#">' . elgg_view_icon('deck-river-delete') . '</a>';
+				$tabs[$name]['text'] = $name . '<a class="delete-tab" href="#">' . elgg_view_icon('deck-river-delete') . '</a>';
 				$tabs[$name]['href'] = "activity/$name";
 			} else {
 				$tabs[$name]['href'] = '#rename-deck-river-tab';

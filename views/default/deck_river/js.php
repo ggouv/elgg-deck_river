@@ -51,15 +51,15 @@ elgg.deck_river.init = function() {
 
 			// Delete tabs
 			$('.delete-tab').click(function() {
-				var tab = $(this).closest('li').attr('class').substr(tab.indexOf('elgg-menu-item-') + "elgg-menu-item-".length);
+				var tab = $(this).closest('li').text();
 				if (confirm(elgg.echo('deck_river:delete:tab:confirm', [tab]))) {
 					// delete tab through ajax
 					elgg.action('deck_river/tab/delete', {
 						data: {
 							tab: tab
 						},
-						success: function() {
-							$('li.elgg-menu-item-'+tab).remove();
+						success: function(response) {
+							if (response.status == 0 ) $('li.elgg-menu-item-'+tab).remove();
 						}
 					});
 				}

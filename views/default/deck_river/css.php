@@ -15,6 +15,9 @@ body {
 .elgg-menu-deck-river > li {
 	background-color: white;
 }
+.elgg-menu-deck-river > li > a:first-letter {
+	text-transform: uppercase;
+}
 .elgg-menu-deck-river > .elgg-state-selected {
 	background-color: #EEE;
 }
