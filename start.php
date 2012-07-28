@@ -28,11 +28,17 @@ function deck_river_init() {
 
 function deck_river_page_handler($page) {
 
-	switch ($page[0]) {
-		default:
-			elgg_set_context(elgg_extract(0, $page, 'default'));
-			include_once dirname(__FILE__) . '/pages/river.php';
-			break;
+	if (elgg_is_logged_in()) {
+	
+		switch ($page[0]) {
+			default:
+				elgg_set_context(elgg_extract(0, $page, 'default'));
+				include_once dirname(__FILE__) . '/pages/river.php';
+				break;
+		}
+	
+	} else {
+		forward('');
 	}
 
 	return true;
