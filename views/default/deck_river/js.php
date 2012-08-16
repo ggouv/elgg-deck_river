@@ -52,7 +52,8 @@ elgg.deck_river.init = function() {
 			// Delete tabs
 			$('.delete-tab').click(function() {
 				var tab = $(this).closest('li').text();
-				if (confirm(elgg.echo('deck_river:delete:tab:confirm', [tab]))) {
+				var tab_string = tab.charAt(0).toUpperCase() + tab.slice(1);
+				if (confirm(elgg.echo('deck_river:delete:tab:confirm', [tab_string]))) {
 					// delete tab through ajax
 					elgg.action('deck_river/tab/delete', {
 						data: {
