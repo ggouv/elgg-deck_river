@@ -1,6 +1,7 @@
 <?php
 
 global $CONFIG;
+$dbprefix = $CONFIG->dbprefix;
 
 // Get callbacks
 $page_filter = get_input('tab', 'default');
@@ -15,23 +16,27 @@ $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settin
 // Set column user settings
 switch ($user_river_options[$page_filter][$column]['type']) {
 	case 'friends':
-		$options['relationship_guid'] = $owner;
-		$options['relationship'] = 'friend';
+		$options['joins'][] = "JOIN {$dbprefix}entity_relationships r ON r.guid_two = rv.subject_guid";
+		$options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+		$options['wheres'][] = "(r.relationship = 'friend' AND r.guid_one = '" . $owner ."')";
+		$options['wheres'][] = "(o.description IS NULL OR o.description NOT REGEXP '^@')";
 		break;
 	case 'mine':
 		$options['subject_guid'] = $owner;
 		break;
 	case 'mention':
-		$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
-		$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . '@' . get_entity($owner)->name . ")')";
+		$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+		$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
+		$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
+		$options['wheres'][] = "((o.description REGEXP '([[:blank:]]|^|>)@" . get_entity($owner)->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '([[:blank:]]|^|>)@" . get_entity($owner)->name . "([[:blank:]]|$|<)'))";
 		break;
 	case 'group':
-			$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
-			$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND e.container_guid = " . $user_river_options[$page_filter][$column]['group'];
+		$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
+		$options['wheres'][] = "e.container_guid = " . $user_river_options[$page_filter][$column]['group'];
 		break;
 	case 'search':
-		$options['joins'] = array(','.$CONFIG->dbprefix.'entities e',','.$CONFIG->dbprefix.'objects_entity o');
-		$options['wheres'][] = "e.guid=o.guid AND rv.object_guid=o.guid AND (o.description REGEXP '(" . implode('|', $user_river_options[$page_filter][$column]['search']) . ")')";
+		$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+		$options['wheres'][] = "(o.description REGEXP '(" . implode('|', $user_river_options[$page_filter][$column]['search']) . ")')";
 		break;
 }
 $options['title'] = $user_river_options[$page_filter][$column]['title'];
@@ -70,9 +75,7 @@ $defaults = array(
 	'count' => FALSE,
 );
 $options = array_merge($defaults, $options);
-
 $items = elgg_get_river($options);
-
 $html = "";
 if (is_array($items)) {
 	foreach ($items as $item) {
@@ -83,9 +86,7 @@ if (is_array($items)) {
 		}
 		$html .= "<li id=\"$id\" class='elgg-list-item' datetime=\"{$item->posted}\">";
 		$html .= elgg_view('river/item', array('item' => $item));
-		//$html .= elgg_view('river/item', array('item' => $item), '', '', 'json');
 		$html .= '</li>';
 	}
 }
-
 echo $html;
