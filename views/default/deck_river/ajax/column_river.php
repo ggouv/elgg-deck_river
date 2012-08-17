@@ -69,24 +69,47 @@ if ($options['types_filter']) {
 }
 
 $defaults = array(
-	'offset'     => (int) max(get_input('offset', 0), 0),
-	'limit'      => (int) max(get_input('limit', 20), 0),
+	'offset' => (int) max(get_input('offset', 0), 0),
+	'limit' => (int) max(get_input('limit', 20), 0),
 	'pagination' => FALSE,
 	'count' => FALSE,
 );
 $options = array_merge($defaults, $options);
 $items = elgg_get_river($options);
-$html = "";
+
+global $jsonexport;
+$jsonexport['activity'] = array();
+//$html = "";
 if (is_array($items)) {
 	foreach ($items as $item) {
-		if (elgg_instanceof($item)) {
-			$id = "elgg-{$item->getType()}-{$item->getGUID()}";
+		/*$html .= "<li id='item-river-{$item->getGUID()}' class='elgg-list-item' datetime=\"{$item->posted}\">";
+		$html .= elgg_view($item->view, array('item' => $item));
+		$html .= '</li>';*/
+		if (elgg_view_exists($item->view, 'json')) {
+			elgg_view($item->view, array('item' => $item), '', '', 'json');
 		} else {
-			$id = "item-{$item->getType()}-{$item->id}";
+			elgg_view('river/item', array('item' => $item), '', '', 'json');
 		}
-		$html .= "<li id=\"$id\" class='elgg-list-item' datetime=\"{$item->posted}\">";
-		$html .= elgg_view('river/item', array('item' => $item));
-		$html .= '</li>';
 	}
 }
-echo $html;
+
+$temp_subjects = array();
+foreach ($jsonexport['activity'] as $item) {
+	if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid;
+	$item->posted_acronym = htmlspecialchars(date(elgg_echo('friendlytime:date_format'), $item->posted));
+	unset($item->view);
+}
+
+$jsonexport['users'] = array();
+foreach ($temp_subjects as $item) {
+	$entity = get_entity($item);
+	$jsonexport['users'][] = array(
+		'guid' => $item,
+		'type' => $entity->type,
+		'username' => $entity->username,
+		'icon' => $entity->getIconURL('small'),
+	);
+}
+
+echo json_encode($jsonexport);
+//echo $html;

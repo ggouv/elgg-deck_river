@@ -112,6 +112,46 @@ elgg.deck_river.init = function() {
 elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
 
 /**
+ * Javascript template for river element
+ *
+ * @param {array}		json response
+ */
+elgg.deck_river.displayItems = function(response) {
+	var output = '';
+	$.each(response.activity, function(key, value) {
+		var user = $.grep(response.users, function(e){ return e.guid == value.subject_guid; })[0];
+
+		output += [
+		'<li class="elgg-list-item" id="item-river-', value.id ,'">',
+			'<div class="elgg-image-block elgg-river-item clearfix">',
+				'<div class="elgg-image">',
+					'<div class="elgg-avatar elgg-avatar-small">',
+						'<a class="" href="http://localhost/~mama/ggouv/ggouv/profile/', user.username ,'">',
+							//'<img style="background: url(', user.icon ,') no-repeat;" title="', user.username ,'" alt="', user.username ,'" src="http://localhost/~mama/ggouv/ggouv/_graphics/spacer.gif">',
+							'<img title="', user.username ,'" alt="', user.username ,'" src="', user.icon ,'">',
+						'</a>',
+					'</div>',
+				'</div>',
+				'<div class="elgg-body">',
+					'<div class="elgg-river-summary">',
+						value.summary, '<br/>',
+						'<span class="elgg-river-timestamp">',
+							'<span class="elgg-friendlytime">',
+								'<acronym title="', value.posted_acronym ,'">', elgg.friendly_time(value.posted) ,'</acronym>',
+								'<span class="hidden">', value.posted ,'</span>',
+							'</span>',
+						'</span>',
+					'</div>',
+					'<div class="elgg-river-message">', value.message ,'</div>',
+				'</div>',
+			'</div>',
+		'</li>'
+		].join('');
+	});
+	return output;
+};
+
+/**
  * Load a column
  *
  * Makes Ajax call to persist column and inserts the column html
@@ -120,13 +160,15 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  * @return void
  */
 elgg.deck_river.LoadColumn = function(TheColumn) {
+	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	elgg.post('ajax/view/deck_river/ajax/column_river', {
+		dataType: 'json',
 		data: {
 			tab: $('.deck-river-lists').attr('id'),
 			column: TheColumn.attr('id'),
 		},
 		success: function(response) {
-			TheColumn.find('.elgg-river').html(response);
+			TheColumn.find('.elgg-river').html(elgg.deck_river.displayItems(response));
 			if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
 				TheColumn.find('.elgg-river').append('<li class="moreItem">More...</li>');
 
@@ -136,22 +178,24 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 					var LastItem = TheColumn.find('.elgg-river .elgg-list-item:last');
 					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 					elgg.post('ajax/view/deck_river/ajax/column_river', {
+							dataType: 'json',
 							data: {
 								tab: $('.deck-river-lists').attr('id'),
 								column: TheColumn.attr('id'),
 								time_method: 'upper',
-								time_posted: LastItem.attr('datetime'),
+								time_posted: LastItem.find('.elgg-friendlytime span').text(),
 							},
 							success: function(response) {
-								TheColumn.find('.elgg-river').append(response);
+								TheColumn.find('.elgg-river').append(elgg.deck_river.displayItems(response));
 								TheColumn.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
-								var pos = LastItem.next().position();
-								TheColumn.find('.elgg-river').scrollTo('+='+pos.top+'px', 2500, {easing:'easeOutQuart'});
+								//	var pos = LastItem.next().position();
+								//TheColumn.find('.elgg-river').scrollTo('+='+pos.top+'px', 2500, {easing:'easeOutQuart'});
+								TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 							}
 					});
-					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 				});
 			}
+			TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 		}
 	});
 };
@@ -165,24 +209,24 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
  * @return void
  */
 elgg.deck_river.RefreshColumn = function(TheColumn) {
-	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent !important');
+	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
 	elgg.post('ajax/view/deck_river/ajax/column_river', {
-		dataType: "html",
+		dataType: "json",
 		data: {
 			tab: $('.deck-river-lists').attr('id'),
 			column: TheColumn.attr('id'),
 			time_method: 'lower',
-			time_posted: TheColumn.find('.elgg-river .elgg-list-item:first').attr('datetime') || 0,
+			time_posted: TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').text() || 0,
 		},
 		success: function(response) {
-			var $response = $('<div>').html(response);
+			var $response = $('<div>').html(elgg.deck_river.displayItems(response));
 			$response.find('.elgg-list-item').addClass('newRiverItem');
 			TheColumn.find('.elgg-river').prepend($response.html());
 			TheColumn.find('.newRiverItem').fadeIn('slow');
+			TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 		}
 	});
-	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 };
 
 
@@ -331,6 +375,7 @@ elgg.deck_river.SetColumnsHeight = function() {
 	$('.deck-river-lists').height($(window).height() - offset.top);
 };
 
+
 /**
  * Resize columns width
  */
@@ -345,5 +390,6 @@ elgg.deck_river.SetColumnsWidth = function() {
 	$('.elgg-river, .column-header, .column-placeholder').width(ListWidth - 2);
 	$('.deck-river-lists-container').width(ListWidth * CountLists);
 };
+
 
 // End of js for deck-river plugin
