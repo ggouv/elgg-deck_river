@@ -69,8 +69,8 @@ if ($options['types_filter']) {
 }
 
 $defaults = array(
-	'offset' => (int) max(get_input('offset', 0), 0),
-	'limit' => (int) max(get_input('limit', 20), 0),
+	'offset' => (int) get_input('offset', 0),
+	'limit' => (int) get_input('limit', 20),
 	'pagination' => FALSE,
 	'count' => FALSE,
 );
@@ -95,9 +95,16 @@ if (is_array($items)) {
 
 $temp_subjects = array();
 foreach ($jsonexport['activity'] as $item) {
-	if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid;
-	$item->posted_acronym = htmlspecialchars(date(elgg_echo('friendlytime:date_format'), $item->posted));
-	unset($item->view);
+	if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
+	
+	$item->posted_acronym = htmlspecialchars(date(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
+	
+	$menus = elgg_trigger_plugin_hook('register', "menu:river", array('item' => $item)); // add menus
+	foreach ($menus as $menu) {
+		$item->menu[] = $menu->getData('name');
+	}
+	
+	unset($item->view); // delete view
 }
 
 $jsonexport['users'] = array();

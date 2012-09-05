@@ -11,6 +11,10 @@ $french = array(
 	'deck_river:add-column' => 'Ajouter une nouvelle colonne',
 	'deck_river:add-tab' => 'Ajouter un nouvel onglet',
 	'deck_river:limitColumnReached' => 'Le nombre maximum de colonne est atteint.',
+	'river:mentions' => "Mentions",
+	
+	// river menu
+	'replyall' => "Répondre à tous",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
