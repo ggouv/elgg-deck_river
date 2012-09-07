@@ -41,7 +41,8 @@ switch ($user_river_options[$page_filter][$column]['type']) {
 		$options['wheres'][] = "(o.description REGEXP '(" . implode('|', $user_river_options[$page_filter][$column]['search']) . ")')";
 		break;
 	default:
-		$result['activity'] = elgg_trigger_plugin_hook('deck-river', "column:{$user_river_options[$page_filter][$column]['type']}", $owner);
+		$params = array('owner' => $owner, 'query' => 'activity');
+		$result['activity'] = elgg_trigger_plugin_hook('deck-river', "column:{$user_river_options[$page_filter][$column]['type']}", $params);
 		$result['column_type'] = $user_river_options[$page_filter][$column]['type'];
 		echo json_encode($result);
 		return;

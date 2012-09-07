@@ -17,18 +17,22 @@ $default = "array(
 	'default' => array(
 		'column-1' => array(
 			'title' => elgg_echo('river:all'),
+			'subtitle' => '',
 			'type' => 'all'
 		),
 		'column-2' => array(
-			'title' => elgg_echo('river:friends'),
+			'title' => elgg_echo('river:timeline'),
+			'subtitle' => elgg_echo('river:timeline:definition'),
 			'type' => 'friends'
 		),
 		'column-3' => array(
 			'title' => elgg_echo('river:mine'),
+			'subtitle' => get_entity(\$user_guid)->name,
 			'type' => 'mine'
 		),
 		'column-4' => array(
 			'title' => '@' . get_entity(\$user_guid)->name,
+			'subtitle' => elgg_echo('river:mentions'),
 			'type' => 'mention'
 		)
 	)
@@ -40,9 +44,9 @@ if (!isset($vars['entity']->default_columns) || empty($vars['entity']->default_c
 $default = "array('all' => elgg_echo('river:all'),
 	'friends' => elgg_echo('river:friends'),
 	'mine' => elgg_echo('river:mine'),
-	'mention' => 'Mention @' . get_entity(\$user_guid)->name,
+	'mention' => elgg_echo('river:mentions') . ' @' . get_entity(\$user_guid)->name,
 	'group' => elgg_echo('group'),
-	'search' => elgg_echo('search')
+	'search' => elgg_echo('search'),
 )";
 if (!isset($vars['entity']->column_type) || empty($vars['entity']->column_type)) {
 	$vars['entity']->column_type = $default;

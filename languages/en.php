@@ -15,6 +15,11 @@ $english = array(
 	
 	// river menu
 	'replyall' => "Répondre à tous",
+	'river:timeline' => "Time line",
+	'river:timeline:definition' => "Following activity",
+	'river:group' => "Group",
+	'river:filtred' => "filtred",
+	'retweet' => "Retweet",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',

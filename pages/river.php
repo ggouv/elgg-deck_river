@@ -22,7 +22,9 @@ $activity = "<div class='deck-river-lists' id='{$page_filter}'><ul class='deck-r
 foreach ($user_river_options[$page_filter] as $key => $tab_options) {
 	$options['title'] = $tab_options['title'];
 	$activity .= "<li class='column-river' id='{$key}'>" .
-				elgg_view('river/elements/deck_river_column_header', $options) .
+				'<ul class="column-header"><li>' .
+				'<h3 class="title">' . $tab_options['title'] . '</h3><h6 class="subtitle">' . $tab_options['subtitle'] . '</h6>' . elgg_view('deck_river/deck_river_column_menu', $options) .
+				'</li></ul>' .
 				'<ul class="elgg-river elgg-list">' .
 					elgg_view('graphics/ajax_loader', array('hidden' => false)) .
 				'</ul>' .

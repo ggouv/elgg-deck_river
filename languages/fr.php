@@ -15,6 +15,11 @@ $french = array(
 	
 	// river menu
 	'replyall' => "Répondre à tous",
+	'river:timeline' => "Le flux",
+	'river:timeline:definition' => "Activité de vos abonnés",
+	'river:group' => "Groupe",
+	'river:filtred' => "filtré",
+	'retweet' => "Retweet",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',

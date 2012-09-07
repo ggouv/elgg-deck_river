@@ -58,7 +58,7 @@ elgg.deck_river.init = function() {
 
 	// Column settings
 	$('.elgg-column-edit-button').die().live('click', function() {
-		elgg.deck_river.ColumnSettings($(this).parents('.column-river').attr('id'));
+		elgg.deck_river.ColumnSettings($(this).parents('.column-river'));
 	});
 
 	// Delete tabs
@@ -88,11 +88,11 @@ elgg.deck_river.init = function() {
 		if (NbrColumn == deck_river_max_nbr_column) {
 			elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 		} else {
-			var NumColumn = [];
+			/*var NumColumn = [];
 			$('.column-river').each(function(){
 				NumColumn.push($(this).attr('id').split('-')[1]);
-			});
-			elgg.deck_river.ColumnSettings( 'column-' + ( ( Math.max.apply(null, NumColumn) ) +1 ) );
+			});*/
+			elgg.deck_river.ColumnSettings();
 		}
 	});
 
@@ -299,7 +299,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 		dataType: "html",
 		data: {
 			tab: $('.deck-river-lists').attr('id'),
-			column: TheColumn,
+			column: TheColumn ? TheColumn.attr('id') : 'new',
 		},
 		success: function(response) {
 			if (!$('#column-settings').length) { $('.deck-river-lists').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
@@ -327,33 +327,41 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 					var dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("value");
 					elgg.action('deck_river/column/settings', {
 						data: dataString,
+						dataType: 'json',
 						success: function(json) {
-							TheResponse = json['output'].split(',');
-							if (TheResponse[2]) $('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
-							if (TheResponse[0] == 'change') {
-								$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
-								elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
-							}
-							if (TheResponse[0] == 'delete') {
-								$('li.column-river[id="'+TheResponse[1]+'"]').css('background-color', '#FF7777').fadeOut(400, function() {
+							response = json.output;
+							if (response.action == 'delete') {
+								$('li.column-river[id="'+response.column+'"]').css('background-color', '#FF7777').fadeOut(400, function() {
 									$(this).animate({'width':0},'', function() {
 										$(this).remove();
 										elgg.deck_river.SetColumnsWidth();
 									});
 								});
-							}
-							if (TheResponse[0] == 'new') {
-								$('.deck-river-lists-container').append('<li class="column-river" id="'+TheResponse[1]+'"><ul class="column-header"></ul><ul class="elgg-river elgg-list"></ul></li>');
-								$('li.column-river[id="'+TheResponse[1]+'"] .column-header').html($('li.column-river[id="column-1"] .column-header').html());
-								elgg.deck_river.SetColumnsHeight();
-								elgg.deck_river.SetColumnsWidth();
-								$('li.column-river[id="'+TheResponse[1]+'"] .elgg-list').html('<div class="elgg-ajax-loader "></div>');
-								elgg.deck_river.LoadColumn($('li.column-river[id="'+TheResponse[1]+'"]'));
-								$('li.column-river[id="'+TheResponse[1]+'"] h3').html(TheResponse[2]);
-								$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
+							} else {
+								if (response.action == 'new') {
+									$('.deck-river-lists-container').append(
+										$('<li>', {class: 'column-river', id: response.column}).append(
+											$('<ul>', {class: 'column-header'}).after(
+												$('<ul>', {class: 'elgg-river elgg-list'})
+									)));
+									$('li.column-river:first-child .column-header').clone().appendTo($('li.column-river[id="'+response.column+'"] .column-header'))
+									elgg.deck_river.SetColumnsHeight();
+									elgg.deck_river.SetColumnsWidth();
+									$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {class: 'elgg-ajax-loader'}));
+									elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
+									$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
+								} else if (response.action == 'change') {
+									$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {class: 'elgg-ajax-loader'}));
+									elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
+								}
+								$('li.column-river[id="'+response.column+'"] .column-header h3').html(response.column_title);
+								$('li.column-river[id="'+response.column+'"] .column-header h6').html(response.column_subtitle);
 							}
 							$('#column-settings').remove();
 							return false;
+						},
+						error: function() {
+						
 						}
 					});
 					return false;

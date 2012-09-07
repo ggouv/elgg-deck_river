@@ -1,12 +1,23 @@
 <?php
 
 // Get tab and column
-$tab = $vars['deck-river']['tab'];
-$column = $vars['deck-river']['column'];
-$new = $vars['deck-river']['new'];
+$tab = elgg_extract('tab', $vars, null);
+$column = elgg_extract('column', $vars, null);
+
+if (!$tab || !$column) {
+	return;
+}
+
 // Get the settings of the current user
 $user_guid = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($user_guid, 'deck_river_settings'));
+
+if ($column == 'new') {
+	foreach ($user_river_options[$tab] as $key => $item) {
+		$n[] = preg_replace('/[^0-9]+/', '', $key);
+	}
+	$column = 'column-' . (max($n)+1);
+}
 $user_river_column_options = $user_river_options[$tab][$column];
 $column_title = $user_river_column_options['title'];
 ?>
@@ -92,13 +103,6 @@ $column_title = $user_river_column_options['title'];
 					'class' => 'column-type',
 					'options_values' => $options_values
 				)); ?>
-		</li>
-		<li class='search-options hidden pts'>
-			<label><?php echo elgg_echo('deck_river:title'); ?></label><br />
-			<?php echo elgg_view('input/text', array(
-				'name' => 'title',
-				'value' => $column_title
-			)); ?>
 		</li>
 		<li class='search-options hidden pts'>
 			<label><?php echo elgg_echo('deck_river:search'); ?></label><br />

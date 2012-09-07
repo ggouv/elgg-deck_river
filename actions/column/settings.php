@@ -3,11 +3,14 @@
 $tab = get_input('tab');
 $column = get_input('column');
 $type = get_input('type');
-$search_column_title = get_input('title');
 $search = get_input('search');
 $group = get_input('group');
 $types_filter = get_input('filters_types');
 $subtypes_filter = get_input('filters_subtypes');
+
+if (!$tab || !$column || !$type) {
+	return;
+}
 
 // save or delete
 $delete = get_input('submit');
@@ -16,64 +19,63 @@ $delete = get_input('submit');
 $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
 
-if ($delete === 'delete') {
+$return = array();
+if ($delete == 'delete') {
 	unset($user_river_options[$tab][$column]);
-	echo "delete,$column,";
+	$return['action'] = 'delete';
+	$return['column'] = $column;
 } else {
 	if (!array_key_exists($column, $user_river_options[$tab])) {
-		$column_container_change = 'new';
-	} else {
-		$column_container_change = 'no';
+		$return['action'] = 'new';
+	} else if ($user_river_options[$tab][$column]['type'] != $type) {
+		$return['action'] = 'change';
 	}
-	$user_river_column_options = $user_river_options[$tab][$column];
 
-	if ($user_river_column_options['type'] != $type) {
-		if ($column_container_change == 'no') $column_container_change = 'change';
+	switch ($type) {
+		case 'all':
+			$return['column_title'] = elgg_echo('river:all');
+			$return['column_subtitle'] = '';
+			break;
+		case 'friends':
+			$return['column_title'] = elgg_echo('river:timeline');
+			$return['column_subtitle'] = elgg_echo('river:timeline:definition');
+			break;
+		case 'mine':
+			$return['column_title'] = elgg_echo('river:mine');
+			$return['column_subtitle'] = get_entity($owner)->name;
+			break;
+		case 'mention':
+			$return['column_title'] = '@' . get_entity($owner)->name;
+			$return['column_subtitle'] = elgg_echo('river:mentions');
+			break;
+		case 'group':
+			if ($user_river_options[$tab][$column]['group'] != $group) $return['action'] = 'change';
+			$user_river_options[$tab][$column]['group'] = $group;
+			$return['column_title'] = '!' . get_entity($group)->name;
+			$return['column_subtitle'] = elgg_echo('river:group');
+			break;
+		case 'search':
+			if ($user_river_options[$tab][$column]['search'] != explode(' ', $search)) $return['action'] = 'change';
+			$user_river_options[$tab][$column]['search'] = explode(' ', $search);
+			$return['column_title'] = $search;
+			$return['column_subtitle'] = elgg_echo('search');
+			break;
+		default:
+			$params = array('owner' => $owner, 'query' => 'title');
+			$hook = elgg_trigger_plugin_hook('deck-river', "column:$type", $params);
+			$return = array_merge($return, $hook);
+			break;
+	}
+	$user_river_options[$tab][$column]['title'] = $return['column_title'];
+	$user_river_options[$tab][$column]['subtitle'] = $return['column_subtitle'];
+
+	// allow plugin break here
+	if ($return['break']) {
 		$user_river_options[$tab][$column]['type'] = $type;
-		switch ($type) {
-			case 'all':
-				$column_title = elgg_echo('river:all');
-				break;
-			case 'friends':
-				$column_title = elgg_echo('river:friends');
-				break;
-			case 'mine':
-				$column_title = elgg_echo('river:mine');
-				break;
-			case 'mention':
-				$column_title = '@' . get_entity($owner)->name;
-				break;
-			case 'group':
-				$group_entity = get_entity($group);
-				$column_title = elgg_echo('group') . ' ' . $group_entity->name;
-				break;
-			case 'search':
-				$column_title = $search_column_title;
-				break;
-		}
-	}
-
-	if ($user_river_column_options['title'] != $column_title) {
-		$column_title_change = true;
-		$user_river_options[$tab][$column]['title'] = $column_title;
-	}
-
-	// in case of type doesn't changed but search title changed or group changed
-	if ($type == 'search' && $user_river_column_options['title'] != $search_column_title) {
-		$column_title_change = true;
-		$user_river_options[$tab][$column]['title'] = $search_column_title;
-	}
-	if ($type == 'group' && $user_river_column_options['group'] != $group) {
-		$column_title_change = true;
-		if ($column_container_change == 'no') $column_container_change = 'change';
-		$user_river_options[$tab][$column]['group'] = $group;
-		$group_entity = get_entity($group);
-		$user_river_options[$tab][$column]['title'] = elgg_echo('group') . ' ' . $group_entity->name;
-	}
-
-	if ($type == 'search' && $user_river_column_options['search'] != explode(' ', $search)) {
-		if ($column_container_change == 'no') $column_container_change = 'change';
-		$user_river_options[$tab][$column]['search'] = explode(' ', $search);
+		set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));
+		$return['column'] = $column;
+		echo json_encode($return);
+		return true;
 	}
 
 	// merge keys defined by admin
@@ -87,30 +89,38 @@ if ($delete === 'delete') {
 			if ($v == $key_master[0]) $subtypes_filter[] = $key_master[1];
 		}
 	}
-	
+
 	// filter changed ?
-	if ($types_filter == '0') $types_filter = '';
-	if ($user_river_column_options['subtypes_filter'] != $subtypes_filter || $user_river_column_options['types_filter'] != $types_filter) {
-		if ($column_container_change == 'no') $column_container_change = 'change';
+	if ($types_filter == '0') $types_filter = ''; // in case no checkbox checked or All
+	if ($subtypes_filter == '0') $subtypes_filter = ''; // in case no checkbox checked
+	if ($user_river_options[$tab][$column]['types_filter'] != $types_filter || $user_river_options[$tab][$column]['subtypes_filter'] != $subtypes_filter) {
 		if (in_array('All', $types_filter)) {
+			if (isset($user_river_options[$tab][$column]['types_filter'])) $return['action'] = 'change';
 			unset($user_river_options[$tab][$column]['types_filter']);
 			unset($user_river_options[$tab][$column]['subtypes_filter']);
 		} elseif ($types_filter == 0) {
+			$return['action'] = 'change';
 			unset($user_river_options[$tab][$column]['types_filter']);
 			$user_river_options[$tab][$column]['subtypes_filter'] = $subtypes_filter;
 		} elseif ($subtypes_filter == 0) {
+			$return['action'] = 'change';
 			unset($user_river_options[$tab][$column]['subtypes_filter']);
 			$user_river_options[$tab][$column]['types_filter'] = $types_filter;
 		} else {
+			$return['action'] = 'change';
 			$user_river_options[$tab][$column]['types_filter'] = $types_filter;
 			$user_river_options[$tab][$column]['subtypes_filter'] = $subtypes_filter;
 		}
-
 	}
 
-	echo "$column_container_change,$column,";
-	// Send this to change title, last item is true if nothing change except title
-	if ($column_title_change) echo $user_river_options[$tab][$column]['title'];
+	if (isset($user_river_options[$tab][$column]['types_filter']) || isset($user_river_options[$tab][$column]['subtypes_filter'])) {
+		$return['column_subtitle'] .= ' | ' . elgg_echo('river:filtred');
+	}
+	
+	$user_river_options[$tab][$column]['type'] = $type;
+
 }
 
 set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));
+$return['column'] = $column;
+echo json_encode($return);
