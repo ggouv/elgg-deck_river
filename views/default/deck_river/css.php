@@ -258,6 +258,9 @@ body {
 #column-settings .box-settings .elgg-input-dropdown, #column-settings .box-settings li {
 	float: left;
 }
+#column-settings .box-settings li:first-child {
+	width: 100%;
+}
 #add-deck-river-tab, #rename-deck-river-tab {
 	width: 260px;
 }

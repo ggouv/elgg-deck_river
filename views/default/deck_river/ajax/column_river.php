@@ -28,7 +28,7 @@ switch ($user_river_options[$page_filter][$column]['type']) {
 		$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 		$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 		$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-		$options['wheres'][] = "((o.description REGEXP '([[:blank:]]|^|>)@" . get_entity($owner)->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '([[:blank:]]|^|>)@" . get_entity($owner)->name . "([[:blank:]]|$|<)'))";
+		$options['wheres'][] = "((o.description REGEXP '@" . get_entity($owner)->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . get_entity($owner)->name . "([[:blank:]]|$|<)'))";
 		break;
 	case 'group':
 		$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
