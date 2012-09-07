@@ -15,6 +15,8 @@ $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settin
 
 // Set column user settings
 switch ($user_river_options[$page_filter][$column]['type']) {
+	case 'all':
+		break;
 	case 'friends':
 		$options['joins'][] = "JOIN {$dbprefix}entity_relationships r ON r.guid_two = rv.subject_guid";
 		$options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
@@ -37,6 +39,12 @@ switch ($user_river_options[$page_filter][$column]['type']) {
 	case 'search':
 		$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 		$options['wheres'][] = "(o.description REGEXP '(" . implode('|', $user_river_options[$page_filter][$column]['search']) . ")')";
+		break;
+	default:
+		$result['activity'] = elgg_trigger_plugin_hook('deck-river', "column:{$user_river_options[$page_filter][$column]['type']}", $owner);
+		$result['column_type'] = $user_river_options[$page_filter][$column]['type'];
+		echo json_encode($result);
+		return;
 		break;
 }
 $options['title'] = $user_river_options[$page_filter][$column]['title'];
@@ -118,5 +126,6 @@ foreach ($temp_subjects as $item) {
 	);
 }
 
+$jsonexport['column_type'] = $user_river_options[$page_filter][$column]['type'];
 echo json_encode($jsonexport);
 //echo $html;
