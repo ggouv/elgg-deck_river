@@ -198,6 +198,9 @@ body {
 	display: list-item;
 	padding: 5px;
 }
+.elgg-submenu-river > .elgg-module-popup > li:hover {
+	background-color: #CCC;
+}
 .elgg-submenu-river > .elgg-module-popup > li .elgg-icon-delete {
 	width: 100%;
 }
@@ -277,22 +280,22 @@ body {
  */
 #user-info-popup {
 	width: 480px;
-	max-height: 600px;
+	height: 600px;
 	left: 40%;
 	position: fixed;
 	top: 15%;
 	z-index: 9990;
 }
 #user-info-popup > .elgg-body {
-	max-height: 540px;
+	height: 540px;
 	overflow-y: auto;
-}
-#user-info-popup #user-info-profile .elgg-avatar {
-	float: left;
 }
 #user-info-popup .elgg-tabs a {
 	cursor: pointer;
 }
 #user-info-popup #user-info-activity {
 	overflow: hidden;
+}
+#user-info-popup #profile-details {
+	clear: both;
 }

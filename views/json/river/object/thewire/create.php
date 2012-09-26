@@ -25,7 +25,7 @@ $vars['item']->summary = elgg_echo("river:create:object:thewire", array($subject
 
 $object = $vars['item']->getObjectEntity();
 $excerpt = strip_tags($object->description);
-$excerpt = thewire_filter($excerpt);
+$excerpt = deck_river_wire_filter($excerpt);
 
 $vars['item']->message = $excerpt;
 

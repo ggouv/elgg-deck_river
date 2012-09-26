@@ -5,6 +5,7 @@
  */
 
 $french = array(
+	'deck_river:activity:none' => "Il n'y a pas d'activité à afficher.",
 	'deck_river:edit' => 'Éditer les paramètres de la colonne',
 	'deck_river:refresh' => 'Rafraîchir la colonne',
 	'deck_river:refresh-all' => 'Rafraîchir toutes les colonnes',
@@ -36,6 +37,10 @@ $french = array(
 	'deck_river:filter' => 'Filtre :',
 	'deck_river:title' => 'Titre de la colonne :',
 	'deck_river:search' => 'Recherche :',
+	
+	// user info popup
+	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
+	'deck_river:user-info-header' => "Informations sur cette personne",
 	
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Largeur minimum des colonnes',

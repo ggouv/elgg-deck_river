@@ -5,6 +5,7 @@
  */
 
 $english = array(
+	'deck_river:activity:none' => "There is no activity to display.",
 	'deck_river:edit' => 'Edit column settings',
 	'deck_river:refresh' => 'Refresh column',
 	'deck_river:refresh-all' => 'Refresh all columns',
@@ -36,6 +37,10 @@ $english = array(
 	'deck_river:filter' => 'Filter:',
 	'deck_river:title' => 'Title:',
 	'deck_river:search' => 'Search:',
+	
+	// user info popup
+	'deck_river:user-not-exist' => "This user doesn't exits.",
+	'deck_river:user-info-header' => "Informations on this person",
 	
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Minimum width of columns',

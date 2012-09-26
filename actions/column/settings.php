@@ -49,13 +49,13 @@ if ($delete == 'delete') {
 			$return['column_subtitle'] = elgg_echo('river:mentions');
 			break;
 		case 'group':
-			if ($user_river_options[$tab][$column]['group'] != $group) $return['action'] = 'change';
+			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['group'] != $group) $return['action'] = 'change';
 			$user_river_options[$tab][$column]['group'] = $group;
 			$return['column_title'] = '!' . get_entity($group)->name;
 			$return['column_subtitle'] = elgg_echo('river:group');
 			break;
 		case 'search':
-			if ($user_river_options[$tab][$column]['search'] != explode(' ', $search)) $return['action'] = 'change';
+			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != explode(' ', $search)) $return['action'] = 'change';
 			$user_river_options[$tab][$column]['search'] = explode(' ', $search);
 			$return['column_title'] = $search;
 			$return['column_subtitle'] = elgg_echo('search');
