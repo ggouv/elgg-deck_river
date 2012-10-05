@@ -112,9 +112,21 @@ elgg.deck_river.init = function() {
 	// user info popup
 	$('.user-info-popup').die().live('click', function() {
 		if (!$('#user-info-popup').length) {
-			$('.elgg-page-body').append('<div id="user-info-popup" class="elgg-module-popup"><div class="elgg-ajax-loader"></div></div>');
+			$('.elgg-page-body').append(
+				$('<div>', {id: 'user-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
+					$('<div>', {class: 'elgg-head'}).append(
+						$('<h3>').html(elgg.echo('deck_river:user-info-header')).after(
+						$('<a>').append(
+							$('<span>', {class: 'elgg-icon elgg-icon-delete-alt'})
+						).click(function() {
+							$('#user-info-popup').remove();
+						})
+					)).after(
+						$('<div>', {class: 'elgg-body'}).append(
+							$('<div>', {class: 'elgg-ajax-loader'})
+			))));
 		} else {
-			$('#user-info-popup').html('<div class="elgg-ajax-loader"></div>');
+			$('#user-info-popup > .elgg-body').html('<div class="elgg-ajax-loader"></div>');
 		}
 		elgg.post('ajax/view/deck_river/ajax/user_info', {
 			dataType: "html",
@@ -122,10 +134,7 @@ elgg.deck_river.init = function() {
 				user: $(this).attr('title'),
 			},
 			success: function(response) {
-				$('#user-info-popup').html(response).draggable({ handle: ".elgg-head" });
-				$('#user-info-popup .elgg-head a').click(function() {
-					$('#user-info-popup').remove();
-				});
+				$('#user-info-popup > .elgg-body').html(response);
 				$('#user-info-popup .elgg-tabs > li > a').click(function() {
 					var tab = $(this).attr('href');
 					if ($('#user-info-popup ' + tab).hasClass('hidden')) {
@@ -140,9 +149,77 @@ elgg.deck_river.init = function() {
 				});
 			},
 			error: function() {
-				$('#user-info-popup').html(elgg.echo('deck_river:ajax:erreur'));
+				$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
+	});
+	
+	// group info popup
+	$('.group-info-popup').die().live('click', function() {
+		if (!$('#group-info-popup').length) {
+			$('.elgg-page-body').append(
+				$('<div>', {id: 'group-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
+					$('<div>', {class: 'elgg-head'}).append(
+						$('<h3>').html(elgg.echo('deck_river:group-info-header')).after(
+						$('<a>').append(
+							$('<span>', {class: 'elgg-icon elgg-icon-delete-alt'})
+						).click(function() {
+							$('#group-info-popup').remove();
+						})
+					)).after(
+						$('<div>', {class: 'elgg-body'}).append(
+							$('<div>', {class: 'elgg-ajax-loader'})
+			))));
+		} else {
+			$('#group-info-popup > .elgg-body').html('<div class="elgg-ajax-loader"></div>');
+		}
+		elgg.post('ajax/view/deck_river/ajax/group_info', {
+			dataType: "html",
+			data: {
+				group: $(this).attr('title'),
+			},
+			success: function(response) {
+				$('#group-info-popup > .elgg-body').html(response);
+				$('#group-info-popup .elgg-tabs > li > a').click(function() {
+					var tab = $(this).attr('href');
+					if ($('#group-info-popup ' + tab).hasClass('hidden')) {
+						$('#group-info-popup .elgg-tabs > li').removeClass('elgg-state-selected');
+						$(this).parent('li').addClass('elgg-state-selected');
+						$('#group-info-popup .elgg-body > li').addClass('hidden');
+						$('#group-info-popup ' + tab).removeClass('hidden');
+					}
+					if (tab == '#group-info-activity' && $('#group-info-activity .elgg-ajax-loader').length) {
+						elgg.deck_river.LoadEntity($('#group-info-activity > .elgg-river').attr('data-group'), $('#group-info-popup #group-info-activity'));
+					}
+				});
+			},
+			error: function() {
+				$('#group-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+			}
+		});
+	});
+	
+	// hashtag info popup
+	$('.hashtag-info-popup').die().live('click', function() {
+		if (!$('#hashtag-info-popup').length) {
+			$('.elgg-page-body').append(
+				$('<div>', {id: 'hashtag-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
+					$('<div>', {class: 'elgg-head'}).append(
+						$('<h3>').html(elgg.echo('deck_river:hashtag-info-header', [$(this).attr('title')])).after(
+						$('<a>').append(
+							$('<span>', {class: 'elgg-icon elgg-icon-delete-alt'})
+						).click(function() {
+							$('#hashtag-info-popup').remove();
+						})
+					)).after(
+						$('<div>', {class: 'elgg-body'}).append(
+							$('<ul>', {class: 'elgg-river elgg-list'}).append(
+								$('<div>', {class: 'elgg-ajax-loader'})
+			)))));
+		} else {
+			$('#hashtag-info-popup > .elgg-river').html('<div class="elgg-ajax-loader"></div>');
+		}
+		elgg.deck_river.LoadEntity($(this).attr('title'), $('#hashtag-info-popup'));
 	});
 
 };
@@ -159,46 +236,79 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  */
 elgg.deck_river.LoadColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
-	elgg.post('ajax/view/deck_river/ajax/column_river', {
-		dataType: 'json',
-		data: {
-			tab: $('.deck-river-lists').attr('id'),
-			column: TheColumn.attr('id'),
-		},
-		success: function(response) {
-			response.TheColumn = TheColumn;
-			$output = elgg.trigger_hook('deck-river', 'column:'+response.column_type, response, 'nohook');
-			if ($output == 'nohook') {
-				TheColumn.find('.elgg-river').html(elgg.deck_river.displayItems(response));
-				if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
-					TheColumn.find('.elgg-river').append('<li class="moreItem">More...</li>');
-					// load more items
-					TheColumn.find('.moreItem').click(function() {
-						var TheColumn = $(this).closest('.column-river');
-						var LastItem = TheColumn.find('.elgg-river .elgg-list-item:last');
-						TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
-						elgg.post('ajax/view/deck_river/ajax/column_river', {
-								dataType: 'json',
-								data: {
-									tab: $('.deck-river-lists').attr('id'),
-									column: TheColumn.attr('id'),
-									time_method: 'upper',
-									time_posted: LastItem.find('.elgg-friendlytime span').text(),
-								},
-								success: function(response) {
-									TheColumn.find('.elgg-river').append(elgg.deck_river.displayItems(response))
-										.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
-									//	var pos = LastItem.next().position();
-									//TheColumn.find('.elgg-river').scrollTo('+='+pos.top+'px', 2500, {easing:'easeOutQuart'});
-									TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
-								}
-						});
+	if (TheColumn.find('h3').attr('data-direct') == 'true') {
+		$.ajax({
+			url: 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=ManUtopiK&count=20&include_rts=1&callback=?',
+			dataType: 'json',
+			success: function(response) {
+				TheColumn.find('.elgg-river').html(elgg.deck_river.TwitterDisplayItems(response));
+				TheColumn.find('.elgg-river').append($('<li>', {class: 'moreItem'}).html(elgg.echo('deck_river:more')));
+				// load more items
+				TheColumn.find('.moreItem').click(function() {
+					var TheColumn = $(this).closest('.column-river');
+					var max_id = TheColumn.find('.elgg-river .elgg-list-item:last .elgg-friendlytime span').text() || 0;
+					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
+					$.ajax({
+						url: 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=ManUtopiK&count=21&include_rts=1&max_id='+max_id+'&callback=?',
+						dataType: 'json',
+						success: function(response) {
+							TheColumn.find('.elgg-river').append(elgg.deck_river.TwitterDisplayItems(response.splice(1,20)))
+								.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
+							TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+						},
+						error: function() {
+							TheColumn.find('.elgg-river').html();
+						}
 					});
-				}
+				});
+			},
+			error: function() {
+				TheColumn.find('.elgg-river').html();
 			}
-			TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
-		}
-	});
+		});
+		TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+	} else {
+		elgg.post('ajax/view/deck_river/ajax/column_river', {
+			dataType: 'json',
+			data: {
+				tab: $('.deck-river-lists').attr('id'),
+				column: TheColumn.attr('id'),
+			},
+			success: function(response) {
+				response.TheColumn = TheColumn;
+				$output = elgg.trigger_hook('deck-river', 'column:'+response.column_type, response, 'nohook');
+				if ($output == 'nohook') {
+					TheColumn.find('.elgg-river').html(elgg.deck_river.displayItems(response));
+					if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
+						TheColumn.find('.elgg-river').append($('<li>', {class: 'moreItem'}).html(elgg.echo('deck_river:more')));
+						// load more items
+						TheColumn.find('.moreItem').click(function() {
+							var TheColumn = $(this).closest('.column-river');
+							var LastItem = TheColumn.find('.elgg-river .elgg-list-item:last');
+							TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
+							elgg.post('ajax/view/deck_river/ajax/column_river', {
+									dataType: 'json',
+									data: {
+										tab: $('.deck-river-lists').attr('id'),
+										column: TheColumn.attr('id'),
+										time_method: 'upper',
+										time_posted: LastItem.find('.elgg-friendlytime span').text(),
+									},
+									success: function(response) {
+										TheColumn.find('.elgg-river').append(elgg.deck_river.displayItems(response))
+											.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
+										//	var pos = LastItem.next().position();
+										//TheColumn.find('.elgg-river').scrollTo('+='+pos.top+'px', 2500, {easing:'easeOutQuart'});
+										TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+									}
+							});
+						});
+					}
+				}
+				TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+			}
+		});
+	}
 };
 
 
@@ -224,7 +334,7 @@ elgg.deck_river.LoadEntity = function(TheEntity, TheColumn) {
 					$('.elgg-submenu-river').removeClass('hover');
 				});
 				if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
-					TheColumn.find('.elgg-river').append('<li class="moreItem">More...</li>');
+					TheColumn.find('.elgg-river').append($('<li>', {class: 'moreItem'}).html(elgg.echo('deck_river:more')));
 	
 					// load more items
 					TheColumn.find('.moreItem').click(function() {
@@ -268,25 +378,39 @@ elgg.deck_river.LoadEntity = function(TheEntity, TheColumn) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
-	elgg.post('ajax/view/deck_river/ajax/column_river', {
-		dataType: "json",
-		data: {
-			tab: $('.deck-river-lists').attr('id'),
-			column: TheColumn.attr('id'),
-			time_method: 'lower',
-			time_posted: TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').text() || 0,
-		},
-		success: function(response) {
-			response.TheColumn = TheColumn;
-			$output = elgg.trigger_hook('deck-river', 'column:'+response.column_type, response, 'nohook');
-			if ($output == 'nohook') {
-				var res = elgg.deck_river.displayItems(response);
+	if (TheColumn.find('h3').attr('data-direct') == 'true') {
+		var since_id = TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').text() || 0;
+		$.ajax({
+			url: 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=ManUtopiK&count=20&include_rts=1&since_id='+ since_id +'&callback=?',
+			dataType: 'json',
+			success: function(response) {
+				var res = elgg.deck_river.TwitterDisplayItems(response);
 				res.filter('.elgg-list-item').addClass('newRiverItem');
 				TheColumn.find('.elgg-river').prepend(res).find('.newRiverItem').fadeIn('slow');
-				TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 			}
-		}
-	});
+		});
+		TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+	} else {
+		elgg.post('ajax/view/deck_river/ajax/column_river', {
+			dataType: "json",
+			data: {
+				tab: $('.deck-river-lists').attr('id'),
+				column: TheColumn.attr('id'),
+				time_method: 'lower',
+				time_posted: TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').text() || 0,
+			},
+			success: function(response) {
+				response.TheColumn = TheColumn;
+				$output = elgg.trigger_hook('deck-river', 'column:'+response.column_type, response, 'nohook');
+				if ($output == 'nohook') {
+					var res = elgg.deck_river.displayItems(response);
+					res.filter('.elgg-list-item').addClass('newRiverItem');
+					TheColumn.find('.elgg-river').prepend(res).find('.newRiverItem').fadeIn('slow');
+					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+				}
+			}
+		});
+	}
 };
 
 
@@ -312,6 +436,15 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			$('#column-settings .elgg-head a').click(function() {
 				$('#column-settings').remove();
 			});
+			$('#column-settings .elgg-tabs.networks a').click(function() {
+				var net = $(this).attr('class');
+				$('#column-settings #deck-column-settings > .elgg-tabs > li').removeClass('elgg-state-selected');
+				$(this).parent('li').addClass('elgg-state-selected');
+				$('#column-settings #deck-column-settings > div').addClass('hidden');
+				$('#column-settings #deck-column-settings > div.'+net).removeClass('hidden');
+				$('#column-settings input.elgg-button-submit').addClass('hidden');
+				$('#column-settings input.elgg-button-submit.'+net).removeClass('hidden');
+			});
 			$('#column-settings .' + $('.column-type option:selected').val() + '-options').show();
 			$('.column-type').change(function() {
 				$('#column-settings .box-settings li').not(':first-child').hide();
@@ -328,7 +461,8 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 					return false;
 				else {
 					$(this).parent("form").beenSubmitted = true;
-					var dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("value");
+					if ($(this).attr('name') == 'delete' && !confirm(elgg.echo('deck-river:delete:column:confirm'))) return false;
+					var dataString = $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr("name");
 					elgg.action('deck_river/column/settings', {
 						data: dataString,
 						dataType: 'json',
@@ -358,8 +492,9 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 									$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {class: 'elgg-ajax-loader'}));
 									elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
 								}
-								$('li.column-river[id="'+response.column+'"] .column-header h3').html(response.column_title);
+								$('li.column-river[id="'+response.column+'"] .column-header h3').replaceWith($('<h3>', {class: 'title'}).html(response.column_title));
 								$('li.column-river[id="'+response.column+'"] .column-header h6').html(response.column_subtitle);
+								if (response.direct == 'true') $('li.column-river[id="'+response.column+'"] h3').attr('data-direct', 'true');
 							}
 							$('#column-settings').remove();
 							return false;
@@ -468,6 +603,7 @@ elgg.deck_river.SetColumnsWidth = function() {
 elgg.deck_river.displayItems = function(response) {
 	var output = $(),
 		wirearea = $('#thewire-textarea');
+	
 	$.each(response.activity, function(key, value) {
 		var user = $.grep(response.users, function(e){ return e.guid == value.subject_guid; })[0],
 			menuOutput = subMenuOutput = $();
@@ -476,7 +612,7 @@ elgg.deck_river.displayItems = function(response) {
 		if (value.subtype == 'thewire') {
 			menuOutput = menuOutput.after(
 				$('<li>').append(
-					$('<span>', {class: 'elgg-icon elgg-icon-response gwf', title: elgg.echo('reply')}).html('&lt;').click(function() {
+					$('<span>', {class: 'elgg-icon elgg-icon-response gwf tooltip s', title: elgg.echo('reply')}).html('&lt;').click(function() {
 						wirearea.val('@' + user.username).focus().keydown();
 						wirearea.parents('fieldset').append('<input type="hidden" value="'+ value.object_guid +'" name="parent_guid">');
 					})
@@ -484,9 +620,9 @@ elgg.deck_river.displayItems = function(response) {
 			);
 			menuOutput = menuOutput.after(
 				$('<li>').append(
-					$('<span>', {class: 'elgg-icon elgg-icon-retweet gwf', title: elgg.echo('retweet')}).html('^').click(function() {
+					$('<span>', {class: 'elgg-icon elgg-icon-retweet gwf tooltip s', title: elgg.echo('retweet')}).html('^').click(function() {
 						//wirearea.val('RT @' + user.username + ' ' + value.message.replace(/<a.*?>|<\/a>/ig, '')).focus().keydown();
-						wirearea.val('RT ' + $(this).parents('.elgg-river').find('.item-river-'+value.id+' .elgg-river-message').text().replace(/^rt /i, '')).focus().keydown();
+						wirearea.val('RT @' + user.username + ' ' + $(this).parents('.elgg-river').find('.item-river-'+value.id+' .elgg-river-message').text().replace(/^rt /i, '')).focus().keydown();
 					})
 				)
 			);
@@ -494,7 +630,7 @@ elgg.deck_river.displayItems = function(response) {
 			if (match_users && !(match_users.length == 1 && $.inArray('@'+user.username, match_users) !== -1)) { // test if there are only river owner
 				subMenuOutput = subMenuOutput.after(
 					$('<li>').append(
-						$('<span>', {class: 'elgg-icon elgg-icon-response-all gwf', title: elgg.echo('replyall')}).html('&le;').click(function() {
+						$('<span>', {class: 'elgg-icon elgg-icon-response-all gwf'}).html('&le;').click(function() {
 							match_users = value.message.match(/@\w{1,}/g);
 							match_users = $.grep(match_users, function(value) {return value != '@'+user.username}); // Delete username of the item river owner  //($.inArray('@manu12', uie) !== -1)
 							match_users = '@'+user.username + ' ' + match_users.join(' '); // and put it at the begining
@@ -507,7 +643,7 @@ elgg.deck_river.displayItems = function(response) {
 		if (value.menu && value.menu.indexOf('delete') > -1) {
 			subMenuOutput = subMenuOutput.after(
 				$('<li>').append(
-					$('<a>', {class:'elgg-requires-confirmation', rel: elgg.echo('deleteconfirm'), is_action: 'is_action', title: elgg.echo('delete:this'), 
+					$('<a>', {class:'elgg-requires-confirmation', rel: elgg.echo('deleteconfirm'), is_action: 'is_action', 
 					href: elgg.security.addToken(elgg.get_site_url() + 'action/river/delete?id=' + value.id)}).append(
 						$('<span>', {class:'elgg-icon elgg-icon-delete'}).html(elgg.echo('delete'))
 			)))
@@ -521,20 +657,20 @@ elgg.deck_river.displayItems = function(response) {
 						$('<div>', {class: 'elgg-avatar elgg-avatar-small'}).append(
 							$('<div>', {class: 'user-info-popup', title: user.username}).append(
 								$('<img>', {title: user.username, alt: user.username, src: user.icon})
-				)))).append(function() {
-					 if (menuOutput.length) return $('<ul>', {class: 'elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default'}).append(
-						menuOutput.after(
-							$('<li>', {class: 'elgg-submenu-river'}).click(function() {
-								$(this).addClass('hover');
-							}).append(function() {
-								if (subMenuOutput.length) return $('<span>', {class:'elgg-icon elgg-icon-submenu-river gwf'}).html(']').after(
-									$('<ul>', {class: 'elgg-module-popup hidden'}).append(subMenuOutput).mouseleave(function() {
-										$('.elgg-submenu-river').removeClass('hover');
-									
-							}));
-					})));
-				}).append(
-					$('<div>', {class: 'elgg-body'}).append(
+				)))).append(
+					$('<div>', {class: 'elgg-body'}).append(function() {
+						if (menuOutput.length) return $('<ul>', {class: 'elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default'}).append(
+							menuOutput.after(
+								$('<li>', {class: 'elgg-submenu-river'}).click(function() {
+									$(this).addClass('hover');
+								}).append(function() {
+									if (subMenuOutput.length) return $('<span>', {class:'elgg-icon elgg-icon-submenu-river gwf'}).html(']').after(
+										$('<ul>', {class: 'elgg-module-popup hidden'}).append(subMenuOutput).mouseleave(function() {
+											$('.elgg-submenu-river').removeClass('hover');
+										
+								}));
+						})));
+					}).append(
 						$('<div>', {class: 'elgg-river-summary'}).html(value.summary+'<br/>').append(
 							$('<span>', {class: 'elgg-river-timestamp'}).append(
 								$('<span>', {class: 'elgg-friendlytime'}).append(
@@ -548,6 +684,118 @@ elgg.deck_river.displayItems = function(response) {
 		);
 	});
 	return output;
+};
+
+
+
+/**
+ * Javascript template for river element @todo waiting for Elgg core developers to see wich library they will use (ember.js, ...) in elgg 1.9 or 2 and replace it with a js MVC system.
+ *
+ * @param {array}	json response
+ */
+elgg.deck_river.TwitterDisplayItems = function(response) {
+	var output = $(),
+		wirearea = $('#thewire-textarea');
+	
+	$.each(response, function(key, value) {
+		var menuOutput = subMenuOutput = riverResponses = $();
+
+		// make menu and submenu
+		menuOutput = menuOutput.after(
+			$('<li>').append(
+				$('<span>', {class: 'elgg-icon elgg-icon-response gwf tooltip s', title: elgg.echo('reply')}).html('&lt;').click(function() {
+					wirearea.val('@' + value.user.screen_name).focus().keydown();
+					//wirearea.parents('fieldset').append('<input type="hidden" value="'+ value.object_guid +'" name="parent_guid">');
+				})
+			)
+		);
+		menuOutput = menuOutput.after(
+			$('<li>').append(
+				$('<span>', {class: 'elgg-icon elgg-icon-retweet gwf tooltip s', title: elgg.echo('retweet')}).html('^').click(function() {
+					//wirearea.val('RT @' + user.username + ' ' + value.message.replace(/<a.*?>|<\/a>/ig, '')).focus().keydown();
+					wirearea.val('RT @' + value.user.screen_name + ' ' + $(this).parents('.elgg-list-item').find('.elgg-river-message').text().replace(/^rt /i, '')).focus().keydown();
+				})
+			)
+		);
+		var match_users = value.text.match(/@\w{1,}/g); //@[A-Za-z0-9_]*.join(' ')
+		if (match_users && !(match_users.length == 1 && $.inArray('@'+value.user.screen_name, match_users) !== -1)) { // test if there are only river owner
+			subMenuOutput = subMenuOutput.after(
+				$('<li>').append(
+					$('<span>', {class: 'elgg-icon elgg-icon-response-all gwf'}).html('&le;').click(function() {
+						match_users = value.text.match(/@\w{1,}/g);
+						match_users = $.grep(match_users, function(value2) {return value2 != '@'+value.user.screen_name}); // Delete username of the item river owner  //($.inArray('@manu12', uie) !== -1)
+						match_users = '@'+value.user.screen_name + ' ' + match_users.join(' '); // and put it at the begining
+						wirearea.val(match_users).focus().keydown();
+					})
+				).append(elgg.echo('replyall'))
+			);
+		}
+		if (value.retweet_count != 0) {
+			if (value.retweet_count == '1') {
+				riverResponses = '<span class="elgg-icon elgg-icon-retweet-sub gwf">^</span>' + elgg.echo('retweet:one', [value.retweet_count]);
+			} else {
+				riverResponses = '<span class="elgg-icon elgg-icon-retweet-sub gwf">^</span>' + elgg.echo('retweet:twoandmore', [value.retweet_count]);
+			}
+			console.log(riverResponses);
+		}
+
+		output = output.after(
+			$('<li>', {class: 'elgg-list-item item-twitter-'+ value.id}).mouseleave(function() {
+				$(this).find('.elgg-submenu-river').removeClass('hover');
+			}).append(
+				$('<div>', {class: 'elgg-image-block elgg-river-item clearfix'}).append(
+					$('<div>', {class: 'elgg-image'}).append(
+						$('<div>', {class: 'elgg-avatar elgg-avatar-small'}).append(
+							$('<div>', {class: 'user-info-popup', title: value.user.screen_name}).append(
+								$('<img>', {title: value.user.screen_name, alt: value.user.screen_name, src: value.user.profile_image_url})
+				)))).append(
+					$('<div>', {class: 'elgg-body'}).append(function() {
+						if (menuOutput.length) return $('<ul>', {class: 'elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default'}).append(
+							menuOutput.after(
+								$('<li>', {class: 'elgg-submenu-river'}).click(function() {
+									$(this).addClass('hover');
+								}).append(function() {
+									if (subMenuOutput.length) return $('<span>', {class:'elgg-icon elgg-icon-submenu-river gwf'}).html(']').after(
+										$('<ul>', {class: 'elgg-module-popup hidden'}).append(subMenuOutput).mouseleave(function() {
+											$('.elgg-submenu-river').removeClass('hover');
+										
+								}));
+						})));
+					}).append(
+						$('<div>', {class: 'elgg-river-summary'}).html(value.user.screen_name+'<br/>').append(
+							$('<span>', {class: 'elgg-river-timestamp'}).append(
+								$('<span>', {class: 'elgg-friendlytime'}).append(
+									$('<acronym>', {title: value.created_at}).html(elgg.friendly_time(value.created_at)).after(
+									$('<span>', {class: 'hidden'}).html(value.id)
+					))))).append(
+						$('<div>', {class: 'elgg-river-message'}).html(value.text.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag())
+					).append(function() {
+						if (riverResponses.length) return $('<div>', {class: 'elgg-river-responses'}).html(riverResponses);
+					})
+				)
+			)
+		);
+	});
+	return output;
+};
+
+
+String.prototype.TwitterParseURL = function () {
+	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&\?\/.=]+/g, function (url) {
+		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
+	});
+};
+String.prototype.TwitterParseUsername = function () {
+	return this.replace(/@[A-Za-z0-9-_]+/g, function (u) {
+		var username = u.replace("@", "")
+		return u.link("http://twitter.com/" + username);
+	});
+};
+String.prototype.TwitterParseHashtag = function () {
+	return this.replace(/#[^.\s#]+/g, function (t) {
+		var tag = t.replace("#", "%23")
+		return t.link("http://search.twitter.com/search?q=" + tag);
+	});
 };
 
 

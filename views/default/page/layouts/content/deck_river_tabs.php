@@ -23,7 +23,7 @@ if (elgg_is_logged_in()) {
 	$tabs['refresh-all'] = array(
 		'text' => elgg_view_icon('refresh'),
 		'href' => '#',
-		'class' => "elgg-refresh-all-button",
+		'class' => "elgg-refresh-all-button tooltip sw",
 		'selected' => 1,
 		'priority' => 100,
 		'title' => elgg_echo('deck_river:refresh-all')
@@ -32,7 +32,7 @@ if (elgg_is_logged_in()) {
 	$tabs['plus-column'] = array(
 		'text' => '+',
 		'href' => '#',
-		'class' => "elgg-add-new-column",
+		'class' => "elgg-add-new-column tooltip sw",
 		'selected' => 1,
 		'priority' => 110,
 		'title' => elgg_echo('deck_river:add-column')
@@ -63,6 +63,7 @@ if (elgg_is_logged_in()) {
 	$tabs['plus'] = array(
 		'text' => '+',
 		'href' => '#add-deck-river-tab',
+		'class' => 'tooltip s',
 		'rel' => 'popup',
 		'selected' => 0,
 		'priority' => $priority * 10,

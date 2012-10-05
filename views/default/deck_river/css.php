@@ -213,6 +213,13 @@ body {
 .elgg-icon-response:hover, .elgg-icon-response-all:hover, .elgg-icon-retweet:hover, .elgg-icon-submenu-river:hover, .elgg-submenu-river.hover .elgg-icon-submenu-river {
 	color: #555;
 }
+.elgg-icon-retweet-sub {
+	color: #555;
+	font-size: 32px;
+	padding-right: 3px;
+	background: none;
+}
+
 
 /* settings */
 #column-settings {
@@ -222,18 +229,18 @@ body {
 	z-index: 9999;
 	min-width: 372px;
 }
-#column-settings .elgg-head, #user-info-popup .elgg-head {
+#column-settings .elgg-head, #user-info-popup .elgg-head, #group-info-popup .elgg-head, #hashtag-info-popup .elgg-head {
 	background-color: #EEE;
 	margin: -5px -5px 5px;
 	padding-bottom: 5px;
 	cursor: move;
 }
-#column-settings .elgg-head h3, #user-info-popup .elgg-head h3 {
+#column-settings .elgg-head h3, #user-info-popup .elgg-head h3, #group-info-popup .elgg-head h3, #hashtag-info-popup .elgg-head h3 {
 	color: #666666;
 	float: left;
 	padding: 4px 30px 0 5px;
 }
-#column-settings .elgg-head a, #user-info-popup .elgg-head a {
+#column-settings .elgg-head a, #user-info-popup .elgg-head a, #group-info-popup .elgg-head a, #hashtag-info-popup .elgg-head a {
 	display: inline-block;
 	height: 18px;
 	position: absolute;
@@ -242,27 +249,43 @@ body {
 	width: 18px;
 	cursor: pointer;
 }
-#column-settings #deck-column-settings {
+#deck-column-settings, #deck-column-settings > div {
 	float:left;
+	height: 240px;
+}
+#column-settings .networks {
+	border-bottom: medium none;
+	float: left;
+	width: auto;
+}
+#column-settings .networks > li {
+	border-color: #CCC;
+	border-radius: 5px 0 0 5px;
+	border-style: solid;
+	border-width: 2px 0 2px 2px;
+	clear: both;
+	float: right;
+	margin: 5px 0 0;
+}
+#column-settings .networks > .elgg-state-selected a {
+	top: 0;
+	right: -2px;
 }
 #column-settings .filter {
 	float:left;
-	border-right: 2px solid #EEE;
-	padding-right: 10px;
-	margin-right: 10px;
 }
 #column-settings .elgg-input-checkboxes label {
 	font-weight: normal;
 }
 #column-settings .box-settings {
-	width: 200px;
+	border-right: 2px solid #CCC;
+	border-left: 2px solid #CCC;
 	float: left;
+	height: 100%;
+	width: 185px;
 }
 #column-settings .box-settings .elgg-input-dropdown, #column-settings .box-settings li {
 	float: left;
-}
-#column-settings .box-settings li:first-child {
-	width: 100%;
 }
 #add-deck-river-tab, #rename-deck-river-tab {
 	width: 260px;
@@ -276,19 +299,26 @@ body {
 }
 
 /*
- * User info
+ * info popup
  */
-#user-info-popup {
+#user-info-popup, #group-info-popup, #hashtag-info-popup {
 	width: 480px;
 	height: 600px;
 	left: 40%;
-	position: fixed;
+	position: fixed !important;
 	top: 15%;
 	z-index: 9990;
 }
-#user-info-popup > .elgg-body {
+#user-info-popup > .elgg-body > .elgg-body, #group-info-popup > .elgg-body > .elgg-body {
 	height: 540px;
 	overflow-y: auto;
+}
+#hashtag-info-popup > .elgg-body {
+	height: 573px;
+	overflow-y: auto;
+}
+#user-info-popup .elgg-ajax-loader, #group-info-popup .elgg-ajax-loader, #hashtag-info-popup .elgg-ajax-loader {
+	height: 540px;
 }
 #user-info-popup .elgg-tabs a {
 	cursor: pointer;
@@ -296,6 +326,28 @@ body {
 #user-info-popup #user-info-activity {
 	overflow: hidden;
 }
-#user-info-popup #profile-details {
+#user-info-popup #profile-details, #group-info-popup #profile-details {
 	clear: both;
+	padding: 5px 0 0 0;
+}
+.user-stats {
+	background: none repeat scroll 0 0 #EEEEEE;
+	border-radius: 5px 5px 5px 5px;
+	clear: both;
+	display: inline-block;
+	padding: 5px 0;
+	width: 100%;
+}
+.user-stats li {
+	color: #333333;
+	font-weight: bold;
+	display: block;
+	float: left;
+	margin: 0 10px;
+	min-width: 100px;
+	vertical-align: top;
+}
+.user-stats .stats {
+	font-size: 200%;
+	line-height: 0.9em;
 }

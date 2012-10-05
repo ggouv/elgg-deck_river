@@ -13,6 +13,7 @@ $french = array(
 	'deck_river:add-tab' => 'Ajouter un nouvel onglet',
 	'deck_river:limitColumnReached' => 'Le nombre maximum de colonne est atteint.',
 	'river:mentions' => "Mentions",
+	'deck_river:more' => "Plus...",
 	
 	// river menu
 	'replyall' => "Répondre à tous",
@@ -21,15 +22,18 @@ $french = array(
 	'river:group' => "Groupe",
 	'river:filtred' => "filtré",
 	'retweet' => "Retweet",
+	'retweet:one' => "%s retweet",
+	'retweet:twoandmore' => "%s retweets",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
 	'deck_river:add:tab:error' => 'Cannot add a new tab.',
 	'deck_river:rename_tab_title' => "renomer l'onglet :",
 	
-	// delete tab
+	// delete
 	'deck_river:delete:tab:confirm' => "Êtes-vous sûr de supprimer l'onglet '%s' ?",
 	'deck_river:delete:tab:error' => "Impossible de supprimer l'onglet.",
+	'deck-river:delete:column:confirm' => "Êtes-vous sûr de supprimer cette colonne ?",
 	
 	// column-settings form
 	'deck_river:settings' => 'Paramètres de la colonne "%s"',
@@ -38,9 +42,10 @@ $french = array(
 	'deck_river:title' => 'Titre de la colonne :',
 	'deck_river:search' => 'Recherche :',
 	
-	// user info popup
+	//info popup
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
 	'deck_river:user-info-header' => "Informations sur cette personne",
+	'deck_river:hashtag-info-header' => "Recherche : %s",
 	
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Largeur minimum des colonnes',

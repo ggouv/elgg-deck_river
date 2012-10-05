@@ -4,28 +4,36 @@ global $CONFIG;
 $dbprefix = $CONFIG->dbprefix;
 
 // Get callbacks
-$entity_guid = (int)get_input('guid', 'false');
+$entity_guid = get_input('guid', 'false');
 $time_method = get_input('time_method', 'false');
 $time_posted = get_input('time_posted', 'false');
 
-$user = elgg_get_logged_in_user_guid();
-
-if (!$entity_guid || !$user) {
-	return;
-}
-
-$entity = get_entity($entity_guid);
-
-// group, user or object ?
-if ($entity->type == 'group') {
-	$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
-	$options['wheres'][] = "e.container_guid = " . $entity_guid;
-} else if ($entity->type == 'user') {
-	$options['subject_guid'] = $entity_guid;
-} else if ($entity->type == 'object') {
-	
+// hashtag ?
+if (strpos($entity_guid, '#') === 0) {
+	$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+	$options['wheres'][] = "(o.description REGEXP '(" . $entity_guid . ")')";
 } else {
-	return;
+	$entity_guid = (int)$entity_guid; // force to guid
+	$user = elgg_get_logged_in_user_guid();
+	
+	if (!$entity_guid || !$user) {
+		return;
+	}
+	
+	$entity = get_entity($entity_guid);
+	
+	// group, user or object ?
+	if ($entity->type == 'group') {
+		$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
+		$options['wheres'][] = "e.container_guid = " . $entity_guid;
+	} else if ($entity->type == 'user') {
+		$options['subject_guid'] = $entity_guid;
+	} else if ($entity->type == 'object') {
+		
+	} else {
+		return;
+	}
+
 }
 
 $options['types_filter'] = get_input('types_filter');

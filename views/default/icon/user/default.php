@@ -57,16 +57,20 @@ $icon = elgg_view('output/img', array(
 <?php
 
 if ($use_link) {
-	//$class = elgg_extract('link_class', $vars, '');
-	echo "<div class='user-info-popup' title='$username'>$icon</div>";
-	/*echo elgg_view('output/url', array(
-		'href' => '',
-		'text' => $icon,
-		'is_trusted' => true,
-		'class' => $class . ' user-info-popup',
-		'rel' => 'nofollow',
-		'title' => $username
-	));*/
+	$url = elgg_extract('href', $vars, false);
+	if (!$url) {
+		echo "<div class='user-info-popup' title='$username'>$icon</div>";
+	} else {
+		$class = elgg_extract('link_class', $vars, '');
+		echo elgg_view('output/url', array(
+			'href' => $url,
+			'text' => $icon,
+			'is_trusted' => true,
+			'class' => $class . ' user-info-popup',
+			'rel' => 'nofollow',
+			'title' => $username
+		));
+	}
 } else {
 	echo "$icon";
 }

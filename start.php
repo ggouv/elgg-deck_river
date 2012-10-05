@@ -14,6 +14,7 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax/column_settings');
 	elgg_register_ajax_view('deck_river/ajax/entity_river');
 	elgg_register_ajax_view('deck_river/ajax/user_info');
+	elgg_register_ajax_view('deck_river/ajax/group_info');
 
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
 
@@ -82,10 +83,44 @@ function deck_river_wire_filter($text) {
 	// hashtags
 	$text = preg_replace(
 				'/(^|[^\w])#(\w*[^\s\d!-\/:-@]+\w*)/',
-				'$1<a href="' . $CONFIG->wwwroot . 'thewire/tag/$2">#$2</a>',
+				'$1<a class="hashtag-info-popup" href="#" title="#$2">#$2</a>',
 				$text);
 
 	$text = trim($text);
 
 	return $text;
+}
+
+
+/**
+ * Get group by title
+ *
+ * @param string $group The title's group
+ *
+ * @return GUID|false Depending on success
+ */
+function search_group_by_title($group) {
+	global $CONFIG, $GROUP_TITLE_TO_GUID_MAP_CACHE;
+
+	$group = sanitise_string($group);
+
+	// Caching
+	if ((isset($GROUP_TITLE_TO_GUID_MAP_CACHE[$group]))
+	&& (retrieve_cached_entity($GROUP_TITLE_TO_GUID_MAP_CACHE[$group]))) {
+		return retrieve_cached_entity($GROUP_TITLE_TO_GUID_MAP_CACHE[$group]);
+	}
+
+	$guid = get_data("SELECT guid from {$CONFIG->dbprefix}groups_entity where name='$group'");
+
+	if ($guid) {
+		$GROUP_TITLE_TO_GUID_MAP_CACHE[$group] = $guid[0]->guid;
+	} else {
+		$guid = false;
+	}
+
+	if ($guid) {
+		return $guid[0]->guid;
+	} else {
+		return false;
+	}
 }

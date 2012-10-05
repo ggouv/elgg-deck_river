@@ -13,6 +13,7 @@ $english = array(
 	'deck_river:add-tab' => 'Add a new tab',
 	'deck_river:limitColumnReached' => 'The maximum number of columns is reached.',
 	'river:mentions' => "Mentions",
+	'deck_river:more' => "More...",
 	
 	// river menu
 	'replyall' => "Répondre à tous",
@@ -21,15 +22,18 @@ $english = array(
 	'river:group' => "Group",
 	'river:filtred' => "filtred",
 	'retweet' => "Retweet",
+	'retweet:one' => "%s retweet",
+	'retweet:twoandmore' => "%s retweets",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',
 	'deck_river:add:tab:error' => 'Cannot add a new tab.',
 	'deck_river:rename_tab_title' => 'Rename tab:',
 
-	// delete tab
+	// delete
 	'deck_river:delete:tab:confirm' => "Are you sure to delete tab '%s'?",
 	'deck_river:delete:tab:error' => "Cannot delete tab.",
+	'deck-river:delete:column:confirm' => "Are you sure to delete this column?",
 	
 	// column-settings form
 	'deck_river:settings' => 'Settings of column "%s"',
@@ -41,6 +45,7 @@ $english = array(
 	// user info popup
 	'deck_river:user-not-exist' => "This user doesn't exits.",
 	'deck_river:user-info-header' => "Informations on this person",
+	'deck_river:hashtag-info-header' => "Search: %s",
 	
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Minimum width of columns',

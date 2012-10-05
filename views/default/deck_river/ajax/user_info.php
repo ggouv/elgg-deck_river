@@ -3,32 +3,24 @@
 $username = get_input('user', 'false');
 $user = get_user_by_username($username);
 elgg_set_page_owner_guid($user->guid);
-?>
 
-<div class="elgg-head">
-	<h3><?php echo elgg_echo('deck_river:user-info-header'); ?></h3>
-		<?php echo elgg_view('output/url', array(
-			'text' => elgg_view_icon('delete-alt'),
-		)); ?>
-</div>
-<?php 
 if (!$user) {
 	echo elgg_echo('deck_river:user-not-exist');
 	return;
 }
 ?>
 <ul class="elgg-tabs elgg-htabs">
-	<li class=" elgg-state-selected"><a href="#user-info-profile"><?php echo elgg_echo('profil'); ?></a></li>
+	<li class=" elgg-state-selected"><a href="#user-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 	<li><a href="#user-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
 </ul>
 <ul class="elgg-body">
 	<li id="user-info-profile">
-		<?php echo elgg_view_entity_icon($user, 'large', array('class' => 'float')); ?>
+		<?php echo elgg_view_entity_icon($user, 'large', array('class' => 'float', 'href' => $user->getURL())); ?>
 		
 			<div class="elgg-body plm">
-				<h1><?php echo $user->realname; ?></h1>
-				<h2 class="mvm" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
-				<?php echo $user->briefdescription; ?>
+				<h1 class="mbm"><?php echo $user->realname; ?></h1>
+				<h2 class="mbs" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
+				<div><?php echo $user->briefdescription; ?></div>
 				
 				<?php
 				// grab the actions and admin menu items from user hover
@@ -55,7 +47,6 @@ if (!$user) {
 				?>
 			</div>
 
-		<ul class="groups-stats float"></ul>
 		<div id="profile-details" class="elgg-body pll">
 			<?php echo elgg_view('profile/details'); ?>
 		</div>
