@@ -29,15 +29,15 @@ if (!$user) {
 				$menu = $builder->getMenu('priority');
 				$actions = elgg_extract('action', $menu, array());
 				$admin = elgg_extract('admin', $menu, array());
-				
 				$profile_actions = '';
 				if (elgg_is_logged_in() && $actions) {
 					$profile_actions = '<ul class="elgg-menu profile-action-menu mvm float">';
 					foreach ($actions as $action) {
 						if ($action->getName() == 'reportuser') {
-							$profile_report = '<ul class="elgg-menu profile-action-menu mtm"><li>' . $action->getContent(array('class' => 'elgg-icon-attention gwfb')) . '</li></ul>';
+							//$profile_report = '<ul class="elgg-menu profile-action-menu mtm"><li>' . $action->getContent(array('class' => 'elgg-icon-attention gwfb')) . '</li></ul>';
 						} else {
-							$profile_actions .= '<li>' . $action->getContent(array('class' => 'elgg-button elgg-button-action')) . '</li>';
+							$action_name = $action->getName();
+							$profile_actions .= '<li>' . $action->getContent(array('class' => "elgg-button elgg-button-action gwfb $action_name")) . '</li>';
 						}
 					}
 					$profile_actions .= '</ul>';

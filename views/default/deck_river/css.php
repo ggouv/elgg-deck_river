@@ -213,13 +213,25 @@ body {
 .elgg-icon-response:hover, .elgg-icon-response-all:hover, .elgg-icon-retweet:hover, .elgg-icon-submenu-river:hover, .elgg-submenu-river.hover .elgg-icon-submenu-river {
 	color: #555;
 }
+.elgg-river-responses a:hover {
+	cursor: pointer;
+}
 .elgg-icon-retweet-sub {
-	color: #555;
+	color: #999;
 	font-size: 32px;
 	padding-right: 3px;
 	background: none;
 }
-
+.elgg-icon-comment-sub {
+	color: #999;
+	font-size: 24px;
+	background: none;
+}
+.column-river .elgg-river td.helper {
+	padding: 0 10% 50%;
+	text-align: center;
+	vertical-align: middle;
+}
 
 /* settings */
 #column-settings {

@@ -5,6 +5,10 @@ elgg_register_event_handler('init','system','deck_river_init');
 function deck_river_init() {
 
 	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
+	elgg_register_class('EpiCurl', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiCurl.php');
+	elgg_register_class('EpiOAuth', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiOAuth.php');
+	elgg_register_class('EpiTwitter', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiTwitter.php');
+	
 	elgg_load_library('deck_river:api');
 
 	elgg_extend_view('css/elgg','deck_river/css');
@@ -15,6 +19,7 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax/entity_river');
 	elgg_register_ajax_view('deck_river/ajax/user_info');
 	elgg_register_ajax_view('deck_river/ajax/group_info');
+	elgg_register_ajax_view('deck_river/ajax/url_shortener');
 
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
 
@@ -123,4 +128,28 @@ function search_group_by_title($group) {
 	} else {
 		return false;
 	}
+}
+
+
+
+/**
+* Google url shortener
+* http://www.webgalli.com/blog/easily-create-short-urls-with-php-curl-and-goo-gl-or-bit-ly/
+*/
+function goo_gl_short_url($longUrl) {
+	$GoogleApiKey = elgg_get_plugin_setting('googleApiKey', 'elgg-deck_river');
+	$postData = array('longUrl' => $longUrl, 'key' => $GoogleApiKey);
+	$jsonData = json_encode($postData);
+	$curlObj = curl_init();
+	curl_setopt($curlObj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url');
+	curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($curlObj, CURLOPT_HEADER, 0);
+	curl_setopt($curlObj, CURLOPT_HTTPHEADER, array('Content-type:application/json'));
+	curl_setopt($curlObj, CURLOPT_POST, 1);
+	curl_setopt($curlObj, CURLOPT_POSTFIELDS, $jsonData);
+	$response = curl_exec($curlObj);
+	$json = json_decode($response);
+	curl_close($curlObj);
+	return $json->id;
 }

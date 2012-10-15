@@ -8,6 +8,9 @@ $entity_guid = get_input('guid', 'false');
 $time_method = get_input('time_method', 'false');
 $time_posted = get_input('time_posted', 'false');
 
+$user = elgg_get_logged_in_user_entity();
+setlocale(LC_TIME, $user->language, strtolower($user->language) . '_' . strtoupper($user->language));
+
 // hashtag ?
 if (strpos($entity_guid, '#') === 0) {
 	$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
@@ -90,7 +93,7 @@ $temp_subjects = array();
 foreach ($jsonexport['activity'] as $item) {
 	if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
 	
-	$item->posted_acronym = htmlspecialchars(date(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
+	$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
 	
 	$menus = elgg_trigger_plugin_hook('register', "menu:river", array('item' => $item)); // add menus
 	foreach ($menus as $menu) {

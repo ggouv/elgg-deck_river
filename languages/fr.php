@@ -14,6 +14,12 @@ $french = array(
 	'deck_river:limitColumnReached' => 'Le nombre maximum de colonne est atteint.',
 	'river:mentions' => "Mentions",
 	'deck_river:more' => "Plus...",
+	'deck-river:reduce_url:string' => "Réduire un lien...",
+	'deck-river:reduce_url' => "Réduire",
+	'deck_river:helper:friends' => "Vous n'avez pas d'abonnement ou les personnes que vous suivez n'ont aucune activité.<br/><br/><a href='" . elgg_get_site_url() . "members'>Suivez des personnes</a> dont l'activité pourrait vous intéresser ou cherchez des personnes <a href='" . elgg_get_site_url() . "groups/members/%s'>de votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/members/%s'>votre département</a>.",
+	'deck_river:helper:now' => "<h3>Bienvenue sur ggouv.fr !</h3><br/><a href='#' onclick='$(\"#thewire-textarea\").focus();'>Dites bonjour à tout le monde</a> et regardez ce qui ce passe près de chez vous <a href='" . elgg_get_site_url() . "groups/profile/%s'>dans votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/profile/%s'>votre département</a>.<br/><br/>Pour collaborer et participer à des actions collectives, <a href='" . elgg_get_site_url() . "groups/all'>cherchez un groupe</a> qui partage vos centres d'intérêts, vos motivations...",
+	'deck_river:helper:mine' => "Vous n'avez pas d'activité.<br/>Publiez un message, entrez dans un groupe pour collaborer, ou participez à une action...",
+	'deck_river:helper:mention' => "Personne ne vous a mentionné pour l'instant.",
 	
 	// river menu
 	'replyall' => "Répondre à tous",
@@ -21,9 +27,10 @@ $french = array(
 	'river:timeline:definition' => "Activité de vos abonnés",
 	'river:group' => "Groupe",
 	'river:filtred' => "filtré",
-	'retweet' => "Retweet",
+	'retweet' => "Retweeter",
 	'retweet:one' => "%s retweet",
 	'retweet:twoandmore' => "%s retweets",
+	'deck_river:show_discussion' => "Afficher la discussion",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
@@ -58,6 +65,12 @@ $french = array(
 	'deck_river:settings:reset_user' => "Remettre à zéro les paramètres de colonnes d'un utilisateur. Entrez son ID",
 	'deck_river:settings:reset_user:ok' => "Les paramètres des colonnes de l'utilisateur %s ont été remis à zéro.",
 	'deck_river:settings:reset_user:nok' => "Impossible de remettre à zéro les paramètres des colonnes de l'utilisateur %s.",
+	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
+	'deck_river:settings:twitter_consumer_secret' => "Consumer secret :",
+	
+	// messages
+	'deck_river:url-not-exist' => "Il n'y a pas l'url à réduire.",
+	'deck_river:url-bad-format' => "Le format d'url n'est pas bon.",
 	
 );
 

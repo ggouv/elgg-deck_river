@@ -52,6 +52,7 @@ if (!isset($vars['entity']->column_type) || empty($vars['entity']->column_type))
 	$vars['entity']->column_type = $default;
 }
 
+
 $min_width_column_string = elgg_echo('deck_river:settings:min_width_column');
 $min_width_column_view = elgg_view('input/text', array(
 	'name' => 'params[min_width_column]',
@@ -106,12 +107,54 @@ $reset_user_view = elgg_view('input/text', array(
 ));
 
 
+/* google shortener */
+if (!isset($vars['entity']->googleApiKey) || empty($vars['entity']->googleApiKey)) {
+	$vars['entity']->googleApiKey = '';
+}
+
+$googleApiKeys_string = elgg_echo('deck_river:settings:googleApiKey');
+$googleApiKey_view = elgg_view('input/text', array(
+	'name' => 'params[googleApiKey]',
+	'value' => $vars['entity']->googleApiKey
+));
+
+
+/* twitter */
+if (!isset($vars['entity']->twitter_consumer_key) || empty($vars['entity']->twitter_consumer_key)) {
+	$vars['entity']->twitter_consumer_key = '';
+}
+
+if (!isset($vars['entity']->twitter_consumer_secret) || empty($vars['entity']->twitter_consumer_secret)) {
+	$vars['entity']->twitter_consumer_secret = '';
+}
+
+$twitter_consumer_key_string = elgg_echo('deck_river:settings:twitter_consumer_key');
+$twitter_consumer_key_view = elgg_view('input/text', array(
+	'name' => 'params[twitter_consumer_key]',
+	'value' => $vars['entity']->twitter_consumer_key
+));
+
+$twitter_consumer_secret_string = elgg_echo('deck_river:settings:twitter_consumer_secret');
+$twitter_consumer_secret_view = elgg_view('input/text', array(
+	'name' => 'params[twitter_consumer_secret]',
+	'value' => $vars['entity']->twitter_consumer_secret
+));
+
 echo <<<__HTML
-<br />
+<br/>
 <div><label>$min_width_column_string</label><br />$min_width_column_view</div>
 <div><label>$max_nbr_column_string</label><br />$max_nbr_column_view</div>
 <div><label>$default_columns_string</label><br />$default_columns_view<br /><span style='font-size:0.85em;color:#999;'>$default_columns_string_default_params</span></div>
 <div><label>$column_type_string</label><br />$column_type_view</div>
 <div><label>$keys_to_merge_string</label><br />$keys_to_merge_view<br /><span style='font-size:0.85em;color:#999;'>$keys_to_merge_string_register_entity</span></div>
 <div><label>$reset_user_string</label><br />$reset_user_view</div>
+
+<br/><hr/><br/>
+<h3>Google shortener</h3><br/>
+<div><label>$googleApiKeys_string</label><br />$googleApiKeys_view</div>
+
+<br/><hr/><br/>
+<h3>Twitter</h3><br/>
+<div><label>$twitter_consumer_key_string</label><br />$twitter_consumer_key_view</div>
+<div><label>$twitter_consumer_secret_string</label><br />$twitter_consumer_secret_view</div>
 __HTML;

@@ -27,6 +27,8 @@ $object = $vars['item']->getObjectEntity();
 $excerpt = strip_tags($object->description);
 $excerpt = deck_river_wire_filter($excerpt);
 
+if ($object->reply) $vars['item']->responses = $object->wire_thread;
+
 $vars['item']->message = $excerpt;
 
 $jsonexport['activity'][] = $vars['item'];

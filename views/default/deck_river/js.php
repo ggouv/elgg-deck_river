@@ -109,6 +109,23 @@ elgg.deck_river.init = function() {
 		update:                elgg.deck_river.MoveColumn
 	});
 	
+	// shortener url
+	$('#thewire-header .url-shortener .elgg-input-text').focusin(function() {
+		if (this.value == elgg.echo('deck-river:reduce_url:string')) {
+			this.value = '';
+		}
+	}).focusout(function() {
+		 if (this.value == '') {
+		 	this.value = elgg.echo('deck-river:reduce_url:string');
+		 }
+	});
+	$('#thewire-header .url-shortener .elgg-button').live('click', function() {
+		var longUrl = $(this).parent().find('.elgg-input-text');
+		if (longUrl.val() != '') {
+			elgg.deck_river.ShortenerUrl(longUrl.val(), longUrl);
+		}
+	});
+	
 	// user info popup
 	$('.user-info-popup').die().live('click', function() {
 		if (!$('#user-info-popup').length) {
@@ -303,6 +320,15 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 									}
 							});
 						});
+					} else if ( TheColumn.find('.elgg-list-item').length == 0 ) {
+						var user = elgg.get_logged_in_user_entity(),
+						c_type = response.column_type;
+						
+						if (c_type == 'mine' && Math.round($.now()/1000) - elgg.get_logged_in_user_entity().time_created  < (60*60*24*7)) c_type = 'now';
+						TheColumn.find('.elgg-river').html($('<table>', {height: '100%', width: '100%'}).append(
+							$('<tr>').append(
+								$('<td>', {class: 'helper'}).html(elgg.echo('deck_river:helper:'+c_type, [user.location])))
+						));
 					}
 				}
 				TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
@@ -405,6 +431,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				if ($output == 'nohook') {
 					var res = elgg.deck_river.displayItems(response);
 					res.filter('.elgg-list-item').addClass('newRiverItem');
+					if (res.length) TheColumn.find('.elgg-river > table').remove();
 					TheColumn.find('.elgg-river').prepend(res).find('.newRiverItem').fadeIn('slow');
 					TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 				}
@@ -596,6 +623,29 @@ elgg.deck_river.SetColumnsWidth = function() {
 
 
 /**
+ * Shortener url
+ */
+elgg.deck_river.ShortenerUrl = function(url, input) {
+	elgg.post('ajax/view/deck_river/ajax/url_shortener', {
+		dataType: "html",
+		data: {
+			url: url,
+		},
+		success: function(response) {
+			if (response == 'badurl') {
+				elgg.register_error(elgg.echo('deck_river:url-bad-format'));
+			} else {
+				input.val(response);
+			}
+		},
+		error: function(response) {
+			// error with server
+		}
+	});
+};
+
+
+/**
  * Javascript template for river element @todo waiting for Elgg core developers to see wich library they will use (ember.js, ...) in elgg 1.9 or 2 and replace it with a js MVC system.
  *
  * @param {array}	json response
@@ -606,7 +656,7 @@ elgg.deck_river.displayItems = function(response) {
 	
 	$.each(response.activity, function(key, value) {
 		var user = $.grep(response.users, function(e){ return e.guid == value.subject_guid; })[0],
-			menuOutput = subMenuOutput = $();
+			menuOutput = subMenuOutput = riverResponses = $();
 
 		// make menu and submenu
 		if (value.subtype == 'thewire') {
@@ -614,7 +664,11 @@ elgg.deck_river.displayItems = function(response) {
 				$('<li>').append(
 					$('<span>', {class: 'elgg-icon elgg-icon-response gwf tooltip s', title: elgg.echo('reply')}).html('&lt;').click(function() {
 						wirearea.val('@' + user.username).focus().keydown();
-						wirearea.parents('fieldset').append('<input type="hidden" value="'+ value.object_guid +'" name="parent_guid">');
+						if (wirearea.find('input[name=parent_guid]').length) {
+							wirearea.find('input[name=parent_guid]').val(value.object_guid);
+						} else {
+							wirearea.parents('fieldset').append('<input type="hidden" value="'+ value.object_guid +'" name="parent_guid">');
+						}
 					})
 				)
 			);
@@ -648,6 +702,13 @@ elgg.deck_river.displayItems = function(response) {
 						$('<span>', {class:'elgg-icon elgg-icon-delete'}).html(elgg.echo('delete'))
 			)))
 		}
+		if (value.responses != null) {
+			riverResponses = riverResponses.after(
+				$('<span>', {class: 'elgg-icon elgg-icon-comment-sub gwf'}).html('c').after(
+					$('<a>', {href: '#', class: 'tooltip s', title: elgg.echo('deck_river:show_discussion'), 'data-thread': value.responses}).html(elgg.echo('deck_river:show_discussion'))
+			));
+		}
+		
 		output = output.after(
 			$('<li>', {class: 'elgg-list-item item-river-'+ value.id +' '+ value.subtype +' '+ value.action_type}).mouseleave(function() {
 				$(this).find('.elgg-submenu-river').removeClass('hover');
@@ -674,11 +735,13 @@ elgg.deck_river.displayItems = function(response) {
 						$('<div>', {class: 'elgg-river-summary'}).html(value.summary+'<br/>').append(
 							$('<span>', {class: 'elgg-river-timestamp'}).append(
 								$('<span>', {class: 'elgg-friendlytime'}).append(
-									$('<acronym>', {title: value.posted_acronym}).html(elgg.friendly_time(value.posted)).after(
+									$('<acronym>', {title: value.posted_acronym, class: 'tooltip w'}).html(elgg.friendly_time(value.posted)).after(
 									$('<span>', {class: 'hidden'}).html(value.posted)
 					))))).append(
 						$('<div>', {class: 'elgg-river-message'}).html(value.message)
-					)
+					).append(function() {
+						if (riverResponses.length) return $('<div>', {class: 'elgg-river-responses'}).html(riverResponses);
+					})
 				)
 			)
 		);
@@ -732,12 +795,20 @@ elgg.deck_river.TwitterDisplayItems = function(response) {
 		}
 		if (value.retweet_count != 0) {
 			if (value.retweet_count == '1') {
-				riverResponses = '<span class="elgg-icon elgg-icon-retweet-sub gwf">^</span>' + elgg.echo('retweet:one', [value.retweet_count]);
+				riverResponses = $('<span>', {class: 'elgg-icon elgg-icon-retweet-sub gwf'}).html('^').after($('<span>', {class: 'prm'}).html(elgg.echo('retweet:one', [value.retweet_count])));
 			} else {
-				riverResponses = '<span class="elgg-icon elgg-icon-retweet-sub gwf">^</span>' + elgg.echo('retweet:twoandmore', [value.retweet_count]);
+				riverResponses = $('<span>', {class: 'elgg-icon elgg-icon-retweet-sub gwf'}).html('^').after($('<span>', {class: 'prm'}).html(elgg.echo('retweet:twoandmore', [value.retweet_count])));
 			}
-			console.log(riverResponses);
 		}
+		console.log(value.in_reply_to_status_id);
+		if (value.in_reply_to_status_id != null) {
+			riverResponses = riverResponses.after(
+				$('<span>', {class: 'elgg-icon elgg-icon-comment-sub gwf'}).html('c').after(
+					$('<a>', {href: '#', class: 'tooltip s', title: elgg.echo('deck_river:show_discussion')}).html(elgg.echo('deck_river:show_discussion'))
+			));
+			// conversation > http://api.twitter.com/1/related_results/show/254208368070258688.json?include_entities=1
+		}
+		console.log(riverResponses);
 
 		output = output.after(
 			$('<li>', {class: 'elgg-list-item item-twitter-'+ value.id}).mouseleave(function() {
@@ -765,7 +836,7 @@ elgg.deck_river.TwitterDisplayItems = function(response) {
 						$('<div>', {class: 'elgg-river-summary'}).html(value.user.screen_name+'<br/>').append(
 							$('<span>', {class: 'elgg-river-timestamp'}).append(
 								$('<span>', {class: 'elgg-friendlytime'}).append(
-									$('<acronym>', {title: value.created_at}).html(elgg.friendly_time(value.created_at)).after(
+									$('<acronym>', {title: value.created_at, class: 'tooltip w'}).html(elgg.friendly_time(value.created_at)).after(
 									$('<span>', {class: 'hidden'}).html(value.id)
 					))))).append(
 						$('<div>', {class: 'elgg-river-message'}).html(value.text.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag())
@@ -792,7 +863,7 @@ String.prototype.TwitterParseUsername = function () {
 	});
 };
 String.prototype.TwitterParseHashtag = function () {
-	return this.replace(/#[^.\s#]+/g, function (t) {
+	return this.replace(/#[A-Za-z0-9_-àæéèêëîïôöœùûüç]+/g, function (t) {
 		var tag = t.replace("#", "%23")
 		return t.link("http://search.twitter.com/search?q=" + tag);
 	});

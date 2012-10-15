@@ -14,6 +14,7 @@ $english = array(
 	'deck_river:limitColumnReached' => 'The maximum number of columns is reached.',
 	'river:mentions' => "Mentions",
 	'deck_river:more' => "More...",
+	'deck-river:reduce_url' => "Reduce",
 	
 	// river menu
 	'replyall' => "Répondre à tous",
@@ -24,6 +25,7 @@ $english = array(
 	'retweet' => "Retweet",
 	'retweet:one' => "%s retweet",
 	'retweet:twoandmore' => "%s retweets",
+	'deck_river:show_discussion' => "Show discussion",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',
@@ -58,6 +60,12 @@ $english = array(
 	'deck_river:settings:reset_user' => "Reset column's settings of a user. Enter his ID",
 	'deck_river:settings:reset_user:ok' => "Column's settings of user %s reseted.",
 	'deck_river:settings:reset_user:nok' => "Impossible to reset column's settings of user %s.",
+	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
+	'deck_river:settings:twitter_consumer_secret' => "Consumer secret :",
+	
+	// messages
+	'deck_river:url-not-exist' => "There is no url to reduce.",
+	'deck_river:url-bad-format' => "Url format is not good.",
 
 );
 
