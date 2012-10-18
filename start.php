@@ -20,6 +20,7 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax/user_info');
 	elgg_register_ajax_view('deck_river/ajax/group_info');
 	elgg_register_ajax_view('deck_river/ajax/url_shortener');
+	elgg_register_ajax_view('deck_river/ajax/load_discussion');
 
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
 

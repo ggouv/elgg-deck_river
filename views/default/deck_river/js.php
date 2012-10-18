@@ -119,7 +119,7 @@ elgg.deck_river.init = function() {
 		 	this.value = elgg.echo('deck-river:reduce_url:string');
 		 }
 	});
-	$('#thewire-header .url-shortener .elgg-button').live('click', function() {
+	$('#thewire-header .url-shortener .elgg-button').die().live('click', function() {
 		var longUrl = $(this).parent().find('.elgg-input-text');
 		if (longUrl.val() != '') {
 			elgg.deck_river.ShortenerUrl(longUrl.val(), longUrl);
@@ -237,6 +237,52 @@ elgg.deck_river.init = function() {
 			$('#hashtag-info-popup > .elgg-river').html('<div class="elgg-ajax-loader"></div>');
 		}
 		elgg.deck_river.LoadEntity($(this).attr('title'), $('#hashtag-info-popup'));
+	});
+
+	// load discussion
+	$('.elgg-river-responses a').die().live('click', function() {
+		if (!$(this).attr('data-direct')) {
+		/*	$('.elgg-page-body').append(
+				$('<div>', {id: 'user-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
+					$('<div>', {class: 'elgg-head'}).append(
+						$('<h3>').html(elgg.echo('deck_river:user-info-header')).after(
+						$('<a>').append(
+							$('<span>', {class: 'elgg-icon elgg-icon-delete-alt'})
+						).click(function() {
+							$('#user-info-popup').remove();
+						})
+					)).after(
+						$('<div>', {class: 'elgg-body'}).append(
+							$('<div>', {class: 'elgg-ajax-loader'})
+			))));
+		} else {
+			$('#user-info-popup > .elgg-body').html('<div class="elgg-ajax-loader"></div>');*/
+
+			elgg.post('ajax/view/deck_river/ajax/load_discussion', {
+				dataType: "json",
+				data: {
+					discussion: $(this).attr('data-thread'),
+				},
+				success: function(response) {
+					/*$('#user-info-popup > .elgg-body').html(response);
+					$('#user-info-popup .elgg-tabs > li > a').click(function() {
+						var tab = $(this).attr('href');
+						if ($('#user-info-popup ' + tab).hasClass('hidden')) {
+							$('#user-info-popup .elgg-tabs > li').removeClass('elgg-state-selected');
+							$(this).parent('li').addClass('elgg-state-selected');
+							$('#user-info-popup .elgg-body > li').addClass('hidden');
+							$('#user-info-popup ' + tab).removeClass('hidden');
+						}
+						if (tab == '#user-info-activity' && $('#user-info-activity .elgg-ajax-loader').length) {
+							elgg.deck_river.LoadEntity($('#user-info-activity > .elgg-river').attr('data-user'), $('#user-info-popup #user-info-activity'));
+						}
+					});*/
+				},
+				error: function() {
+					//$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+				}
+			});
+		}
 	});
 
 };
