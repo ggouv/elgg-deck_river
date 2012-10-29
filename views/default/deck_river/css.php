@@ -151,6 +151,13 @@ body {
 .elgg-list-item:hover .elgg-menu-river {
 	opacity: 1;
 }
+.column-river .elgg-river td.helper {
+	padding: 0 10% 50%;
+	text-align: center;
+	vertical-align: middle;
+}
+
+
 /* comment */
 .elgg-river-comments-tab {
 	float:left;
@@ -227,11 +234,17 @@ body {
 	font-size: 24px;
 	background: none;
 }
-.column-river .elgg-river td.helper {
-	padding: 0 10% 50%;
-	text-align: center;
-	vertical-align: middle;
+.elgg-river-responses .thread .elgg-list-item {
+	color: black;
 }
+.elgg-river-responses .thread .elgg-avatar img {
+	height: 24px;
+	width: 24px;
+}
+.elgg-river-responses .thread .elgg-river-item.elgg-image-block .elgg-body {
+	margin-left: 30px;
+}
+
 
 /* settings */
 #column-settings {

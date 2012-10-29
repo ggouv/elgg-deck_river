@@ -26,6 +26,7 @@ $english = array(
 	'retweet:one' => "%s retweet",
 	'retweet:twoandmore' => "%s retweets",
 	'deck_river:show_discussion' => "Show discussion",
+	'deck_river:toggle_discussion' => "Toggle discussion",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',

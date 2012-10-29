@@ -31,6 +31,7 @@ $french = array(
 	'retweet:one' => "%s retweet",
 	'retweet:twoandmore' => "%s retweets",
 	'deck_river:show_discussion' => "Afficher la discussion",
+	'deck_river:toggle_discussion' => "Afficher/masquer la discussion",
 	
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',

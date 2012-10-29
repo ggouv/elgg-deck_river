@@ -240,8 +240,11 @@ elgg.deck_river.init = function() {
 	});
 
 	// load discussion
-	$('.elgg-river-responses a').die().live('click', function() {
-		if (!$(this).attr('data-direct')) {
+	$('.elgg-river-responses a.thread').die().live('click', function() {
+		var athread = $(this);
+		if (athread.parent('.elgg-river-responses').find('div.thread').length) return;
+		
+		if (!athread.attr('data-direct')) {
 		/*	$('.elgg-page-body').append(
 				$('<div>', {id: 'user-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
 					$('<div>', {class: 'elgg-head'}).append(
@@ -261,9 +264,16 @@ elgg.deck_river.init = function() {
 			elgg.post('ajax/view/deck_river/ajax/load_discussion', {
 				dataType: "json",
 				data: {
-					discussion: $(this).attr('data-thread'),
+					discussion: athread.attr('data-thread'),
 				},
 				success: function(response) {
+					var idToggle = athread.parents('.column-river').attr('id') + '-' + athread.parents('.elgg-list-item').attr('class').match(/item-river-\d+/);
+					
+					athread.parent('.elgg-river-responses').append($('<div>', {id: idToggle, class: 'thread mts'}).html(elgg.deck_river.displayItems(response, true)));
+					athread.attr({
+						rel: 'toggle',
+						href: '#' + idToggle
+					}).html(elgg.echo('deck_river:toggle_discussion'));
 					/*$('#user-info-popup > .elgg-body').html(response);
 					$('#user-info-popup .elgg-tabs > li > a').click(function() {
 						var tab = $(this).attr('href');
@@ -696,8 +706,9 @@ elgg.deck_river.ShortenerUrl = function(url, input) {
  *
  * @param {array}	json response
  */
-elgg.deck_river.displayItems = function(response) {
-	var output = $(),
+elgg.deck_river.displayItems = function(response, thread) {
+	var thread = thread || false,
+		output = $(),
 		wirearea = $('#thewire-textarea');
 	
 	$.each(response.activity, function(key, value) {
@@ -705,7 +716,7 @@ elgg.deck_river.displayItems = function(response) {
 			menuOutput = subMenuOutput = riverResponses = $();
 
 		// make menu and submenu
-		if (value.subtype == 'thewire') {
+		if (value.subtype == 'thewire' && !thread) {
 			menuOutput = menuOutput.after(
 				$('<li>').append(
 					$('<span>', {class: 'elgg-icon elgg-icon-response gwf tooltip s', title: elgg.echo('reply')}).html('&lt;').click(function() {
@@ -748,10 +759,10 @@ elgg.deck_river.displayItems = function(response) {
 						$('<span>', {class:'elgg-icon elgg-icon-delete'}).html(elgg.echo('delete'))
 			)))
 		}
-		if (value.responses != null) {
+		if (value.responses != null && !thread) {
 			riverResponses = riverResponses.after(
 				$('<span>', {class: 'elgg-icon elgg-icon-comment-sub gwf'}).html('c').after(
-					$('<a>', {href: '#', class: 'tooltip s', title: elgg.echo('deck_river:show_discussion'), 'data-thread': value.responses}).html(elgg.echo('deck_river:show_discussion'))
+					$('<a>', {href: '#', class: 'thread', 'data-thread': value.responses}).html(elgg.echo('deck_river:show_discussion'))
 			));
 		}
 		
