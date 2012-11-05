@@ -24,7 +24,7 @@ $french = array(
 	// river menu
 	'replyall' => "Répondre à tous",
 	'river:timeline' => "Le flux",
-	'river:timeline:definition' => "Activité de vos abonnés",
+	'river:timeline:definition' => "Activité de mes abonnements",
 	'river:group' => "Groupe",
 	'river:filtred' => "filtré",
 	'retweet' => "Retweeter",

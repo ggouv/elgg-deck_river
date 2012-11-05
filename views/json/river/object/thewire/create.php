@@ -8,6 +8,8 @@
 global $jsonexport;
 
 $subject = $vars['item']->getSubjectEntity();
+$object = $vars['item']->getObjectEntity();
+
 $subject_link = elgg_view('output/url', array(
 	'href' => $subject->getURL(),
 	'text' => $subject->name,
@@ -15,7 +17,7 @@ $subject_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 $object_link = elgg_view('output/url', array(
-	'href' => "thewire/owner/$subject->username",
+	'href' => $object->getURL(),
 	'text' => elgg_echo('thewire:wire'),
 	'class' => 'elgg-river-object',
 	'is_trusted' => true,
@@ -23,7 +25,7 @@ $object_link = elgg_view('output/url', array(
 
 $vars['item']->summary = elgg_echo("river:create:object:thewire", array($subject_link, $object_link));
 
-$object = $vars['item']->getObjectEntity();
+
 $excerpt = strip_tags($object->description);
 $excerpt = deck_river_wire_filter($excerpt);
 
