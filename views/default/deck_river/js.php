@@ -259,7 +259,7 @@ elgg.deck_river.init = function() {
 							$('<div>', {class: 'elgg-ajax-loader'})
 			))));
 		} else {
-			$('#user-info-popup > .elgg-body').html('<div class="elgg-ajax-loader"></div>');*/
+			*/
 
 			elgg.post('ajax/view/deck_river/ajax/load_discussion', {
 				dataType: "json",
@@ -274,19 +274,6 @@ elgg.deck_river.init = function() {
 						rel: 'toggle',
 						href: '#' + idToggle
 					}).html(elgg.echo('deck_river:toggle_discussion'));
-					/*$('#user-info-popup > .elgg-body').html(response);
-					$('#user-info-popup .elgg-tabs > li > a').click(function() {
-						var tab = $(this).attr('href');
-						if ($('#user-info-popup ' + tab).hasClass('hidden')) {
-							$('#user-info-popup .elgg-tabs > li').removeClass('elgg-state-selected');
-							$(this).parent('li').addClass('elgg-state-selected');
-							$('#user-info-popup .elgg-body > li').addClass('hidden');
-							$('#user-info-popup ' + tab).removeClass('hidden');
-						}
-						if (tab == '#user-info-activity' && $('#user-info-activity .elgg-ajax-loader').length) {
-							elgg.deck_river.LoadEntity($('#user-info-activity > .elgg-river').attr('data-user'), $('#user-info-popup #user-info-activity'));
-						}
-					});*/
 				},
 				error: function() {
 					//$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
@@ -460,8 +447,9 @@ elgg.deck_river.LoadEntity = function(TheEntity, TheColumn) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
+	var since_id = TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').first().text() || 0;
+	
 	if (TheColumn.find('h3').attr('data-direct') == 'true') {
-		var since_id = TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').text() || 0;
 		$.ajax({
 			url: 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=ManUtopiK&count=20&include_rts=1&since_id='+ since_id +'&callback=?',
 			dataType: 'json',
@@ -479,7 +467,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				tab: $('.deck-river-lists').attr('id'),
 				column: TheColumn.attr('id'),
 				time_method: 'lower',
-				time_posted: TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').text() || 0,
+				time_posted: since_id,
 			},
 			success: function(response) {
 				response.TheColumn = TheColumn;
