@@ -25,20 +25,22 @@ if ($post) {
 <div id="thewire-header">
 	<div id="thewire-textarea-border"></div>
 	<textarea id="thewire-textarea" name="body"></textarea>
-	<div class="url-shortener hidden">
-		<?php
-			echo elgg_view('input/text', array(
-				'value' => elgg_echo('deck-river:reduce_url:string'),
-			));
-			echo elgg_view('input/button', array(
-				'value' => elgg_echo('deck-river:copy_url'),
-				'class' => 'elgg-button-action hidden'
-			));
-			echo elgg_view('input/button', array(
-				'value' => elgg_echo('deck-river:reduce_url'),
-				'class' => 'elgg-button-submit'
-			));
-		?>
+	<div class="options hidden">
+		<div class="url-shortener">
+			<?php
+				echo elgg_view('input/text', array(
+					'value' => elgg_echo('deck-river:reduce_url:string'),
+				));
+				echo elgg_view('input/button', array(
+					'value' => elgg_echo('deck-river:copy_url'),
+					'class' => 'elgg-button-action hidden'
+				));
+				echo elgg_view('input/button', array(
+					'value' => elgg_echo('deck-river:reduce_url'),
+					'class' => 'elgg-button-submit'
+				));
+			?>
+		</div>
 	</div>
 	<div id="thewire-characters-remaining">
 		<span>0</span>

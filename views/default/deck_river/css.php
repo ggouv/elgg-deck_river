@@ -251,6 +251,9 @@ body {
 	position: relative;
 	width: 16px;
 }
+.elgg-list-item.responseAt {
+	background-color: #FFFFCC !important;
+}
 
 
 /* settings */

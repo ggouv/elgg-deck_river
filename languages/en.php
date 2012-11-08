@@ -16,6 +16,8 @@ $english = array(
 	'deck_river:more' => "More...",
 	'deck-river:reduce_url' => "Reduce",
 	'deck-river:copy_url' => "Insert",
+	'responseToHelper:text' => "Reply to %s : <span>%s</span>",
+	'responseToHelper:delete' => "Stop reply to %s",
 	
 	// river menu
 	'replyall' => "Répondre à tous",

@@ -45,11 +45,13 @@ elgg.deck_river.init = function() {
 	});
 	
 	$('#thewire-textarea').focusin(function() {
-		$('#thewire-header').addClass('extended');
+		var optionsHeight = $('#thewire-header').addClass('extended').find('.options').height();
+		$('#thewire-header').height(optionsHeight+117);
+		$('#thewire-textarea-border').height(optionsHeight+111);
 	}).focusout(function() {
 	 	if ($('#thewire-header').is(':hover')) {
 		} else {
-			$('#thewire-header').removeClass('extended');
+			$('#thewire-header').height(33).removeClass('extended');
 		}
 	});
 	$('#thewire-network .elgg-icon-delete').click(function() {
@@ -83,7 +85,7 @@ elgg.deck_river.init = function() {
 						$.data(thisSubmit, 'clicked', false);
 						$("#thewire-characters-remaining span").html('0');
 						$('#thewire-textarea').val('').parents('.elgg-form').find('input[name=parent_guid]').remove();
-						$('#thewire-header').removeClass('extended');
+						$('#thewire-header').height(33).removeClass('extended');
 						return false;
 					},
 					error: function(){
@@ -94,6 +96,47 @@ elgg.deck_river.init = function() {
 		}
 		e.preventDefault();
 		return false;
+	});
+	
+	// response to a wire post
+	$('#thewire-header .responseTo').die().live('click', function() {
+		$(this).parents('fieldset').find('input[name=parent_guid]').remove();
+		$(this).remove();
+		$('.tipsy').remove();
+		$('#thewire-header, #thewire-textarea-border').css({height: '+=-22'});
+		$('.elgg-list-item.thewire').removeClass('responseAt');
+	});
+	
+	// shortener url
+	$('#thewire-header .url-shortener .elgg-input-text').focusin(function() {
+		if (this.value == elgg.echo('deck-river:reduce_url:string')) {
+			this.value = '';
+		}
+	}).focusout(function() {
+		if (this.value == '') {
+			this.value = elgg.echo('deck-river:reduce_url:string');
+			$(this).parent().find('.elgg-button-action').addClass('hidden');
+		}
+	});
+	$('#thewire-header .url-shortener .elgg-button-submit').die().live('click', function() {
+		var longUrl = $(this).parent().find('.elgg-input-text');
+		if (longUrl.val() == elgg.echo('deck-river:reduce_url:string')) {
+			elgg.register_error(elgg.echo('deck_river:url-not-exist'));
+		} else if (longUrl.val() != '') {
+			elgg.deck_river.ShortenerUrl(longUrl.val(), longUrl);
+		}
+	});
+	$('#thewire-header .url-shortener .elgg-button-action').die().live('click', function() {
+		var txtarea = $('#thewire-textarea'),
+			shortUrl = $(this).parent().find('.elgg-input-text').val(),
+			strPos = txtarea.getCursorPosition(),
+			front = (txtarea.val()).substring(0,strPos),
+			back = (txtarea.val()).substring(strPos,txtarea.val().length); 
+		
+		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
+		if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) front = front + ' ';
+		if (back.substring(0, 1) != ' ' && back.length != 0) back = ' ' + back;
+		txtarea.val(front + shortUrl + back);
 	});
 	
 	// refresh column, use 'live' for new column
@@ -159,38 +202,6 @@ elgg.deck_river.init = function() {
 		revert:               500,
 		start: function(event, ui) { $('.column-placeholder').css('width', $('.column-header').width()-3); },
 		update:                elgg.deck_river.MoveColumn
-	});
-	
-	// shortener url
-	$('#thewire-header .url-shortener .elgg-input-text').focusin(function() {
-		if (this.value == elgg.echo('deck-river:reduce_url:string')) {
-			this.value = '';
-		}
-	}).focusout(function() {
-		if (this.value == '') {
-			this.value = elgg.echo('deck-river:reduce_url:string');
-			$(this).parent().find('.elgg-button-action').addClass('hidden');
-		}
-	});
-	$('#thewire-header .url-shortener .elgg-button-submit').die().live('click', function() {
-		var longUrl = $(this).parent().find('.elgg-input-text');
-		if (longUrl.val() == elgg.echo('deck-river:reduce_url:string')) {
-			elgg.register_error(elgg.echo('deck_river:url-not-exist'));
-		} else if (longUrl.val() != '') {
-			elgg.deck_river.ShortenerUrl(longUrl.val(), longUrl);
-		}
-	});
-	$('#thewire-header .url-shortener .elgg-button-action').die().live('click', function() {
-		var txtarea = $('#thewire-textarea'),
-			shortUrl = $(this).parent().find('.elgg-input-text').val(),
-			strPos = txtarea.getCursorPosition(),
-			front = (txtarea.val()).substring(0,strPos),
-			back = (txtarea.val()).substring(strPos,txtarea.val().length); 
-		
-		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
-		if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) front = front + ' ';
-		if (back.substring(0, 1) != ' ' && back.length != 0) back = ' ' + back;
-		txtarea.val(front + shortUrl + back);
 	});
 	
 	// user info popup
@@ -618,7 +629,8 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 						success: function(json) {
 							response = json.output;
 							if (response.action == 'delete') {
-								$('li.column-river[id="'+response.column+'"]').css('background-color', '#FF7777').fadeOut(400, function() {
+								$('li.column-river[id="'+response.column+'"] .elgg-list, li.column-river[id="'+response.column+'"] .elgg-list-item').css('background-color', '#FF7777');
+								$('li.column-river[id="'+response.column+'"]').fadeOut(400, function() {
 									$(this).animate({'width':0},'', function() {
 										$(this).remove();
 										elgg.deck_river.SetColumnsWidth();
@@ -778,6 +790,23 @@ elgg.deck_river.displayItems = function(response, thread) {
 		output = $(),
 		wirearea = $('#thewire-textarea');
 	
+	var responseToWire = function(wireGuidValue, responseToUser, WireID) {
+		$('.elgg-list-item.thewire').removeClass('responseAt');
+		var wireForm = wirearea.parents('fieldset'),
+			message = $('.item-river-'+WireID).addClass('responseAt').find('.elgg-river-message').first().text();;
+		
+		if (wireForm.find('input[name=parent_guid]').length) {
+			wireForm.find('input[name=parent_guid]').val(wireGuidValue);
+			wireForm.find('.responseTo').html(elgg.echo('responseToHelper:text', [responseToUser, message])).attr('title', elgg.echo('responseToHelper:delete', [responseToUser]));
+		} else {
+			wireForm.append($('<input>', {type: 'hidden', value: wireGuidValue, name: 'parent_guid'}));
+			wireForm.find('.options').prepend($('<div>', {
+				class: 'responseTo tooltip s',
+				title: elgg.echo('responseToHelper:delete', [responseToUser])
+			}).html(elgg.echo('responseToHelper:text', [responseToUser, message])));
+		}
+	}
+	
 	$.each(response.activity, function(key, value) {
 		var user = $.grep(response.users, function(e){ return e.guid == value.subject_guid; })[0],
 			menuOutput = subMenuOutput = riverResponses = $();
@@ -787,12 +816,8 @@ elgg.deck_river.displayItems = function(response, thread) {
 			menuOutput = menuOutput.after(
 				$('<li>').append(
 					$('<span>', {class: 'elgg-icon elgg-icon-response gwf tooltip s', title: elgg.echo('reply')}).html('&lt;').click(function() {
+						responseToWire(value.object_guid, user.username, value.id);
 						wirearea.val('@' + user.username).focus().keydown();
-						if (wirearea.find('input[name=parent_guid]').length) {
-							wirearea.find('input[name=parent_guid]').val(value.object_guid);
-						} else {
-							wirearea.parents('fieldset').append('<input type="hidden" value="'+ value.object_guid +'" name="parent_guid">');
-						}
 					})
 				)
 			);
