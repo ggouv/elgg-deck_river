@@ -244,6 +244,13 @@ body {
 .elgg-river-responses .thread .elgg-river-item.elgg-image-block .elgg-body {
 	margin-left: 30px;
 }
+.response-loader {
+	background: url(<?php echo elgg_get_site_url() . 'mod/elgg-deck_river/graphics/ajax-loader.gif'; ?>) no-repeat scroll 0 0 transparent;
+	height: 16px;
+	left: -20px;
+	position: relative;
+	width: 16px;
+}
 
 
 /* settings */
