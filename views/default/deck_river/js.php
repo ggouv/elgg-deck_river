@@ -44,6 +44,58 @@ elgg.deck_river.init = function() {
 		}
 	});
 	
+	$('#thewire-textarea').focusin(function() {
+		$('#thewire-header').addClass('extended');
+	}).focusout(function() {
+	 	if ($('#thewire-header').is(':hover')) {
+		} else {
+			$('#thewire-header').removeClass('extended');
+		}
+	});
+	$('#thewire-network .elgg-icon-delete').click(function() {
+		var net_input = $(this).parent('.net-profile').find('input'),
+			delete_icon = $(this).parent('.net-profile').find('.elgg-icon-delete');
+		if (net_input.val() === 'false') {
+			net_input.val(true);
+			delete_icon.addClass('hidden');
+		} else {
+			net_input.val(false);
+			delete_icon.removeClass('hidden');
+		}
+	});
+	
+	// thewire live post
+	$('#thewire-submit-button').click(function(e){
+		if ($('#thewire-textarea').val() == '') { // no text
+			elgg.system_message('thewire:blank');
+		} else if ($('#thewire-network input[value=true]').length == 0) { // no network actived
+			elgg.system_message('thewire:nonetwork');
+		} else {
+			thisSubmit = this;
+			if ($.data(this, 'clicked')) { // Prevent double-click
+				return false;
+			} else {
+				$.data(this, 'clicked', true);
+				dataString = $(this).parents('form').serialize();
+				elgg.action('deck_river/wire_input', {
+					data: dataString,
+					success: function(json) {
+						$.data(thisSubmit, 'clicked', false);
+						$("#thewire-characters-remaining span").html('0');
+						$('#thewire-textarea').val('').parents('.elgg-form').find('input[name=parent_guid]').remove();
+						$('#thewire-header').removeClass('extended');
+						return false;
+					},
+					error: function(){
+						$.data(thisSubmit, 'clicked', false);
+					}
+				});
+			}
+		}
+		e.preventDefault();
+		return false;
+	});
+	
 	// refresh column, use 'live' for new column
 	$('.elgg-column-refresh-button').die().live('click', function() {
 		elgg.deck_river.RefreshColumn($(this).parents('.column-river'));
@@ -121,7 +173,9 @@ elgg.deck_river.init = function() {
 	});
 	$('#thewire-header .url-shortener .elgg-button').die().live('click', function() {
 		var longUrl = $(this).parent().find('.elgg-input-text');
-		if (longUrl.val() != '') {
+		if (longUrl.val() == elgg.echo('deck-river:reduce_url:string')) {
+			elgg.register_error(elgg.echo('deck_river:url-not-exist'));
+		} else if (longUrl.val() != '') {
 			elgg.deck_river.ShortenerUrl(longUrl.val(), longUrl);
 		}
 	});
