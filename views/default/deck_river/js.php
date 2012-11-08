@@ -167,17 +167,30 @@ elgg.deck_river.init = function() {
 			this.value = '';
 		}
 	}).focusout(function() {
-		 if (this.value == '') {
-		 	this.value = elgg.echo('deck-river:reduce_url:string');
-		 }
+		if (this.value == '') {
+			this.value = elgg.echo('deck-river:reduce_url:string');
+			$(this).parent().find('.elgg-button-action').addClass('hidden');
+		}
 	});
-	$('#thewire-header .url-shortener .elgg-button').die().live('click', function() {
+	$('#thewire-header .url-shortener .elgg-button-submit').die().live('click', function() {
 		var longUrl = $(this).parent().find('.elgg-input-text');
 		if (longUrl.val() == elgg.echo('deck-river:reduce_url:string')) {
 			elgg.register_error(elgg.echo('deck_river:url-not-exist'));
 		} else if (longUrl.val() != '') {
 			elgg.deck_river.ShortenerUrl(longUrl.val(), longUrl);
 		}
+	});
+	$('#thewire-header .url-shortener .elgg-button-action').die().live('click', function() {
+		var txtarea = $('#thewire-textarea'),
+			shortUrl = $(this).parent().find('.elgg-input-text').val(),
+			strPos = txtarea.getCursorPosition(),
+			front = (txtarea.val()).substring(0,strPos),
+			back = (txtarea.val()).substring(strPos,txtarea.val().length); 
+		
+		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
+		if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) front = front + ' ';
+		if (back.substring(0, 1) != ' ' && back.length != 0) back = ' ' + back;
+		txtarea.val(front + shortUrl + back);
 	});
 	
 	// user info popup
@@ -745,6 +758,7 @@ elgg.deck_river.ShortenerUrl = function(url, input) {
 				elgg.register_error(elgg.echo('deck_river:url-bad-format'));
 			} else {
 				input.val(response);
+				input.parent().find('.elgg-button-action').removeClass('hidden');
 			}
 		},
 		error: function(response) {

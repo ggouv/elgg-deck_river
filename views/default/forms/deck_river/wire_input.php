@@ -31,6 +31,10 @@ if ($post) {
 				'value' => elgg_echo('deck-river:reduce_url:string'),
 			));
 			echo elgg_view('input/button', array(
+				'value' => elgg_echo('deck-river:copy_url'),
+				'class' => 'elgg-button-action hidden'
+			));
+			echo elgg_view('input/button', array(
 				'value' => elgg_echo('deck-river:reduce_url'),
 				'class' => 'elgg-button-submit'
 			));

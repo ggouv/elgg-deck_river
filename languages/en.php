@@ -15,6 +15,7 @@ $english = array(
 	'river:mentions' => "Mentions",
 	'deck_river:more' => "More...",
 	'deck-river:reduce_url' => "Reduce",
+	'deck-river:copy_url' => "Insert",
 	
 	// river menu
 	'replyall' => "Répondre à tous",
