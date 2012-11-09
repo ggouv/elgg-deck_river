@@ -71,6 +71,7 @@ body {
 .deck-river-lists .elgg-river {
 	height: 100%;
 	overflow-y: scroll;
+	overflow-x: hidden;
 }
 .elgg-list {
 	margin: 0;

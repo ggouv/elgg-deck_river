@@ -8,9 +8,6 @@ $entity_guid = get_input('guid', 'false');
 $time_method = get_input('time_method', 'false');
 $time_posted = get_input('time_posted', 'false');
 
-$user = elgg_get_logged_in_user_entity();
-setlocale(LC_TIME, $user->language, strtolower($user->language) . '_' . strtoupper($user->language));
-
 // hashtag ?
 if (strpos($entity_guid, '#') === 0) {
 	$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
