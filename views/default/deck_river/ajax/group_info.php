@@ -21,7 +21,7 @@ if (!$group) {
 		
 			<div class="elgg-body plm">
 				<h1 class="mbm"><?php echo $group->name; ?></h1>
-				<div><?php echo $group->briefdescription; ?></div>
+				<div><?php echo deck_river_wire_filter($group->briefdescription); ?></div>
 				
 				<?php
 					$profile_actions = '<ul class="elgg-menu profile-action-menu mvm float">';

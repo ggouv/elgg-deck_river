@@ -20,7 +20,7 @@ if (!$user) {
 			<div class="elgg-body plm">
 				<h1 class="mbm"><?php echo $user->realname; ?></h1>
 				<h2 class="mbs" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
-				<div><?php echo $user->briefdescription; ?></div>
+				<div><?php echo deck_river_wire_filter($user->briefdescription); ?></div>
 				
 				<?php
 				// grab the actions and admin menu items from user hover
