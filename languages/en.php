@@ -16,6 +16,7 @@ $english = array(
 	'deck_river:more' => "More...",
 	'deck-river:reduce_url' => "Reduce",
 	'deck-river:copy_url' => "Insert",
+	'deck-river:clean_url' => "Effacer",
 	'responseToHelper:text' => "Reply to %s : <span>%s</span>",
 	'responseToHelper:delete' => "Stop reply to %s",
 	

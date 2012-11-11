@@ -17,6 +17,7 @@ $french = array(
 	'deck-river:reduce_url:string' => "Réduire un lien...",
 	'deck-river:reduce_url' => "Réduire",
 	'deck-river:copy_url' => "Insérer",
+	'deck-river:clean_url' => "Effacer",
 	'responseToHelper:text' => "En réponse à %s : <span>%s</span>",
 	'responseToHelper:delete' => "Ne plus répondre à %s",
 	
