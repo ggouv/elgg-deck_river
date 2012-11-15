@@ -9,8 +9,8 @@
  *	Elgg-deck_river js
  *
  */
-var deck_river_min_width_column = <?php echo elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); ?> || 300;
-var deck_river_max_nbr_column = <?php echo elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river'); ?> || 10;
+var deck_river_min_width_column = <?php $mwc = elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); echo $mwc ? $mwc : 300; ?>;
+var deck_river_max_nbr_column = <?php $mnc = elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
 
 /**
  * Elgg-deck_river initialization
@@ -213,6 +213,8 @@ elgg.deck_river.init = function() {
 	// user info popup
 	$('.user-info-popup').die().live('click', function() {
 		if (!$('#user-info-popup').length) {
+			//var method = 'append';
+			//$('.elgg-page-body')[method](
 			$('.elgg-page-body').append(
 				$('<div>', {id: 'user-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
 					$('<div>', {class: 'elgg-head'}).append(

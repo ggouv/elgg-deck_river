@@ -9,6 +9,7 @@ $user_guid = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($user_guid, 'deck_river_settings'));
 if ( !$user_river_options || !is_array($user_river_options) ) {
 	$set = str_replace("&gt;", ">", elgg_get_plugin_setting('default_columns', 'elgg-deck_river'));
+	if (!$set) $set = elgg_echo('deck_river:settings:default_column:default');
 	eval("\$defaults = $set;");
 	set_private_setting($user_guid, 'deck_river_settings', serialize($defaults));
 	$user_river_options = $defaults;

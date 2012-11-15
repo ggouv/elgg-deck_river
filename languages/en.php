@@ -67,6 +67,37 @@ $english = array(
 	'deck_river:settings:reset_user:nok' => "Impossible to reset column's settings of user %s.",
 	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
 	'deck_river:settings:twitter_consumer_secret' => "Consumer secret :",
+	'deck_river:settings:default_column:default' => "array(
+	'default' => array(
+		'column-1' => array(
+			'title' => elgg_echo('river:all'),
+			'subtitle' => '',
+			'type' => 'all'
+		),
+		'column-2' => array(
+			'title' => elgg_echo('river:timeline'),
+			'subtitle' => elgg_echo('river:timeline:definition'),
+			'type' => 'friends'
+		),
+		'column-3' => array(
+			'title' => elgg_echo('river:mine'),
+			'subtitle' => get_entity(\$user_guid)->name,
+			'type' => 'mine'
+		),
+		'column-4' => array(
+			'title' => '@' . get_entity(\$user_guid)->name,
+			'subtitle' => elgg_echo('river:mentions'),
+			'type' => 'mention'
+		)
+	)
+)",
+	'deck_river:settings:column_type:default' => "array('all' => elgg_echo('river:all'),
+	'friends' => elgg_echo('river:friends'),
+	'mine' => elgg_echo('river:mine'),
+	'mention' => elgg_echo('river:mentions') . ' @' . get_entity(\$user_guid)->name,
+	'group' => elgg_echo('group'),
+	'search' => elgg_echo('search'),
+)",
 	
 	// messages
 	'deck_river:url-not-exist' => "There is no url to reduce.",

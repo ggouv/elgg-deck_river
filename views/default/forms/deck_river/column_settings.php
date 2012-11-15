@@ -63,6 +63,7 @@ $column_title = $user_river_column_options['title'];
 				<label><?php echo elgg_echo('deck_river:type'); ?></label><br />
 				<?php
 					$set = str_replace("&gt;", ">", elgg_get_plugin_setting('column_type', 'elgg-deck_river'));
+					if (!$set) $set = elgg_echo('deck_river:settings:column_type:default');
 					eval("\$options_values = $set;");
 					echo elgg_view('input/dropdown', array(
 						'name' => 'type',
