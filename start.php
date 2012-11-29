@@ -114,7 +114,7 @@ function search_group_by_title($group) {
 	// Caching
 	if ((isset($GROUP_TITLE_TO_GUID_MAP_CACHE[$group]))
 	&& (retrieve_cached_entity($GROUP_TITLE_TO_GUID_MAP_CACHE[$group]))) {
-		return retrieve_cached_entity($GROUP_TITLE_TO_GUID_MAP_CACHE[$group]);
+		return retrieve_cached_entity($GROUP_TITLE_TO_GUID_MAP_CACHE[$group])->guid;
 	}
 
 	$guid = get_data("SELECT guid from {$CONFIG->dbprefix}groups_entity where name='$group'");
