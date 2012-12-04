@@ -1,6 +1,9 @@
 body {
 	width: 100%;
 }
+body.fixed {
+	position: fixed;
+}
 .elgg-main {
 	padding: 10px 0 0;
 }

@@ -22,7 +22,7 @@ elgg.provide('elgg.deck_river');
 elgg.deck_river.init = function() {
 	$(document).ready(function() {
 		if ( $('.deck-river').length ) {
-			$('body').css('position','fixed');
+			$('body').addClass('fixed');
 			$('.elgg-page-default .elgg-page-body > .elgg-inner').css('width','100%');
 			elgg.deck_river.SetColumnsHeight();
 			elgg.deck_river.SetColumnsWidth();
@@ -33,7 +33,7 @@ elgg.deck_river.init = function() {
 			});
 
 		} else {
-			$('body').css('position','relative');
+			$('body').removeClass('fixed');
 		}
 	});
 
@@ -54,7 +54,7 @@ elgg.deck_river.init = function() {
 			$('#thewire-header').height(33).removeClass('extended');
 		}
 	});
-	$('#thewire-network .elgg-icon-delete').click(function() {
+	$('#thewire-network .elgg-icon-delete').die().live('click', function() {
 		var net_input = $(this).parent('.net-profile').find('input'),
 			delete_icon = $(this).parent('.net-profile').find('.elgg-icon-delete');
 		if (net_input.val() === 'false') {
@@ -67,7 +67,7 @@ elgg.deck_river.init = function() {
 	});
 	
 	// thewire live post
-	$('#thewire-submit-button').click(function(e){
+	$('#thewire-submit-button').die().live('click', function(e){
 		if ($('#thewire-textarea').val() == '') { // no text
 			elgg.system_message('thewire:blank');
 		} else if ($('#thewire-network input[value=true]').length == 0) { // no network actived
