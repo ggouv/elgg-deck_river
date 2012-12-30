@@ -1,7 +1,7 @@
 body {
 	width: 100%;
 }
-body.fixed {
+body.fixed-deck {
 	position: fixed;
 }
 .elgg-main {

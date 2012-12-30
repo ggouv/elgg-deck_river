@@ -22,7 +22,7 @@ elgg.provide('elgg.deck_river');
 elgg.deck_river.init = function() {
 	$(document).ready(function() {
 		if ( $('.deck-river').length ) {
-			$('body').addClass('fixed');
+			$('body').addClass('fixed-deck');
 			$('.elgg-page-default .elgg-page-body > .elgg-inner').css('width','100%');
 			elgg.deck_river.SetColumnsHeight();
 			elgg.deck_river.SetColumnsWidth();
@@ -33,7 +33,7 @@ elgg.deck_river.init = function() {
 			});
 
 		} else {
-			$('body').removeClass('fixed');
+			$('body').removeClass('fixed-deck');
 		}
 	});
 
