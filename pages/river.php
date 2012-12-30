@@ -22,7 +22,7 @@ $activity = "<div class='deck-river-lists' id='{$page_filter}'><ul class='deck-r
 
 foreach ($user_river_options[$page_filter] as $key => $tab_options) {
 	$options['title'] = $tab_options['title'];
-	$direct = $tab_options['direct'] == true ? ' data-direct="true"' : '';
+	$direct = (isset($tab_options['direct']) && $tab_options['direct'] == true) ? ' data-direct="true"' : '';
 	$activity .= "<li class='column-river' id='{$key}'>" .
 				'<ul class="column-header"><li>' .
 				'<h3 class="title"' . $direct . '>' . $tab_options['title'] . '</h3>' .

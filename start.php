@@ -40,6 +40,10 @@ function deck_river_page_handler($page) {
 
 	if (elgg_is_logged_in()) {
 	
+		if (!isset($page[0])) {
+			$page[0] = 'default';
+		}
+	
 		switch ($page[0]) {
 			default:
 				elgg_set_context(elgg_extract(0, $page, 'default'));
