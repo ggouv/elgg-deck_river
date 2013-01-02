@@ -39,7 +39,6 @@ if (strpos($entity_guid, '#') === 0) {
 $options['types_filter'] = get_input('types_filter');
 $options['subtypes_filter'] = get_input('subtypes_filter');
 
-
 // set time_method and set $where_with_time in case of multiple query
 if ($time_method == 'lower') {
 	$options['posted_time_lower'] = (int)$time_posted+1; // +1 for not repeat first river item

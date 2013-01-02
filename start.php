@@ -20,6 +20,7 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax/column_river');
 	elgg_register_ajax_view('deck_river/ajax/column_settings');
 	elgg_register_ajax_view('deck_river/ajax/entity_river');
+	elgg_register_ajax_view('deck_river/ajax/entity_mention');
 	elgg_register_ajax_view('deck_river/ajax/user_info');
 	elgg_register_ajax_view('deck_river/ajax/group_info');
 	elgg_register_ajax_view('deck_river/ajax/url_shortener');

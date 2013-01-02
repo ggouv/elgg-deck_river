@@ -55,6 +55,9 @@ elgg.deck_river.popups = function() {
 					if (tab == '#user-info-activity' && $('#user-info-activity .elgg-ajax-loader').length) {
 						elgg.deck_river.LoadEntity($('#user-info-activity > .elgg-river').attr('data-user'), $('#user-info-popup #user-info-activity'));
 					}
+					if (tab == '#user-info-mentions' && $('#user-info-mentions .elgg-ajax-loader').length) {
+						elgg.deck_river.LoadMentions($('#user-info-mentions > .elgg-river').attr('data-user'), $('#user-info-popup #user-info-mentions'));
+					}
 				});
 			},
 			error: function() {
@@ -99,6 +102,9 @@ elgg.deck_river.popups = function() {
 					}
 					if (tab == '#group-info-activity' && $('#group-info-activity .elgg-ajax-loader').length) {
 						elgg.deck_river.LoadEntity($('#group-info-activity > .elgg-river').attr('data-group'), $('#group-info-popup #group-info-activity'));
+					}
+					if (tab == '#group-info-mentions' && $('#group-info-mentions .elgg-ajax-loader').length) {
+						elgg.deck_river.LoadMentions($('#group-info-mentions > .elgg-river').attr('data-group'), $('#group-info-popup #group-info-mentions'));
 					}
 				});
 			},

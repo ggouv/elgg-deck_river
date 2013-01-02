@@ -158,6 +158,60 @@ elgg.deck_river.LoadEntity = function(TheEntity, TheColumn) {
 	});
 };
 
+/**
+ * duplicate LoadEntity for mentions. @todo merge with elgg.deck_river.LoadColumn
+ *
+ * Makes Ajax call to persist column and inserts the column html
+ *
+ * @param {TheEntity} the entity
+ * @param {TheColumn} the column where response will be displayed
+ * @return void
+ */
+elgg.deck_river.LoadMentions = function(TheEntity, TheColumn) {
+	elgg.post('ajax/view/deck_river/ajax/entity_mention', {
+		dataType: "json",
+		data: {
+			guid: TheEntity,
+		},
+		success: function(response) {
+			if (response) {
+				TheColumn.find('.elgg-river').html(elgg.deck_river.displayItems(response));
+				$('.elgg-submenu-river > .elgg-module-popup').mouseleave(function() {
+					$('.elgg-submenu-river').removeClass('hover');
+				});
+				if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
+					TheColumn.find('.elgg-river').append($('<li>', {class: 'moreItem'}).html(elgg.echo('deck_river:more')));
+	
+					// load more items
+					TheColumn.find('.moreItem').click(function() {
+						var TheColumn = $(this).closest('.elgg-river').parent();
+						var LastItem = TheColumn.find('.elgg-river .elgg-list-item:last');
+						TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
+						elgg.post('ajax/view/deck_river/ajax/entity_river', {
+								dataType: 'json',
+								data: {
+									guid: TheEntity,
+									time_method: 'upper',
+									time_posted: LastItem.find('.elgg-friendlytime span').text(),
+							},
+								success: function(response) {
+									TheColumn.find('.elgg-river').append(elgg.deck_river.displayItems(response))
+										.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
+									//	var pos = LastItem.next().position();
+									//TheColumn.find('.elgg-river').scrollTo('+='+pos.top+'px', 2500, {easing:'easeOutQuart'});
+									TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+								}
+						});
+					});
+				}
+			}  else {
+				TheColumn.find('.elgg-river').html(elgg.echo('deck_river:activity:none'));
+			}
+			TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
+		}
+	});
+};
+
 
 /**
  * Refresh a column
@@ -296,7 +350,7 @@ elgg.deck_river.displayItems = function(response, thread) {
 			}).html(elgg.echo('responseToHelper:text', [responseToUser, message])));
 		}
 	}
-	
+
 	$.each(response.activity, function(key, value) {
 		var user = $.grep(response.users, function(e){ return e.guid == value.subject_guid; })[0],
 			menuOutput = subMenuOutput = riverResponses = $();
