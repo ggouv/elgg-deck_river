@@ -167,7 +167,7 @@ elgg.deck_river.LoadEntity = function(TheEntity, TheColumn) {
  * @param {TheColumn} the column where response will be displayed
  * @return void
  */
-elgg.deck_river.LoadMentions = function(TheEntity, TheColumn) {
+elgg.deck_river.LoadMention = function(TheEntity, TheColumn) {
 	elgg.post('ajax/view/deck_river/ajax/entity_mention', {
 		dataType: "json",
 		data: {

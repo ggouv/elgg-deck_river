@@ -53,6 +53,7 @@ $english = array(
 	'deck_river:user-not-exist' => "This user doesn't exits.",
 	'deck_river:user-info-header' => "Informations on this person",
 	'deck_river:hashtag-info-header' => "Search: %s",
+	'deck_river:mention' => "Mention",
 	
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Minimum width of columns',

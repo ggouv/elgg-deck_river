@@ -12,7 +12,7 @@ if (!$user) {
 <ul class="elgg-tabs elgg-htabs">
 	<li class=" elgg-state-selected"><a href="#user-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 	<li><a href="#user-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
-	<li><a href="#user-info-mentions"><?php echo elgg_echo('mentions'); ?></a></li>
+	<li><a href="#user-info-mention"><?php echo elgg_echo('deck_river:mention'); ?></a></li>
 </ul>
 <ul class="elgg-body">
 	<li id="user-info-profile">
@@ -55,7 +55,7 @@ if (!$user) {
 	<li id="user-info-activity" class="hidden">
 		<ul class="elgg-river elgg-list" data-user="<?php echo $user->guid; ?>"><div class="elgg-ajax-loader"></div></ul>
 	</li>
-	<li id="user-info-mentions" class="hidden">
+	<li id="user-info-mention" class="hidden">
 		<ul class="elgg-river elgg-list" data-user="<?php echo $user->guid; ?>"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

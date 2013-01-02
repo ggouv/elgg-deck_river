@@ -59,6 +59,7 @@ $french = array(
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
 	'deck_river:user-info-header' => "Informations sur cette personne",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
+	'deck_river:mention' => "Mention",
 	
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Largeur minimum des colonnes',

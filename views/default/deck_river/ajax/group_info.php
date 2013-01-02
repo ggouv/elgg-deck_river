@@ -14,7 +14,7 @@ if (!$group) {
 <ul class="elgg-tabs elgg-htabs">
 	<li class=" elgg-state-selected"><a href="#group-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 	<li><a href="#group-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
-	<li><a href="#group-info-mentions"><?php echo elgg_echo('mentions'); ?></a></li>
+	<li><a href="#group-info-mention"><?php echo elgg_echo('deck_river:mention'); ?></a></li>
 </ul>
 <ul class="elgg-body">
 	<li id="group-info-profile">
@@ -61,7 +61,7 @@ if (!$group) {
 	<li id="group-info-activity" class="hidden">
 		<ul class="elgg-river elgg-list" data-group="<?php echo $group_id; ?>"><div class="elgg-ajax-loader"></div></ul>
 	</li>
-		<li id="group-info-mentions" class="hidden">
+		<li id="group-info-mention" class="hidden">
 		<ul class="elgg-river elgg-list" data-group="<?php echo $group_id; ?>"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>
