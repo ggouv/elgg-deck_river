@@ -187,7 +187,7 @@ elgg.deck_river.LoadMentions = function(TheEntity, TheColumn) {
 						var TheColumn = $(this).closest('.elgg-river').parent();
 						var LastItem = TheColumn.find('.elgg-river .elgg-list-item:last');
 						TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
-						elgg.post('ajax/view/deck_river/ajax/entity_river', {
+						elgg.post('ajax/view/deck_river/ajax/entity_mention', {
 								dataType: 'json',
 								data: {
 									guid: TheEntity,
