@@ -13,7 +13,14 @@ $entity = get_entity($entity_guid);
 $options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 $options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 $options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-$options['wheres'][] = "((o.description REGEXP '!" . $entity->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '!" . $entity->name . "([[:blank:]]|$|<)'))";
+
+if (elgg_instanceof($entity,'group')) {
+	$options['wheres'][] = "((o.description REGEXP '!" . $entity->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '!" . $entity->name . "([[:blank:]]|$|<)'))";
+} else if (elgg_instanceof($entity,'user')) {
+	$options['wheres'][] = "((o.description REGEXP '@" . $entity->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $entity->name . "([[:blank:]]|$|<)'))";
+} else {
+	return;
+}
 
 $options['types_filter'] = get_input('types_filter');
 $options['subtypes_filter'] = get_input('subtypes_filter');
