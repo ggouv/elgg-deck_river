@@ -246,21 +246,21 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 							} else {
 								if (response.action == 'new') {
 									$('.deck-river-lists-container').append(
-										$('<li>', {class: 'column-river', id: response.column}).append(
-											$('<ul>', {class: 'column-header'}).after(
-												$('<ul>', {class: 'elgg-river elgg-list'})
+										$('<li>', {'class': 'column-river', id: response.column}).append(
+											$('<ul>', {'class': 'column-header'}).after(
+												$('<ul>', {'class': 'elgg-river elgg-list'})
 									)));
 									$('li.column-river:first-child .column-header').clone().appendTo($('li.column-river[id="'+response.column+'"] .column-header'))
 									elgg.deck_river.SetColumnsHeight();
 									elgg.deck_river.SetColumnsWidth();
-									$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {class: 'elgg-ajax-loader'}));
+									$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 									elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
 									$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
 								} else if (response.action == 'change') {
-									$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {class: 'elgg-ajax-loader'}));
+									$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 									elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
 								}
-								$('li.column-river[id="'+response.column+'"] .column-header h3').replaceWith($('<h3>', {class: 'title'}).html(response.column_title));
+								$('li.column-river[id="'+response.column+'"] .column-header h3').replaceWith($('<h3>', {'class': 'title'}).html(response.column_title));
 								$('li.column-river[id="'+response.column+'"] .column-header h6').html(response.column_subtitle);
 								if (response.direct == 'true') $('li.column-river[id="'+response.column+'"] h3').attr('data-direct', 'true');
 							}

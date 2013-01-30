@@ -22,20 +22,20 @@ elgg.deck_river.popups = function() {
 			//var method = 'append';
 			//$('.elgg-page-body')[method](
 			$('.elgg-page-body').append(
-				$('<div>', {id: 'user-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
-					$('<div>', {class: 'elgg-head'}).append(
+				$('<div>', {id: 'user-info-popup', 'class': 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
+					$('<div>', {'class': 'elgg-head'}).append(
 						$('<h3>').html(elgg.echo('deck_river:user-info-header')).after(
 						$('<a>').append(
-							$('<span>', {class: 'elgg-icon elgg-icon-delete-alt'})
+							$('<span>', {'class': 'elgg-icon elgg-icon-delete-alt'})
 						).click(function() {
 							$('#user-info-popup').remove();
 						})
 					)).after(
-						$('<div>', {class: 'elgg-body'}).append(
-							$('<div>', {class: 'elgg-ajax-loader'})
+						$('<div>', {'class': 'elgg-body'}).append(
+							$('<div>', {'class': 'elgg-ajax-loader'})
 			))));
 		} else {
-			$('#user-info-popup > .elgg-body').html($('<div>', {class: 'elgg-ajax-loader'}));
+			$('#user-info-popup > .elgg-body').html($('<div>', {'class': 'elgg-ajax-loader'}));
 		}
 		elgg.post('ajax/view/deck_river/ajax/user_info', {
 			dataType: "html",
@@ -70,20 +70,20 @@ elgg.deck_river.popups = function() {
 	$('.group-info-popup').die().live('click', function() {
 		if (!$('#group-info-popup').length) {
 			$('.elgg-page-body').append(
-				$('<div>', {id: 'group-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
-					$('<div>', {class: 'elgg-head'}).append(
+				$('<div>', {id: 'group-info-popup', 'class': 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
+					$('<div>', {'class': 'elgg-head'}).append(
 						$('<h3>').html(elgg.echo('deck_river:group-info-header')).after(
 						$('<a>').append(
-							$('<span>', {class: 'elgg-icon elgg-icon-delete-alt'})
+							$('<span>', {'class': 'elgg-icon elgg-icon-delete-alt'})
 						).click(function() {
 							$('#group-info-popup').remove();
 						})
 					)).after(
-						$('<div>', {class: 'elgg-body'}).append(
-							$('<div>', {class: 'elgg-ajax-loader'})
+						$('<div>', {'class': 'elgg-body'}).append(
+							$('<div>', {'class': 'elgg-ajax-loader'})
 			))));
 		} else {
-			$('#group-info-popup > .elgg-body').html($('<div>', {class: 'elgg-ajax-loader'}));
+			$('#group-info-popup > .elgg-body').html($('<div>', {'class': 'elgg-ajax-loader'}));
 		}
 		elgg.post('ajax/view/deck_river/ajax/group_info', {
 			dataType: "html",
@@ -118,21 +118,21 @@ elgg.deck_river.popups = function() {
 	$('.hashtag-info-popup').die().live('click', function() {
 		if (!$('#hashtag-info-popup').length) {
 			$('.elgg-page-body').append(
-				$('<div>', {id: 'hashtag-info-popup', class: 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
-					$('<div>', {class: 'elgg-head'}).append(
+				$('<div>', {id: 'hashtag-info-popup', 'class': 'elgg-module-popup'}).draggable({ handle: ".elgg-head" }).append(
+					$('<div>', {'class': 'elgg-head'}).append(
 						$('<h3>').html(elgg.echo('deck_river:hashtag-info-header', [$(this).attr('title')])).after(
 						$('<a>').append(
-							$('<span>', {class: 'elgg-icon elgg-icon-delete-alt'})
+							$('<span>', {'class': 'elgg-icon elgg-icon-delete-alt'})
 						).click(function() {
 							$('#hashtag-info-popup').remove();
 						})
 					)).after(
-						$('<div>', {class: 'elgg-body'}).append(
-							$('<ul>', {class: 'elgg-river elgg-list'}).append(
-								$('<div>', {class: 'elgg-ajax-loader'})
+						$('<div>', {'class': 'elgg-body'}).append(
+							$('<ul>', {'class': 'elgg-river elgg-list'}).append(
+								$('<div>', {'class': 'elgg-ajax-loader'})
 			)))));
 		} else {
-			$('#hashtag-info-popup > .elgg-river').html($('<div>', {class: 'elgg-ajax-loader'}));
+			$('#hashtag-info-popup > .elgg-river').html($('<div>', {'class': 'elgg-ajax-loader'}));
 		}
 		elgg.deck_river.LoadEntity($(this).attr('title'), $('#hashtag-info-popup'));
 	});
