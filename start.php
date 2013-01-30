@@ -30,7 +30,8 @@ function deck_river_init() {
 
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
-	elgg_register_action("deck_river/wire_input", "$action_path/wire_input.php");	
+	elgg_register_action('deck_river/wire_input', "$action_path/thewire/wire_input.php");
+	elgg_register_action('thewire/delete', "$action_path/thewire/delete.php");
 	elgg_register_action('deck_river/column/settings', "$action_path/column/settings.php");
 	elgg_register_action('deck_river/column/move', "$action_path/column/move.php");
 	elgg_register_action('deck_river/tab/add', "$action_path/tab/add.php");
