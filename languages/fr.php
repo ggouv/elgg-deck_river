@@ -54,6 +54,7 @@ $french = array(
 	'deck_river:filter' => 'Filtre :',
 	'deck_river:title' => 'Titre de la colonne :',
 	'deck_river:search' => 'Recherche :',
+	'deck_river:filter:all' => 'Tout',
 	
 	//info popup
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",

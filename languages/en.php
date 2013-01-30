@@ -48,6 +48,7 @@ $english = array(
 	'deck_river:filter' => 'Filter:',
 	'deck_river:title' => 'Title:',
 	'deck_river:search' => 'Search:',
+	'deck_river:filter:all' => 'All',
 	
 	// user info popup
 	'deck_river:user-not-exist' => "This user doesn't exits.",

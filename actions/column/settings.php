@@ -94,7 +94,7 @@ if ($submit == 'delete') {
 	if ($subtypes_filter == '0') $subtypes_filter = ''; // in case no checkbox checked
 	if ($user_river_options[$tab][$column]['types_filter'] != $types_filter || $user_river_options[$tab][$column]['subtypes_filter'] != $subtypes_filter) {
 		if (in_array('All', $types_filter)) {
-			if (isset($user_river_options[$tab][$column]['types_filter'])) $return['action'] = 'change';
+			if (isset($user_river_options[$tab][$column]['types_filter']) || isset($user_river_options[$tab][$column]['subtypes_filter'])) $return['action'] = 'change';
 			unset($user_river_options[$tab][$column]['types_filter']);
 			unset($user_river_options[$tab][$column]['subtypes_filter']);
 		} elseif ($types_filter == 0) {
