@@ -26,8 +26,7 @@ if (empty($body)) {
 		
 		// Send response to original poster if not already registered to receive notification
 		if ($parent_guid) {
-			thewire_send_response_notification($guid, $parent_guid, $user);
-			$parent = get_entity($parent_guid);
+			deck_river_thewire_send_response_notification($guid, $parent_guid, $user);
 		}
 		
 		system_message(elgg_echo("thewire:posted"));

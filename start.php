@@ -358,6 +358,50 @@ function deck_river_thewire_notify_message($hook, $entity_type, $returnvalue, $p
 
 
 /**
+ * Send notification to poster of parent post if not notified already
+ *
+ * @param int      $guid        The guid of the reply wire post
+ * @param int      $parent_guid The guid of the original wire post
+ * @param ElggUser $user        The user who posted the reply
+ * @return void
+ */
+function deck_river_thewire_send_response_notification($guid, $parent_guid, $user) {
+	$parent_owner = get_entity($parent_guid)->getOwnerEntity();
+	$user = elgg_get_logged_in_user_entity();
+
+	// check to make sure user is not responding to self
+	if ($parent_owner->guid != $user->guid) {
+		// check if parent owner has notification for this user
+		$send_response = true;
+		global $NOTIFICATION_HANDLERS;
+		foreach ($NOTIFICATION_HANDLERS as $method => $foo) {
+			if (check_entity_relationship($parent_owner->guid, 'notify' . $method, $user->guid)) {
+				$send_response = false;
+			}
+		}
+
+		// create the notification message
+		if ($send_response) {
+			// grab same notification message that goes to everyone else
+			$params = array(
+				'entity' => get_entity($guid),
+				'method' => "email",
+			);
+			$msg = deck_river_thewire_notify_message("", "", "", $params);
+
+			notify_user(
+					$parent_owner->guid,
+					$user->guid,
+					elgg_echo('thewire:notify:subject'),
+					$msg);
+		}
+	}
+}
+
+
+
+
+/**
 * Google url shortener
 * http://www.webgalli.com/blog/easily-create-short-urls-with-php-curl-and-goo-gl-or-bit-ly/
 */
