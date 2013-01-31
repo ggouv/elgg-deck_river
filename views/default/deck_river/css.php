@@ -390,3 +390,41 @@ body.fixed-deck {
 	font-size: 200%;
 	line-height: 0.9em;
 }
+
+/* single view */
+.single-view .elgg-list-item {
+	opacity: 0.6;
+}
+.single-view .elgg-list-item:hover {
+	opacity: 1;
+}
+.single-view .viewed {
+	opacity: 1;
+	padding: 10px 0 !important;
+	background: none;
+}
+.single-view .elgg-river-responses {
+	display: none;
+}
+.viewed .elgg-image-block {
+	box-shadow: 0 0 10px #CCCCCC;
+	margin: 10px;
+	padding: 10px;
+}
+.viewed .elgg-avatar-small > div > img {
+	height: 40px ;
+	width: 40px;
+}
+.viewed .elgg-image-block .elgg-body {
+	margin-left: 50px;
+}
+.viewed .elgg-menu-river {
+	opacity: 1;
+}
+.viewed .elgg-river-summary {
+	font-size: 115%;
+}
+.viewed .elgg-river-message {
+	font-size: 130%;
+	color: #333;
+}

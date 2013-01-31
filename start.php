@@ -5,11 +5,13 @@ elgg_register_event_handler('init','system','deck_river_init');
 function deck_river_init() {
 
 	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
+	elgg_register_library('deck_river:river_loader', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_loader.php');
+
 	elgg_register_class('EpiCurl', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiCurl.php');
 	elgg_register_class('EpiOAuth', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiOAuth.php');
 	elgg_register_class('EpiTwitter', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiTwitter.php');
 	
-	elgg_load_library('deck_river:api');
+	//elgg_load_library('deck_river:api');
 
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js/init');
@@ -27,6 +29,7 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax/load_discussion');
 
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
+	elgg_register_page_handler('thewire', 'deck_river_wire_page_handler');
 
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
@@ -62,6 +65,79 @@ function deck_river_page_handler($page) {
 
 	return true;
 }
+
+/**
+ * The wire page handler
+ *
+ * Supports:
+ * thewire/owner/<username>     View this user's wire posts
+ * thewire/following/<username> View the posts of those this user follows
+ * thewire/reply/<guid>         Reply to a post
+ * thewire/view/<guid>          View a post
+ * thewire/thread/<id>          View a conversation thread
+ * thewire/tag/<tag>            View wire posts tagged with <tag>
+ *
+ * @param array $page From the page_handler function
+ * @return bool
+ */
+function deck_river_wire_page_handler($page) {
+
+	$base_dir = elgg_get_plugins_path() . 'elgg-deck_river/pages/thewire';
+
+	if (!isset($page[0]) || $page[0] == 'all') {
+		forward('activity');
+	}
+
+	switch ($page[0]) {
+		case "friends":
+			include "$base_dir/friends.php";
+			break;
+
+		case "owner":
+			include "$base_dir/owner.php";
+			break;
+
+		case "view":
+			if (isset($page[1])) {
+				set_input('guid', $page[1]);
+			}
+			include "$base_dir/view.php";
+			break;
+
+		case "thread":
+			if (isset($page[1])) {
+				set_input('thread_id', $page[1]);
+			}
+			include "$base_dir/thread.php";
+			break;
+
+		case "reply":
+			if (isset($page[1])) {
+				set_input('guid', $page[1]);
+			}
+			include "$base_dir/reply.php";
+			break;
+
+		case "tag":
+			if (isset($page[1])) {
+				set_input('tag', $page[1]);
+			}
+			include "$base_dir/tag.php";
+			break;
+
+		case "previous":
+			if (isset($page[1])) {
+				set_input('guid', $page[1]);
+			}
+			include "$base_dir/previous.php";
+			break;
+
+		default:
+			return false;
+	}
+	return true;
+}
+
 
 
 /**

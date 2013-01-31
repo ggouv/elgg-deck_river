@@ -35,6 +35,12 @@ elgg.deck_river.init = function() {
 		} else {
 			$('body').removeClass('fixed-deck');
 		}
+
+		if ($('#json-river-thread').length) {
+			var rThread = $('#json-river-thread');
+			$('.elgg-river').html(elgg.deck_river.displayItems($.parseJSON(rThread.val())));
+			$('.item-river-'+rThread.attr('data-message-id')).addClass('viewed');
+		}
 	});
 
 	$(window).bind("resize", function() {
@@ -125,7 +131,7 @@ elgg.deck_river.init = function() {
 	});
 
 	// Delete tabs
-	$('.delete-tab').click(function() {
+	$('.delete-tab').die().live('click', function() {
 		var tab = $(this).closest('li').text();
 		var tab_string = tab.charAt(0).toUpperCase() + tab.slice(1);
 		if (confirm(elgg.echo('deck_river:delete:tab:confirm', [tab_string]))) {
