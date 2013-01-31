@@ -42,6 +42,17 @@ function deck_river_init() {
 	elgg_register_action('deck_river/tab/rename', "$action_path/tab/rename.php");
 	elgg_register_action('elgg-deck_river/settings/save', "$action_path/plugins/save.php");
 
+	// Register a URL handler for thewire posts
+	elgg_register_entity_url_handler('object', 'thewire', 'deck_river_thewire_url');
+
+	// Register for search
+	elgg_register_entity_type('object', 'thewire');
+
+	// Register granular notification for this type
+	register_notification_object('object', 'thewire', elgg_echo('thewire:notify:subject'));
+
+	// Listen to notification events and supply a more useful message
+	elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'deck_river_thewire_notify_message');
 }
 
 function deck_river_page_handler($page) {
@@ -141,6 +152,17 @@ function deck_river_wire_page_handler($page) {
 
 
 /**
+ * Override the url for a wire post to return the thread
+ * 
+ * @param ElggObject $thewirepost Wire post object
+ */
+function deck_river_thewire_url($thewirepost) {
+	return "thewire/view/" . $thewirepost->guid;
+}
+
+
+
+/**
  * Replace urls, hashtags,  ! and @ by links
  *
  * @param string $text The text of a post
@@ -216,6 +238,122 @@ function search_group_by_title($group) {
 		return false;
 	}
 }
+
+
+
+/**
+ * Get an array of hashtags from a text string
+ * 
+ * @param string $text The text of a post
+ * @return array
+ */
+function deck_river_thewire_get_hashtags($text) {
+	// beginning of text or white space followed by hashtag
+	// hashtag must begin with # and contain at least one character not digit, space, or punctuation
+	$matches = array();
+	preg_match_all('/(^|[^\w])#(\w*[^\s\d!-\/:-@]+\w*)/', $text, $matches);
+	return $matches[2];
+}
+
+
+
+/**
+ * Create a new wire post.
+ *
+ * @param string $text        The post text
+ * @param int    $userid      The user's guid
+ * @param int    $access_id   Public/private etc
+ * @param int    $parent_guid Parent post guid (if any)
+ * @param string $method      The method (default: 'site')
+ * @return guid or false if failure
+ */
+function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid = 0, $method = "site") {
+	$post = new ElggObject();
+
+	$post->subtype = "thewire";
+	$post->owner_guid = $userid;
+	$post->access_id = $access_id;
+
+	// only 200 characters allowed
+	$text = elgg_substr($text, 0, 200);
+
+	// no html tags allowed so we escape
+	$post->description = htmlspecialchars($text, ENT_NOQUOTES, 'UTF-8');
+
+	$post->method = $method; //method: site, email, api, ...
+
+	$tags = deck_river_thewire_get_hashtags($text);
+	if ($tags) {
+		$post->tags = $tags;
+	}
+
+	// must do this before saving so notifications pick up that this is a reply
+	if ($parent_guid) {
+		$post->reply = true;
+	}
+
+	$guid = $post->save();
+
+	// set thread guid
+	if ($parent_guid) {
+		$post->addRelationship($parent_guid, 'parent');
+		
+		// name conversation threads by guid of first post (works even if first post deleted)
+		$parent_post = get_entity($parent_guid);
+		$post->wire_thread = $parent_post->wire_thread;
+	} else {
+		// first post in this thread
+		$post->wire_thread = $guid;
+	}
+
+	if ($guid) {
+		$idd = add_to_river('river/object/thewire/create', 'create', $post->owner_guid, $post->guid);
+
+		// let other plugins know we are setting a user status
+		$params = array(
+			'entity' => $post,
+			'user' => $post->getOwnerEntity(),
+			'message' => $post->description,
+			'url' => $post->getURL(),
+			'origin' => 'thewire',
+		);
+		elgg_trigger_plugin_hook('status', 'user', $params);
+	}
+	
+	return $guid;
+}
+
+
+
+/**
+ * Returns the notification body
+ *
+ * @return $string
+ */
+function deck_river_thewire_notify_message($hook, $entity_type, $returnvalue, $params) {
+	global $CONFIG;
+	
+	$entity = $params['entity'];
+	if (($entity instanceof ElggEntity) && ($entity->getSubtype() == 'thewire')) {
+		$descr = $entity->description;
+		$owner = $entity->getOwnerEntity();
+		if ($entity->reply) {
+			// have to do this because of poor design of Elgg notification system
+			$parent_post = get_entity(get_input('parent_guid'));
+			if ($parent_post) {
+				$parent_owner = $parent_post->getOwnerEntity();
+			}
+			$body = sprintf(elgg_echo('thewire:notify:reply'), $owner->name, $parent_owner->name);
+		} else {
+			$body = sprintf(elgg_echo('thewire:notify:post'), $owner->name);
+		}
+		$body .= "\n\n" . $descr . "\n\n";
+		$body .= elgg_echo('thewire') . ": {$CONFIG->url}thewire";
+		return $body;
+	}
+	return $returnvalue;
+}
+
 
 
 

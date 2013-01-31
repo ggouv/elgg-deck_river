@@ -18,10 +18,8 @@ if (empty($body)) {
 
 	if ($network_ggouv == 'true') {
 		$parent_guid = (int) get_input('parent_guid');
-		$access_id = ACCESS_PUBLIC;
-		$method = 'site';
 	
-		$guid = thewire_save_post($body, elgg_get_logged_in_user_guid(), $access_id, $parent_guid, $method);
+		$guid = deck_river_thewire_save_post($body, elgg_get_logged_in_user_guid(), ACCESS_PUBLIC, $parent_guid, 'site');
 		if (!$guid) {
 			register_error(elgg_echo("thewire:error"));
 		}
