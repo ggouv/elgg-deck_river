@@ -36,10 +36,13 @@ elgg.deck_river.init = function() {
 			$('body').removeClass('fixed-deck');
 		}
 
-		if ($('#json-river-thread').length) {
+		if ($('#json-river-thread').length) { // single river item view, dispalyed in his thread
 			var rThread = $('#json-river-thread');
 			$('.elgg-river').html(elgg.deck_river.displayItems($.parseJSON(rThread.val())));
 			$('.item-river-'+rThread.attr('data-message-id')).addClass('viewed');
+		}
+		if ($('#json-river-owner').length) { // owner river view
+			elgg.deck_river.LoadEntity($('#json-river-owner').val(), $('#column'));
 		}
 	});
 
