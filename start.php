@@ -49,10 +49,10 @@ function deck_river_init() {
 	elgg_register_entity_type('object', 'thewire');
 
 	// Register granular notification for this type
-	register_notification_object('object', 'thewire', elgg_echo('thewire:notify:subject'));
+	//register_notification_object('object', 'thewire', elgg_echo('thewire:notify:subject'));
 
 	// Listen to notification events and supply a more useful message
-	elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'deck_river_thewire_notify_message');
+	//elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'deck_river_thewire_notify_message');
 }
 
 function deck_river_page_handler($page) {
@@ -163,14 +163,12 @@ function deck_river_thewire_url($thewirepost) {
 
 
 /**
- * Replace urls, hashtags,  ! and @ by links
+ * Replace urls, hashtags,  ! and @ by popups
  *
  * @param string $text The text of a post
  * @return string
  */
 function deck_river_wire_filter($text) {
-	global $CONFIG;
-
 	$text = ' ' . $text;
 
 	// email addresses
@@ -204,6 +202,50 @@ function deck_river_wire_filter($text) {
 
 	return $text;
 }
+
+
+
+/**
+ * Replace urls, hashtags,  ! and @ by links
+ *
+ * @param string $text The text of a post
+ * @return string
+ */
+function deck_river_wire_filter_external($text) {
+	$text = ' ' . $text;
+
+	// email addresses
+	$text = preg_replace(
+				'/(^|[^\w])([\w\-\.]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})/i',
+				'$1<a href="mailto:$2@$3">$2@$3</a>',
+				$text);
+
+	// links
+	$text = parse_urls($text);
+
+	// usernames
+	$text = preg_replace(
+				'/(^|[^\w])@([\p{L}\p{Nd}._]+)/u',
+				'$1<a href="'. elgg_get_site_url() .'profile/$2" title="$2">@$2</a>',
+				$text);
+				
+	// groups
+	$text = preg_replace(
+				'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
+				'$1<a href="'. elgg_get_site_url() .'groups/profile/$2" title="$2">!$2</a>',
+				$text);
+
+	// hashtags
+	$text = preg_replace(
+				'/(^|[^\w])#(\w*[^\s\d!-\/:-@]+\w*)/',
+				'$1<a href="'. elgg_get_site_url() .'search?q=$2&search_type=tags" title="#$2">#$2</a>',
+				$text);
+
+	$text = trim($text);
+
+	return $text;
+}
+
 
 
 /**
@@ -307,7 +349,7 @@ function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid =
 	}
 
 	if ($guid) {
-		$idd = add_to_river('river/object/thewire/create', 'create', $post->owner_guid, $post->guid);
+		add_to_river('river/object/thewire/create', 'create', $post->owner_guid, $post->guid);
 
 		// let other plugins know we are setting a user status
 		$params = array(
@@ -330,30 +372,35 @@ function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid =
  *
  * @return $string
  */
-function deck_river_thewire_notify_message($hook, $entity_type, $returnvalue, $params) {
-	global $CONFIG;
-	
-	$entity = $params['entity'];
-	if (($entity instanceof ElggEntity) && ($entity->getSubtype() == 'thewire')) {
-		$descr = $entity->description;
-		$owner = $entity->getOwnerEntity();
-		if ($entity->reply) {
-			// have to do this because of poor design of Elgg notification system
-			$parent_post = get_entity(get_input('parent_guid'));
-			if ($parent_post) {
-				$parent_owner = $parent_post->getOwnerEntity();
-			}
-			$body = sprintf(elgg_echo('thewire:notify:reply'), $owner->name, $parent_owner->name);
-		} else {
-			$body = sprintf(elgg_echo('thewire:notify:post'), $owner->name);
-		}
-		$body .= "\n\n" . $descr . "\n\n";
-		$body .= elgg_echo('thewire') . ": {$CONFIG->url}thewire";
-		return $body;
-	}
-	return $returnvalue;
-}
+function deck_river_thewire_notify_message($guid, $parent_guid) {
+	$entity = get_entity($guid);
+	$descr = deck_river_wire_filter_external($entity->description);
+	$owner = $entity->getOwnerEntity();
 
+	$parent_post = get_entity($parent_guid);
+	
+	$owner_url = elgg_view('output/url', array(
+		'href' => $owner->getURL(),
+		'text' => $owner->name,
+		'is_trusted' => true,
+	));
+	$this_message = elgg_view('output/url', array(
+		'href' => $entity->getURL(),
+		'text' => elgg_echo('thewire:notify:thismessage'),
+		'is_trusted' => true,
+	));
+	$your_message = elgg_view('output/url', array(
+		'href' => $parent_post->getURL(),
+		'text' => elgg_echo('thewire:notify:yourmessage'),
+		'is_trusted' => true,
+	));
+	$body = elgg_echo('thewire:notify:reply', array($owner_url, $this_message));
+	$body .= "\n\n" . '<div style="background-color: #FAFAFA;font-size: 1.4em;padding: 10px;">' . $descr . '</div>' . "\n";
+	$body .= elgg_echo('thewire:notify:atyourmessage', array($your_message));
+	$body .= "\n\n" . '<div style="background-color: #FAFAFA;font-size: 1.1em;padding: 10px;">' . deck_river_wire_filter_external($parent_post->description) . '</div>' . "\n\n";
+
+	return $body;
+}
 
 
 
@@ -367,8 +414,7 @@ function deck_river_thewire_notify_message($hook, $entity_type, $returnvalue, $p
  */
 function deck_river_thewire_send_response_notification($guid, $parent_guid, $user) {
 	$parent_owner = get_entity($parent_guid)->getOwnerEntity();
-	$user = elgg_get_logged_in_user_entity();
-
+	if (!$user) $user = elgg_get_logged_in_user_entity();
 	// check to make sure user is not responding to self
 	if ($parent_owner->guid != $user->guid) {
 		// check if parent owner has notification for this user
@@ -387,12 +433,12 @@ function deck_river_thewire_send_response_notification($guid, $parent_guid, $use
 				'entity' => get_entity($guid),
 				'method' => "email",
 			);
-			$msg = deck_river_thewire_notify_message("", "", "", $params);
+			$msg = deck_river_thewire_notify_message($guid, $parent_guid);
 
 			notify_user(
 					$parent_owner->guid,
 					$user->guid,
-					elgg_echo('thewire:notify:subject'),
+					elgg_echo('thewire:notify:subject', array($user->username)),
 					$msg);
 		}
 	}
