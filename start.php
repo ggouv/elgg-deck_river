@@ -48,6 +48,9 @@ function deck_river_init() {
 	// Register for search
 	elgg_register_entity_type('object', 'thewire');
 
+	// owner block menu
+	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'deck_river_thewire_owner_block_menu');
+	
 	// Register granular notification for this type
 	//register_notification_object('object', 'thewire', elgg_echo('thewire:notify:subject'));
 
@@ -508,6 +511,23 @@ function deck_river_thewire_send_mention_notification($guid, $user_mentioned) {
 				elgg_echo('thewire:mention:subject', array($owner->username)),
 				$msg);
 	}
+}
+
+
+
+/**
+ * Add a menu item to an ownerblock
+ *
+ * @return array
+ */
+function deck_river_thewire_owner_block_menu($hook, $type, $return, $params) {
+	if (elgg_instanceof($params['entity'], 'user')) {
+		$url = "thewire/owner/{$params['entity']->username}";
+		$item = new ElggMenuItem('thewire', elgg_echo('item:object:thewire'), $url);
+		$return[] = $item;
+	}
+
+	return $return;
 }
 
 
