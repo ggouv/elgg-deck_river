@@ -24,10 +24,10 @@ elgg_push_breadcrumb($title);
 $content = '<ul class="elgg-river elgg-list single-view">' . elgg_view('graphics/ajax_loader', array('hidden' => false)) . '</ul>';
 
 elgg_load_library('deck_river:river_loader');
-$thread = htmlspecialchars(load_wire_discussion($wire->wire_thread));
+$thread = htmlspecialchars(load_wire_discussion($wire->wire_thread), ENT_QUOTES, "UTF-8");
 $river = elgg_get_river(array('object_guid' => $wire_guid));
 $river_id = $river[0]->id;
-$content .= "<input id=\"json-river-thread\" class=\"hidden\" value=\"$thread\" data-message-id=\"$river_id\">";
+$content .= "<div id=\"json-river-thread\" class=\"hidden\" data-message-id=\"$river_id\">$thread</div>";
 
 $body = elgg_view_layout('content', array(
 	'filter' => false,
