@@ -291,10 +291,32 @@ function search_group_by_title($group) {
  */
 function deck_river_thewire_get_hashtags($text) {
 	// beginning of text or white space followed by hashtag
-	// hashtag must begin with # and contain at least one character not digit, space, or punctuation
+	// hashtag must begin with @ and contain at least one alphanumeric character
 	$matches = array();
 	preg_match_all('/(^|[^\w])#(\w*[^\s\d!-\/:-@]+\w*)/', $text, $matches);
 	return $matches[2];
+}
+
+
+
+/**
+ * Get an array of users from a text string
+ * 
+ * @param string $text The text of a post
+ * @return array
+ */
+function deck_river_thewire_get_users($text) {
+	// beginning of text or white space followed by hashtag
+	// hashtag must begin with # and contain at least one character not digit, space, or punctuation
+	$matches = array();
+	preg_match_all('/(^|[^\w])@([\p{L}\p{Nd}._]+)/u', $text, $matches);
+	
+	// check if users exists
+	$users = array();
+	foreach ($matches[2] as $key => $user) {
+		$users[] = get_user_by_username($user);
+	}
+	return $users;
 }
 
 
@@ -315,13 +337,7 @@ function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid =
 	$post->subtype = "thewire";
 	$post->owner_guid = $userid;
 	$post->access_id = $access_id;
-
-	// only 200 characters allowed
-	$text = elgg_substr($text, 0, 200);
-
-	// no html tags allowed so we escape
-	$post->description = htmlspecialchars($text, ENT_NOQUOTES, 'UTF-8');
-
+	$post->description = $text;
 	$post->method = $method; //method: site, email, api, ...
 
 	$tags = deck_river_thewire_get_hashtags($text);
@@ -413,6 +429,7 @@ function deck_river_thewire_notify_message($guid, $parent_guid) {
  * @return void
  */
 function deck_river_thewire_send_response_notification($guid, $parent_guid, $user) {
+global $fb; $fb->info('response');
 	$parent_owner = get_entity($parent_guid)->getOwnerEntity();
 	if (!$user) $user = elgg_get_logged_in_user_entity();
 	// check to make sure user is not responding to self
@@ -428,11 +445,6 @@ function deck_river_thewire_send_response_notification($guid, $parent_guid, $use
 
 		// create the notification message
 		if ($send_response) {
-			// grab same notification message that goes to everyone else
-			$params = array(
-				'entity' => get_entity($guid),
-				'method' => "email",
-			);
 			$msg = deck_river_thewire_notify_message($guid, $parent_guid);
 
 			notify_user(
@@ -444,6 +456,59 @@ function deck_river_thewire_send_response_notification($guid, $parent_guid, $use
 	}
 }
 
+
+
+/**
+ * Returns the mention body
+ *
+ * @return $string
+ */
+function deck_river_thewire_mention_message($guid, $user_mentioned) {
+	$entity = get_entity($guid);
+	$descr = deck_river_wire_filter_external($entity->description);
+	$owner = $entity->getOwnerEntity();
+
+	$parent_post = get_entity($parent_guid);
+	
+	$owner_url = elgg_view('output/url', array(
+		'href' => $owner->getURL(),
+		'text' => $owner->name,
+		'is_trusted' => true,
+	));
+	$this_message = elgg_view('output/url', array(
+		'href' => $entity->getURL(),
+		'text' => elgg_echo('thewire:notify:thismessage'),
+		'is_trusted' => true,
+	));
+	$body = elgg_echo('thewire:mention:mention', array($owner_url, $this_message));
+	$body .= "\n\n" . '<div style="background-color: #FAFAFA;font-size: 1.4em;padding: 10px;">' . $descr . '</div>' . "\n";
+
+	return $body;
+}
+
+
+
+/**
+ * Send notification to mentioned user
+ *
+ * @param int      $guid        The guid of the reply wire post
+ * @param ElggUser $user        The user mentioned
+ * @return void
+ */
+function deck_river_thewire_send_mention_notification($guid, $user_mentioned) {
+	$owner = get_entity($guid)->getOwnerEntity();
+	// check to make sure user is not mentionning to self
+	if ($owner->guid != $user_mentioned->guid) {
+		// create the notification message
+		$msg = deck_river_thewire_mention_message($guid, $user_mentioned);
+
+		notify_user(
+				$user_mentioned->guid,
+				$owner->guid,
+				elgg_echo('thewire:mention:subject', array($owner->username)),
+				$msg);
+	}
+}
 
 
 
