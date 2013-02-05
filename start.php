@@ -29,12 +29,12 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax/load_discussion');
 
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
-	elgg_register_page_handler('thewire', 'deck_river_wire_page_handler');
+	elgg_register_page_handler('message', 'deck_river_wire_page_handler');
 
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
-	elgg_register_action('deck_river/wire_input', "$action_path/thewire/wire_input.php");
-	elgg_register_action('thewire/delete', "$action_path/thewire/delete.php");
+	elgg_register_action('deck_river/wire_input', "$action_path/message/wire_input.php");
+	elgg_register_action('message/delete', "$action_path/message/delete.php");
 	elgg_register_action('deck_river/column/settings', "$action_path/column/settings.php");
 	elgg_register_action('deck_river/column/move', "$action_path/column/move.php");
 	elgg_register_action('deck_river/tab/add', "$action_path/tab/add.php");
@@ -84,11 +84,8 @@ function deck_river_page_handler($page) {
  * The wire page handler
  *
  * Supports:
- * thewire/owner/<username>     View this user's wire posts
- * thewire/following/<username> View the posts of those this user follows
- * thewire/reply/<guid>         Reply to a post
- * thewire/view/<guid>          View a post
- * thewire/thread/<id>          View a conversation thread
+ * message/owner/<username>     View this user's wire posts
+ * message/view/<guid>          View a post
  * thewire/tag/<tag>            View wire posts tagged with <tag>
  *
  * @param array $page From the page_handler function
@@ -103,49 +100,21 @@ function deck_river_wire_page_handler($page) {
 	}
 
 	switch ($page[0]) {
-		case "friends":
-			include "$base_dir/friends.php";
-			break;
-
 		case "owner":
 			include "$base_dir/owner.php";
 			break;
-
 		case "view":
 			if (isset($page[1])) {
 				set_input('guid', $page[1]);
 			}
 			include "$base_dir/view.php";
 			break;
-
-		case "thread":
-			if (isset($page[1])) {
-				set_input('thread_id', $page[1]);
-			}
-			include "$base_dir/thread.php";
-			break;
-
-		case "reply":
-			if (isset($page[1])) {
-				set_input('guid', $page[1]);
-			}
-			include "$base_dir/reply.php";
-			break;
-
 		case "tag":
 			if (isset($page[1])) {
 				set_input('tag', $page[1]);
 			}
 			include "$base_dir/tag.php";
 			break;
-
-		case "previous":
-			if (isset($page[1])) {
-				set_input('guid', $page[1]);
-			}
-			include "$base_dir/previous.php";
-			break;
-
 		default:
 			return false;
 	}
@@ -160,7 +129,7 @@ function deck_river_wire_page_handler($page) {
  * @param ElggObject $thewirepost Wire post object
  */
 function deck_river_thewire_url($thewirepost) {
-	return "thewire/view/" . $thewirepost->guid;
+	return "message/view/" . $thewirepost->guid;
 }
 
 
@@ -522,7 +491,7 @@ function deck_river_thewire_send_mention_notification($guid, $user_mentioned) {
  */
 function deck_river_thewire_owner_block_menu($hook, $type, $return, $params) {
 	if (elgg_instanceof($params['entity'], 'user')) {
-		$url = "thewire/owner/{$params['entity']->username}";
+		$url = "message/owner/{$params['entity']->username}";
 		$item = new ElggMenuItem('thewire', elgg_echo('item:object:thewire'), $url);
 		$return[] = $item;
 	}

@@ -18,7 +18,7 @@ if (!$owner) {
 
 $title = elgg_echo('thewire:by', array($owner->name));
 
-elgg_push_breadcrumb(elgg_echo('thewire:user', array($owner->name)), 'thewire/owner/' . $owner->name);
+elgg_push_breadcrumb(elgg_echo('thewire:user', array($owner->name)), 'message/owner/' . $owner->name);
 elgg_push_breadcrumb($title);
 
 $content = '<ul class="elgg-river elgg-list single-view">' . elgg_view('graphics/ajax_loader', array('hidden' => false)) . '</ul>';
