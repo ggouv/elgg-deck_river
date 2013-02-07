@@ -43,6 +43,7 @@ $english = array(
 	'deck-river:delete:column:confirm' => "Are you sure to delete this column?",
 	
 	// column-settings form
+	'deck_river:settings:blank' => 'Settings',
 	'deck_river:settings' => 'Settings of column "%s"',
 	'deck_river:type' => 'Type:',
 	'deck_river:filter' => 'Filter:',
@@ -52,7 +53,7 @@ $english = array(
 	
 	// user info popup
 	'deck_river:user-not-exist' => "This user doesn't exits.",
-	'deck_river:user-info-header' => "Informations on this person",
+	'deck_river:user-info-header' => "Informations about %s",
 	'deck_river:hashtag-info-header' => "Search: %s",
 	
 	// plugin settings

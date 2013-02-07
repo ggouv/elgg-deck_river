@@ -267,6 +267,7 @@ body.fixed-deck {
 	top: 15%;
 	z-index: 9999;
 	min-width: 372px;
+	max-width: 600px;
 }
 #column-settings .elgg-head, #user-info-popup .elgg-head, #group-info-popup .elgg-head, #hashtag-info-popup .elgg-head {
 	background-color: #EEE;

@@ -49,6 +49,7 @@ $french = array(
 	'deck-river:delete:column:confirm' => "Êtes-vous sûr de supprimer cette colonne ?",
 	
 	// column-settings form
+	'deck_river:settings:blank' => 'Paramètres',
 	'deck_river:settings' => 'Paramètres de la colonne "%s"',
 	'deck_river:type' => 'Type :',
 	'deck_river:filter' => 'Filtre :',
@@ -58,7 +59,7 @@ $french = array(
 	
 	//info popup
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
-	'deck_river:user-info-header' => "Informations sur cette personne",
+	'deck_river:user-info-header' => "Informations sur %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
 	
 	// plugin settings

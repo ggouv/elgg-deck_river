@@ -199,6 +199,9 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  * @return void
  */
 elgg.deck_river.ColumnSettings = function(TheColumn) {
+	if (!$('#column-settings').length) elgg.deck_river.createPopup('column-settings', elgg.echo('deck_river:settings:blank'));
+	var columnSettings = $('#column-settings');
+
 	elgg.post('ajax/view/deck_river/ajax/column_settings', {
 		dataType: "html",
 		data: {
@@ -206,7 +209,6 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			column: TheColumn ? TheColumn.attr('id') : 'new',
 		},
 		success: function(response) {
-			if (!$('#column-settings').length) { $('.deck-river-lists').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
 			var network = $('#column-settings').attr('data-network');
 			
 			$('#column-settings').html(response).draggable({ handle: ".elgg-head" });

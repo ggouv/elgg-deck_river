@@ -420,7 +420,7 @@ elgg.deck_river.displayItems = function(response, thread) {
 								$('<li>', {'class': 'elgg-submenu-river'}).click(function() {
 									$(this).addClass('hover');
 								}).append(function() {
-									if (subMenuOutput.length) return $('<span>', {'class':'elgg-icon elgg-icon-submenu-river gwf'}).html(']').after(
+									if (subMenuOutput.length) return $('<span>', {'class':'elgg-icon elgg-icon-submenu-river gwf'}).html('+').after(
 										$('<ul>', {'class': 'elgg-module-popup hidden'}).append(subMenuOutput).mouseleave(function() {
 											$('.elgg-submenu-river').removeClass('hover');
 										
@@ -525,7 +525,7 @@ elgg.deck_river.TwitterDisplayItems = function(response, thread) {
 								$('<li>', {'class': 'elgg-submenu-river'}).click(function() {
 									$(this).addClass('hover');
 								}).append(function() {
-									if (subMenuOutput.length) return $('<span>', {'class':'elgg-icon elgg-icon-submenu-river gwf'}).html(']').after(
+									if (subMenuOutput.length) return $('<span>', {'class':'elgg-icon elgg-icon-submenu-river gwf'}).html('+').after(
 										$('<ul>', {'class': 'elgg-module-popup hidden'}).append(subMenuOutput).mouseleave(function() {
 											$('.elgg-submenu-river').removeClass('hover');
 										
