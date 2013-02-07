@@ -17,6 +17,7 @@ if ($column == 'new') {
 		$n[] = preg_replace('/[^0-9]+/', '', $key);
 	}
 	$column = 'column-' . (max($n)+1);
+	$new = true;
 }
 $user_river_column_options = $user_river_options[$tab][$column];
 $column_title = $user_river_column_options['title'];
@@ -150,26 +151,50 @@ $column_title = $user_river_column_options['title'];
 			} ?>
 		</div>
 	</div>
+
 	
-	<div class="twitter<?php if ($selected != 'twitter') echo ' hidden'; ?>">
-		nrstaénprs
-	</div>
+	<?php // TWITTER
+		$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
+		$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
+		if ($twitter_consumer_key && $twitter_consumer_secret) {
+			$class = ($selected != 'twitter')  ? ' hidden': '';
+			echo '<div class="twitter' .  $class . '"><ul class="box-settings phm"><li>';
+
+			$access_key = elgg_get_plugin_user_setting('twitter_access_key', $user_guid, 'elgg-deck_river');
+			$access_secret = elgg_get_plugin_user_setting('twitter_access_secret', $user_guid, 'elgg-deck_river');
+
+			if (!$access_key || !$access_secret) { // send user off to validate account
+				$site_name = elgg_get_site_entity()->name;
+				elgg_load_library('deck_river:twitter_async');
+				$twitterObjUnAuth = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret);
+				echo '<div class="mtl pts center">' . elgg_echo('deck_river:twitter:usersettings:request', array($twitterObjUnAuth->getAuthenticateUrl(), $site_name)) . '</div>';
+			} else {
+				echo elgg_get_plugin_user_setting('twitter_name', $user_guid, 'elgg-deck_river');
+			}
+			
+			echo '</li></ul></div>';
+		}
+	?>
 	
 </div>
 
-<div>
+<div class="elgg-foot phs">
 <?php
 	echo elgg_view('input/submit', array(
 		'name' => 'ggouv',
 		'value' => elgg_echo('save'),
 		'class' => $selected == 'ggouv' ? 'elgg-button elgg-button-submit ggouv' : 'elgg-button elgg-button-submit ggouv hidden'
 	));
-	echo elgg_view('input/submit', array(
-		'name' => 'twitter',
-		'value' => elgg_echo('save'),
-		'class' => $selected == 'twitter' ? 'elgg-button elgg-button-submit twitter' : 'elgg-button elgg-button-submit twitter hidden'
-	));
-	if ($new != 'true') {
+	
+	if ($twitter_consumer_key && $twitter_consumer_secret) {
+		echo elgg_view('input/submit', array(
+			'name' => 'twitter',
+			'value' => elgg_echo('save'),
+			'class' => $selected == 'twitter' ? 'elgg-button elgg-button-submit twitter' : 'elgg-button elgg-button-submit twitter hidden'
+		));
+	}
+
+	if (!$new) {
 		echo elgg_view('input/submit', array(
 				'name' => 'delete',
 				'value' => elgg_echo('delete'),

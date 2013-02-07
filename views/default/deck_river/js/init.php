@@ -207,6 +207,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 		},
 		success: function(response) {
 			if (!$('#column-settings').length) { $('.deck-river-lists').append('<div id="column-settings" class="elgg-module-popup"></div>'); }
+			var network = $('#column-settings').attr('data-network');
 			
 			$('#column-settings').html(response).draggable({ handle: ".elgg-head" });
 			$('#column-settings .elgg-head a').click(function() {
@@ -221,6 +222,12 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				$('#column-settings input.elgg-button-submit').addClass('hidden');
 				$('#column-settings input.elgg-button-submit.'+net).removeClass('hidden');
 			});
+			if (network) $('#column-settings .elgg-tabs.networks a.'+network).click();
+			$('#authorize-twitter').click(function(e){
+				var oauthWindow = window.open($(this).attr('data-url'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
+				e.preventDefault();
+				return false;
+			});
 			$('#column-settings .' + $('.column-type option:selected').val() + '-options').show();
 			$('.column-type').change(function() {
 				$('#column-settings .box-settings li').not(':first-child').hide();
@@ -232,7 +239,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			});
 			
 			$('.deck-river-form-column-settings').submit(function() { return false; });
-			$(".elgg-button").click(function(event) {
+			$(".elgg-foot .elgg-button").click(function(event) {
 				if ($(this).parent("form").beenSubmitted) // Prevent double-click
 					return false;
 				else {
@@ -286,6 +293,17 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 		}
 	});
 };
+
+elgg.deck_river.authorize = function() {
+	var c = window.opener.$('#'+window.opener.$('.deck-river-form-column-settings input[name="column"]').val());
+	window.opener.$('#column-settings').attr('data-network', 'twitter');
+	if (c.length == 1) {
+		c.find('.elgg-column-edit-button').click();
+	} else {
+		window.opener.$('.elgg-add-new-column').click();
+	}
+	window.close();
+}
 
 /**
  * Rename a column

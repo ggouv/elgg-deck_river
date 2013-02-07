@@ -79,6 +79,9 @@ $french = array(
 	'deck_river:url-not-exist' => "Il n'y a pas l'url à réduire.",
 	'deck_river:url-bad-format' => "Le format d'url n'est pas bon.",
 	
+	// Twitter
+	'deck_river:twitter:usersettings:request' => "Vous devez d'abord <a id=\"authorize-twitter\" data-url=\"%s\" class=\"elgg-button elgg-button-action mts\">autoriser %s</a><br/>à accéder à votre compte Twitter.",
+	
 );
 
 add_translation('fr', $french);

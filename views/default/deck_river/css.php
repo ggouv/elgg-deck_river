@@ -305,6 +305,10 @@ body.fixed-deck {
 	clear: both;
 	float: right;
 	margin: 5px 0 0;
+	width: 100%;
+}
+#column-settings .networks > li a {
+	text-align: left;
 }
 #column-settings .networks > .elgg-state-selected a {
 	top: 0;

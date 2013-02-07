@@ -4,14 +4,10 @@ elgg_register_event_handler('init','system','deck_river_init');
 
 function deck_river_init() {
 
+	elgg_register_library('deck_river:river_loader', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_loader.php');	
 	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
-	elgg_register_library('deck_river:river_loader', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_loader.php');
-
-	elgg_register_class('EpiCurl', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiCurl.php');
-	elgg_register_class('EpiOAuth', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiOAuth.php');
-	elgg_register_class('EpiTwitter', elgg_get_plugins_path() . 'elgg-deck_river/vendors/twitter-async/EpiTwitter.php');
-	
-	//elgg_load_library('deck_river:api');
+	elgg_register_library('deck_river:authorize', elgg_get_plugins_path() . 'elgg-deck_river/lib/authorize.php');
+	elgg_register_library('deck_river:twitter_async', elgg_get_plugins_path() . 'elgg-deck_river/vendors/load_twitter_async.php');
 
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js/init');
@@ -28,8 +24,10 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax/url_shortener');
 	elgg_register_ajax_view('deck_river/ajax/load_discussion');
 
+	// register page handlers
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
 	elgg_register_page_handler('message', 'deck_river_wire_page_handler');
+	elgg_register_page_handler('authorize', 'authorize_page_handler');
 
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
@@ -50,12 +48,7 @@ function deck_river_init() {
 
 	// owner block menu
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'deck_river_thewire_owner_block_menu');
-	
-	// Register granular notification for this type
-	//register_notification_object('object', 'thewire', elgg_echo('thewire:notify:subject'));
 
-	// Listen to notification events and supply a more useful message
-	//elgg_register_plugin_hook_handler('notify:entity:message', 'object', 'deck_river_thewire_notify_message');
 }
 
 function deck_river_page_handler($page) {
@@ -114,6 +107,34 @@ function deck_river_wire_page_handler($page) {
 				set_input('tag', $page[1]);
 			}
 			include "$base_dir/tag.php";
+			break;
+		case 'test':
+			include "$base_dir/test.php";
+			break;
+		default:
+			return false;
+	}
+	return true;
+}
+
+
+
+/**
+ * Serves pages for social network authorization.
+ *
+ * @param array $page
+ * @return void
+ */
+function authorize_page_handler($page) {
+	if (!isset($page[0])) {
+		return false;
+	}
+
+	elgg_load_library('deck_river:authorize');
+
+	switch ($page[0]) {
+		case 'twitter':
+			deck_river_twitter_authorize();
 			break;
 		default:
 			return false;

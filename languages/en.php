@@ -103,6 +103,9 @@ $english = array(
 	// messages
 	'deck_river:url-not-exist' => "There is no url to reduce.",
 	'deck_river:url-bad-format' => "Url format is not good.",
+	
+	// Twitter
+	'deck_river:twitter:usersettings:request' => "You must first <a id=\"authorize-twitter\" type=\"submit\" data-url=\"%s\" class=\"elgg-button elgg-button-action\">authorize %s</a><br/>to access your Twitter account.",
 
 );
 
