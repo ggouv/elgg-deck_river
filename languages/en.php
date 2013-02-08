@@ -52,6 +52,8 @@ $english = array(
 	'deck_river:filter:all' => 'All',
 	
 	// user info popup
+	'deck-river:popups:close' => "Close this window",
+	'deck-river:popups:pin' => "Pin this window",
 	'deck_river:user-not-exist' => "This user doesn't exits.",
 	'deck_river:user-info-header' => "Informations about %s",
 	'deck_river:hashtag-info-header' => "Search: %s",
@@ -101,7 +103,7 @@ $english = array(
 	'search' => elgg_echo('search'),
 )",
 	
-	// messages
+	// urlshortener
 	'deck_river:url-not-exist' => "There is no url to reduce.",
 	'deck_river:url-bad-format' => "Url format is not good.",
 	

@@ -269,18 +269,18 @@ body.fixed-deck {
 	min-width: 372px;
 	max-width: 600px;
 }
-#column-settings .elgg-head, #user-info-popup .elgg-head, #group-info-popup .elgg-head, #hashtag-info-popup .elgg-head {
+.deck-popup .elgg-head {
 	background-color: #EEE;
 	margin: -5px -5px 5px;
 	padding-bottom: 5px;
 	cursor: move;
 }
-#column-settings .elgg-head h3, #user-info-popup .elgg-head h3, #group-info-popup .elgg-head h3, #hashtag-info-popup .elgg-head h3 {
+.deck-popup .elgg-head h3 {
 	color: #666666;
 	float: left;
 	padding: 4px 30px 0 5px;
 }
-#column-settings .elgg-head a, #user-info-popup .elgg-head a, #group-info-popup .elgg-head a, #hashtag-info-popup .elgg-head a {
+.deck-popup .elgg-head a {
 	display: inline-block;
 	height: 18px;
 	position: absolute;
@@ -288,6 +288,9 @@ body.fixed-deck {
 	top: 5px;
 	width: 18px;
 	cursor: pointer;
+}
+.deck-popup .elgg-head a.pin {
+	right: 20px;
 }
 #deck-column-settings, #deck-column-settings > div {
 	float:left;

@@ -38,8 +38,8 @@ elgg.deck_river.init = function() {
 
 		if ($('#json-river-thread').length) { // single river item view, dispalyed in his thread
 			var rThread = $('#json-river-thread');
-			$('.elgg-river').html(elgg.deck_river.displayItems($.parseJSON(rThread.text())));
-			$('.item-river-'+rThread.attr('data-message-id')).addClass('viewed');
+			$('.elgg-river.single-view').html(elgg.deck_river.displayItems($.parseJSON(rThread.text())));
+			$('.single-view .item-river-'+rThread.attr('data-message-id')).addClass('viewed');
 		}
 		if ($('#json-river-owner').length) { // owner river view
 			elgg.deck_river.LoadEntity($('#json-river-owner').val(), $('#column'));

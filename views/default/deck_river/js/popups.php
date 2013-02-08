@@ -122,9 +122,10 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 		//var method = 'append';
 		//$('.elgg-page-body')[method](
 		$('.elgg-page-body').append(
-			$('<div>', {id: popupID, 'class': 'elgg-module-popup'})
+			$('<div>', {id: popupID, 'class': 'elgg-module-popup deck-popup'})
 			.draggable({
-				handle: ".elgg-head",
+				handle: '.elgg-head',
+				containment: 'document',
 				start: function(event, ui) {
 					setToTop($(this));
 				}
@@ -135,8 +136,18 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 			.append(
 				$('<div>', {'class': 'elgg-head'}).append(
 					$('<h3>').html(popupTitle).after(
-					$('<a>').append(
-						$('<span>', {'class': 'elgg-icon elgg-icon-delete-alt'})
+					$('<a>', {href: '#', 'class': 'pin'}).append(
+						$('<span>', {'class': 'elgg-icon elgg-icon-push-pin tooltip s', title: elgg.echo('deck-river:popups:pin')})
+					).click(function() {
+						var popupP = $(this).parents('.deck-popup');
+						if (popupP.hasClass('pinned')) {
+							$('.elgg-page-body').append(popupP.removeClass('pinned'));
+						} else {
+							$('.elgg-page-body').after(popupP.addClass('pinned'));
+						}
+					})).after(
+					$('<a>', {href: '#'}).append(
+						$('<span>', {'class': 'elgg-icon elgg-icon-delete-alt tooltip s', title: elgg.echo('deck-river:popups:close')})
 					).click(function() {
 						$('#'+popupID).remove();
 					})

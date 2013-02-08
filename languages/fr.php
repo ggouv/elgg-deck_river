@@ -57,7 +57,9 @@ $french = array(
 	'deck_river:search' => 'Recherche :',
 	'deck_river:filter:all' => 'Tout',
 	
-	//info popup
+	//info popups
+	'deck-river:popups:close' => "Fermer cette fenêtre",
+	'deck-river:popups:pin' => "Épingler cette fenêtre (elle ne disparaîtra pas lors des changements de page)",
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
 	'deck_river:user-info-header' => "Informations sur %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
@@ -76,7 +78,7 @@ $french = array(
 	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
 	'deck_river:settings:twitter_consumer_secret' => "Consumer secret :",
 	
-	// messages
+	// urlshortener
 	'deck_river:url-not-exist' => "Il n'y a pas l'url à réduire.",
 	'deck_river:url-bad-format' => "Le format d'url n'est pas bon.",
 	
