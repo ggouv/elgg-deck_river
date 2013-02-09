@@ -43,8 +43,7 @@ $english = array(
 	'deck-river:delete:column:confirm' => "Are you sure to delete this column?",
 	
 	// column-settings form
-	'deck_river:settings:blank' => 'Settings',
-	'deck_river:settings' => 'Settings of column "%s"',
+	'deck_river:settings' => 'Settings of column',
 	'deck_river:type' => 'Type:',
 	'deck_river:filter' => 'Filter:',
 	'deck_river:title' => 'Title:',
@@ -108,7 +107,13 @@ $english = array(
 	'deck_river:url-bad-format' => "Url format is not good.",
 	
 	// Twitter
-	'deck_river:twitter:usersettings:request' => "You must first <a id=\"authorize-twitter\" type=\"submit\" data-url=\"%s\" class=\"elgg-button elgg-button-action\">authorize %s</a><br/>to access your Twitter account.",
+	'deck_river:twitter:usersettings:request:title' => "Authorize %s to access your Twitter account",
+	'deck_river:twitter:usersettings:request' => "You can add Twitter feed...<br/><a id=\"authorize-twitter\" type=\"submit\" data-url=\"%s\" class=\"elgg-button elgg-button-action\">authorize %s</a>",
+	'deck_river:twitter:authorize:success' => 'Twitter access has been authorized.',
+	'deck_river:twitter:revoke:success' => 'Twitter access has been revoked.',
+	'deck_river:twitter:your_account' => 'Your Twitter account linked with %s:',
+	'deck_river:twitter:feed:search:tweets' => "Search word or hashtag",
+	'deck_river:twitter:feed:users:search' => "Search users"
 
 );
 

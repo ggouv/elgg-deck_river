@@ -3,8 +3,10 @@
 $tab = get_input('tab');
 $column = get_input('column');
 $type = get_input('type');
+$twitter_type = get_input('twitter-type');
+$submit = get_input('submit');
 
-if (!$tab || !$column || !$type) {
+if (!$submit || !$tab || !$column || !$type || !$twitter_type) {
 	return;
 }
 
@@ -12,7 +14,6 @@ $search = get_input('search');
 $group = get_input('group');
 $types_filter = get_input('filters_types');
 $subtypes_filter = get_input('filters_subtypes');
-$submit = get_input('submit');
 
 // Get the settings of the current column of the current user
 $owner = elgg_get_logged_in_user_guid();
@@ -23,7 +24,7 @@ if ($submit == 'delete') {
 	unset($user_river_options[$tab][$column]);
 	$return['action'] = 'delete';
 	$return['column'] = $column;
-} else if ($submit == 'ggouv') {
+} else if ($submit == 'elgg') {
 	if (!array_key_exists($column, $user_river_options[$tab])) {
 		$return['action'] = 'new';
 	} else if ($user_river_options[$tab][$column]['type'] != $type) {
@@ -117,22 +118,40 @@ if ($submit == 'delete') {
 	}
 	
 	$user_river_options[$tab][$column]['type'] = $type;
+	$user_river_options[$tab][$column]['direct'] = false;
 
 } else if ($submit == 'twitter') {
-	$type = 'twitter';
+
 	if (!array_key_exists($column, $user_river_options[$tab])) {
 		$return['action'] = 'new';
-	} else if ($user_river_options[$tab][$column]['type'] != $type) {
+	} else if ($user_river_options[$tab][$column]['type'] != $twitter_type) {
 		$return['action'] = 'change';
 	}
-	$return['column_title'] = 'Twitter';
-	$return['column_subtitle'] = 'Flux';
-	$return['direct'] = 'true';
+	
+	switch ($twitter_type) {
+		case 'twitter:search/tweets':
+			$return['column_title'] = elgg_echo('deck_river:twitter:feed:search');
+			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != $search) $return['action'] = 'change';
+			$user_river_options[$tab][$column]['search'] = $search;
+			$return['column_subtitle'] = $search;
+			$return['direct'] = true;
+			$user_river_options[$tab][$column]['direct'] = true;
+			break;
+		case 'twitter:users/search':
+			$return['column_title'] = 'users/search';
+			$return['column_subtitle'] = 'manutopik';
+			$return['direct'] = true;
+			$user_river_options[$tab][$column]['direct'] = true;
+			break;
+		default:
+			
+			break;
+	
+	}
 
-	$user_river_options[$tab][$column]['type'] = 'twitter';
+	$user_river_options[$tab][$column]['type'] = $twitter_type;
 	$user_river_options[$tab][$column]['title'] = $return['column_title'];
 	$user_river_options[$tab][$column]['subtitle'] = $return['column_subtitle'];
-	$user_river_options[$tab][$column]['direct'] = true;
 }
 
 set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));

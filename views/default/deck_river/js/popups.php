@@ -115,7 +115,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 		$('.elgg-module-popup.ui-draggable:visible').each(function(){
 			index_highest = Math.max(index_highest, parseInt($(this).css("z-index"), 10));
 		});
-		e.css({'z-index': index_highest+1});
+		e.css({'z-index': index_highest+1, position: 'absolute'});
 	};
 	
 	if (!$('#'+popupID).length) {
@@ -125,7 +125,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 			$('<div>', {id: popupID, 'class': 'elgg-module-popup deck-popup'})
 			.draggable({
 				handle: '.elgg-head',
-				containment: 'document',
+				//containment: 'document',
 				start: function(event, ui) {
 					setToTop($(this));
 				}
@@ -150,6 +150,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 						$('<span>', {'class': 'elgg-icon elgg-icon-delete-alt tooltip s', title: elgg.echo('deck-river:popups:close')})
 					).click(function() {
 						$('#'+popupID).remove();
+						$('.tipsy').remove();
 					})
 				)).after(
 					$('<div>', {'class': 'elgg-body'}).append(

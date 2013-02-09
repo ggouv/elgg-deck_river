@@ -6,7 +6,7 @@
 
 $french = array(
 	'deck_river:activity:none' => "Il n'y a pas d'activité à afficher.",
-	'deck_river:edit' => 'Éditer les paramètres de la colonne',
+	'deck_river:edit' => 'Modifier les paramètres de la colonne',
 	'deck_river:refresh' => 'Rafraîchir la colonne',
 	'deck_river:refresh-all' => 'Rafraîchir toutes les colonnes',
 	'deck_river:add-column' => 'Ajouter une nouvelle colonne',
@@ -49,17 +49,19 @@ $french = array(
 	'deck-river:delete:column:confirm' => "Êtes-vous sûr de supprimer cette colonne ?",
 	
 	// column-settings form
-	'deck_river:settings:blank' => 'Paramètres',
-	'deck_river:settings' => 'Paramètres de la colonne "%s"',
-	'deck_river:type' => 'Type :',
+	'deck_river:settings' => 'Paramètres de la colonne',
+	'deck_river:type' => "Sélectionnez le type de flux :",
 	'deck_river:filter' => 'Filtre :',
 	'deck_river:title' => 'Titre de la colonne :',
 	'deck_river:search' => 'Recherche :',
 	'deck_river:filter:all' => 'Tout',
+	'deck_river:twitter:usersettings:request:title' => "Autorisez %s à accéder à votre compte Twitter",
+	'deck_river:twitter:usersettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnés, vos abonnements, vos listes...<br/><a id=\"authorize-twitter\" data-url=\"%s\" class=\"elgg-button elgg-button-action mtm\">Faire la demande à Twitter</a>",
+	'deck_river:twitter:your_account' => "Votre profile Twitter lié à %s :",
 	
 	//info popups
 	'deck-river:popups:close' => "Fermer cette fenêtre",
-	'deck-river:popups:pin' => "Épingler cette fenêtre (elle ne disparaîtra pas lors des changements de page)",
+	'deck-river:popups:pin' => "<div style=\"text-align: left;\">Épingler cette fenêtre<br><span class=\"elgg-subtext\">Elle ne disparaîtra pas lors des changements de page.</span></div>",
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
 	'deck_river:user-info-header' => "Informations sur %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
@@ -83,8 +85,12 @@ $french = array(
 	'deck_river:url-bad-format' => "Le format d'url n'est pas bon.",
 	
 	// Twitter
-	'deck_river:twitter:usersettings:request' => "Vous devez d'abord <a id=\"authorize-twitter\" data-url=\"%s\" class=\"elgg-button elgg-button-action mts\">autoriser %s</a><br/>à accéder à votre compte Twitter.",
-	
+	'deck_river:twitter:authorize:success' => "Twitter a autorisé l'accès à votre compte.",
+	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
+	'deck_river:twitter:feed:search' => "Recherche sur Twitter",
+	'deck_river:twitter:feed:search:tweets' => "Rechercher un mot ou un hashtag",
+	'deck_river:twitter:feed:users:search' => "Recherche d'utilisateurs"
+
 );
 
 add_translation('fr', $french);

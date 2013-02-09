@@ -21,6 +21,7 @@ function deck_river_twitter_authorize() {
 		return false;
 	}
 	
+	// get token
 	elgg_load_library('deck_river:twitter_async');
 	$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
 	$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
@@ -51,10 +52,13 @@ function deck_river_twitter_authorize() {
 	elgg_set_plugin_user_setting('twitter_access_key', $token->oauth_token, null, 'elgg-deck_river');
 	elgg_set_plugin_user_setting('twitter_access_secret', $token->oauth_token_secret, null, 'elgg-deck_river');
 	
+	// save avatar
+	$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $token->oauth_token, $token->oauth_token_secret);
+	$userInfo = $twitterObj->get('/account/verify_credentials.json');
+	elgg_set_plugin_user_setting('twitter_avatar', $userInfo->response['profile_image_url_https'], null, 'elgg-deck_river');
+	
 	// trigger authorization hook
 	elgg_trigger_plugin_hook('authorize', 'elgg-deck_river', array('token' => $token));
-
-	system_message(elgg_echo('twitter_api:authorize:success'));
 	
 	echo elgg_view('page/elements/head');
 	echo elgg_view('page/elements/foot');
@@ -66,6 +70,9 @@ function deck_river_twitter_authorize() {
  */
 function deck_river_twitter_api_revoke($user_guid = null) {
 	elgg_unset_plugin_user_setting('twitter_name', $user_guid, 'elgg-deck_river');
+	elgg_unset_plugin_user_setting('twitter_avatar', $user_guid, 'elgg-deck_river');
 	elgg_unset_plugin_user_setting('twitter_access_key', $user_guid, 'elgg-deck_river');
 	elgg_unset_plugin_user_setting('twitter_access_secret', $user_guid, 'elgg-deck_river');
+	
+	system_message(elgg_echo('deck_river:twitter:revoke:success'));
 }

@@ -19,6 +19,8 @@
  */
 elgg.deck_river.LoadColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
+	console.log(TheColumn.find('h3').attr('data-direct'));
+	console.log(TheColumn);
 	if (TheColumn.find('h3').attr('data-direct') == 'true') {
 		$.ajax({
 			url: 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=ManUtopiK&count=20&include_rts=1&callback=?',
@@ -120,6 +122,7 @@ elgg.deck_river.LoadEntity = function(TheEntity, TheColumn) {
 			guid: TheEntity,
 		},
 		success: function(response) {
+		return false;
 			if (response) {
 				TheColumn.find('.elgg-river').html(elgg.deck_river.displayItems(response));
 				$('.elgg-submenu-river > .elgg-module-popup').mouseleave(function() {

@@ -267,20 +267,24 @@ body.fixed-deck {
 	top: 15%;
 	z-index: 9999;
 	min-width: 372px;
-	max-width: 600px;
+	max-width: 560px;
+	min-height: 300px;
 }
-.deck-popup .elgg-head {
+#column-settings .elgg-ajax-loader {
+	height: 270px;
+}
+.deck-popup > .elgg-head {
 	background-color: #EEE;
 	margin: -5px -5px 5px;
 	padding-bottom: 5px;
 	cursor: move;
 }
-.deck-popup .elgg-head h3 {
+.deck-popup > .elgg-head h3 {
 	color: #666666;
 	float: left;
 	padding: 4px 30px 0 5px;
 }
-.deck-popup .elgg-head a {
+.deck-popup > .elgg-head a {
 	display: inline-block;
 	height: 18px;
 	position: absolute;
@@ -318,21 +322,17 @@ body.fixed-deck {
 	top: 0;
 	right: -2px;
 }
-#column-settings .filter {
-	float:left;
-}
 #column-settings .elgg-input-checkboxes label {
 	font-weight: normal;
 }
-#column-settings .box-settings {
-	border-right: 2px solid #CCC;
+#column-settings .tab > * {
 	border-left: 2px solid #CCC;
 	float: left;
 	height: 100%;
-	width: 185px;
+	width: 449px;
 }
-#column-settings .box-settings .elgg-input-dropdown, #column-settings .box-settings li {
-	float: left;
+#column-settings .elgg > * {
+	width: 205px;
 }
 #add-deck-river-tab, #rename-deck-river-tab {
 	width: 260px;
@@ -343,6 +343,17 @@ body.fixed-deck {
 }
 #add-deck-river-tab .elgg-button-submit, #rename-deck-river-tab .elgg-button-submit {
 	float: right;
+}
+#column-settings .twitter .elgg-module-info {
+	background: none repeat scroll 0 0 #EEEEEE;
+}
+#column-settings .twitter .elgg-module {
+	bottom: 5px;
+	font-size: 0.9em;
+	margin-bottom: 0;
+	padding: 5px 5px 0;
+	position: absolute;
+	width: 440px;
 }
 
 /*
@@ -435,4 +446,14 @@ body.fixed-deck {
 .viewed .elgg-river-message {
 	font-size: 130%;
 	color: #333;
+}
+
+/* twitter */
+.twitter-user-info-popup {
+	color: #4690D6;
+	cursor: pointer;
+}
+.twitter-user-info-popup:hover {
+	color: #555;
+	text-decoration: underline;
 }

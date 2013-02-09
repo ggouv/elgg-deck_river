@@ -2,8 +2,8 @@
 
 elgg_load_library('deck_river:twitter_async');
 
-$consumer_key = elgg_get_plugin_setting('consumer_key', 'twitter_api');
-$consumer_secret = elgg_get_plugin_setting('consumer_secret', 'twitter_api');
+$consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
+$consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
 
 global $fb; $fb->info($consumer_key);
 $fb->info($consumer_secret);
@@ -14,9 +14,9 @@ $fb->info($consumer_secret);
 
 $user = elgg_get_logged_in_user_entity();
 global $fb; $fb->info($user);
-$twitter_name = elgg_get_plugin_user_setting('twitter_name', $user->getGUID(), 'twitter_api');
-$access_key = elgg_get_plugin_user_setting('access_key', $user->getGUID(), 'twitter_api');
-$access_secret = elgg_get_plugin_user_setting('access_secret', $user->getGUID(), 'twitter_api');
+$twitter_name = elgg_get_plugin_user_setting('twitter_name', $user->getGUID(), 'elgg-deck_river');
+$access_key = elgg_get_plugin_user_setting('twitter_access_key', $user->getGUID(), 'elgg-deck_river');
+$access_secret = elgg_get_plugin_user_setting('twitter_access_secret', $user->getGUID(), 'elgg-deck_river');
 
 $fb->info($twitter_name, 'twitter_name');
 $fb->info($access_key, 'access_key');
