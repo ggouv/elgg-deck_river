@@ -256,9 +256,10 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 					dataType: 'json',
 					success: function(json) {
 						response = json.output;
+						var columnID = $('#'+response.column);
 						if (response.action == 'delete') {
-							$('li.column-river[id="'+response.column+'"] .elgg-list, li.column-river[id="'+response.column+'"] .elgg-list-item').css('background-color', '#FF7777');
-							$('li.column-river[id="'+response.column+'"]').fadeOut(400, function() {
+							columnID.find('*').css('background-color', '#FF7777');
+							columnID.fadeOut(400, function() {
 								$(this).animate({'width':0},'', function() {
 									$(this).remove();
 									elgg.deck_river.SetColumnsWidth();
@@ -271,23 +272,21 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 										$('<ul>', {'class': 'column-header'}).after(
 											$('<ul>', {'class': 'elgg-river elgg-list'})
 								)));
-								$('li.column-river:first-child .column-header').clone().appendTo($('li.column-river[id="'+response.column+'"] .column-header'))
+								columnID = $('#'+response.column); // redeclare because it was just created.
+								$('li.column-river:first-child .column-header').clone().appendTo(columnID.find('.column-header'))
 								elgg.deck_river.SetColumnsHeight();
 								elgg.deck_river.SetColumnsWidth();
-								$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
-								elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
-								$('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
+								columnID.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 							} else if (response.action == 'change') {
-								$('li.column-river[id="'+response.column+'"] .elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
-								elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
+								columnID.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 							}
-							$('li.column-river[id="'+response.column+'"] .column-header h3').replaceWith($('<h3>', {'class': 'title'}).html(response.column_title));
-							$('li.column-river[id="'+response.column+'"] .column-header h6').html(response.column_subtitle);
-							console.log(response.direct == 'true');
-							if (response.direct == 'true') {
-								$('li.column-river[id="'+response.column+'"] h3').attr('data-direct', 'true');
-								elgg.deck_river.LoadColumn($('li.column-river[id="'+response.column+'"]'));
-							}
+							
+							columnID.attr('data-direct', response.direct)
+								.find('.column-header h3').html(response.column_title);
+							columnID.find('.column-header h6').html(response.column_subtitle);
+							
+							elgg.deck_river.LoadColumn(columnID);
+							if (response.action == 'new') $('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
 						}
 						cs.remove();
 						return false;

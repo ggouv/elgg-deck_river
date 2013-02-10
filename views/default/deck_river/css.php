@@ -452,6 +452,7 @@ body.fixed-deck {
 .twitter-user-info-popup {
 	color: #4690D6;
 	cursor: pointer;
+	font-weight: bold;
 }
 .twitter-user-info-popup:hover {
 	color: #555;

@@ -32,6 +32,7 @@ $french = array(
 	'river:timeline:definition' => "Activité de mes abonnements",
 	'river:group' => "Groupe",
 	'river:filtred' => "filtré",
+	'river:search' => "Recherche sur %s",
 	'retweet' => "Retweeter",
 	'retweet:one' => "%s retweet",
 	'retweet:twoandmore' => "%s retweets",
@@ -57,7 +58,7 @@ $french = array(
 	'deck_river:filter:all' => 'Tout',
 	'deck_river:twitter:usersettings:request:title' => "Autorisez %s à accéder à votre compte Twitter",
 	'deck_river:twitter:usersettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnés, vos abonnements, vos listes...<br/><a id=\"authorize-twitter\" data-url=\"%s\" class=\"elgg-button elgg-button-action mtm\">Faire la demande à Twitter</a>",
-	'deck_river:twitter:your_account' => "Votre profile Twitter lié à %s :",
+	'deck_river:twitter:your_account' => "Votre profil Twitter lié à %s :",
 	
 	//info popups
 	'deck-river:popups:close' => "Fermer cette fenêtre",
@@ -89,7 +90,10 @@ $french = array(
 	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
 	'deck_river:twitter:feed:search' => "Recherche sur Twitter",
 	'deck_river:twitter:feed:search:tweets' => "Rechercher un mot ou un hashtag",
-	'deck_river:twitter:feed:users:search' => "Recherche d'utilisateurs"
+	'deck_river:twitter:feed:search:popular' => "Recherche triée par tweets les plus populaires",
+	'deck_river:twitter:feed:users:search' => "Rechercher des utilisateurs",
+	
+	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
 
 );
 

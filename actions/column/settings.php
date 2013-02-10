@@ -10,11 +10,6 @@ if (!$submit || !$tab || !$column || !$type || !$twitter_type) {
 	return;
 }
 
-$search = get_input('search');
-$group = get_input('group');
-$types_filter = get_input('filters_types');
-$subtypes_filter = get_input('filters_subtypes');
-
 // Get the settings of the current column of the current user
 $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
@@ -25,6 +20,11 @@ if ($submit == 'delete') {
 	$return['action'] = 'delete';
 	$return['column'] = $column;
 } else if ($submit == 'elgg') {
+	$search = get_input('search');
+	$group = get_input('group');
+	$types_filter = get_input('filters_types');
+	$subtypes_filter = get_input('filters_subtypes');
+
 	if (!array_key_exists($column, $user_river_options[$tab])) {
 		$return['action'] = 'new';
 	} else if ($user_river_options[$tab][$column]['type'] != $type) {
@@ -58,7 +58,7 @@ if ($submit == 'delete') {
 			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != explode(' ', $search)) $return['action'] = 'change';
 			$user_river_options[$tab][$column]['search'] = explode(' ', $search);
 			$return['column_title'] = $search;
-			$return['column_subtitle'] = elgg_echo('search');
+			$return['column_subtitle'] = elgg_echo('river:search', array(elgg_get_site_entity()->name));
 			break;
 		default:
 			$params = array('owner' => $owner, 'query' => 'title');
@@ -121,6 +121,7 @@ if ($submit == 'delete') {
 	$user_river_options[$tab][$column]['direct'] = false;
 
 } else if ($submit == 'twitter') {
+	$search = get_input('twitter-search');
 
 	if (!array_key_exists($column, $user_river_options[$tab])) {
 		$return['action'] = 'new';
@@ -130,18 +131,26 @@ if ($submit == 'delete') {
 	
 	switch ($twitter_type) {
 		case 'twitter:search/tweets':
-			$return['column_title'] = elgg_echo('deck_river:twitter:feed:search');
+			$return['column_title'] = $search;
 			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != $search) $return['action'] = 'change';
 			$user_river_options[$tab][$column]['search'] = $search;
-			$return['column_subtitle'] = $search;
-			$return['direct'] = true;
-			$user_river_options[$tab][$column]['direct'] = true;
+			$return['column_subtitle'] = elgg_echo('deck_river:twitter:feed:search');
+			$return['direct'] = 'http://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1';
+			$user_river_options[$tab][$column]['direct'] = $return['direct'];
+			break;
+		case 'twitter:search/tweets-popular':
+			$return['column_title'] = $search;
+			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != $search) $return['action'] = 'change';
+			$user_river_options[$tab][$column]['search'] = $search;
+			$return['column_subtitle'] = elgg_echo('deck_river:twitter:feed:search');
+			$return['direct'] = 'http://search.twitter.com/search.json?q=' . urlencode($search) . '&include_entities=1&result_type=popular';
+			$user_river_options[$tab][$column]['direct'] = $return['direct'];
 			break;
 		case 'twitter:users/search':
 			$return['column_title'] = 'users/search';
 			$return['column_subtitle'] = 'manutopik';
 			$return['direct'] = true;
-			$user_river_options[$tab][$column]['direct'] = true;
+			$user_river_options[$tab][$column]['direct'] = $return['direct'];
 			break;
 		default:
 			

@@ -69,27 +69,13 @@ $column_title = $user_river_column_options['title'];
 			</li>
 			<li class='group-options hidden pts'>
 				<label><?php echo elgg_echo('group'); ?></label><br />
-				<?php // once autocomplete is working use that
-					/*$groups = elgg_get_logged_in_user_entity()->getGroups("", 0);
-					$mygroups = array();
-					if (!$user_river_column_options['group']) {
-						$mygroups[0] = '';
-					}
-					foreach ($groups as $group) {
-						$mygroups[$group->guid] = $group->name;
-					}
-					$params = array(
-						'name' => 'group',
-						'value' => $user_river_column_options['group'],
-						'options_values' => $mygroups,
-					);
-					echo elgg_view('input/dropdown', $params);*/
+				<?php 
 					echo elgg_view('input/autocomplete', array(
 						'name' => 'group',
 						'value' => $user_river_column_options['group'],
 						'match_on' => 'groups'
 					));
-					?>
+				?>
 			</li>
 		</ul>
 		
@@ -201,7 +187,7 @@ $column_title = $user_river_column_options['title'];
 				
 				$options_values = array(
 					'twitter:search/tweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
-					'twitter:users/search' => elgg_echo('deck_river:twitter:feed:users:search')
+					'twitter:search/tweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
 				);
 				
 			}
@@ -215,9 +201,9 @@ $column_title = $user_river_column_options['title'];
 				'options_values' => $options_values
 			));
 			
-			echo '<li class="twitter-search-tweets-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
+			echo '<li class="twitter-search-tweets-options twitter-search-tweets-popular-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
 			echo elgg_view('input/text', array(
-				'name' => 'search',
+				'name' => 'twitter-search',
 				'value' => $user_river_column_options['search']
 			));
 			echo '</li>';
