@@ -10,7 +10,7 @@ if (!$user) {
 }
 ?>
 <ul class="elgg-tabs elgg-htabs">
-	<li class=" elgg-state-selected"><a href="#<?php echo $user->guid; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+	<li class="elgg-state-selected"><a href="#<?php echo $user->guid; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 	<li><a href="#<?php echo $user->guid; ?>-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
 	<li><a href="#<?php echo $user->guid; ?>-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
 </ul>

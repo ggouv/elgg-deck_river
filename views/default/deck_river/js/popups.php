@@ -19,7 +19,7 @@ elgg.deck_river.popups = function() {
 	// function for user and group popups
 	var fillPopup = function(popupElem, response) {
 		popupElem.children('.elgg-body').html(response);
-		popupElem.find('.elgg-tabs > li > a').click(function() {
+		popupElem.find('.elgg-tabs > li > a').click(function() {console.log($(this));
 			var tab = $(this).attr('href');
 			if (popupElem.find(tab).hasClass('hidden')) {
 				popupElem.find('.elgg-tabs > li').removeClass('elgg-state-selected');
@@ -81,6 +81,60 @@ elgg.deck_river.popups = function() {
 		elgg.deck_river.LoadEntity($(this).attr('title'), $('#hashtag-info-popup'));
 	});
 
+	// Twitter user info popup
+	$('.twitter-user-info-popup').die().live('click', function() {
+		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
+		
+		$.ajax({
+			url: 'https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
+			dataType: "jsonP",
+			success: function(response) {
+				console.log(response);
+				var tabs = ['profile', 'activity', 'mentions', 'favoris'];
+				var output = $('<ul>', {'class': 'elgg-tabs elgg-htabs'}).html(function() {
+								var tabsHtml = '';
+								$.each(tabs, function(i, e) {
+									tabsHtml += '<li class="' + (i==0 ? 'elgg-state-selected' : '') + '"><a href="#'+response.id+'-info-'+e+'">' + elgg.echo(e) + '</a></li>';
+								});
+								return tabsHtml;
+							}
+							).after($('<ul>', {'class': 'elgg-body'}).html(function() {
+								var lisHtml = '';
+								$.each(tabs, function(i, e) {
+									lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="hidden" data-load-type="LoadTwitter_'+e + '"><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
+								});
+								return lisHtml;
+							}));
+				output.filter('.elgg-body').find('li:first-child').html(
+					$('<div>', {'class': 'elgg-avatar elgg-avatar-large float'}).html(
+						$('<a>', {title: response.screen_name, rel: 'nofollow', href: 'http://twitter.com/'+response.screen_name}).append(
+						$('<img>', {title: response.screen_name, alt: response.screen_name, src: response.profile_image_url.replace(/_normal/, ''), width: '200px', height: '200px'})
+					)).after(
+					$('<div>', {'class': 'elgg-body plm'}).html(
+						$('<h1>', {'class': 'mbm'}).html(response.name).after(
+						$('<h2>', {'class': 'mbs', style: 'font-weight:normal;'}).html('@'+response.screen_name).after(
+							$('<div>').html(response.description)
+					)))).after(
+					$('<div>', {id: 'profile-details', 'class': 'elgg-body pll'}).html(
+						$('<ul>', {'class': 'user-stats mbm'}).append(
+							$('<li>').append($('<div>', {'class': 'stats'}).html(response.followers_count), elgg.echo('friends:followers')),
+							$('<li>').append($('<div>', {'class': 'stats'}).html(response.friends_count), elgg.echo('friends:following')),
+							$('<li>').append($('<div>', {'class': 'stats'}).html(response.listed_count), elgg.echo('list')),
+							$('<li>').append($('<div>', {'class': 'stats'}).html(response.statuses_count), elgg.echo('item:object:thewire'))
+					)).append(
+						$('<div>', {'class': 'even'}).html('<b>' + elgg.echo('Twitter') + ' :</b> <a target="_blank" href="http://twitter.com/'+response.screen_name + '">http://twitter.com/'+response.screen_name + '</a>'),
+						$('<div>', {'class': 'even'}).html('<b>' + elgg.echo('site') + ' :</b> <a target="_blank" href="'+ response.url + '">' + response.url + '</a>'),
+						$('<div>', {'class': 'even'}).html('<b>' + elgg.echo('profile:time_created') + ' :</b> ' + response.created_at)
+					))
+				);
+				fillPopup($('#user-info-popup'), output);
+			},
+			error: function() {
+				$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+			}
+		});
+	});
+	
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);
 
