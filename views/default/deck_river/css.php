@@ -359,7 +359,7 @@ body.fixed-deck {
 /*
  * info popup
  */
-#user-info-popup, #group-info-popup, #hashtag-info-popup {
+.deck-popup {
 	width: 480px;
 	height: 600px;
 	left: 40%;
@@ -367,7 +367,7 @@ body.fixed-deck {
 	top: 15%;
 	z-index: 9990;
 }
-#user-info-popup > .elgg-body > .elgg-body, #group-info-popup > .elgg-body > .elgg-body {
+.deck-popup > .elgg-body > .elgg-body {
 	height: 540px;
 	overflow-y: auto;
 }
@@ -375,16 +375,10 @@ body.fixed-deck {
 	height: 573px;
 	overflow-y: auto;
 }
-#user-info-popup .elgg-ajax-loader, #group-info-popup .elgg-ajax-loader, #hashtag-info-popup .elgg-ajax-loader {
+.deck-popup .elgg-ajax-loader {
 	height: 540px;
 }
-#user-info-popup .elgg-tabs a {
-	cursor: pointer;
-}
-#user-info-popup #user-info-activity {
-	overflow: hidden;
-}
-#user-info-popup #profile-details, #group-info-popup #profile-details {
+.deck-popup #profile-details {
 	clear: both;
 	padding: 5px 0 0 0;
 }

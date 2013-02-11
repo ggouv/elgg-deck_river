@@ -10,12 +10,12 @@ if (!$user) {
 }
 ?>
 <ul class="elgg-tabs elgg-htabs">
-	<li class=" elgg-state-selected"><a href="#user-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
-	<li><a href="#user-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
-	<li><a href="#user-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
+	<li class=" elgg-state-selected"><a href="#<?php echo $user->guid; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+	<li><a href="#<?php echo $user->guid; ?>-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
+	<li><a href="#<?php echo $user->guid; ?>-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
 </ul>
 <ul class="elgg-body">
-	<li id="user-info-profile">
+	<li id="<?php echo $user->guid; ?>-info-profile">
 		<?php echo elgg_view_entity_icon($user, 'large', array('class' => 'float', 'href' => $user->getURL())); ?>
 		
 			<div class="elgg-body plm">
@@ -52,10 +52,10 @@ if (!$user) {
 			<?php echo elgg_view('profile/details'); ?>
 		</div>
 	</li>
-	<li id="user-info-activity" class="hidden">
-		<ul class="elgg-river elgg-list" data-user="<?php echo $user->guid; ?>"><div class="elgg-ajax-loader"></div></ul>
+	<li id="<?php echo $user->guid; ?>-info-activity" class="hidden" data-load-type="LoadEntity">
+		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
-	<li id="user-info-mentions" class="hidden">
-		<ul class="elgg-river elgg-list" data-user="<?php echo $user->guid; ?>"><div class="elgg-ajax-loader"></div></ul>
+	<li id="<?php echo $user->guid; ?>-info-mentions" class="hidden" data-load-type="LoadMentions">
+		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

@@ -12,12 +12,12 @@ if (!$group) {
 }
 ?>
 <ul class="elgg-tabs elgg-htabs">
-	<li class=" elgg-state-selected"><a href="#group-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
-	<li><a href="#group-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
-	<li><a href="#group-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
+	<li class=" elgg-state-selected"><a href="#<?php echo $group_id; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+	<li><a href="#<?php echo $group_id; ?>-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
+	<li><a href="#<?php echo $group_id; ?>-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
 </ul>
 <ul class="elgg-body">
-	<li id="group-info-profile">
+	<li id="<?php echo $group_id; ?>-info-profile">
 		<?php echo elgg_view_entity_icon($group, 'medium', array('img_class' => 'float')); ?>
 		
 			<div class="elgg-body plm">
@@ -54,14 +54,14 @@ if (!$group) {
 				?>
 			</div>
 
-		<div id="profile-details" class="elgg-body pll">
+		<div id="<?php echo $group_id; ?>-details" class="elgg-body pll">
 			<?php //echo elgg_view('profile/details'); ?>
 		</div>
 	</li>
-	<li id="group-info-activity" class="hidden">
-		<ul class="elgg-river elgg-list" data-group="<?php echo $group_id; ?>"><div class="elgg-ajax-loader"></div></ul>
+	<li id="<?php echo $group_id; ?>-info-activity" class="hidden" data-load-type="LoadEntity">
+		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
-		<li id="group-info-mentions" class="hidden">
-		<ul class="elgg-river elgg-list" data-group="<?php echo $group_id; ?>"><div class="elgg-ajax-loader"></div></ul>
+		<li id="<?php echo $group_id; ?>-info-mentions" class="hidden" data-load-type="LoadMentions">
+		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>
