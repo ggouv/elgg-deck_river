@@ -266,6 +266,8 @@ body.fixed-deck {
 	position: fixed;
 	top: 15%;
 	z-index: 9999;
+	width: auto;
+	height: auto;
 	min-width: 372px;
 	max-width: 560px;
 	min-height: 300px;
@@ -350,10 +352,29 @@ body.fixed-deck {
 #column-settings .twitter .elgg-module {
 	bottom: 5px;
 	font-size: 0.9em;
-	margin-bottom: 0;
 	padding: 5px 5px 0;
 	position: absolute;
 	width: 440px;
+}
+#column-settings .twitter .elgg-module.multi {
+	position: relative;
+	padding: 0 5px;
+}
+#column-settings select[name="twitter-account"] {
+	position: absolute;
+	right: 40px;
+	top: 38px;
+}
+#column-settings .addAccount {
+	font-size: 1.4em;
+	font-weight: bold;
+	position: absolute;
+	right: 7px;
+	top: 8px;
+	cursor: pointer;
+}
+#column-settings .addAccount:hover {
+	text-decoration: none;
 }
 
 /*
@@ -443,12 +464,12 @@ body.fixed-deck {
 }
 
 /* twitter */
-.twitter-user-info-popup {
+.elgg-river-summary .twitter-user-info-popup {
 	color: #4690D6;
-	cursor: pointer;
 	font-weight: bold;
 }
 .twitter-user-info-popup:hover {
 	color: #555;
 	text-decoration: underline;
+	cursor: pointer;
 }

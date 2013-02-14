@@ -44,7 +44,7 @@ $column_title = $user_river_column_options['title'];
 		);
 		echo elgg_view('navigation/tabs', $params);
 	?>
-	
+
 	<div class="tab elgg<?php if ($selected != 'elgg') echo ' hidden'; ?>">
 		<ul class='box-settings phm'>
 			<li>
@@ -56,7 +56,7 @@ $column_title = $user_river_column_options['title'];
 					echo elgg_view('input/dropdown', array(
 						'name' => 'type',
 						'value' => $user_river_column_options['type'],
-						'class' => 'column-type mtm',
+						'class' => 'column-type mts',
 						'options_values' => $options_values
 					)); ?>
 			</li>
@@ -69,7 +69,7 @@ $column_title = $user_river_column_options['title'];
 			</li>
 			<li class='group-options hidden pts'>
 				<label><?php echo elgg_echo('group'); ?></label><br />
-				<?php 
+				<?php
 					echo elgg_view('input/autocomplete', array(
 						'name' => 'group',
 						'value' => $user_river_column_options['group'],
@@ -78,7 +78,7 @@ $column_title = $user_river_column_options['title'];
 				?>
 			</li>
 		</ul>
-		
+
 		<div class='filter plm'>
 			<label><?php echo elgg_echo('deck_river:filter'); ?></label><br />
 			<?php
@@ -102,7 +102,7 @@ $column_title = $user_river_column_options['title'];
 						}
 					}
 				}
-				
+
 				// merge keys defined by admin
 				$keys_to_merge = explode(',', elgg_get_plugin_setting('keys_to_merge', 'elgg-deck_river'));
 				foreach ($keys_to_merge as $key => $value ) {
@@ -114,7 +114,7 @@ $column_title = $user_river_column_options['title'];
 						if ($v == $key_master[1]) unset($subtypes_label[$k]);
 					}
 				}
-				
+
 				// show filters
 				echo elgg_view('input/checkboxes', array(
 									'name' => 'filters_types',
@@ -131,7 +131,7 @@ $column_title = $user_river_column_options['title'];
 		</div>
 	</div>
 
-	
+
 	<?php // TWITTER
 		$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
 		$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
@@ -139,27 +139,19 @@ $column_title = $user_river_column_options['title'];
 			$class = ($selected != 'twitter')  ? ' hidden': '';
 			echo '<div class="tab twitter' .  $class . '"><ul class="box-settings phm"><li>';
 
-			$access_key = elgg_get_plugin_user_setting('twitter_access_key', $user_guid, 'elgg-deck_river');
-			$access_secret = elgg_get_plugin_user_setting('twitter_access_secret', $user_guid, 'elgg-deck_river');
+			// get twitter account
+			elgg_load_library('deck_river:authorize');
+			$twitter_account = deck_river_twitter_get_account();
 
-			if (!$access_key || !$access_secret) { // send user off to validate account
-				elgg_load_library('deck_river:twitter_async');
-				$twitterObjUnAuth = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret);
-				$output = elgg_view_module(
-					'featured',
-					elgg_echo('deck_river:twitter:usersettings:request:title', array($site_name)),
-					elgg_echo('deck_river:twitter:usersettings:request', array($twitterObjUnAuth->getAuthenticateUrl())),
-					array('class' => 'mtl float')
-				);
-				
-				$options_values = array(
-					'twitter:search/tweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
-					'twitter:users/search' => elgg_echo('deck_river:twitter:feed:users:search')
-				);
-			} else {
-				$twitter_user = elgg_get_plugin_user_setting('twitter_name', $user_guid, 'elgg-deck_river');
-				$twitter_avatar = elgg_get_plugin_user_setting('twitter_avatar', $user_guid, 'elgg-deck_river');
-				
+			elgg_load_library('deck_river:twitter_async');
+			$twitterObjUnAuth = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret);
+			$twitterRequestUrl = $twitterObjUnAuth->getAuthenticateUrl();
+
+			function displayTwitterAccount($account, $phrase, $class = null, $twitterRequestUrl = null) {
+				$site_name = elgg_get_site_entity()->name;
+				$twitter_user = $account->screen_name;
+				$twitter_avatar = $account->avatar;
+
 				// User twitter block
 				$img = elgg_view('output/img', array(
 					'src' => $twitter_avatar,
@@ -174,45 +166,96 @@ $column_title = $user_river_column_options['title'];
 				$twitter_name .= elgg_view('output/url', array(
 					'href' => 'http://twitter.com/' . $twitter_user,
 					'text' => 'http://twitter.com/' . $twitter_user,
-					'target' => '_blank'
+					'target' => '_blank',
+					'rel' => 'nofollow'
 				));
 				$twitter_name .= '</span></div>';
 				$twitter_name = elgg_view_image_block($img, $twitter_name);
-				
-				$output = elgg_view_module(
+
+				$add_account = elgg_view('output/url', array(
+					'href' => '#',
+					'data-url' => $twitterRequestUrl,
+					'text' => '+',
+					'class' => 'addAccount tooltip s t',
+					'title' => elgg_echo('deck_river:twitter:add:account')
+				));
+
+				return elgg_view_module(
 					'info',
-					'<span class="elgg-river-timestamp">' . elgg_echo('deck_river:twitter:your_account', array($site_name)) . '</span>',
-					$twitter_name
+					'<span class="elgg-river-timestamp">' . $phrase . '</span>',
+					$twitter_name . $add_account,
+					array(
+						'class' => $class
+					)
 				);
-				
-				$options_values = array(
+			}
+
+			$options_values = array(
+				'twitter:search/tweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
+				'twitter:search/tweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
+			);
+
+			if (count($twitter_account) == 0) { // No account registred, send user off to validate account
+
+				$output = elgg_view_module(
+					'featured',
+					elgg_echo('deck_river:twitter:usersettings:request:title', array($site_name)),
+					elgg_echo('deck_river:twitter:usersettings:request', array($twitterRequestUrl)),
+					array('class' => 'mtl float')
+				);
+
+			} else if (count($twitter_account) == 1) { // One account registred
+
+				$output = displayTwitterAccount($twitter_account[0], elgg_echo('deck_river:twitter:your_account', array($site_name)), 'mbn', $twitterRequestUrl);
+				$output .= elgg_view('input/hidden', array(
+					'name' => 'twitter-account',
+					'value' => $twitter_account[0]->getGUID(),
+				));
+
+				$options_values = array_merge($options_values, array(
 					'twitter:search/tweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
 					'twitter:search/tweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
-				);
-				
+				));
+
+			} else { // more than one account
+
+				if (!isset($user_river_column_options['account'])) $user_river_column_options['account'] = $twitter_account[0]->getGUID();
+				echo '<label>' . elgg_echo('deck_river:twitter:choose:account') . '</label><br />';
+				foreach ($twitter_account as $account) {
+					$hidden = ($account->getGUID() == $user_river_column_options['account']) ? '' : 'hidden ';
+					echo displayTwitterAccount($twitter_account[0], '', $hidden . 'mtm mbs multi ' . $account->getGUID(), $twitterRequestUrl);
+					$accounts_name[$account->getGUID()] = $account->screen_name;
+				}
+				echo elgg_view('input/dropdown', array(
+					'name' => 'twitter-account',
+					'value' => $user_river_column_options['account'],
+					'class' => '',
+					'options_values' => $accounts_name
+				));
+
 			}
-			
+
 			// select feed
 			echo '<label>' . elgg_echo('deck_river:type') . '</label><br />';
 			echo elgg_view('input/dropdown', array(
 				'name' => 'twitter-type',
 				'value' => $selected == 'twitter' ? $user_river_column_options['type'] : 'twitter:search/tweets',
-				'class' => 'column-type mtm',
+				'class' => 'column-type mts',
 				'options_values' => $options_values
 			));
-			
+
 			echo '<li class="twitter-search-tweets-options twitter-search-tweets-popular-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
 			echo elgg_view('input/text', array(
 				'name' => 'twitter-search',
 				'value' => $user_river_column_options['search']
 			));
 			echo '</li>';
-			
+
 			echo $output;
-			
+
 			echo '</li></ul></div>';
 		}
-	
+
 		// FACEBOOK
 		$facebook_consumer_key = elgg_get_plugin_setting('facebook_consumer_key', 'elgg-deck_river');
 		$facebook_consumer_secret = elgg_get_plugin_setting('facebook_consumer_secret', 'elgg-deck_river');
@@ -221,9 +264,9 @@ $column_title = $user_river_column_options['title'];
 			echo '<div class="tab facebook' .  $class . '"><ul class="box-settings phm">En construction...<li>';
 			echo '</li></ul></div>';
 		//}
-	
+
 	?>
-	
+
 </div>
 
 <div class="elgg-foot phs">
@@ -233,7 +276,7 @@ $column_title = $user_river_column_options['title'];
 		'value' => elgg_echo('save'),
 		'class' => $selected == 'elgg' ? 'elgg-button elgg-button-submit elgg' : 'elgg-button elgg-button-submit elgg hidden'
 	));
-	
+
 	if ($twitter_consumer_key && $twitter_consumer_secret) {
 		echo elgg_view('input/submit', array(
 			'name' => 'twitter',

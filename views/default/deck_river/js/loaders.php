@@ -99,7 +99,7 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 					} else if ( TheColumn.find('.elgg-list-item').length == 0 ) {
 						var user = elgg.get_logged_in_user_entity(),
 						c_type = response.column_type;
-						
+
 						if (c_type == 'mine' && Math.round($.now()/1000) - elgg.get_logged_in_user_entity().time_created  < (60*60*24*7)) c_type = 'now';
 						TheColumn.find('.elgg-river').html($('<table>', {height: '100%', width: '100%'}).append(
 							$('<tr>').append(
@@ -126,8 +126,8 @@ elgg.deck_river.LoadColumn = function(TheColumn) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	TheColumn.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + 'mod/elgg-deck_river/graphics/elgg_refresh.gif") no-repeat scroll -1px -1px transparent');
 	TheColumn.find('.elgg-list-item').removeClass('newRiverItem');
-	
-	if (TheColumn.attr('data-direct') !== undefined) {
+
+	if (TheColumn.attr('data-direct') !== undefined && TheColumn.attr('data-direct') !== '') {
 		$.ajax({
 			url: TheColumn.attr('data-refresh_url'),
 			dataType: 'jsonP',
@@ -143,7 +143,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 		});
 	} else {
 		var since_id = TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').first().text() || 0;
-		
+
 		elgg.post('ajax/view/deck_river/ajax/column_river', {
 			dataType: "json",
 			data: {
@@ -192,7 +192,7 @@ elgg.deck_river.LoadEntity = function(TheEntity, TheColumn) {
 				});
 				if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
 					TheColumn.find('.elgg-river').append($('<li>', {'class': 'moreItem'}).html(elgg.echo('deck_river:more')));
-	
+
 					// load more items
 					TheColumn.find('.moreItem').click(function() {
 						var TheColumn = $(this).closest('.elgg-river').parent();
@@ -246,7 +246,7 @@ elgg.deck_river.LoadMentions = function(TheEntity, TheColumn) {
 				});
 				if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
 					TheColumn.find('.elgg-river').append($('<li>', {'class': 'moreItem'}).html(elgg.echo('deck_river:more')));
-	
+
 					// load more items
 					TheColumn.find('.moreItem').click(function() {
 						var TheColumn = $(this).closest('.elgg-river').parent();
@@ -290,9 +290,9 @@ elgg.deck_river.LoadMentions = function(TheEntity, TheColumn) {
 elgg.deck_river.LoadDiscussion = function(athread) {
 	// if already exist, skip
 	if (athread.parent('.elgg-river-responses').find('div.thread').length) return;
-	
+
 	athread.parent('.elgg-river-responses').find('.response-loader').removeClass('hidden');
-	
+
 	if (athread.attr('data-direct')) {
 		//http://api.twitter.com/1/related_results/show/254208368070258688.json?include_entities=1
 		$.ajax({
@@ -302,7 +302,7 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 			success: function(response) {
 				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
 				var idToggle = athread.parents('.column-river').attr('id') + '-' + athread.parents('.elgg-list-item').attr('class').match(/item-twitter-\d+/);
-				
+
 				athread.parent('.elgg-river-responses').append($('<div>', {id: idToggle, 'class': 'thread mts float'}).html(elgg.deck_river.TwitterDisplayItems(response, true)));
 				athread.attr({
 					rel: 'toggle',
@@ -326,7 +326,7 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 			success: function(response) {
 				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
 				var idToggle = athread.parents('.column-river').attr('id') + '-' + athread.parents('.elgg-list-item').attr('class').match(/item-river-\d+/);
-				
+
 				athread.parent('.elgg-river-responses').append($('<div>', {id: idToggle, 'class': 'thread mts float'}).html(elgg.deck_river.displayItems(response, true)));
 				athread.attr({
 					rel: 'toggle',
@@ -350,12 +350,12 @@ elgg.deck_river.displayItems = function(response, thread) {
 	var thread = thread || false,
 		output = $(),
 		wirearea = $('#thewire-textarea');
-	
+
 	var responseToWire = function(wireGuidValue, responseToUser, WireID) {
 		$('.elgg-list-item.thewire').removeClass('responseAt');
 		var wireForm = wirearea.parents('fieldset'),
 			message = $('.item-river-'+WireID).addClass('responseAt').find('.elgg-river-message').first().text();;
-		
+
 		if (wireForm.find('input[name=parent_guid]').length) {
 			wireForm.find('input[name=parent_guid]').val(wireGuidValue);
 			wireForm.find('.responseTo').html(elgg.echo('responseToHelper:text', [responseToUser, message])).attr('title', elgg.echo('responseToHelper:delete', [responseToUser]));
@@ -408,7 +408,7 @@ elgg.deck_river.displayItems = function(response, thread) {
 		if (value.menu && value.menu.indexOf('delete') > -1) {
 			subMenuOutput = subMenuOutput.after(
 				$('<li>').append(
-					$('<a>', {'class':'elgg-requires-confirmation', rel: elgg.echo('deleteconfirm'), is_action: 'is_action', 
+					$('<a>', {'class':'elgg-requires-confirmation', rel: elgg.echo('deleteconfirm'), is_action: 'is_action',
 					href: elgg.security.addToken(elgg.get_site_url() + 'action/river/delete?id=' + value.id)}).append(
 						$('<span>', {'class':'elgg-icon elgg-icon-delete'}).html(elgg.echo('delete'))
 			)))
@@ -420,7 +420,7 @@ elgg.deck_river.displayItems = function(response, thread) {
 						$('<div>', {'class': "response-loader hidden"})
 			)));
 		}
-		
+
 		output = output.after(
 			$('<li>', {'class': 'elgg-list-item item-river-'+ value.id +' '+ value.subtype +' '+ value.action_type}).mouseleave(function() {
 				$(this).find('.elgg-submenu-river').removeClass('hover');
@@ -440,7 +440,7 @@ elgg.deck_river.displayItems = function(response, thread) {
 									if (subMenuOutput.length) return $('<span>', {'class':'elgg-icon elgg-icon-submenu-river gwf'}).html('+').after(
 										$('<ul>', {'class': 'elgg-module-popup hidden'}).append(subMenuOutput).mouseleave(function() {
 											$('.elgg-submenu-river').removeClass('hover');
-										
+
 								}));
 						})));
 					}).append(
@@ -462,11 +462,11 @@ elgg.deck_river.displayItems = function(response, thread) {
 };
 
 
-
+/*
+ * Load Twitter timeline for an user
+ */
 elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
 	$.ajax({
-		//url: 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=ManUtopiK&count=20&include_rts=1&callback=?',
-		//url: 'http://search.twitter.com/search.json?q=Pas+cher+le+%23nucléaire&count=20&include_entities=1&callback=?',
 		url: 'http://api.twitter.com/1/statuses/user_timeline.json?count=50&include_rts=1&user_id='+twitterID,
 		dataType: 'jsonP',
 		success: function(response) {
@@ -499,7 +499,7 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
 			OutputElem.find('.elgg-icon-refresh').css('background', 'url("' + elgg.config.wwwroot + '_graphics/elgg_sprites.png") no-repeat scroll 0 -792px transparent');
 		},
 		error: function(xmlhttp, status, error) {
-			//TheColumn.find('.elgg-river').html();
+			//OutputElem.find('.elgg-river').html();
 			elgg.register_error(elgg.echo('deck_river:twitter:access:error', [status, error]));
 		}
 	});
@@ -516,7 +516,7 @@ elgg.deck_river.TwitterDisplayItems = function(response, thread) {
 	var thread = thread || false,
 		output = $(),
 		wirearea = $('#thewire-textarea');
-	
+
 	if (response.results) { // json returned by Twitter is different between twitter search api and twitter main api
 		response = response.results;
 		$.each(response, function(key, value) {
@@ -524,7 +524,7 @@ elgg.deck_river.TwitterDisplayItems = function(response, thread) {
 			response[key].user.profile_image_url = response[key].profile_image_url;
 		});
 	}
-	
+
 	$.each(response, function(key, value) {
 		var menuOutput = subMenuOutput = riverResponses = $();
 //console.log(value);
@@ -598,7 +598,7 @@ elgg.deck_river.TwitterDisplayItems = function(response, thread) {
 									if (subMenuOutput.length) return $('<span>', {'class':'elgg-icon elgg-icon-submenu-river gwf'}).html('+').after(
 										$('<ul>', {'class': 'elgg-module-popup hidden'}).append(subMenuOutput).mouseleave(function() {
 											$('.elgg-submenu-river').removeClass('hover');
-										
+
 								}));
 						})));
 					}).append(
@@ -630,8 +630,7 @@ String.prototype.TwitterParseURL = function () {
 };
 String.prototype.TwitterParseUsername = function () {
 	return this.replace(/@[A-Za-z0-9-_]+/g, function (u) {
-		var username = u.replace("@", "")
-		return u.link("http://twitter.com/" + username);
+		return '<a href="#" class="twitter-user-info-popup" title="'+u.replace("@", "")+'">'+u+'</a>';
 	});
 };
 String.prototype.TwitterParseHashtag = function () {

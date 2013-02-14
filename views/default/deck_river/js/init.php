@@ -52,7 +52,7 @@ elgg.deck_river.init = function() {
 			elgg.deck_river.SetColumnsWidth();
 		}
 	});
-	
+
 	$('#thewire-textarea').focusin(function() {
 		var optionsHeight = $('#thewire-header').addClass('extended').find('.options').height();
 		$('#thewire-header').height(optionsHeight+117);
@@ -74,7 +74,7 @@ elgg.deck_river.init = function() {
 			delete_icon.removeClass('hidden');
 		}
 	});
-	
+
 	// thewire live post
 	$('#thewire-submit-button').die().live('click', function(e){
 		if ($('#thewire-textarea').val() == '') { // no text
@@ -106,7 +106,7 @@ elgg.deck_river.init = function() {
 		e.preventDefault();
 		return false;
 	});
-	
+
 	// response to a wire post
 	$('#thewire-header .responseTo').die().live('click', function() {
 		$(this).parents('fieldset').find('input[name=parent_guid]').remove();
@@ -115,7 +115,7 @@ elgg.deck_river.init = function() {
 		$('#thewire-header, #thewire-textarea-border').css({height: '+=-22'});
 		$('.elgg-list-item.thewire').removeClass('responseAt');
 	});
-	
+
 	// refresh column, use 'live' for new column
 	$('.elgg-column-refresh-button').die().live('click', function() {
 		elgg.deck_river.RefreshColumn($(this).parents('.column-river'));
@@ -151,7 +151,7 @@ elgg.deck_river.init = function() {
 		return false;
 	});
 
-	// rename column button 
+	// rename column button
 	$('.elgg-form-deck-river-tab-rename .elgg-button-submit').die().live('click', elgg.deck_river.tabRename);
 
 	// Add new column
@@ -180,7 +180,7 @@ elgg.deck_river.init = function() {
 		start: function(event, ui) { $('.column-placeholder').css('width', $('.column-header').width()-3); },
 		update:                elgg.deck_river.MoveColumn
 	});
-	
+
 	// load discussion
 	$('.elgg-river-responses a.thread').die().live('click', function() {
 		elgg.deck_river.LoadDiscussion($(this));
@@ -213,9 +213,9 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 		success: function(response) {
 			var cs =$('#column-settings');
 			cs.find('.elgg-body').html(response);
-			
+
 			elgg.autocomplete.init();
-			
+
 			// network vertical tabs
 			cs.find('.elgg-tabs.networks a').click(function() {
 				var net = $(this).attr('class');
@@ -228,26 +228,30 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				cs.find('.column-type').trigger('change');
 			});
 			if (cs.attr('data-network')) cs.find('.elgg-tabs.networks a.'+cs.attr('data-network')).click(); // used when authorize social network callback
-			
-			$('#authorize-twitter').click(function(e){
+
+			$('#authorize-twitter, .addAccount').click(function(e){
 				var oauthWindow = window.open($(this).attr('data-url'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
 				e.preventDefault();
 				return false;
 			});
-			
+
 			// dropdown
 			cs.find('.' + cs.find('.tab:visible .column-type').val().replace(/[:\/]/g, '-')+'-options').show();
 			$('.column-type').change(function() {
 				$(this).parents('.box-settings').find('li').not(':first-child').hide();
 				$(this).parents('.box-settings').find('.'+$(this).val().replace(/[:\/]/g, '-')+'-options').show();
 			});
-			
+			$('select[name="twitter-account"]').change(function() {
+				console.log($(this).val());
+				$(this).parents('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
+			});
+
 			// checkboxes
 			cs.find('.filter .elgg-input-checkbox').click(function() {
 				if ( $(this).val() == 'All' ) $("#deck-column-settings .filter .elgg-input-checkbox").not($(this)).removeAttr("checked");
 				if ( $(this).val() != 'All' ) $("#deck-column-settings .filter .elgg-input-checkbox[value='All']").removeAttr("checked");
 			});
-			
+
 			$('.deck-river-form-column-settings').submit(function() { return false; });
 			$(".elgg-foot .elgg-button").click(function(e) {
 				if ($(this).attr('name') == 'delete' && !confirm(elgg.echo('deck-river:delete:column:confirm'))) return false;
@@ -280,11 +284,11 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 							} else if (response.action == 'change') {
 								columnID.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 							}
-							
+
 							columnID.attr('data-direct', response.direct)
 								.find('.column-header h3').html(response.column_title);
 							columnID.find('.column-header h6').html(response.column_subtitle);
-							
+
 							elgg.deck_river.LoadColumn(columnID);
 							if (response.action == 'new') $('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
 						}
@@ -406,7 +410,7 @@ elgg.deck_river.SetColumnsWidth = function() {
 elgg.provide('elgg.friendly_time');
 
 elgg.friendly_time = function(time) {
-	
+
 	//TODO friendly:time hook
 
 	diff = new Date().getTime()/1000 - parseInt(time);

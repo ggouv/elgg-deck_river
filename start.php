@@ -4,7 +4,7 @@ elgg_register_event_handler('init','system','deck_river_init');
 
 function deck_river_init() {
 
-	elgg_register_library('deck_river:river_loader', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_loader.php');	
+	elgg_register_library('deck_river:river_loader', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_loader.php');
 	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
 	elgg_register_library('deck_river:authorize', elgg_get_plugins_path() . 'elgg-deck_river/lib/authorize.php');
 	elgg_register_library('deck_river:twitter_async', elgg_get_plugins_path() . 'elgg-deck_river/vendors/load_twitter_async.php');
@@ -54,18 +54,18 @@ function deck_river_init() {
 function deck_river_page_handler($page) {
 
 	if (elgg_is_logged_in()) {
-	
+
 		if (!isset($page[0])) {
 			$page[0] = 'default';
 		}
-	
+
 		switch ($page[0]) {
 			default:
 				elgg_set_context(elgg_extract(0, $page, 'default'));
 				include_once dirname(__FILE__) . '/pages/river.php';
 				break;
 		}
-	
+
 	} else {
 		forward('');
 	}
@@ -146,7 +146,7 @@ function authorize_page_handler($page) {
 
 /**
  * Override the url for a wire post to return the thread
- * 
+ *
  * @param ElggObject $thewirepost Wire post object
  */
 function deck_river_thewire_url($thewirepost) {
@@ -178,7 +178,7 @@ function deck_river_wire_filter($text) {
 				'/(^|[^\w])@([\p{L}\p{Nd}._]+)/u',
 				'$1<a class="user-info-popup" href="#" title="$2">@$2</a>',
 				$text);
-				
+
 	// groups
 	$text = preg_replace(
 				'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
@@ -221,7 +221,7 @@ function deck_river_wire_filter_external($text) {
 				'/(^|[^\w])@([\p{L}\p{Nd}._]+)/u',
 				'$1<a href="'. elgg_get_site_url() .'profile/$2" title="$2">@$2</a>',
 				$text);
-				
+
 	// groups
 	$text = preg_replace(
 				'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
@@ -278,7 +278,7 @@ function search_group_by_title($group) {
 
 /**
  * Get an array of hashtags from a text string
- * 
+ *
  * @param string $text The text of a post
  * @return array
  */
@@ -294,7 +294,7 @@ function deck_river_thewire_get_hashtags($text) {
 
 /**
  * Get an array of users from a text string
- * 
+ *
  * @param string $text The text of a post
  * @return array
  */
@@ -303,7 +303,7 @@ function deck_river_thewire_get_users($text) {
 	// hashtag must begin with # and contain at least one character not digit, space, or punctuation
 	$matches = array();
 	preg_match_all('/(^|[^\w])@([\p{L}\p{Nd}._]+)/u', $text, $matches);
-	
+
 	// check if users exists
 	$users = array();
 	foreach ($matches[2] as $key => $user) {
@@ -348,7 +348,7 @@ function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid =
 	// set thread guid
 	if ($parent_guid) {
 		$post->addRelationship($parent_guid, 'parent');
-		
+
 		// name conversation threads by guid of first post (works even if first post deleted)
 		$parent_post = get_entity($parent_guid);
 		$post->wire_thread = $parent_post->wire_thread;
@@ -370,7 +370,7 @@ function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid =
 		);
 		elgg_trigger_plugin_hook('status', 'user', $params);
 	}
-	
+
 	return $guid;
 }
 
@@ -387,7 +387,7 @@ function deck_river_thewire_notify_message($guid, $parent_guid) {
 	$owner = $entity->getOwnerEntity();
 
 	$parent_post = get_entity($parent_guid);
-	
+
 	$owner_url = elgg_view('output/url', array(
 		'href' => $owner->getURL(),
 		'text' => $owner->name,
@@ -462,7 +462,7 @@ function deck_river_thewire_mention_message($guid, $user_mentioned) {
 	$owner = $entity->getOwnerEntity();
 
 	$parent_post = get_entity($parent_guid);
-	
+
 	$owner_url = elgg_view('output/url', array(
 		'href' => $owner->getURL(),
 		'text' => $owner->name,
