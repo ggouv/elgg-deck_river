@@ -5,7 +5,7 @@
 
 $object = $vars['item']->getObjectEntity();
 $excerpt = strip_tags($object->description);
-$excerpt = thewire_filter($excerpt);
+$excerpt = deck_river_wire_filter($excerpt);
 
 $subject = $vars['item']->getSubjectEntity();
 $subject_link = elgg_view('output/url', array(
