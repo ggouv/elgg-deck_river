@@ -7,9 +7,441 @@ body.fixed-deck {
 .elgg-main {
 	padding: 10px 0 0;
 }
-.deck-river {
-	/*padding: 10px 0 0;*/
+
+/* the wire-search textarea */
+#thewire-header {
+	background-color: white;
+	border-radius: 6px;
+	height: 33px;
+	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
+#thewire-header #thewire-textarea-border {
+	display: none;
+}
+#thewire-textarea {
+	background-color: transparent;
+	resize: none;
+	height: 32px !important;
+	padding: 10px 2px 0px 12px !important;
+	margin: 0;
+	color: #666;
+	font: 130% Arial,Helvetica,sans-serif;
+	border: none;
+	width: 570px;
+	line-height: 1em;
+	overflow: hidden;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none; 
+}
+#thewire-textarea-border {
+	background-color: #4690D6;
+	border-radius: 0 0 6px 6px;
+	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
+	height: 0px;
+	left: -4px;
+	position: absolute;
+	top: 35px;
+	width: 665px;
+	z-index: -1;
+}
+#thewire-characters-remaining {
+	position: absolute;
+	right: 47px;
+	top: 0;
+	z-index: 7003;
+	overflow: hidden;
+	width: 40px;
+	text-align: right;
+	font-weight: bold;
+	color: #333333;
+}
+#thewire-characters-remaining span {
+	color: #00CC00;
+	background-color: white;
+	border-radius: 0 6px 6px 0;
+	display: block;
+	font-size: 1.2em;
+	margin-left: -12px;
+	padding: 9px 6px 6px 0;
+	height: 18px;
+	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	box-shadow: inset 0 2px 2px 0 #1F2E3D;
+}
+#thewire-header > .thewire-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border-radius: 6px 6px 6px 6px;
+	height: 33px;
+	overflow: hidden;
+	right: 0;
+	background-color: #FFE6E6;
+	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	box-shadow: inset 0 2px 2px 0 #1F2E3D;
+}
+#thewire-header > .thewire-button:before {
+	content: "S";
+	color: #B40000;
+	font-size: 54px;
+	position: relative;
+	right: 5px;
+	top: 9px;
+	position: absolute;
+}
+#thewire-header > .thewire-button:hover {
+	background-color: #FF0000;
+}
+#thewire-header > .thewire-button:hover:before {
+	color: white;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+#thewire-submit-button {
+	color: transparent;
+	height: 33px;
+	text-indent: -9999px;
+	background-color: transparent;
+	border: none;
+	width: 60px;
+}
+#thewire-header #submit-loader {
+	background-color: white;
+	background-position: 50% center;
+	left: 573px;
+	padding: 2px 8px;
+	top: -25px;
+	z-index: 7004;
+}
+#thewire-header.extended #submit-loader {
+	background-color: transparent;
+	left: 526px;
+	top: 8px;
+}
+#thewire-header.extended #thewire-textarea {
+	height: 115px !important;
+}
+#thewire-header.extended {
+	border-radius: 6px 6px 0 0;
+}
+#thewire-header.extended #thewire-textarea-border {
+	display: block;
+}
+#thewire-header.extended #thewire-textarea {
+	width: 100%;
+	overflow-y: auto;
+}
+#thewire-header.extended #thewire-characters-remaining {
+	bottom: -31px;
+	left: 3px;
+	top: auto;
+}
+#thewire-header.extended #thewire-characters-remaining span {
+	background-color: transparent;
+	box-shadow: none;
+	margin-left: 5px;
+	text-align: left;
+}
+#thewire-header.extended #thewire-textarea-bottom {
+	background-color: #F4F4F4;
+	border-radius: 0 0 6px 6px;
+	bottom: -31px;
+	height: 40px;
+	position: absolute;
+	width: 100%;
+	z-index: -1;
+	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	box-shadow: inset 0 2px 2px 0 #1F2E3D;
+}
+#thewire-header.extended .thewire-button {
+	background-color: white;
+	border: 1px solid #999999;
+	box-shadow: none;
+	height: 21px;
+	margin: 4px;
+	padding: 0 0 1px 24px;
+	top: auto;
+	bottom: -32px;
+	width: 72px;
+	-webkit-box-shadow: inset 0px -10px 10px 2px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: inset 0px -10px 10px 2px rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0px -10px 10px 2px rgba(0, 0, 0, 0.1);
+}
+#thewire-header.extended > .thewire-button:before {
+	font-size: 40px;
+	left: 2px;
+	right: auto;
+	top: 2px;
+}
+#thewire-header.extended #thewire-submit-button {
+	color: #333333;
+	float: left;
+	height: 22px;
+	padding-left: 30px;
+	position: absolute;
+	right: 0;
+	text-indent: 0;
+	width: 97px;
+}
+#thewire-header.extended > .thewire-button:hover {
+	background-color: #FF3019;
+	border: 1px solid #CF0404;
+	color: white;
+}
+#thewire-header.extended > .thewire-button:hover #thewire-submit-button {
+	color: white;
+}
+#thewire-header.extended .options {
+	display: block;
+}
+#thewire-header .url-shortener {
+	border-top: 1px solid #DEDEDE;
+	margin: 0 1px;
+	padding: 4px;
+	width: 647px;
+	position: relative;
+}
+#thewire-header .url-shortener .elgg-input-text {
+	font-size: 100%;
+	padding-right: 70px;
+}
+#thewire-header .url-shortener .elgg-button {
+	font-size: 90%;
+	padding: 2px 2px 0;
+	position: absolute;
+	top: 8px;
+}
+#thewire-header .url-shortener .elgg-button-submit {
+	right: 7px;
+}
+#thewire-header .url-shortener .elgg-button-action {
+	right: 75px;
+}
+#thewire-header .url-shortener .elgg-icon {
+	position: absolute;
+	top: 8px;
+	right: 138px;
+}
+#thewire-header .responseTo {
+	background-color: #FFC;
+	color: #666;
+	margin: 0 2px;
+	padding: 2px 5px;
+	height: 18px;
+	overflow: hidden;
+}
+#thewire-header .responseTo span {
+	color: #999;
+	font-size: 85%;
+	font-style: italic;
+}
+#thewire-header .responseTo:hover {
+	background-color: #FDD;
+	color: red;
+	cursor: pointer;
+}
+
+
+#thewire-network {
+	right: -201px;
+	top: 0;
+	width: 194px;
+	position: absolute;
+}
+#thewire-network .selected-profile {
+	background-color: white;
+	border: medium none;
+	border-radius: 4px 4px 4px 4px;
+	height: 23px;
+	width: 100%;
+	box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
+}
+#thewire-network .selected-profile.ui-state-highlight, #thewire-network .non-pinned .content.ui-state-highlight {
+	background: #FFFFCC;
+}
+#thewire-network .selected-profile.ui-state-active, #thewire-network .non-pinned .content.ui-state-active {
+	background: #DDFFDD;
+}
+#thewire-network .selected-profile.ui-start, #thewire-network .non-pinned .content.ui-start {
+	background: white;
+}
+#thewire-network .net-profile {
+	position: relative;
+}
+#thewire-network .network {
+	background-color: white;
+	border: 1px solid #666666;
+	height: 10px;
+	left: 17px;
+	position: absolute;
+	top: -3px;
+	width: 10px;
+}
+#thewire-network .net-profile.ggouv .network {
+	background-image: url(<?php echo elgg_get_site_url() . 'mod/elgg-ggouv_template/graphics/favicon.png'; ?>);
+	background-size: 10px 10px;
+}
+#thewire-network .net-profile.twitter .network {
+	background-color: #00ACED;
+	border: 1px solid #00ACED;
+	color: white;
+	font-size: 15px;
+	line-height: 10px;
+}
+#thewire-network .elgg-icon-delete {
+	background-color: rgba(0, 0, 0, 0.3);
+	height: 15px;
+	left: -2px;
+	position: absolute;
+	text-indent: 1.5px;
+	width: 15px;
+	cursor: pointer;
+}
+#thewire-network .elgg-icon-delete:before {
+	color: red;
+}
+#thewire-network .net-profile:hover .elgg-icon {
+	display: block;
+}
+#thewire-network .net-profile.ui-draggable-dragging:hover .elgg-icon-delete {
+	display: none;
+}
+#thewire-network .net-profile:hover .elgg-module-popup {
+	display: block;
+	left: -77px;
+	position: absolute;
+	top: 31px;
+	background: #1F2E3D;
+	color: white;
+	width: 160px;
+	border-radius: 6px;
+	border: none;
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+}
+#thewire-network .selected-profile .net-profile.ui-draggable-dragging:hover .elgg-module-popup {
+	display: none;
+}
+#thewire-network .triangle {
+	border-style: solid;
+	border-width: 0 10px 10px;
+	border-color: #1F2E3D transparent;
+	left: 80px;
+	position: absolute;
+	top: -6px;
+}
+#thewire-network .elgg-module-popup a:hover, #thewire-network .elgg-module-popup span:hover {
+	color: #e4ecf5;
+}
+#thewire-network .more_networks {
+	color: #CCCCCC;
+	position: absolute;
+	right: 0;
+	top: 10px;
+	font-size: 3em;
+	cursor: pointer;
+}
+#thewire-network .more_networks:hover {
+	color: #4690D6;
+}
+#thewire-network.extended .non-pinned {
+	display: block;
+	position: absolute;
+	top: 33px;
+	z-index: 0;
+}
+#thewire-network .non-pinned {
+	background-color: #4690D6;
+	border-radius: 0 0 6px 6px;
+	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
+	padding: 4px;
+	margin-left: -4px;
+	float: left;
+}
+#thewire-network .non-pinned .content {
+	background: none repeat scroll 0 0 white;
+	border-radius: 0 0 6px 6px;
+	box-shadow: 0 2px 2px 0 #1F2E3D inset;
+	float: left;
+	padding: 22px 0 5px;
+	width: 100%;
+}
+#thewire-network .helper {
+	height: 24px;
+	overflow: hidden;
+	position: relative;
+	margin: -6px 0 -18px;
+	width: 194px;
+}
+#thewire-network .helper div {
+	margin-top: -6px;
+	padding: 8px 0 3px;
+	background: none repeat scroll 0 0 #F0F0F0;
+	box-shadow: 0 2px 2px 0 #1F2E3D inset;
+	color: #999999;
+	font-size: 0.85em;
+	text-align: center;
+}
+#thewire-network .helper span {
+	font-size: 2em;
+	vertical-align: text-bottom;
+	color: #CCC;
+}
+/* hack Chrome / Safari */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#thewire-network .helper span {
+		vertical-align: bottom;
+	}
+}
+#thewire-network .non-pinned .net-profile {
+	margin: 2px;
+	padding: 3px;
+	width: 184px;
+}
+#thewire-network .non-pinned .net-profile:hover {
+	background: white;
+	cursor: move;
+	box-shadow: 0 0 1px #CCC;
+}
+#thewire-network .non-pinned .network {
+	display: block;
+}
+#thewire-network .non-pinned .net-profile .elgg-module-popup {
+	background: white;
+	border: medium none;
+	box-shadow: none;
+	display: block;
+	float: left;
+	font-size: 0.8em;
+	height: 0;
+	left: 34px;
+	padding: 0;
+	position: absolute;
+	top: -4px;
+	width: 155px;
+}
+#thewire-network .non-pinned .net-profile:hover .elgg-module-popup {
+	color: black !important;
+}
+#thewire-network .non-pinned .triangle, #thewire-network .non-pinned .elgg-icon-delete, #thewire-network .non-pinned .elgg-river-timestamp {
+	display: none !important;
+}
+#thewire-network .non-pinned .elgg-module-popup span:hover {
+	color: #555;
+}
+#thewire-network .non-pinned .pin {
+	float: right;
+	font-size: 0.8em;
+	padding-top: 8px;
+}
+
 
 /* deck tabs */
 .elgg-menu-deck-river {

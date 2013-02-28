@@ -56,41 +56,71 @@ elgg.deck_river.init = function() {
 	$('#thewire-textarea').focusin(function() {
 		var optionsHeight = $('#thewire-header').addClass('extended').find('.options').height();
 		$('#thewire-header').height(optionsHeight+117);
-		$('#thewire-textarea-border').height(optionsHeight+111);
+		$('#thewire-textarea-border').height(optionsHeight+118);
 	}).focusout(function() {
 	 	if ($('#thewire-header').is(':hover')) {
 		} else {
 			$('#thewire-header').height(33).removeClass('extended');
 		}
 	});
+
+	// networks
 	$('#thewire-network .elgg-icon-delete').die().live('click', function() {
-		var net_input = $(this).parent('.net-profile').find('input'),
-			delete_icon = $(this).parent('.net-profile').find('.elgg-icon-delete');
-		if (net_input.val() === 'false') {
-			net_input.val(true);
-			delete_icon.addClass('hidden');
+		var net_input = $(this).parents('.net-profile').find('input');
+		if ($(this).hasClass('hidden')) {
+			net_input.attr('name', '_networks[]');
+			$(this).removeClass('hidden');
 		} else {
-			net_input.val(false);
-			delete_icon.removeClass('hidden');
+			net_input.attr('name', 'networks[]');
+			$(this).addClass('hidden');
+		}
+	});
+	$('#thewire-network .more_networks').die().live('click', function() {
+		$('#thewire-network').toggleClass('extended');
+	});
+	$('#thewire-network .non-pinned .net-profile').draggable({
+		revert: true,
+		revertDuration: 0,
+		zIndex: 9999,
+	});
+	$('#thewire-network .selected-profile, #thewire-network .non-pinned .content').droppable({
+		accept:                 $('.net-profile').not('.ggouv'),
+		activeClass:            'ui-state-highlight',
+		hoverClass:             'ui-state-active',
+		drop: function(e, ui) {
+			ui.draggable.appendTo($(this));
+			$('#thewire-network *').removeClass('ui-start');
+			if ($(this).hasClass('selected-profile')) {
+				ui.draggable.find('input').attr('name', 'networks[]');
+				ui.draggable.find('.elgg-icon-delete').addClass('hidden');
+			} else {
+				ui.draggable.find('input').attr('name', '_networks[]');
+			}
+		},
+		activate: function(e, ui) {
+			ui.draggable.parent().addClass('ui-start');
 		}
 	});
 
 	// thewire live post
 	$('#thewire-submit-button').die().live('click', function(e){
+		var thewireForm = $(this).parents('form');
 		if ($('#thewire-textarea').val() == '') { // no text
-			elgg.system_message('thewire:blank');
-		} else if ($('#thewire-network input[value=true]').length == 0) { // no network actived
-			elgg.system_message('thewire:nonetwork');
+			elgg.register_error('thewire:blank');
+		} else if (thewireForm.find('input[name="networks[]"]').length == 0) { // no network actived
+			elgg.register_error('thewire:nonetwork');
 		} else {
 			thisSubmit = this;
 			if ($.data(this, 'clicked')) { // Prevent double-click
 				return false;
 			} else {
+				$('#submit-loader').removeClass('hidden');
 				$.data(this, 'clicked', true);
-				dataString = $(this).parents('form').serialize();
+				dataString = thewireForm.serialize();
 				elgg.action('deck_river/wire_input', {
 					data: dataString,
 					success: function(json) {
+						$('#submit-loader').addClass('hidden');
 						$.data(thisSubmit, 'clicked', false);
 						$("#thewire-characters-remaining span").html('0');
 						$('#thewire-textarea').val('').parents('.elgg-form').find('input[name=parent_guid], .responseTo').remove();
@@ -98,6 +128,7 @@ elgg.deck_river.init = function() {
 						$('.elgg-list-item.thewire').removeClass('responseAt');
 					},
 					error: function(){
+						$('#submit-loader').addClass('hidden');
 						$.data(thisSubmit, 'clicked', false);
 					}
 				});
@@ -285,8 +316,8 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 								columnID.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 							}
 
-							columnID.attr('data-direct', response.direct)
-								.find('.column-header h3').html(response.column_title);
+							columnID.attr('data-direct', response.direct);
+							columnID.find('.column-header h3').html(response.column_title);
 							columnID.find('.column-header h6').html(response.column_subtitle);
 
 							elgg.deck_river.LoadColumn(columnID);

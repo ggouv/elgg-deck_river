@@ -19,7 +19,8 @@ $english = array(
 	'deck-river:clean_url' => "Erase",
 	'responseToHelper:text' => "Reply to %s : <span>%s</span>",
 	'responseToHelper:delete' => "Stop reply to %s",
-	
+		'deck-river:add:network' => "Add a network",
+
 	// river menu
 	'replyall' => "Reply to all",
 	'river:timeline' => "Time line",
@@ -32,7 +33,7 @@ $english = array(
 	'retweet:twoandmore' => "%s retweets",
 	'deck_river:show_discussion' => "Show discussion",
 	'deck_river:toggle_discussion' => "Toggle discussion",
-	
+
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',
 	'deck_river:add:tab:error' => 'Cannot add a new tab.',
@@ -42,7 +43,7 @@ $english = array(
 	'deck_river:delete:tab:confirm' => "Are you sure to delete tab '%s'?",
 	'deck_river:delete:tab:error' => "Cannot delete tab.",
 	'deck-river:delete:column:confirm' => "Are you sure to delete this column?",
-	
+
 	// column-settings form
 	'deck_river:settings' => 'Settings of column',
 	'deck_river:type' => 'Type:',
@@ -50,14 +51,14 @@ $english = array(
 	'deck_river:title' => 'Title:',
 	'deck_river:search' => 'Search:',
 	'deck_river:filter:all' => 'All',
-	
+
 	// user info popup
 	'deck-river:popups:close' => "Close this window",
 	'deck-river:popups:pin' => "Pin this window",
 	'deck_river:user-not-exist' => "This user doesn't exits.",
 	'deck_river:user-info-header' => "Informations about %s",
 	'deck_river:hashtag-info-header' => "Search: %s",
-	
+
 	// plugin settings
 	'deck_river:settings:min_width_column' => 'Minimum width of columns',
 	'deck_river:settings:max_nbr_column' => 'Maximum number of columns',
@@ -102,11 +103,11 @@ $english = array(
 	'group' => elgg_echo('group'),
 	'search' => elgg_echo('search'),
 )",
-	
+
 	// urlshortener
 	'deck_river:url-not-exist' => "There is no url to reduce.",
 	'deck_river:url-bad-format' => "Url format is not good.",
-	
+
 	// Twitter
 	'deck_river:twitter:usersettings:request:title' => "Authorize %s to access your Twitter account",
 	'deck_river:twitter:usersettings:request' => "You can add Twitter feed...<br/><a id=\"authorize-twitter\" type=\"submit\" data-url=\"%s\" class=\"elgg-button elgg-button-action\">authorize %s</a>",

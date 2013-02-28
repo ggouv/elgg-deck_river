@@ -26,6 +26,13 @@ $french = array(
 	'deck_river:helper:mine' => "Vous n'avez pas d'activité.<br/>Publiez un message, entrez dans un groupe pour collaborer, ou participez à une action...",
 	'deck_river:helper:mention' => "Personne ne vous a mentionné pour l'instant.",
 
+	// wire network
+	'deck-river:add:network' => "Ajouter un réseau",
+	'deck-river:ggouv:account' => "Compte Ggouv :",
+	'deck-river:twitter:account' => "Compte Twitter :",
+	'deck-river:network:pin' => "<div style=\"text-align: left;\">Épingler<br><span class=\"elgg-text-help\">Ce compte restera toujours dans les réseaux favoris.</span></div>",
+	'deck-river:add:network:slide' => "<span>↕</span> Glissez pour ajouter ou enlever <span>↕</span>",
+
 	// river menu
 	'replyall' => "Répondre à tous",
 	'river:timeline' => "Le flux",
@@ -91,13 +98,18 @@ $french = array(
 	'deck_river:twitter:authorize:success' => "Twitter a autorisé l'accès à votre compte.",
 	'deck_river:twitter:authorize:success' => "Le compte Twitter n'a pas pu être autorisé par Twitter.",
 	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
-	'deck_river:twitter:revoke:error' => "Le compte Twitter n'a pas pu être supprimé."
+	'deck_river:twitter:revoke:error' => "Le compte Twitter n'a pas pu être supprimé.",
 	'deck_river:twitter:feed:search' => "Recherche sur Twitter",
 	'deck_river:twitter:feed:search:tweets' => "Rechercher un mot ou un hashtag",
 	'deck_river:twitter:feed:search:popular' => "Recherche triée par tweets les plus populaires",
 	'deck_river:twitter:feed:users:search' => "Rechercher des utilisateurs",
 
 	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
+
+	// messages
+	'thewire:twitter:posted' => "Votre message a été publié sur Twitter.",
+	'thewire:blank' => "??? Il faut écrire un peu avant d'envoyer son message...",
+	'thewire:nonetwork' => "Vous n'avez pas sélectionné de réseau.",
 
 );
 

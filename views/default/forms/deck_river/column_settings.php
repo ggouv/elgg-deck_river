@@ -161,7 +161,7 @@ $column_title = $user_river_column_options['title'];
 					'width' => '25',
 					'height' => '25',
 				));
-				$twitter_name = '<div class="elgg-river-summary"><span class="twitter-user-info-popup elgg-river-subject">' . $twitter_user . '</span>';
+				$twitter_name = '<div class="elgg-river-summary"><span class="twitter-user-info-popup" title="' . $twitter_user . '">' . $twitter_user . '</span>';
 				$twitter_name .= '<br/><span class="elgg-river-timestamp">';
 				$twitter_name .= elgg_view('output/url', array(
 					'href' => 'http://twitter.com/' . $twitter_user,
