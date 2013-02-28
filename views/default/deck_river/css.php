@@ -262,13 +262,23 @@ body.fixed-deck {
 	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
-#thewire-network .selected-profile.ui-state-highlight, #thewire-network .non-pinned .content.ui-state-highlight {
+#thewire-network .net-profiles {
+	box-shadow: 0 2px 2px 0 #1F2E3D inset;
+	background: white;
+	float: left;
+	margin-top: -10px;
+	min-height: 20px;
+	padding-top: 10px;
+	width: 194px;
+	z-index: -1;
+}
+#thewire-network .selected-profile.ui-state-highlight, #thewire-network .non-pinned .net-profiles.ui-state-highlight {
 	background: #FFFFCC;
 }
-#thewire-network .selected-profile.ui-state-active, #thewire-network .non-pinned .content.ui-state-active {
+#thewire-network .selected-profile.ui-state-active, #thewire-network .non-pinned .net-profiles.ui-state-active {
 	background: #DDFFDD;
 }
-#thewire-network .selected-profile.ui-start, #thewire-network .non-pinned .content.ui-start {
+#thewire-network .selected-profile.ui-start, #thewire-network .non-pinned .net-profiles.ui-start {
 	background: white;
 }
 #thewire-network .net-profile {
@@ -366,11 +376,8 @@ body.fixed-deck {
 	float: left;
 }
 #thewire-network .non-pinned .content {
-	background: none repeat scroll 0 0 white;
-	border-radius: 0 0 6px 6px;
-	box-shadow: 0 2px 2px 0 #1F2E3D inset;
 	float: left;
-	padding: 22px 0 5px;
+	padding-top: 22px;
 	width: 100%;
 }
 #thewire-network .helper {
@@ -411,7 +418,8 @@ body.fixed-deck {
 	box-shadow: 0 0 1px #CCC;
 }
 #thewire-network .non-pinned .network {
-	display: block;
+	left: 20px;
+	top: 0;
 }
 #thewire-network .non-pinned .net-profile .elgg-module-popup {
 	background: white;
@@ -421,10 +429,10 @@ body.fixed-deck {
 	float: left;
 	font-size: 0.8em;
 	height: 0;
-	left: 34px;
+	left: 38px;
 	padding: 0;
 	position: absolute;
-	top: -4px;
+	top: -1px;
 	width: 155px;
 }
 #thewire-network .non-pinned .net-profile:hover .elgg-module-popup {
@@ -440,6 +448,17 @@ body.fixed-deck {
 	float: right;
 	font-size: 0.8em;
 	padding-top: 8px;
+}
+#thewire-network .footer {
+	background: #F0F0F0;
+	border-radius: 0 0 6px 6px;
+	box-shadow: 0 2px 2px 0 #1F2E3D inset;
+	float: left;
+	margin-top: -12px;
+	padding: 15px 5px 5px;
+	position: relative;
+	width: 184px;
+	z-index: -1;
 }
 
 

@@ -110,6 +110,10 @@ $french = array(
 	'thewire:twitter:posted' => "Votre message a été publié sur Twitter.",
 	'thewire:blank' => "??? Il faut écrire un peu avant d'envoyer son message...",
 	'thewire:nonetwork' => "Vous n'avez pas sélectionné de réseau.",
+	'deck_river:error:pin' => "Impossible de ne plus épingler ou épingler ce compte.",
+	'deck_river:ok:pin' => "Ce compte a été épinglé.",
+	'deck_river:ok:unpin' => "Ce compte n'est plus épinglé.",
+	'deck_river:error:pin:too_much' => "Vous ne pouvez pas épingler plus de 5 comptes.",
 
 );
 

@@ -9,6 +9,8 @@ if (!$user) {
 	return false;
 }
 
+$user_deck_river_pinned_accounts = unserialize(get_private_setting($user->getGUID(), 'deck_river_pinned_accounts'));
+
 $accounts = array();
 // get and format twitter accounts
 elgg_load_library('deck_river:authorize');
@@ -32,17 +34,24 @@ foreach ($twitter_accounts as $account) {
 		'rel' => 'nofollow'
 	));
 	$info .= '</span></div>';
-	if (true) {
-		$pin = '<span class="elgg-icon elgg-icon-push-pin tooltip w" title="' . htmlspecialchars(elgg_echo('deck-river:network:pin')) . '"></span>';
+	if (in_array($account->getGUID(), $user_deck_river_pinned_accounts)) {
+		$pinned = ' pinned';
+		$input_name = 'networks[]';
+	} else {
+		$input_name = '_networks[]';
 	}
+	$pin_tooltip = htmlspecialchars(elgg_echo('deck-river:network:pin'));
+
 	$accounts[$account->getGUID()] = <<<HTML
-<div class="net-profile float mlm twitter">
-	<input type="hidden" value="{$account->getGUID()}" name="_networks[]">
+<div class="net-profile float mlm twitter$pinned">
+	<input type="hidden" value="{$account->getGUID()}" name="$input_name">
 	<ul>
 		<span class="elgg-icon elgg-icon-delete pas hidden"></span>
 		<div class="elgg-module-popup hidden">
 			<div class="triangle"></div>
-			<div class="pin float-alt">$pin</div>
+			<div class="pin float-alt">
+			<span class="elgg-icon elgg-icon-push-pin tooltip w" title="$pin_tooltip""></span>
+			</div>
 			$info
 		</div>
 	</ul>
@@ -115,7 +124,6 @@ HTML;
 			<span class="network"></span>
 		</div>
 		<?php
-			$user_deck_river_pinned_accounts = unserialize(get_private_setting($user->getGUID(), 'deck_river_pinned_accounts'));
 			foreach ($accounts as $account_guid => $account_output) {
 				if (in_array($account_guid, $user_deck_river_pinned_accounts)) {
 					echo $account_output;
@@ -128,11 +136,16 @@ HTML;
 	<div class="non-pinned clearfloat hidden">
 		<div class="helper"><div><?php echo elgg_echo('deck-river:add:network:slide'); ?></div></div>
 		<div class="content">
+			<div class="net-profiles">
 			<?php
 				foreach ($accounts as $account_output) {
-					echo $account_output;
+					echo $account_output . $account_output. $account_output. $account_output. $account_output. $account_output;
 				}
 			?>
+			</div>
+			<div class="footer">
+				auie
+			</div>
 		</div>
 	</div>
 </div>

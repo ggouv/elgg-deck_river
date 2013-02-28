@@ -38,6 +38,7 @@ function deck_river_init() {
 	elgg_register_action('deck_river/tab/add', "$action_path/tab/add.php");
 	elgg_register_action('deck_river/tab/delete', "$action_path/tab/delete.php");
 	elgg_register_action('deck_river/tab/rename', "$action_path/tab/rename.php");
+	elgg_register_action('deck_river/network/pin', "$action_path/plugins/pin_network.php");
 	elgg_register_action('elgg-deck_river/settings/save', "$action_path/plugins/save.php");
 
 	// Register a URL handler for thewire posts

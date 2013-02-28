@@ -14,7 +14,15 @@ if (empty($body)) {
 	register_error(elgg_echo("thewire:blank"));
 } else if (!$networks) {
 	register_error(elgg_echo("thewire:nonetwork"));
+
 } else {
+	array_unique($networks);
+
+	if (count($networks) > 5) {
+		register_error(elgg_echo("thewire:error"));
+		return false;
+	}
+
 	// no html tags allowed so we escape
 	$body = htmlspecialchars($body, ENT_NOQUOTES, 'UTF-8');
 	// only 140 characters allowed
@@ -43,7 +51,7 @@ if (empty($body)) {
 			}
 		} else {
 			$network_entity = get_entity($network);
-			if ($network_entity->getSubtype() == 'twitter_account') {
+			if ($network_entity->getSubtype() == 'twitter_account' && $network_entity->getOwnerGUID() == $user->getGUID()) {
 				system_message(elgg_echo("thewire:twitter:posted"));
 			}
 		}

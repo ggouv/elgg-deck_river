@@ -78,23 +78,43 @@ elgg.deck_river.init = function() {
 	$('#thewire-network .more_networks').die().live('click', function() {
 		$('#thewire-network').toggleClass('extended');
 	});
-	$('#thewire-network .non-pinned .net-profile').draggable({
+	$('#thewire-network .pin').die().live('click', function() {
+		var netProfile = $(this).parents('.net-profile');
+		elgg.action('deck_river/network/pin', {
+			data: {
+				network: netProfile.find('input').val()
+			},
+			success: function (response) {
+				if (response.output) {
+					console.log(netProfile);
+					netProfile.toggleClass('pinned');
+				}
+			},
+			error: function (response) {
+				elgg.register_error(response);
+			}
+		});
+	});
+	$('#thewire-network .net-profile').draggable({
 		revert: true,
 		revertDuration: 0,
 		zIndex: 9999,
 	});
-	$('#thewire-network .selected-profile, #thewire-network .non-pinned .content').droppable({
+	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
 		accept:                 $('.net-profile').not('.ggouv'),
 		activeClass:            'ui-state-highlight',
 		hoverClass:             'ui-state-active',
 		drop: function(e, ui) {
-			ui.draggable.appendTo($(this));
 			$('#thewire-network *').removeClass('ui-start');
 			if ($(this).hasClass('selected-profile')) {
-				ui.draggable.find('input').attr('name', 'networks[]');
-				ui.draggable.find('.elgg-icon-delete').addClass('hidden');
+				if ($(this).find('input[name="networks[]"]').length < 5) {
+					ui.draggable.appendTo($(this)).find('input').attr('name', 'networks[]');
+					ui.draggable.find('.elgg-icon-delete').addClass('hidden');
+				} else {
+					elgg.register_error('auie');
+				}
 			} else {
-				ui.draggable.find('input').attr('name', '_networks[]');
+				ui.draggable.appendTo($(this)).find('input').attr('name', '_networks[]');
 			}
 		},
 		activate: function(e, ui) {
