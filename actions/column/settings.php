@@ -2,11 +2,9 @@
 
 $tab = get_input('tab');
 $column = get_input('column');
-$type = get_input('type');
-$twitter_type = get_input('twitter-type');
 $submit = get_input('submit');
 
-if (!$submit || !$tab || !$column || !$type || !$twitter_type) {
+if (!$submit || !$tab || !$column) {
 	return;
 }
 
@@ -20,10 +18,15 @@ if ($submit == 'delete') {
 	$return['action'] = 'delete';
 	$return['column'] = $column;
 } else if ($submit == 'elgg') {
+	$type = get_input('type');
 	$search = get_input('search');
 	$group = get_input('group');
 	$types_filter = get_input('filters_types');
 	$subtypes_filter = get_input('filters_subtypes');
+
+	if (!$type) {
+		return;
+	}
 
 	if (!array_key_exists($column, $user_river_options[$tab])) {
 		$return['action'] = 'new';
@@ -116,19 +119,21 @@ if ($submit == 'delete') {
 	if (isset($user_river_options[$tab][$column]['types_filter']) || isset($user_river_options[$tab][$column]['subtypes_filter'])) {
 		$return['column_subtitle'] .= ' | ' . elgg_echo('river:filtred');
 	}
-	
+
 	$user_river_options[$tab][$column]['type'] = $type;
 	$user_river_options[$tab][$column]['direct'] = false;
 
 } else if ($submit == 'twitter') {
+	$twitter_type = get_input('twitter-type');
 	$search = get_input('twitter-search');
+	$twitter_account = (int) get_input('twitter-account', false);
 
 	if (!array_key_exists($column, $user_river_options[$tab])) {
 		$return['action'] = 'new';
 	} else if ($user_river_options[$tab][$column]['type'] != $twitter_type) {
 		$return['action'] = 'change';
 	}
-	
+
 	switch ($twitter_type) {
 		case 'twitter:search/tweets':
 			$return['column_title'] = $search;
@@ -146,6 +151,10 @@ if ($submit == 'delete') {
 			$return['direct'] = 'http://search.twitter.com/search.json?q=' . urlencode($search) . '&include_entities=1&result_type=popular';
 			$user_river_options[$tab][$column]['direct'] = $return['direct'];
 			break;
+
+
+
+
 		case 'twitter:users/search':
 			$return['column_title'] = 'users/search';
 			$return['column_subtitle'] = 'manutopik';
@@ -153,9 +162,9 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['direct'] = $return['direct'];
 			break;
 		default:
-			
+
 			break;
-	
+
 	}
 
 	$user_river_options[$tab][$column]['type'] = $twitter_type;

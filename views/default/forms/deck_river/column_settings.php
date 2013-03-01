@@ -177,7 +177,7 @@ $column_title = $user_river_column_options['title'];
 					'data-url' => $twitterRequestUrl,
 					'text' => '+',
 					'class' => 'addAccount tooltip s t',
-					'title' => elgg_echo('deck_river:twitter:add:account')
+					'title' => elgg_echo('deck_river:network:add:account')
 				));
 
 				return elgg_view_module(

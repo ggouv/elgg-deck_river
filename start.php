@@ -50,6 +50,9 @@ function deck_river_init() {
 	// owner block menu
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'deck_river_thewire_owner_block_menu');
 
+	// add menu in usersettings page
+	elgg_register_event_handler('pagesetup', 'system', 'authorize_applications_pagesetup');
+
 }
 
 function deck_river_page_handler($page) {
@@ -137,10 +140,28 @@ function authorize_page_handler($page) {
 		case 'twitter':
 			deck_river_twitter_authorize();
 			break;
+		case 'applications':
+			include elgg_get_plugins_path() . 'elgg-deck_river/pages/thewire/applications.php';
+			break;
 		default:
 			return false;
 	}
 	return true;
+}
+
+
+
+function authorize_applications_pagesetup() {
+	if (elgg_get_context() == "settings") {
+		$user = elgg_get_page_owner_entity();
+
+		$params = array(
+			'name' => 'applications',
+			'text' => elgg_echo('usersettings:authorize:applications'),
+			'href' => "authorize/applications/{$user->username}",
+		);
+		elgg_register_menu_item('page', $params);
+	}
 }
 
 

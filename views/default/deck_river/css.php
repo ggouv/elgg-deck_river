@@ -267,7 +267,7 @@ body.fixed-deck {
 	background: white;
 	float: left;
 	margin-top: -10px;
-	min-height: 20px;
+	min-height: 39px;
 	padding-top: 10px;
 	width: 194px;
 	z-index: -1;
@@ -347,6 +347,9 @@ body.fixed-deck {
 	position: absolute;
 	top: -6px;
 }
+#thewire-network .user-info-popup {
+	font-weight: bold;
+}
 #thewire-network .elgg-module-popup a:hover, #thewire-network .elgg-module-popup span:hover {
 	color: #e4ecf5;
 }
@@ -376,7 +379,6 @@ body.fixed-deck {
 	float: left;
 }
 #thewire-network .non-pinned .content {
-	float: left;
 	padding-top: 22px;
 	width: 100%;
 }
@@ -388,13 +390,14 @@ body.fixed-deck {
 	width: 194px;
 }
 #thewire-network .helper div {
-	margin-top: -6px;
+	margin-top: -7px;
 	padding: 8px 0 3px;
 	background: none repeat scroll 0 0 #F0F0F0;
 	box-shadow: 0 2px 2px 0 #1F2E3D inset;
 	color: #999999;
 	font-size: 0.85em;
 	text-align: center;
+	cursor: default;
 }
 #thewire-network .helper span {
 	font-size: 2em;
@@ -405,6 +408,9 @@ body.fixed-deck {
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 	#thewire-network .helper span {
 		vertical-align: bottom;
+	}
+	#thewire-network .helper div {
+		padding: 10px 0 3px;
 	}
 }
 #thewire-network .non-pinned .net-profile {
@@ -459,6 +465,22 @@ body.fixed-deck {
 	position: relative;
 	width: 184px;
 	z-index: -1;
+}
+#thewire-network .footer li {
+	display: inline-block;
+	font-size: 0.8em;
+	line-height: 1em;
+	margin-top: 3px;
+	padding: 0 5px;
+	text-align: center;
+	width: 74px;
+}
+#thewire-network .footer li:first-child {
+	border-right: 1px solid #CCC;
+	padding-right: 15px;
+}
+#thewire-network .footer a {
+	color: #999;
 }
 
 

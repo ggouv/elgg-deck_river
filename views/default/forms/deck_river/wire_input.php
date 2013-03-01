@@ -134,17 +134,35 @@ HTML;
 	</div>
 	<div class="more_networks gwf tooltip w t5 phs" title="<?php echo elgg_echo('deck-river:add:network'); ?>">+</div>
 	<div class="non-pinned clearfloat hidden">
-		<div class="helper"><div><?php echo elgg_echo('deck-river:add:network:slide'); ?></div></div>
+		<div class="helper tooltip w" title="<?php echo htmlspecialchars(elgg_echo('deck-river:add:network:helper')); ?>"><div><?php echo elgg_echo('deck-river:add:network:slide'); ?></div></div>
 		<div class="content">
 			<div class="net-profiles">
 			<?php
 				foreach ($accounts as $account_output) {
-					echo $account_output . $account_output. $account_output. $account_output. $account_output. $account_output;
+					echo $account_output;
 				}
 			?>
 			</div>
 			<div class="footer">
-				auie
+				<ul>
+					<li>
+					<?php
+						echo elgg_view('output/url', array(
+							'href' => '#',
+							'text' => elgg_echo('deck_river:network:add:account'),
+							'class' => 'add_account'
+						));
+					?>
+					</li>
+					<li>
+					<?php
+						echo elgg_view('output/url', array(
+							'href' => '/authorize/applications/' . $user->username . '?ajaxified=true',
+							'text' => elgg_echo('deck_river:network:manage_account')
+						));
+					?>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>

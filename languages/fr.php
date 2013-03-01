@@ -30,7 +30,8 @@ $french = array(
 	'deck-river:add:network' => "Ajouter un réseau",
 	'deck-river:ggouv:account' => "Compte Ggouv :",
 	'deck-river:twitter:account' => "Compte Twitter :",
-	'deck-river:network:pin' => "<div style=\"text-align: left;\">Épingler<br><span class=\"elgg-text-help\">Ce compte restera toujours dans les réseaux favoris.</span></div>",
+	'deck-river:network:pin' => "<div style=\"text-align: left;\">Épingler<br><span class=\"elgg-text-help\">Ce compte restera toujours actifs.<br/>Vous pourrez le désactiver temporairement en cliquant dessus.</span></div>",
+	'deck-river:add:network:helper' => "<div style=\"text-align: left;\">Au dessus :<br><span class=\"elgg-text-help\">Vos comptes actifs vers lesquels vos messages seront envoyés.</span>Dessous :<br><span class=\"elgg-text-help\">Vos comptes enregistrés et inactifs.</span></div>",
 	'deck-river:add:network:slide' => "<span>↕</span> Glissez pour ajouter ou enlever <span>↕</span>",
 
 	// river menu
@@ -67,11 +68,12 @@ $french = array(
 	'deck_river:twitter:usersettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnés, vos abonnements, vos listes...<br/><a id=\"authorize-twitter\" data-url=\"%s\" class=\"elgg-button elgg-button-action mtm\">Faire la demande à Twitter</a>",
 	'deck_river:twitter:your_account' => "Votre profil Twitter lié à %s :",
 	'deck_river:twitter:choose:account' => "Choisissez le compte Twitter pour cette colonne :",
-	'deck_river:twitter:add:account' => "Ajouter un autre compte Twitter",
+	'deck_river:network:add:account' => "Ajouter un autre compte",
+	'deck_river:network:manage_account' => "Gérer mes comptes",
 
 	//info popups
 	'deck-river:popups:close' => "Fermer cette fenêtre",
-	'deck-river:popups:pin' => "<div style=\"text-align: left;\">Épingler cette fenêtre<br><span class=\"elgg-subtext\">Elle ne disparaîtra pas lors des changements de page.</span></div>",
+	'deck-river:popups:pin' => "<div style=\"text-align: left;\">Épingler cette fenêtre<br><span class=\"elgg-text-help\">Elle ne disparaîtra pas lors des changements de page.</span></div>",
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
 	'deck_river:user-info-header' => "Informations sur %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
@@ -95,6 +97,7 @@ $french = array(
 	'deck_river:url-bad-format' => "Le format d'url n'est pas bon.",
 
 	// Twitter
+	'item:object:twitter_account' => "Comptes Twitter",
 	'deck_river:twitter:authorize:success' => "Twitter a autorisé l'accès à votre compte.",
 	'deck_river:twitter:authorize:success' => "Le compte Twitter n'a pas pu être autorisé par Twitter.",
 	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
