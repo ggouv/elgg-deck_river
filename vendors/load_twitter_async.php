@@ -1,4 +1,4 @@
 <?php
-include_once('twitter-async/EpiCurl.php');
-include_once('twitter-async/EpiOAuth.php');
-include_once('twitter-async/EpiTwitter.php');
+include_once('twitter-async-master/EpiCurl.php');
+include_once('twitter-async-master/EpiOAuth.php');
+include_once('twitter-async-master/EpiTwitter.php');
