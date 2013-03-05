@@ -99,7 +99,8 @@ $french = array(
 	// Twitter
 	'item:object:twitter_account' => "Comptes Twitter",
 	'deck_river:twitter:authorize:success' => "Twitter a autorisé l'accès à votre compte.",
-	'deck_river:twitter:authorize:success' => "Le compte Twitter n'a pas pu être autorisé par Twitter.",
+	'deck_river:twitter:authorize:error' => "Le compte Twitter n'a pas pu être autorisé par Twitter.",
+	'deck_river:twitter:authorize:already_done' => "Vous avez déjà associé ce compte Twitter.",
 	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
 	'deck_river:twitter:revoke:error' => "Le compte Twitter n'a pas pu être supprimé.",
 	'deck_river:twitter:feed:search' => "Recherche sur Twitter",

@@ -339,6 +339,9 @@ body.fixed-deck {
 #thewire-network .selected-profile .net-profile.ui-draggable-dragging:hover .elgg-module-popup {
 	display: none;
 }
+#thewire-network .selected-profile .net-profile.ui-draggable-dragging:hover {
+	cursor: move;
+}
 #thewire-network .triangle {
 	border-style: solid;
 	border-width: 0 10px 10px;

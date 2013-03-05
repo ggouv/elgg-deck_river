@@ -65,7 +65,7 @@ elgg.deck_river.init = function() {
 	});
 
 	// networks
-	$('#thewire-network .elgg-icon-delete').die().live('click', function() {
+	$('#thewire-network .elgg-icon-delete').die().live('click', function(e) {
 		var net_input = $(this).parents('.net-profile').find('input');
 		if ($(this).hasClass('hidden')) {
 			net_input.attr('name', '_networks[]');
@@ -74,8 +74,9 @@ elgg.deck_river.init = function() {
 			net_input.attr('name', 'networks[]');
 			$(this).addClass('hidden');
 		}
+		e.stopPropagation();
 	});
-	$('#thewire-network .more_networks').die().live('click', function() {
+	$('#thewire-network .more_networks, #thewire-network .selected-profile').die().live('click', function() {
 		$('#thewire-network').toggleClass('extended');
 	});
 	$('#thewire-network .pin').die().live('click', function() {
@@ -357,16 +358,21 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 	});
 };
 
-elgg.deck_river.authorize = function() { //system_message(elgg_echo('twitter_api:authorize:success'));
-	var c = window.opener.$('#'+window.opener.$('.deck-river-form-column-settings input[name="column"]').val());
-	window.opener.$('#column-settings').attr('data-network', 'twitter');
-	if (c.length == 1) {
-		c.find('.elgg-column-edit-button').click();
+elgg.deck_river.twitter_authorize = function(token) { //system_message(elgg_echo('twitter_api:authorize:success'));
+	if (token == false) {
+		window.opener.parent.elgg.system_message(window.opener.parent.elgg.echo('deck_river:twitter:authorize:already_done'));
+		window.close();
 	} else {
-		window.opener.$('.elgg-add-new-column').click();
+		var c = window.opener.$('#'+window.opener.$('.deck-river-form-column-settings input[name="column"]').val());
+		window.opener.$('#column-settings').attr('data-network', 'twitter');
+		if (c.length == 1) {
+			c.find('.elgg-column-edit-button').click();
+		} else {
+			window.opener.$('.elgg-add-new-column').click();
+		}
+		window.opener.parent.elgg.system_message(window.opener.parent.elgg.echo('deck_river:twitter:authorize:success'));
+		window.close();
 	}
-	window.opener.parent.elgg.system_message(elgg.echo('deck_river:twitter:authorize:success'));
-	window.close();
 }
 
 /**

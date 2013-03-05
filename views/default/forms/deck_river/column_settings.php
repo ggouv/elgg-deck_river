@@ -223,7 +223,7 @@ $column_title = $user_river_column_options['title'];
 				echo '<label>' . elgg_echo('deck_river:twitter:choose:account') . '</label><br />';
 				foreach ($twitter_account as $account) {
 					$hidden = ($account->getGUID() == $user_river_column_options['account']) ? '' : 'hidden ';
-					echo displayTwitterAccount($twitter_account[0], '', $hidden . 'mtm mbs multi ' . $account->getGUID(), $twitterRequestUrl);
+					echo displayTwitterAccount($account, '', $hidden . 'mtm mbs multi ' . $account->getGUID(), $twitterRequestUrl);
 					$accounts_name[$account->getGUID()] = $account->screen_name;
 				}
 				echo elgg_view('input/dropdown', array(
