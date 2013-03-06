@@ -1,4 +1,11 @@
 <?php
+/**
+ *	Elgg-deck_river plugin
+ *	@package elgg-deck_river
+ *	@author Emmanuel Salomon @ManUtopiK
+ *	@license GNU Affero General Public License, version 3 or late
+ *	@link https://github.com/ggouv/elgg-deck_river
+ **/
 
 elgg_register_event_handler('init','system','deck_river_init');
 

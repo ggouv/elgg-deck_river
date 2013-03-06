@@ -40,22 +40,27 @@ function deck_river_twitter_authorize() {
 		$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $token->oauth_token, $token->oauth_token_secret);
 		$userInfo = $twitterObj->get('/account/verify_credentials.json');
 
-		$twitter_access = new ElggObject;
-		$twitter_access->subtype = 'twitter_account';
-		$twitter_access->access_id = 0;
-		$twitter_access->user_id = $token->user_id;
-		$twitter_access->screen_name = $token->screen_name;
-		$twitter_access->oauth_token = $token->oauth_token;
-		$twitter_access->oauth_token_secret = $token->oauth_token_secret;
-		$twitter_access->avatar = $userInfo->response['profile_image_url_https'];
+		$twitter_account = new ElggObject;
+		$twitter_account->subtype = 'twitter_account';
+		$twitter_account->access_id = 0;
+		$twitter_account->user_id = $token->user_id;
+		$twitter_account->screen_name = $token->screen_name;
+		$twitter_account->oauth_token = $token->oauth_token;
+		$twitter_account->oauth_token_secret = $token->oauth_token_secret;
+		$twitter_account->avatar = $userInfo->response['profile_image_url_https'];
 
 		echo elgg_view('page/elements/head');
 		echo elgg_view('page/elements/foot');
 
-		if ($twitter_access->save()) {
+		if ($twitter_account->save()) {
 			// trigger authorization hook
 			elgg_trigger_plugin_hook('authorize', 'elgg-deck_river', array('token' => $token));
-			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.twitter_authorize(' . json_encode($userInfo) . ');});</script>';
+
+			$account_output = elgg_view('output/accounts/twitter_account', array(
+				'account' => $twitter_account,
+				'pinned' => false,
+			));
+			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.twitter_authorize(' . json_encode($account_output) . ');});</script>';
 		} else {
 			register_error(elgg_echo('deck_river:twitter:authorize:error'));
 			echo elgg_echo('deck_river:twitter:authorize:error');
@@ -69,8 +74,15 @@ function deck_river_twitter_authorize() {
 function deck_river_twitter_api_revoke($user_guid, $screen_name = null, $echo = true) {
 	if ($user_guid && elgg_instanceof(get_entity($user_guid), 'user')) {
 
+		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
+
 		$entities = deck_river_twitter_get_account($user_guid, $screen_name);
 		foreach ($entities as $entity) {
+			// remove account from pinned accounts
+			$arr = array_diff($user_deck_river_pinned_accounts, array($entity->getGUID()));
+			set_private_setting($user_guid, 'deck_river_pinned_accounts', serialize($arr));
+
+			// remove account
 			$entity->delete();
 		}
 

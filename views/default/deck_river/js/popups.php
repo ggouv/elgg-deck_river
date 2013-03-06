@@ -31,11 +31,11 @@ elgg.deck_river.popups = function() {
 			}
 		});
 	};
-	
+
 	// user info popup
 	$('.user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
-		
+
 		elgg.post('ajax/view/deck_river/ajax/user_info', {
 			dataType: "html",
 			data: {
@@ -49,11 +49,11 @@ elgg.deck_river.popups = function() {
 			}
 		});
 	});
-	
+
 	// group info popup
 	$('.group-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:group-info-header'));
-		
+
 		elgg.post('ajax/view/deck_river/ajax/group_info', {
 			dataType: "html",
 			data: {
@@ -67,7 +67,7 @@ elgg.deck_river.popups = function() {
 			}
 		});
 	});
-	
+
 	// hashtag info popup
 	$('.hashtag-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup(
@@ -77,14 +77,14 @@ elgg.deck_river.popups = function() {
 				$('#hashtag-info-popup').find('.elgg-ajax-loader').wrap($('<ul>', {'class': 'elgg-river elgg-list'}));
 			}
 		);
-		
+
 		elgg.deck_river.LoadEntity($(this).attr('title'), $('#hashtag-info-popup'));
 	});
 
 	// Twitter user info popup
 	$('.twitter-user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
-		
+
 		$.ajax({
 			url: 'https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
 			dataType: "jsonP",
@@ -134,7 +134,7 @@ elgg.deck_river.popups = function() {
 			}
 		});
 	});
-	
+
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);
 
@@ -149,29 +149,15 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);
 elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 	if (!popupID) return false;
 	var popupTitle = popupTitle || '';
-	
-	var setToTop = function(e) {
-		var index_highest = 0;
-		$('.elgg-module-popup.ui-draggable:visible').each(function(){
-			index_highest = Math.max(index_highest, parseInt($(this).css("z-index"), 10));
-		});
-		e.css({'z-index': index_highest+1, position: 'absolute'});
-	};
-	
+
 	if (!$('#'+popupID).length) {
 		//var method = 'append';
-		//$('.elgg-page-body')[method](
+		//$('.elgg-page-body')[method]( @todo option to always pin popup ?
 		$('.elgg-page-body').append(
 			$('<div>', {id: popupID, 'class': 'elgg-module-popup deck-popup'})
 			.draggable({
 				handle: '.elgg-head',
-				//containment: 'document',
-				start: function(event, ui) {
-					setToTop($(this));
-				}
-			})
-			.click(function(){
-				setToTop($(this));
+				stack: '.elgg-module-popup',
 			})
 			.append(
 				$('<div>', {'class': 'elgg-head'}).append(
@@ -200,7 +186,6 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 		$('#'+popupID+' > .elgg-head h3').html(popupTitle);
 		$('#'+popupID+' > .elgg-body').html($('<div>', {'class': 'elgg-ajax-loader'}));
 	}
-	
-	setToTop($('#'+popupID));
+
 	if (callback) callback();
 };

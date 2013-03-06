@@ -87,7 +87,6 @@ elgg.deck_river.init = function() {
 			},
 			success: function (response) {
 				if (response.output) {
-					console.log(netProfile);
 					netProfile.toggleClass('pinned');
 				}
 			},
@@ -96,32 +95,7 @@ elgg.deck_river.init = function() {
 			}
 		});
 	});
-	$('#thewire-network .net-profile').draggable({
-		revert: true,
-		revertDuration: 0,
-		zIndex: 9999,
-	});
-	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
-		accept:                 $('.net-profile').not('.ggouv'),
-		activeClass:            'ui-state-highlight',
-		hoverClass:             'ui-state-active',
-		drop: function(e, ui) {
-			$('#thewire-network *').removeClass('ui-start');
-			if ($(this).hasClass('selected-profile')) {
-				if ($(this).find('input[name="networks[]"]').length < 5) {
-					ui.draggable.appendTo($(this)).find('input').attr('name', 'networks[]');
-					ui.draggable.find('.elgg-icon-delete').addClass('hidden');
-				} else {
-					elgg.register_error('auie');
-				}
-			} else {
-				ui.draggable.appendTo($(this)).find('input').attr('name', '_networks[]');
-			}
-		},
-		activate: function(e, ui) {
-			ui.draggable.parent().addClass('ui-start');
-		}
-	});
+	elgg.deck_river.move_account();
 
 	// thewire live post
 	$('#thewire-submit-button').die().live('click', function(e){
@@ -251,9 +225,13 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
  * @return void
  */
 elgg.deck_river.ColumnSettings = function(TheColumn) {
-	if (!$('#column-settings').length) elgg.deck_river.createPopup('column-settings', elgg.echo('deck_river:settings'), function() {
-		$('#column-settings').find('.elgg-icon-push-pin').remove();
-	});
+	if (!$('#column-settings').length) {
+		elgg.deck_river.createPopup('column-settings', elgg.echo('deck_river:settings'), function() {
+			$('#column-settings').find('.elgg-icon-push-pin').remove();
+		});
+	} else {
+		$('#column-settings .elgg-body').html($('<div>', {'class': 'elgg-ajax-loader'}));
+	}
 	var columnSettings = $('#column-settings');
 
 	elgg.post('ajax/view/deck_river/ajax/column_settings', {
@@ -294,7 +272,6 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				$(this).parents('.box-settings').find('.'+$(this).val().replace(/[:\/]/g, '-')+'-options').show();
 			});
 			$('select[name="twitter-account"]').change(function() {
-				console.log($(this).val());
 				$(this).parents('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
 			});
 
@@ -358,19 +335,73 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 	});
 };
 
-elgg.deck_river.twitter_authorize = function(token) { //system_message(elgg_echo('twitter_api:authorize:success'));
+
+
+/**
+ * Initiate draggable and droppable for net-profile in thewire network
+ */
+elgg.deck_river.move_account = function() {
+	$('#thewire-network .net-profile').draggable({
+		revert: true,
+		revertDuration: 0,
+		zIndex: 9999,
+	});
+	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
+		accept:                 $('.net-profile').not('.ggouv'),
+		activeClass:            'ui-state-highlight',
+		hoverClass:             'ui-state-active',
+		drop: function(e, ui) {
+			$('#thewire-network *').removeClass('ui-start');
+			if ($(this).hasClass('selected-profile')) {
+				if ($(this).find('input[name="networks[]"]').length < 5) {
+					ui.draggable.appendTo($(this)).find('input').attr('name', 'networks[]');
+					ui.draggable.find('.elgg-icon-delete').addClass('hidden');
+				} else {
+					elgg.register_error('deck_river:error:pin:too_much');
+				}
+			} else {
+				ui.draggable.appendTo($(this)).find('input').attr('name', '_networks[]');
+			}
+		},
+		activate: function(e, ui) {
+			ui.draggable.parent().addClass('ui-start');
+		}
+	});
+}
+
+
+
+/**
+ * Called by twitter callback
+ *
+ * Add new account in non-pinned network and reload the column-settings if open
+ *
+ * @param {token} false if twitter error, else it contain the account view
+ * @return void
+ */
+elgg.deck_river.twitter_authorize = function(token) {
+	var p = window.opener;
 	if (token == false) {
-		window.opener.parent.elgg.system_message(window.opener.parent.elgg.echo('deck_river:twitter:authorize:already_done'));
+		p.elgg.system_message(p.elgg.echo('deck_river:twitter:authorize:already_done'));
 		window.close();
 	} else {
-		var c = window.opener.$('#'+window.opener.$('.deck-river-form-column-settings input[name="column"]').val());
-		window.opener.$('#column-settings').attr('data-network', 'twitter');
-		if (c.length == 1) {
-			c.find('.elgg-column-edit-button').click();
-		} else {
-			window.opener.$('.elgg-add-new-column').click();
+		// reload column settings popup if it's open
+		if (p.$('#column-settings').length) {
+			var c = p.$('#'+p.$('#column-settings input[name="column"]').val());
+			p.$('#column-settings').attr('data-network', 'twitter');
+			if (c.length == 1) {
+				c.find('.elgg-column-edit-button').click();
+			} else {
+				p.$('.elgg-add-new-column').click();
+			}
 		}
-		window.opener.parent.elgg.system_message(window.opener.parent.elgg.echo('deck_river:twitter:authorize:success'));
+
+		// add new twitter account in #thewire-network
+		p.$('#thewire-network .non-pinned .net-profiles').append(token);
+		p.elgg.deck_river.move_account();
+
+		// show message
+		p.elgg.system_message(p.elgg.echo('deck_river:twitter:authorize:success'));
 		window.close();
 	}
 }
