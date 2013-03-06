@@ -26,6 +26,8 @@ $french = array(
 	'deck_river:helper:mine' => "Vous n'avez pas d'activité.<br/>Publiez un message, entrez dans un groupe pour collaborer, ou participez à une action...",
 	'deck_river:helper:mention' => "Personne ne vous a mentionné pour l'instant.",
 
+	'usersettings:authorize:applications' => "Vos réseaux connectés",
+
 	// wire network
 	'deck-river:add:network' => "Ajouter un réseau",
 	'deck-river:ggouv:account' => "Compte Ggouv :",

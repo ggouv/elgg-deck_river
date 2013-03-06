@@ -148,7 +148,7 @@ function authorize_page_handler($page) {
 			deck_river_twitter_authorize();
 			break;
 		case 'applications':
-			include elgg_get_plugins_path() . 'elgg-deck_river/pages/thewire/applications.php';
+			include elgg_get_plugins_path() . 'elgg-deck_river/pages/applications.php';
 			break;
 		default:
 			return false;

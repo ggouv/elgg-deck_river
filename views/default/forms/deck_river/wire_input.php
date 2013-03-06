@@ -118,7 +118,7 @@ foreach ($twitter_accounts as $account) {
 					<li>
 					<?php
 						echo elgg_view('output/url', array(
-							'href' => '/authorize/applications/' . $user->username . '?ajaxified=true',
+							'href' => '/authorize/applications/' . $user->username,
 							'text' => elgg_echo('deck_river:network:manage_account')
 						));
 					?>

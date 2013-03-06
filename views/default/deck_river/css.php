@@ -39,7 +39,9 @@ body.fixed-deck {
 #thewire-textarea-border {
 	background-color: #4690D6;
 	border-radius: 0 0 6px 6px;
-	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
+	-box-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
+	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	height: 0px;
 	left: -4px;
 	position: absolute;
@@ -376,8 +378,10 @@ body.fixed-deck {
 #thewire-network .non-pinned {
 	background-color: #4690D6;
 	border-radius: 0 0 6px 6px;
-	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
-	padding: 4px;
+	-webkit-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
+	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
+	padding: 4px 4px 5px;
 	margin-left: -4px;
 	float: left;
 }
