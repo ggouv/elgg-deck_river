@@ -60,7 +60,7 @@ function deck_river_twitter_authorize() {
 				'network_box' => elgg_view_entity($twitter_account, array(
 										'view_type' => 'in_network_box',
 									)),
-				'full' => elgg_view_entity($twitter_account)
+				'full' => '<li id="elgg-object-' . $twitter_account->getGUID() . '">' . elgg_view_entity($twitter_account) . '</li>'
 			);
 
 			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.twitter_authorize(' . json_encode($account_output) . ');});</script>';

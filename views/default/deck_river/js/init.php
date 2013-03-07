@@ -111,6 +111,11 @@ elgg.deck_river.init = function() {
 			}
 		});
 	});
+	$('#authorize-twitter, .addAccount').die().live('click', function(e){
+		var oauthWindow = window.open($(this).attr('data-url'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
+		e.preventDefault();
+		return false;
+	});
 
 	// thewire live post
 	$('#thewire-submit-button').die().live('click', function(e){
@@ -275,12 +280,6 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			});
 			if (cs.attr('data-network')) cs.find('.elgg-tabs.networks a.'+cs.attr('data-network')).click(); // used when authorize social network callback
 
-			$('#authorize-twitter, .addAccount').click(function(e){
-				var oauthWindow = window.open($(this).attr('data-url'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
-				e.preventDefault();
-				return false;
-			});
-
 			// dropdown
 			cs.find('.' + cs.find('.tab:visible .column-type').val().replace(/[:\/]/g, '-')+'-options').show();
 			$('.column-type').change(function() {
@@ -414,11 +413,14 @@ elgg.deck_river.twitter_authorize = function(token) {
 
 		// add new network in applications page
 		if (p.$('.elgg-module-twitter').length) {
-			p.$('.elgg-module-twitter .elgg-list').append($('<li>').html(token.full));
+			p.$('.elgg-module-twitter .elgg-list').prepend(token.full);
 		}
 
+		// remove add-network popup
+		p.$('#add_social_network').remove();
+
 		// add new twitter account in #thewire-network
-		p.$('#thewire-network .non-pinned .net-profiles').append(token.network_box);
+		p.$('#thewire-network .non-pinned .net-profiles').prepend(token.network_box);
 		p.elgg.deck_river.move_account();
 
 		// show message
