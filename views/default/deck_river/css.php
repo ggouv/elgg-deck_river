@@ -254,6 +254,10 @@ body.fixed-deck {
 	width: 194px;
 	position: absolute;
 }
+#thewire-network img {
+	width: 25px;
+	height: 25px;
+}
 #thewire-network .selected-profile {
 	background-color: white;
 	border: medium none;
@@ -362,7 +366,7 @@ body.fixed-deck {
 	color: #CCCCCC;
 	position: absolute;
 	right: 0;
-	top: 10px;
+	top: 9px;
 	font-size: 3em;
 	cursor: pointer;
 }
@@ -952,4 +956,14 @@ body.fixed-deck {
 	color: #555;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+/* applications page */
+.elgg-module-twitter .elgg-head h3 {
+	color: #555555;
+	font-size: 1.3em;
+}
+.elgg-module-twitter .twitter-icon:before {
+	cursor: default;
+	font-size: 2.2em;
 }

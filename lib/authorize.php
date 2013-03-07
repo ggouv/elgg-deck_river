@@ -56,10 +56,13 @@ function deck_river_twitter_authorize() {
 			// trigger authorization hook
 			elgg_trigger_plugin_hook('authorize', 'elgg-deck_river', array('token' => $token));
 
-			$account_output = elgg_view('output/accounts/twitter_account', array(
-				'account' => $twitter_account,
-				'pinned' => false,
-			));
+			$account_output = array(
+				'network_box' => elgg_view_entity($twitter_account, array(
+										'view_type' => 'in_network_box',
+									)),
+				'full' => elgg_view_entity($twitter_account)
+			);
+
 			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.twitter_authorize(' . json_encode($account_output) . ');});</script>';
 		} else {
 			register_error(elgg_echo('deck_river:twitter:authorize:error'));
@@ -71,19 +74,23 @@ function deck_river_twitter_authorize() {
 /**
  * Remove twitter access for the currently logged in user.
  */
-function deck_river_twitter_api_revoke($user_guid, $screen_name = null, $echo = true) {
+function deck_river_twitter_api_revoke($user_guid = null, $user_id = null, $echo = true) {
+	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
+
 	if ($user_guid && elgg_instanceof(get_entity($user_guid), 'user')) {
 
 		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
 
-		$entities = deck_river_twitter_get_account($user_guid, $screen_name);
+		$entities = deck_river_twitter_get_account($user_guid, $user_id);
 		foreach ($entities as $entity) {
-			// remove account from pinned accounts
-			$arr = array_diff($user_deck_river_pinned_accounts, array($entity->getGUID()));
-			set_private_setting($user_guid, 'deck_river_pinned_accounts', serialize($arr));
+			if ($entity->canEdit()) {
+				// remove account from pinned accounts
+				$arr = array_diff($user_deck_river_pinned_accounts, array($entity->getGUID()));
+				set_private_setting($user_guid, 'deck_river_pinned_accounts', serialize($arr));
 
-			// remove account
-			$entity->delete();
+				// remove account
+				$entity->delete();
+			}
 		}
 
 		if ($echo && $entities) system_message(elgg_echo('deck_river:twitter:revoke:success'));

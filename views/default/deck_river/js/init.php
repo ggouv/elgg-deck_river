@@ -57,11 +57,6 @@ elgg.deck_river.init = function() {
 		var optionsHeight = $('#thewire-header').addClass('extended').find('.options').height();
 		$('#thewire-header').height(optionsHeight+117);
 		$('#thewire-textarea-border').height(optionsHeight+118);
-	}).focusout(function() {
-	 	if ($('#thewire-header').is(':hover')) {
-		} else {
-			$('#thewire-header').height(33).removeClass('extended');
-		}
 	});
 
 	// networks
@@ -76,8 +71,9 @@ elgg.deck_river.init = function() {
 		}
 		e.stopPropagation();
 	});
-	$('#thewire-network .more_networks, #thewire-network .selected-profile').die().live('click', function() {
+	$('#thewire-network .more_networks, #thewire-network .selected-profile').die().live('click', function(e) {
 		$('#thewire-network').toggleClass('extended');
+		e.stopPropagation();
 	});
 	$('#thewire-network .pin').die().live('click', function() {
 		var netProfile = $(this).parents('.net-profile');
@@ -96,6 +92,13 @@ elgg.deck_river.init = function() {
 		});
 	});
 	elgg.deck_river.move_account();
+
+	$('html').die().live('click', function(e) { //Hide thewire menu if visible
+		if (!$(e.target).parents('.elgg-form-deck-river-wire-input').length) {
+			$('#thewire-network').removeClass('extended');
+			$('#thewire-header').height(33).removeClass('extended');
+		}
+	});
 
 	// thewire live post
 	$('#thewire-submit-button').die().live('click', function(e){
@@ -120,6 +123,7 @@ elgg.deck_river.init = function() {
 						$("#thewire-characters-remaining span").html('0');
 						$('#thewire-textarea').val('').parents('.elgg-form').find('input[name=parent_guid], .responseTo').remove();
 						$('#thewire-header').height(33).removeClass('extended');
+						$('#thewire-network').removeClass('extended');
 						$('.elgg-list-item.thewire').removeClass('responseAt');
 					},
 					error: function(){
@@ -396,8 +400,13 @@ elgg.deck_river.twitter_authorize = function(token) {
 			}
 		}
 
+		// add new network in applications page
+		if (p.$('.elgg-module-twitter').length) {
+			p.$('.elgg-module-twitter .elgg-list').append($('<li>').html(token.full));
+		}
+
 		// add new twitter account in #thewire-network
-		p.$('#thewire-network .non-pinned .net-profiles').append(token);
+		p.$('#thewire-network .non-pinned .net-profiles').append(token.network_box);
 		p.elgg.deck_river.move_account();
 
 		// show message

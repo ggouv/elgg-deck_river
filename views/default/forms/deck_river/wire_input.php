@@ -17,8 +17,8 @@ elgg_load_library('deck_river:authorize');
 $twitter_accounts = deck_river_twitter_get_account();
 
 foreach ($twitter_accounts as $account) {
-	$accounts[$account->getGUID()] = elgg_view('output/accounts/'.$account->getSubtype(), array(
-		'account' => $account,
+	$accounts[$account->getGUID()] = elgg_view_entity($account, array(
+		'view_type' => 'in_network_box',
 		'pinned' => in_array($account->getGUID(), $user_deck_river_pinned_accounts) ? true : false,
 	));
 }
@@ -111,7 +111,7 @@ foreach ($twitter_accounts as $account) {
 						echo elgg_view('output/url', array(
 							'href' => '#',
 							'text' => elgg_echo('deck_river:network:add:account'),
-							'class' => 'add_account'
+							'class' => 'add_social_network'
 						));
 					?>
 					</li>

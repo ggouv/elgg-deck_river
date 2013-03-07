@@ -27,6 +27,8 @@ $french = array(
 	'deck_river:helper:mention' => "Personne ne vous a mentionné pour l'instant.",
 
 	'usersettings:authorize:applications' => "Vos réseaux connectés",
+	'deck_river:account:createdby' => "Compte Twitter connecté à %s par %s ",
+	'deck_river:account:deleteconfirm' => "Êtes-vous sur de vouloir supprimer ce compte Twitter ?",
 
 	// wire network
 	'deck-river:add:network' => "Ajouter un réseau",
@@ -120,6 +122,7 @@ $french = array(
 	'deck_river:ok:pin' => "Ce compte a été épinglé.",
 	'deck_river:ok:unpin' => "Ce compte n'est plus épinglé.",
 	'deck_river:error:pin:too_much' => "Vous ne pouvez pas épingler plus de 5 comptes.",
+	'deck_river:delete:network:error' => "Impossible de supprimer ce compte.",
 
 );
 
