@@ -129,24 +129,37 @@ elgg.deck_river.init = function() {
 			if ($.data(this, 'clicked')) { // Prevent double-click
 				return false;
 			} else {
+				//$.data(this, 'clicked', true);
 				$('#submit-loader').removeClass('hidden');
-				$.data(this, 'clicked', true);
-				dataString = thewireForm.serialize();
-				elgg.action('deck_river/wire_input', {
-					data: dataString,
-					success: function(json) {
-						$('#submit-loader').addClass('hidden');
-						$.data(thisSubmit, 'clicked', false);
-						$("#thewire-characters-remaining span").html('0');
-						$('#thewire-textarea').val('').parents('.elgg-form').find('input[name=parent_guid], .responseTo').remove();
-						$('#thewire-header').height(33).removeClass('extended');
-						$('#thewire-network').removeClass('extended');
-						$('.elgg-list-item.thewire').removeClass('responseAt');
-					},
-					error: function(){
-						$('#submit-loader').addClass('hidden');
-						$.data(thisSubmit, 'clicked', false);
-					}
+				var dataObject = thewireForm.serializeObject(),
+					networksCount = dataObject.networks.length;
+
+				$.each(dataObject.networks, function(i, e) {
+					var dataString = dataObject;
+					// format data for each network
+					dataString.networks = [e];
+					dataString = $.param(dataString);
+
+					elgg.action('deck_river/add_message', {
+						data: dataString,
+						success: function(json) {
+							if (networksCount == 1) {
+								$.data(thisSubmit, 'clicked', false);
+								$('#submit-loader').addClass('hidden');
+								$("#thewire-characters-remaining span").html('0');
+								$('#thewire-textarea').val('').parents('.elgg-form').find('input[name=parent_guid], .responseTo').remove();
+								$('.elgg-list-item.thewire').removeClass('responseAt');
+								$('#thewire-header').height(33).removeClass('extended');
+								$('#thewire-network').removeClass('extended');
+							} else {
+								networksCount--;
+							}
+						},
+						error: function(){
+							$('#submit-loader').addClass('hidden');
+							$.data(thisSubmit, 'clicked', false);
+						}
+					});
 				});
 			}
 		}
@@ -217,15 +230,15 @@ elgg.deck_river.init = function() {
 
 	// make columns sortable
 	$(".deck-river-lists-container").sortable({
-		items:                '.column-river',
-		connectWith:          '.deck-river-lists-container',
-		handle:               '.column-header',
+		items:				'.column-river',
+		connectWith:		  '.deck-river-lists-container',
+		handle:			   '.column-header',
 		forcePlaceholderSize: true,
-		placeholder:          'column-placeholder',
-		opacity:              0.8,
-		revert:               500,
+		placeholder:		  'column-placeholder',
+		opacity:			  0.8,
+		revert:			   500,
 		start: function(event, ui) { $('.column-placeholder').css('width', $('.column-header').width()-3); },
-		update:                elgg.deck_river.MoveColumn
+		update:				elgg.deck_river.MoveColumn
 	});
 
 	// load discussion
@@ -362,9 +375,9 @@ elgg.deck_river.move_account = function() {
 		zIndex: 9999,
 	});
 	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
-		accept:                 $('.net-profile').not('.ggouv'),
-		activeClass:            'ui-state-highlight',
-		hoverClass:             'ui-state-active',
+		accept:				 $('.net-profile').not('.ggouv'),
+		activeClass:			'ui-state-highlight',
+		hoverClass:			 'ui-state-active',
 		drop: function(e, ui) {
 			$('#thewire-network *').removeClass('ui-start');
 			if ($(this).hasClass('selected-profile')) {
@@ -583,5 +596,13 @@ elgg.friendly_time.init = function() {
 elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
 
 
+
+/**
+ * Function serializeObject
+ * Copied from https://github.com/macek/jquery-serialize-object
+ * Version 1.0.0
+ */
+(function(f){return f.fn.serializeObject=function(){var k,l,m,n,p,g,c,h=this;g={};c={};k=/^[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/;l=/[a-zA-Z0-9_]+|(?=\[\])/g;m=/^$/;n=/^\d+$/;p=/^[a-zA-Z0-9_]+$/;this.build=function(d,e,a){d[e]=a;return d};this.push_counter=function(d){void 0===c[d]&&(c[d]=0);return c[d]++};f.each(f(this).serializeArray(),function(d,e){var a,c,b,j;if(k.test(e.name)){c=e.name.match(l);b=e.value;for(j=e.name;void 0!==(a=c.pop());)m.test(a)?(a=RegExp("\\["+a+"\\]$"),j=
+j.replace(a,""),b=h.build([],h.push_counter(j),b)):n.test(a)?b=h.build([],a,b):p.test(a)&&(b=h.build({},a,b));return g=f.extend(!0,g,b)}});return g}})(jQuery);
 
 // End of js for deck-river plugin

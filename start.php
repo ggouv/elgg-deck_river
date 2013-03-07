@@ -39,7 +39,7 @@ function deck_river_init() {
 
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
-	elgg_register_action('deck_river/wire_input', "$action_path/message/wire_input.php");
+	elgg_register_action('deck_river/add_message', "$action_path/message/add.php");
 	elgg_register_action('message/delete', "$action_path/message/delete.php");
 	elgg_register_action('deck_river/column/settings', "$action_path/column/settings.php");
 	elgg_register_action('deck_river/column/move', "$action_path/column/move.php");

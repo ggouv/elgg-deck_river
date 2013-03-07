@@ -51,7 +51,16 @@ if (empty($body)) {
 			}
 		} else {
 			$network_entity = get_entity($network);
+
+			// twitter
 			if ($network_entity->getSubtype() == 'twitter_account' && $network_entity->getOwnerGUID() == $user->getGUID()) {
+				elgg_load_library('deck_river:twitter_async');
+				$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
+				$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
+				$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $network_entity->oauth_token, $network_entity->oauth_token_secret);
+
+				// post to twitter
+				$result = $twitterObj->post_statusesUpdate(array('status' => $body));
 				system_message(elgg_echo("thewire:twitter:posted"));
 			}
 		}

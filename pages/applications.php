@@ -20,11 +20,15 @@ $title = elgg_echo('usersettings:authorize:applications');
 elgg_push_breadcrumb(elgg_echo('settings'), 'settings/user/' . $user->username);
 elgg_push_breadcrumb($title);
 
+$content = '';
+
 $twitter_accounts = deck_river_twitter_get_account($user->getGUID());
 
-$content = elgg_view_module('twitter', '<span class="twitter-icon gwfb prs"></span>' . elgg_echo('Twitter'), elgg_view_entity_list($twitter_accounts), array(
-	'class' => 'mtl',
-));
+if (!empty($twitter_accounts)) {
+	$content .= elgg_view_module('twitter', '<span class="twitter-icon gwfb prs"></span>' . elgg_echo('Twitter'), elgg_view_entity_list($twitter_accounts), array(
+		'class' => 'mtl',
+	));
+}
 
 $params = array(
 	'content' => $content,
