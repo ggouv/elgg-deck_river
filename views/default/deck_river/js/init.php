@@ -100,6 +100,18 @@ elgg.deck_river.init = function() {
 		}
 	});
 
+	$('.add_social_network').die().live('click', function() {
+		elgg.deck_river.createPopup('add_social_network', elgg.echo('deck-river:add:network'), function() {
+			$('#add_social_network').find('.elgg-icon-push-pin').remove();
+		});
+		elgg.post('ajax/view/deck_river/ajax/add_social_network', {
+			dataType: "html",
+			success: function(response) {
+				$('#add_social_network').find('.elgg-body').html(response);
+			}
+		});
+	});
+
 	// thewire live post
 	$('#thewire-submit-button').die().live('click', function(e){
 		var thewireForm = $(this).parents('form');

@@ -24,7 +24,7 @@ body.fixed-deck {
 	background-color: transparent;
 	resize: none;
 	height: 32px !important;
-	padding: 10px 2px 0px 12px !important;
+	padding: 10px 2px 0 12px !important;
 	margin: 0;
 	color: #666;
 	font: 130% Arial,Helvetica,sans-serif;
@@ -40,9 +40,9 @@ body.fixed-deck {
 	background-color: #4690D6;
 	border-radius: 0 0 6px 6px;
 	-webkit-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
-	-box-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
-	height: 0px;
+	height: 0;
 	left: -4px;
 	position: absolute;
 	top: 35px;
@@ -967,3 +967,20 @@ body.fixed-deck {
 	cursor: default;
 	font-size: 2.2em;
 }
+
+/* popup add_social_network */
+#add_social_network {
+	height: auto;
+}
+#add_social_network .elgg-image-block {
+	border-top: 1px solid #CCC;
+}
+#add_social_network .elgg-image-block:first-child {
+	border: none;
+}
+#add_social_network .elgg-image {
+	font-size: 10em;
+	line-height: 0.7em;
+	padding-right: 20px;
+}
+
