@@ -60,8 +60,32 @@ if (empty($body)) {
 				$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $network_entity->oauth_token, $network_entity->oauth_token_secret);
 
 				// post to twitter
-				$result = $twitterObj->post_statusesUpdate(array('status' => $body));
-				system_message(elgg_echo("thewire:twitter:posted"));
+				if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message
+					if (!$matches[2]) {
+						register_error('deck_river:message:blank');
+						return true;
+					}
+
+					try {
+						$result = $twitterObj->post_direct_messagesNew(array('text' => $matches[2], 'screen_name' => $matches[1]));
+					} catch(Exception $e) {
+						$result = json_decode($e->getMessage())->errors[0];
+					}
+				} else {
+					$result = $twitterObj->post_statusesUpdate(array('status' => $body));
+				}
+
+				// send result
+				if ($result->code == 200) {
+					system_message(elgg_echo("deck_river:twitter:posted"));
+				} else {
+					$key = 'deck_river:twitter:error:' . $result->code;
+					if (elgg_echo($key) == $key) { // check if language string exist
+						register_error(elgg_echo('deck_river:twitter:error', array($result->code, $result->message)));
+					} else {
+						register_error(elgg_echo($key));
+					}
+				}
 			}
 		}
 	}

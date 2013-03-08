@@ -121,9 +121,9 @@ elgg.deck_river.init = function() {
 	$('#thewire-submit-button').die().live('click', function(e){
 		var thewireForm = $(this).parents('form');
 		if ($('#thewire-textarea').val() == '') { // no text
-			elgg.register_error('thewire:blank');
+			elgg.register_error('deck_river:message:blank');
 		} else if (thewireForm.find('input[name="networks[]"]').length == 0) { // no network actived
-			elgg.register_error('thewire:nonetwork');
+			elgg.register_error('deck_river:nonetwork');
 		} else {
 			thisSubmit = this;
 			if ($.data(this, 'clicked')) { // Prevent double-click

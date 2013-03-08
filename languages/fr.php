@@ -115,14 +115,19 @@ $french = array(
 	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
 
 	// messages
-	'thewire:twitter:posted' => "Votre message a été publié sur Twitter.",
-	'thewire:blank' => "??? Il faut écrire un peu avant d'envoyer son message...",
-	'thewire:nonetwork' => "Vous n'avez pas sélectionné de réseau.",
+	'deck_river:message:blank' => "??? Il faut écrire le message avant de l'envoyer...",
+	'deck_river:nonetwork' => "Vous n'avez pas sélectionné de réseau.",
 	'deck_river:error:pin' => "Impossible de ne plus épingler ou épingler ce compte.",
 	'deck_river:ok:pin' => "Ce compte a été épinglé.",
 	'deck_river:ok:unpin' => "Ce compte n'est plus épinglé.",
 	'deck_river:error:pin:too_much' => "Vous ne pouvez pas épingler plus de 5 comptes.",
 	'deck_river:delete:network:error' => "Impossible de supprimer ce compte.",
+
+	'deck_river:twitter:posted' => "Votre message a été publié sur Twitter.",
+	'deck_river:twitter:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",
+	'deck_river:twitter:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", //"You cannot send messages to users who are not following you",
+	'deck_river:twitter:error:34' => "La page ou l'utilisateur n'existe pas sur Twitter.", //"Sorry, that page does not exist",
+
 
 );
 
