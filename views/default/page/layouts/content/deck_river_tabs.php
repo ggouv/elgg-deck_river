@@ -4,9 +4,10 @@
  *
  * Select between user, friends, and all content
  *
- * @uses $vars['filter_context']  Filter context: all, friends, mine
- * @uses $vars['filter_override'] HTML for overriding the default filter (override)
- * @uses $vars['context']         Page context (override)
+ * @uses $vars['filter_context']      Filter context: all, friends, mine
+ * @uses $vars['filter_override']     HTML for overriding the default filter (override)
+ * @uses $vars['context']             Page context (override)
+ * @uses $vars['user_river_settings'] Settings of the user
  */
 
 if (isset($vars['filter_override'])) {
@@ -39,7 +40,7 @@ if (elgg_is_logged_in()) {
 	);
 
 	$priority = 12;
-	foreach ($vars['user_river_options'] as $name => $tab) {
+	foreach ($vars['user_river_settings'] as $name => $tab) {
 		$tabs[$name] = array(
 			'text' => ucfirst($name),
 			'selected' => ($filter_context == $name),
@@ -76,10 +77,10 @@ if (elgg_is_logged_in()) {
 	echo "<div id='rename-deck-river-tab' class='elgg-module-popup hidden rename-deck-river-tab-popup'>" .
 			elgg_view_form('deck_river/tab/rename', '', $vars) .
 		"</div>";
-	
+
 	foreach ($tabs as $name => $tab) {
 		$tab['name'] = $name;
-		
+
 		elgg_register_menu_item('filter', $tab);
 	}
 

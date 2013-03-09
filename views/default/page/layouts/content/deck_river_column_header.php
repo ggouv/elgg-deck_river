@@ -1,7 +1,9 @@
 <?php
 /**
- * 
+ * @uses $vars['tab_settings'] Settings of this tab
  **/
+
+$tab_settings = elgg_extract('tab_settings', $vars, 'default');
 
 $params = array(
 	'text' => elgg_view_icon('refresh'),
@@ -9,7 +11,7 @@ $params = array(
 	'href' => "#",
 	'class' => "elgg-column-refresh-button tooltip s",
 );
-echo elgg_view('output/url', $params);
+$buttons = elgg_view('output/url', $params);
 
 $params = array(
 	'text' => elgg_view_icon('settings-alt'),
@@ -17,4 +19,10 @@ $params = array(
 	'href' => "#",
 	'class' => "elgg-column-edit-button tooltip s",
 );
-echo elgg_view('output/url', $params);
+$buttons .= elgg_view('output/url', $params);
+
+echo <<<HTML
+<h3 class="title">{$tab_settings['title']}</h3>
+<h6 class="subtitle">{$tab_settings['subtitle']}</h6>
+$buttons
+HTML;
