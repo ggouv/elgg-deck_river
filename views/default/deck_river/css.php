@@ -782,13 +782,11 @@ body.fixed-deck {
 .deck-popup .elgg-head a.pin {
 	right: 20px;
 }
-#deck-column-settings, #deck-column-settings > div {
-	float:left;
+#column-settings .tab {
 	height: 240px;
 }
 #column-settings .networks {
 	border-bottom: medium none;
-	float: left;
 	width: auto;
 }
 #column-settings .networks > li {
@@ -846,10 +844,10 @@ body.fixed-deck {
 }
 #column-settings select[name="twitter-account"] {
 	position: absolute;
-	right: 40px;
+	right: 44px;
 	top: 38px;
 }
-#column-settings .addAccount {
+#column-settings .add_social_network {
 	font-size: 1.4em;
 	font-weight: bold;
 	position: absolute;
@@ -857,7 +855,7 @@ body.fixed-deck {
 	top: 8px;
 	cursor: pointer;
 }
-#column-settings .addAccount:hover {
+#column-settings .add_social_network:hover {
 	text-decoration: none;
 }
 

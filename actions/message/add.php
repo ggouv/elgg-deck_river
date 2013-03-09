@@ -62,10 +62,9 @@ if (empty($body)) {
 				// post to twitter
 				if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message
 					if (!$matches[2]) {
-						register_error('deck_river:message:blank');
+						register_error(elgg_echo('deck_river:message:blank'));
 						return true;
 					}
-
 					try {
 						$result = $twitterObj->post_direct_messagesNew(array('text' => $matches[2], 'screen_name' => $matches[1]));
 					} catch(Exception $e) {
