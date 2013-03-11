@@ -40,8 +40,8 @@ elgg.deck_river.ShortenerUrlInit = function() {
 			shortUrl = $(this).parent().find('.elgg-input-text').val(),
 			strPos = txtarea.getCursorPosition(),
 			front = (txtarea.val()).substring(0,strPos),
-			back = (txtarea.val()).substring(strPos,txtarea.val().length); 
-		
+			back = (txtarea.val()).substring(strPos,txtarea.val().length);
+
 		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
 		if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) front = front + ' ';
 		if (back.substring(0, 1) != ' ' && back.length != 0) back = ' ' + back;
@@ -62,7 +62,7 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.ShortenerUrlInit);
  * Shortener url
  */
 elgg.deck_river.ShortenerUrl = function(url, input) {
-	elgg.post('ajax/view/deck_river/ajax/url_shortener', {
+	elgg.post('ajax/view/deck_river/ajax_json/url_shortener', {
 		dataType: "html",
 		data: {
 			url: url,

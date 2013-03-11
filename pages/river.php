@@ -18,13 +18,11 @@ if ( !$user_river_settings || !is_array($user_river_settings) ) {
 //get page for tabs
 $page_filter = elgg_get_context();
 
-$content = "<div class=\"deck-river-lists\" id=\"{$page_filter}\"><ul class=\"deck-river-lists-container\">";
+$content = "<div id=\"deck-river-lists\" data-tab=\"{$page_filter}\"><ul class=\"deck-river-lists-container\">";
 
-foreach ($user_river_settings[$page_filter] as $key => $tab_settings) {
-	$content .= "<li class=\"column-river\" id=\"{$key}\" data-network=\"{$tab_settings['network']}\">" .
-				'<ul class="column-header"><li>' .
-					elgg_view('page/layouts/content/deck_river_column_header', array('tab_settings' => $tab_settings)) .
-				'</li></ul>' .
+foreach ($user_river_settings[$page_filter] as $key => $column_settings) {
+	$content .= "<li class=\"column-river\" id=\"{$key}\">" .
+				elgg_view('page/layouts/content/deck_river_column_header', array('column_settings' => $column_settings)) .
 				'<ul class="elgg-river elgg-list">' .
 					elgg_view('graphics/ajax_loader', array('hidden' => false)) .
 				'</ul>' .

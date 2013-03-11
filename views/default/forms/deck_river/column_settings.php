@@ -30,9 +30,7 @@ $column_title = $user_river_column_options['title'];
 
 <div id='deck-column-settings' class='pas'>
 	<?php
-	$selected = explode(':', $user_river_column_options['type']);
-	$selected = $selected[0];
-	if (!in_array($selected, array('twitter', 'facebook'))) $selected = 'elgg';
+		$selected = $new ? 'elgg' : $user_river_column_options['network'];
 		$params = array(
 			'type' => 'vertical',
 			'class' => 'networks float',

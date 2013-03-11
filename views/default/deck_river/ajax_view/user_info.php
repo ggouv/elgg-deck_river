@@ -17,12 +17,12 @@ if (!$user) {
 <ul class="elgg-body">
 	<li id="<?php echo $user->guid; ?>-info-profile">
 		<?php echo elgg_view_entity_icon($user, 'large', array('class' => 'float', 'href' => $user->getURL())); ?>
-		
+
 			<div class="elgg-body plm">
 				<h1 class="mbm"><?php echo $user->realname; ?></h1>
 				<h2 class="mbs" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
 				<div><?php echo deck_river_wire_filter($user->briefdescription); ?></div>
-				
+
 				<?php
 				// grab the actions and admin menu items from user hover
 				$menu = elgg_trigger_plugin_hook('register', "menu:user_hover", array('entity' => $user), array());
@@ -44,7 +44,7 @@ if (!$user) {
 					$profile_actions .= '</ul>';
 				}
 				echo $profile_actions;
-				
+
 				?>
 			</div>
 
@@ -52,10 +52,12 @@ if (!$user) {
 			<?php echo elgg_view('profile/details'); ?>
 		</div>
 	</li>
-	<li id="<?php echo $user->guid; ?>-info-activity" class="hidden" data-load-type="LoadEntity">
+	<li id="<?php echo $user->guid; ?>-info-activity" class="column-river hidden">
+		<ul class="column-header hidden" data-network="elgg" data-view_type="entity_river"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
-	<li id="<?php echo $user->guid; ?>-info-mentions" class="hidden" data-load-type="LoadMentions">
+	<li id="<?php echo $user->guid; ?>-info-mentions" class="column-river hidden">
+		<ul class="column-header hidden" data-network="elgg" data-view_type="entity_mention"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

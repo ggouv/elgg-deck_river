@@ -75,23 +75,23 @@ $english = array(
 	'deck_river:settings:default_column:default' => "array(
 	'default' => array(
 		'column-1' => array(
-			'title' => elgg_echo('river:all'),
+			'title' => 'river:all',
 			'subtitle' => '',
 			'type' => 'all'
 		),
 		'column-2' => array(
-			'title' => elgg_echo('river:timeline'),
-			'subtitle' => elgg_echo('river:timeline:definition'),
+			'title' => 'river:timeline',
+			'subtitle' => 'river:timeline:definition',
 			'type' => 'friends'
 		),
 		'column-3' => array(
-			'title' => elgg_echo('river:mine'),
+			'title' => 'river:mine',
 			'subtitle' => get_entity(\$user_guid)->name,
 			'type' => 'mine'
 		),
 		'column-4' => array(
 			'title' => '@' . get_entity(\$user_guid)->name,
-			'subtitle' => elgg_echo('river:mentions'),
+			'subtitle' => 'river:mentions',
 			'type' => 'mention'
 		)
 	)

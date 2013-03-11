@@ -1,9 +1,9 @@
 <?php
 /**
- * @uses $vars['tab_settings'] Settings of this tab
+ * @uses $vars['column_settings'] Settings of this tab
  **/
 
-$tab_settings = elgg_extract('tab_settings', $vars, 'default');
+$column_settings = elgg_extract('column_settings', $vars);
 
 $params = array(
 	'text' => elgg_view_icon('refresh'),
@@ -21,8 +21,15 @@ $params = array(
 );
 $buttons .= elgg_view('output/url', $params);
 
+$title = elgg_echo($column_settings['title']);
+$subtitle = elgg_echo($column_settings['subtitle']);
+
 echo <<<HTML
-<h3 class="title">{$tab_settings['title']}</h3>
-<h6 class="subtitle">{$tab_settings['subtitle']}</h6>
-$buttons
+<ul class="column-header" data-network="{$column_settings['network']}" data-direct="{$column_settings['direct']}" data-view_type="column_river">
+	<li>
+		<h3 class="title">$title</h3>
+		<h6 class="subtitle">$subtitle</h6>
+		$buttons
+	</li>
+</ul>
 HTML;

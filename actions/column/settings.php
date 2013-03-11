@@ -12,6 +12,9 @@ if (!$submit || !$tab || !$column) {
 $owner = elgg_get_logged_in_user_guid();
 $user_river_options = unserialize(get_private_setting($owner, 'deck_river_settings'));
 
+// reset some settings
+$user_river_options[$tab][$column]['direct'] = false;
+
 $return = array();
 if ($submit == 'delete') {
 	unset($user_river_options[$tab][$column]);
@@ -28,139 +31,113 @@ if ($submit == 'delete') {
 		return;
 	}
 
-	if (!array_key_exists($column, $user_river_options[$tab])) {
-		$return['action'] = 'new';
-	} else if ($user_river_options[$tab][$column]['type'] != $type) {
-		$return['action'] = 'change';
-	}
-
 	switch ($type) {
 		case 'all':
-			$return['column_title'] = elgg_echo('river:all');
-			$return['column_subtitle'] = '';
+			$user_river_options[$tab][$column]['title'] = elgg_echo('river:all');
+			$user_river_options[$tab][$column]['subtitle'] = '';
 			break;
 		case 'friends':
-			$return['column_title'] = elgg_echo('river:timeline');
-			$return['column_subtitle'] = elgg_echo('river:timeline:definition');
+			$user_river_options[$tab][$column]['title'] = elgg_echo('river:timeline');
+			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:timeline:definition');
 			break;
 		case 'mine':
-			$return['column_title'] = elgg_echo('river:mine');
-			$return['column_subtitle'] = get_entity($owner)->name;
+			$user_river_options[$tab][$column]['title'] = elgg_echo('river:mine');
+			$user_river_options[$tab][$column]['subtitle'] = get_entity($owner)->name;
 			break;
 		case 'mention':
-			$return['column_title'] = '@' . get_entity($owner)->name;
-			$return['column_subtitle'] = elgg_echo('river:mentions');
+			$user_river_options[$tab][$column]['title'] = '@' . get_entity($owner)->name;
+			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:mentions');
 			break;
 		case 'group':
-			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['group'] != $group) $return['action'] = 'change';
 			$user_river_options[$tab][$column]['group'] = $group;
-			$return['column_title'] = '!' . get_entity($group)->name;
-			$return['column_subtitle'] = elgg_echo('river:group');
+			$user_river_options[$tab][$column]['title'] = '!' . get_entity($group)->name;
+			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:group');
 			break;
 		case 'search':
-			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != explode(' ', $search)) $return['action'] = 'change';
 			$user_river_options[$tab][$column]['search'] = explode(' ', $search);
-			$return['column_title'] = $search;
-			$return['column_subtitle'] = elgg_echo('river:search', array(elgg_get_site_entity()->name));
+			$user_river_options[$tab][$column]['title'] = $search;
+			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:search', array(elgg_get_site_entity()->name));
 			break;
 		default:
-			$params = array('owner' => $owner, 'query' => 'title');
+			$params = array('owner' => $owner, 'query' => 'settings');
 			$hook = elgg_trigger_plugin_hook('deck-river', "column:$type", $params);
-			$return = array_merge($return, $hook);
+			$user_river_options[$tab][$column] = array_merge($user_river_options[$tab][$column], $hook);
 			break;
 	}
-	$user_river_options[$tab][$column]['title'] = $return['column_title'];
-	$user_river_options[$tab][$column]['subtitle'] = $return['column_subtitle'];
 
 	// allow plugin break here
-	if ($return['break']) {
-		$user_river_options[$tab][$column]['type'] = $type;
-		set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));
-		$return['column'] = $column;
-		echo json_encode($return);
-		return true;
-	}
+	if (!$hook) {
 
-	// merge keys defined by admin
-	$keys_to_merge = explode(',', elgg_get_plugin_setting('keys_to_merge', 'elgg-deck_river'));
-	foreach ($keys_to_merge as $key => $value ) {
-		$key_master = explode('=', $value);
-		foreach ($types_filter as $k => $v) {
-			if ($v == $key_master[0]) $types_filter[] = $key_master[1];
+		// merge keys defined by admin
+		$keys_to_merge = explode(',', elgg_get_plugin_setting('keys_to_merge', 'elgg-deck_river'));
+		foreach ($keys_to_merge as $key => $value ) {
+			$key_master = explode('=', $value);
+			foreach ($types_filter as $k => $v) {
+				if ($v == $key_master[0]) $types_filter[] = $key_master[1];
+			}
+			foreach ($subtypes_filter as $k => $v) {
+				if ($v == $key_master[0]) $subtypes_filter[] = $key_master[1];
+			}
 		}
-		foreach ($subtypes_filter as $k => $v) {
-			if ($v == $key_master[0]) $subtypes_filter[] = $key_master[1];
-		}
-	}
 
-	// filter changed ?
-	if ($types_filter == '0') $types_filter = ''; // in case no checkbox checked or All
-	if ($subtypes_filter == '0') $subtypes_filter = ''; // in case no checkbox checked
-	if ($user_river_options[$tab][$column]['types_filter'] != $types_filter || $user_river_options[$tab][$column]['subtypes_filter'] != $subtypes_filter) {
+		// filter
+		if ($types_filter == '0') $types_filter = ''; // in case no checkbox checked or All
+		if ($subtypes_filter == '0') $subtypes_filter = ''; // in case no checkbox checked
 		if (in_array('All', $types_filter)) {
-			if (isset($user_river_options[$tab][$column]['types_filter']) || isset($user_river_options[$tab][$column]['subtypes_filter'])) $return['action'] = 'change';
 			unset($user_river_options[$tab][$column]['types_filter']);
 			unset($user_river_options[$tab][$column]['subtypes_filter']);
 		} elseif ($types_filter == 0) {
-			$return['action'] = 'change';
 			unset($user_river_options[$tab][$column]['types_filter']);
 			$user_river_options[$tab][$column]['subtypes_filter'] = $subtypes_filter;
 		} elseif ($subtypes_filter == 0) {
-			$return['action'] = 'change';
 			unset($user_river_options[$tab][$column]['subtypes_filter']);
 			$user_river_options[$tab][$column]['types_filter'] = $types_filter;
 		} else {
-			$return['action'] = 'change';
 			$user_river_options[$tab][$column]['types_filter'] = $types_filter;
 			$user_river_options[$tab][$column]['subtypes_filter'] = $subtypes_filter;
 		}
-	}
 
-	if (isset($user_river_options[$tab][$column]['types_filter']) || isset($user_river_options[$tab][$column]['subtypes_filter'])) {
-		$return['column_subtitle'] .= ' | ' . elgg_echo('river:filtred');
+		if (isset($user_river_options[$tab][$column]['types_filter']) || isset($user_river_options[$tab][$column]['subtypes_filter'])) {
+			$user_river_options[$tab][$column]['subtitle'] .= ' | ' . elgg_echo('river:filtred');
+		}
+
 	}
 
 	$user_river_options[$tab][$column]['type'] = $type;
-	$user_river_options[$tab][$column]['direct'] = false;
+	$user_river_options[$tab][$column]['network'] = 'elgg';
 
 } else if ($submit == 'twitter') {
 	$twitter_type = get_input('twitter-type');
 	$search = get_input('twitter-search');
 	$twitter_account = (int) get_input('twitter-account', false);
 
-	if (!array_key_exists($column, $user_river_options[$tab])) {
-		$return['action'] = 'new';
-	} else if ($user_river_options[$tab][$column]['type'] != $twitter_type) {
-		$return['action'] = 'change';
-	}
-
 	switch ($twitter_type) {
-		case 'twitter:search/tweets':
-			$return['column_title'] = $search;
-			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != $search) $return['action'] = 'change';
+		case 'searchTweets':
+			$user_river_options[$tab][$column]['title'] = $search;
+			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('deck_river:twitter:feed:search');
 			$user_river_options[$tab][$column]['search'] = $search;
-			$return['column_subtitle'] = elgg_echo('deck_river:twitter:feed:search');
-			$return['direct'] = 'http://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1';
-			$user_river_options[$tab][$column]['direct'] = $return['direct'];
+			$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1';
 			break;
-		case 'twitter:search/tweets-popular':
-			$return['column_title'] = $search;
-			if ($return['action'] != 'new' && $user_river_options[$tab][$column]['search'] != $search) $return['action'] = 'change';
+		case 'searchTweets-popular':
+			$user_river_options[$tab][$column]['title'] = $search;
+			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('deck_river:twitter:feed:search');
 			$user_river_options[$tab][$column]['search'] = $search;
-			$return['column_subtitle'] = elgg_echo('deck_river:twitter:feed:search');
-			$return['direct'] = 'http://search.twitter.com/search.json?q=' . urlencode($search) . '&include_entities=1&result_type=popular';
-			$user_river_options[$tab][$column]['direct'] = $return['direct'];
+			$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1&result_type=popular';
+			break;
+
+		case 'get_statusesHome_timeline':
+			$user_river_options[$tab][$column]['title'] = elgg_echo('deck_river:twitter:feed:home');
+			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
 			break;
 
 
-
-
-		case 'twitter:users/search':
-			$return['column_title'] = 'users/search';
-			$return['column_subtitle'] = 'manutopik';
-			$return['direct'] = true;
-			$user_river_options[$tab][$column]['direct'] = $return['direct'];
-			break;
+		/*case 'twitter:users/search':
+			$user_river_options[$tab][$column]['title'] = 'users/search';
+			$user_river_options[$tab][$column]['subtitle'] = 'manutopik';
+			$return['network'] = true;
+			$user_river_options[$tab][$column]['network'] = $return['network'];
+			break;*/
 		default:
 
 			break;
@@ -168,10 +145,14 @@ if ($submit == 'delete') {
 	}
 
 	$user_river_options[$tab][$column]['type'] = $twitter_type;
-	$user_river_options[$tab][$column]['title'] = $return['column_title'];
-	$user_river_options[$tab][$column]['subtitle'] = $return['column_subtitle'];
+	$user_river_options[$tab][$column]['title'] = $user_river_options[$tab][$column]['title'];
+	$user_river_options[$tab][$column]['subtitle'] = $user_river_options[$tab][$column]['subtitle'];
+	$user_river_options[$tab][$column]['network'] = 'twitter';
 }
 
 set_private_setting($owner, 'deck_river_settings', serialize($user_river_options));
+
 $return['column'] = $column;
+$return['header'] = elgg_view('page/layouts/content/deck_river_column_header', array('column_settings' => $user_river_options[$tab][$column]));
+
 echo json_encode($return);

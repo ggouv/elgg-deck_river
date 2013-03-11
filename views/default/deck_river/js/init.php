@@ -29,20 +29,19 @@ elgg.deck_river.init = function() {
 
 			// load columns
 			$('.column-river').each(function() {
-				elgg.deck_river.LoadColumn($(this));
+				elgg.deck_river.LoadRiver($(this));
 			});
-
 		} else {
 			$('body').removeClass('fixed-deck');
 		}
 
 		if ($('#json-river-thread').length) { // single river item view, dispalyed in his thread
 			var rThread = $('#json-river-thread');
-			$('.elgg-river.single-view').html(elgg.deck_river.displayItems($.parseJSON(rThread.text())));
-			$('.single-view .item-river-'+rThread.attr('data-message-id')).addClass('viewed');
+			$('.elgg-river.single-view').html(elgg.deck_river.elggDisplayItems($.parseJSON(rThread.text())));
+			$('.single-view .item-river-'+rThread.data('message-id')).addClass('viewed');
 		}
 		if ($('#json-river-owner').length) { // owner river view
-			elgg.deck_river.LoadEntity($('#json-river-owner').val(), $('#column'));
+			elgg.deck_river.LoadRiver($('.column-river'), $('#json-river-owner').val());
 		}
 	});
 
@@ -104,7 +103,7 @@ elgg.deck_river.init = function() {
 		elgg.deck_river.createPopup('add_social_network', elgg.echo('deck-river:add:network'), function() {
 			$('#add_social_network').find('.elgg-icon-push-pin').remove();
 		});
-		elgg.post('ajax/view/deck_river/ajax/add_social_network', {
+		elgg.post('ajax/view/deck_river/ajax_view/add_social_network', {
 			dataType: "html",
 			success: function(response) {
 				$('#add_social_network').find('.elgg-body').html(response);
@@ -112,7 +111,7 @@ elgg.deck_river.init = function() {
 		});
 	});
 	$('#authorize-twitter').die().live('click', function(e){
-		var oauthWindow = window.open($(this).attr('data-url'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
+		var oauthWindow = window.open($(this).data('url'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
 		e.preventDefault();
 		return false;
 	});
@@ -188,6 +187,12 @@ elgg.deck_river.init = function() {
 		});
 	});
 
+	// load more in column
+	$('.moreItem').die().live('click', function() {
+		var TheColumn = $(this).parents('.column-river');
+		elgg.deck_river.LoadMore(TheColumn, TheColumn.attr('id').match(/[0-9]+/)[0]);
+	});
+
 	// Column settings
 	$('.elgg-column-edit-button').die().live('click', function() {
 		elgg.deck_river.ColumnSettings($(this).parents('.column-river'));
@@ -220,10 +225,6 @@ elgg.deck_river.init = function() {
 		if (NbrColumn == deck_river_max_nbr_column) {
 			elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 		} else {
-			/*var NumColumn = [];
-			$('.column-river').each(function(){
-				NumColumn.push($(this).attr('id').split('-')[1]);
-			});*/
 			elgg.deck_river.ColumnSettings();
 		}
 	});
@@ -266,13 +267,15 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 	} else {
 		$('#column-settings .elgg-body').html($('<div>', {'class': 'elgg-ajax-loader'}));
 	}
-	var columnSettings = $('#column-settings');
 
-	elgg.post('ajax/view/deck_river/ajax/column_settings', {
+	var columnSettings = $('#column-settings'),
+		columnID = TheColumn ? TheColumn.attr('id') : 'new';
+
+	elgg.post('ajax/view/deck_river/ajax_view/column_settings', {
 		dataType: "html",
 		data: {
-			tab: $('.deck-river-lists').attr('id'),
-			column: TheColumn ? TheColumn.attr('id') : 'new',
+			tab: $('#deck-river-lists').data('tab'),
+			column: columnID,
 		},
 		success: function(response) {
 			var cs = $('#column-settings');
@@ -289,13 +292,14 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				cs.find('.tab.'+net+', input.elgg-button-submit.'+net).removeClass('hidden');
 				cs.find('.column-type').trigger('change');
 			});
-			if (cs.attr('data-network')) cs.find('.elgg-tabs.networks a.'+cs.attr('data-network')).click(); // used when authorize social network callback
+			if (cs.data('network')) cs.find('.elgg-tabs.networks a.'+cs.data('network')).click(); // used when authorize social network callback
 
 			// dropdown
 			cs.find('.' + cs.find('.tab:visible .column-type').val()+'-options').show();
 			$('.column-type').change(function() {
-				$(this).parents('.box-settings').find('li').not(':first-child').hide();
-				$(this).parents('.box-settings').find('.'+$(this).val()+'-options').show();
+				var bs = $(this).parents('.box-settings');
+				bs.find('li').not(':first-child').hide();
+				bs.find('.'+$(this).val()+'-options').show();
 			});
 			$('select[name="twitter-account"]').change(function() {
 				$(this).parents('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
@@ -307,48 +311,47 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				if ( $(this).val() != 'All' ) cs.find('.filter .elgg-input-checkbox[value="All"]').removeAttr('checked');
 			});
 
-			$('.deck-river-form-column-settings').submit(function() { return false; });
 			$(".elgg-foot .elgg-button").click(function(e) {
-				if ($(this).attr('name') == 'delete' && !confirm(elgg.echo('deck-river:delete:column:confirm'))) return false;
+				var submitType = $(this).attr('name');
+
+				if (submitType == 'delete' && !confirm(elgg.echo('deck-river:delete:column:confirm'))) return false;
+
 				elgg.action('deck_river/column/settings', {
-					data: $('.deck-river-form-column-settings').serialize() + "&submit=" + $(this).attr('name'),
+					data: $('.deck-river-form-column-settings').serialize() + "&submit=" + submitType,
 					dataType: 'json',
 					success: function(json) {
-						response = json.output;
-						var columnID = $('#'+response.column);
-						if (response.action == 'delete') {
-							columnID.find('*').css('background-color', '#FF7777');
-							columnID.fadeOut(400, function() {
+						var response = json.output;
+
+						if (columnID == 'new') {
+							$('.deck-river-lists-container').append(
+								$('<li>', {'class': 'column-river', id: response.column}).append(
+									$('<ul>', {'class': 'column-header'}).after(
+										$('<ul>', {'class': 'elgg-river elgg-list'})
+							)));
+							elgg.deck_river.SetColumnsHeight();
+							elgg.deck_river.SetColumnsWidth();
+							$('#deck-river-lists').animate({ scrollLeft: $('#deck-river-lists').width()});
+						}
+
+						var TheColumn = $('#'+response.column); // redeclare because maybe it was just created.
+
+						if (submitType == 'delete' && response.action == 'delete') {
+							TheColumn.find('*').css('background-color', '#FF7777');
+							TheColumn.fadeOut(400, function() {
 								$(this).animate({'width':0},'', function() {
 									$(this).remove();
 									elgg.deck_river.SetColumnsWidth();
 								});
 							});
-						} else {
-							if (response.action == 'new') {
-								$('.deck-river-lists-container').append(
-									$('<li>', {'class': 'column-river', id: response.column}).append(
-										$('<ul>', {'class': 'column-header'}).after(
-											$('<ul>', {'class': 'elgg-river elgg-list'})
-								)));
-								columnID = $('#'+response.column); // redeclare because it was just created.
-								$('li.column-river:first-child .column-header').clone().appendTo(columnID.find('.column-header'))
-								elgg.deck_river.SetColumnsHeight();
-								elgg.deck_river.SetColumnsWidth();
-								columnID.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
-							} else if (response.action == 'change') {
-								columnID.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
-							}
-
-							columnID.attr('data-direct', response.direct);
-							columnID.find('.column-header h3').html(response.column_title);
-							columnID.find('.column-header h6').html(response.column_subtitle);
-
-							elgg.deck_river.LoadColumn(columnID);
-							if (response.action == 'new') $('.deck-river-lists').animate({ scrollLeft: $('.deck-river-lists').width()});
+							cs.remove();
+							return false;
 						}
+
+						TheColumn.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
+						TheColumn.find('.column-header').replaceWith(response.header);
+						elgg.deck_river.LoadRiver(TheColumn);
+
 						cs.remove();
-						return false;
 					},
 					error: function() {
 						return false;
@@ -414,7 +417,7 @@ elgg.deck_river.twitter_authorize = function(token) {
 		// reload column settings popup if it's open
 		if (p.$('#column-settings').length) {
 			var c = p.$('#'+p.$('#column-settings input[name="column"]').val());
-			p.$('#column-settings').attr('data-network', 'twitter');
+			p.$('#column-settings').data('network', 'twitter');
 			if (c.length == 1) {
 				c.find('.elgg-column-edit-button').click();
 			} else {
@@ -453,7 +456,7 @@ elgg.deck_river.tabRename = function(event) {
 		data: $('.elgg-form-deck-river-tab-rename').serialize(),
 		success: function(json) {
 			if (json.status != -1) {
-				$('.deck-river-lists').attr('id', json.output.tab_name);
+				$('#deck-river-lists').data('tab', json.output.tab_name);
 				$('.elgg-menu-item-'+json.output.old_tab_name+' a').text(json.output.tab_name.charAt(0).toUpperCase() + json.output.tab_name.slice(1));
 				$('.elgg-menu-item-'+json.output.old_tab_name).removeClass('elgg-menu-item-'+json.output.old_tab_name).addClass('elgg-menu-item-'+json.output.tab_name);
 			}
@@ -475,7 +478,7 @@ elgg.deck_river.MoveColumn = function(event, ui) {
 
 	elgg.action('deck_river/column/move', {
 		data: {
-			tab: ui.item.parents('.deck-river-lists').attr('id'),
+			tab: ui.item.parents('#deck-river-lists').data('tab'),
 			column: ui.item.attr('id'),
 			position: ui.item.index()
 		}
@@ -503,9 +506,9 @@ elgg.deck_river.SetColumnsHeight = function() {
 		}
 		return $._scrollbarWidth;
 	}
-	var offset = $('.deck-river-lists').offset();
+	var offset = $('#deck-river-lists').offset();
 	$('.elgg-river').height($(window).height() - offset.top - $('.column-header').height() - scrollbarWidth());
-	$('.deck-river-lists').height($(window).height() - offset.top);
+	$('#deck-river-lists').height($(window).height() - offset.top);
 };
 
 
@@ -513,7 +516,7 @@ elgg.deck_river.SetColumnsHeight = function() {
  * Resize columns width
  */
 elgg.deck_river.SetColumnsWidth = function() {
-	var WindowWidth = $('.deck-river-lists').width();
+	var WindowWidth = $('#deck-river-lists').width();
 	var CountLists = $('.column-river').length;
 	var ListWidth = 0; var i = 0;
 	while ( ListWidth < deck_river_min_width_column ) {

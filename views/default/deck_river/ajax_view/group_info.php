@@ -19,11 +19,11 @@ if (!$group) {
 <ul class="elgg-body">
 	<li id="<?php echo $group_id; ?>-info-profile">
 		<?php echo elgg_view_entity_icon($group, 'medium', array('img_class' => 'float')); ?>
-		
+
 			<div class="elgg-body plm">
 				<h1 class="mbm"><?php echo $group->name; ?></h1>
 				<div><?php echo deck_river_wire_filter($group->briefdescription); ?></div>
-				
+
 				<?php
 					$profile_actions = '<ul class="elgg-menu profile-action-menu mvm float">';
 					// group members
@@ -48,9 +48,9 @@ if (!$group) {
 								'</a></li>';
 						}
 					}
-				
+
 				echo $profile_actions . '</ul>';
-				
+
 				?>
 			</div>
 
@@ -58,10 +58,12 @@ if (!$group) {
 			<?php //echo elgg_view('profile/details'); ?>
 		</div>
 	</li>
-	<li id="<?php echo $group_id; ?>-info-activity" class="hidden" data-load-type="LoadEntity">
+	<li id="<?php echo $group_id; ?>-info-activity" class="column-river hidden">
+		<ul class="column-header hidden" data-network="elgg" data-view_type="entity_river"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
-		<li id="<?php echo $group_id; ?>-info-mentions" class="hidden" data-load-type="LoadMentions">
+		<li id="<?php echo $group_id; ?>-info-mentions" class="column-river hidden">
+		<ul class="column-header hidden" data-network="elgg" data-view_type="entity_mention"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

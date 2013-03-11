@@ -21,16 +21,17 @@ function deck_river_init() {
 	elgg_extend_view('js/elgg', 'deck_river/js/popups');
 	elgg_extend_view('js/elgg', 'deck_river/js/loaders');
 	elgg_extend_view('js/elgg', 'deck_river/js/shortener_url');
+	elgg_extend_view('js/elgg', 'deck_river/js/river_templates');
 
-	elgg_register_ajax_view('deck_river/ajax/column_river');
-	elgg_register_ajax_view('deck_river/ajax/column_settings');
-	elgg_register_ajax_view('deck_river/ajax/add_social_network');
-	elgg_register_ajax_view('deck_river/ajax/entity_river');
-	elgg_register_ajax_view('deck_river/ajax/entity_mention');
-	elgg_register_ajax_view('deck_river/ajax/user_info');
-	elgg_register_ajax_view('deck_river/ajax/group_info');
-	elgg_register_ajax_view('deck_river/ajax/url_shortener');
-	elgg_register_ajax_view('deck_river/ajax/load_discussion');
+	elgg_register_ajax_view('deck_river/ajax_json/column_river');
+	elgg_register_ajax_view('deck_river/ajax_json/entity_river');
+	elgg_register_ajax_view('deck_river/ajax_json/entity_mention');
+	elgg_register_ajax_view('deck_river/ajax_json/url_shortener');
+	elgg_register_ajax_view('deck_river/ajax_json/load_discussion');
+	elgg_register_ajax_view('deck_river/ajax_view/column_settings');
+	elgg_register_ajax_view('deck_river/ajax_view/add_social_network');
+	elgg_register_ajax_view('deck_river/ajax_view/user_info');
+	elgg_register_ajax_view('deck_river/ajax_view/group_info');
 
 	// register page handlers
 	elgg_register_page_handler('activity', 'deck_river_page_handler');

@@ -7,6 +7,13 @@ body.fixed-deck {
 .elgg-main {
 	padding: 10px 0 0;
 }
+.response-loader {
+	background: url(<?php echo elgg_get_site_url() . 'mod/elgg-deck_river/graphics/ajax-loader.gif'; ?>) no-repeat scroll 0 0 transparent;
+	height: 16px;
+	left: -20px;
+	position: relative;
+	width: 16px;
+}
 
 /* the wire-search textarea */
 #thewire-header {
@@ -550,12 +557,12 @@ body.fixed-deck {
 	background-position: 0 -189px;
 }
 
-.deck-river-lists {
+#deck-river-lists {
 	overflow-x: scroll;
 	overflow-y: hidden;
 	width: 100%;
 }
-.deck-river-lists .elgg-river {
+#deck-river-lists .elgg-river {
 	height: 100%;
 	overflow-y: scroll;
 	overflow-x: hidden;
@@ -563,10 +570,10 @@ body.fixed-deck {
 .elgg-list {
 	margin: 0;
 }
-.deck-river-lists .elgg-list > li {
+#deck-river-lists .elgg-list > li {
 	padding: 5px;
 }
-.column-river {
+#deck-river-lists .column-river {
 	float: left;
 	border-left: 1px solid #CCC;
 	border-right: 1px solid #CCC;
@@ -601,14 +608,15 @@ body.fixed-deck {
 	width: 18px;
 	height: 18px;
 }
-.column-river .column-header > li a.elgg-column-refresh-button {
+.column-river .elgg-column-refresh-button {
 	right: 32px;
 }
-.column-river .column-header > li a.elgg-column-refresh-button .elgg-icon {
+.column-river.loadingRefresh .elgg-icon-refresh {
 	height: 18px;
 	width: 18px;
+	background: url(<?php echo elgg_get_site_url() . 'mod/elgg-deck_river/graphics/elgg_refresh.gif'; ?>) no-repeat scroll -1px -1px transparent'
 }
-.column-river .column-header > li a.elgg-column-edit-button {
+.column-river .elgg-column-edit-button {
 	right: 8px;
 }
 
@@ -629,9 +637,20 @@ body.fixed-deck {
 	background-color: #EEE;
 	cursor: pointer;
 	text-align: center;
+	position: relative;
 }
 .moreItem:hover {
 	color: #4690D6;
+}
+.moreItem .response-loader {
+	left: 50%;
+	position: absolute;
+}
+.loadingMore .moreItem {
+	color: transparent;
+}
+.loadingMore .moreItem .response-loader {
+	display: block;
 }
 .elgg-menu-river {
 	opacity: 0;
@@ -731,13 +750,6 @@ body.fixed-deck {
 }
 .elgg-river-responses .thread .elgg-river-item.elgg-image-block .elgg-body {
 	margin-left: 30px;
-}
-.response-loader {
-	background: url(<?php echo elgg_get_site_url() . 'mod/elgg-deck_river/graphics/ajax-loader.gif'; ?>) no-repeat scroll 0 0 transparent;
-	height: 16px;
-	left: -20px;
-	position: relative;
-	width: 16px;
 }
 .elgg-list-item.responseAt {
 	background-color: #FFFFCC !important;

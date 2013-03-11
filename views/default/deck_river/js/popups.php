@@ -19,7 +19,7 @@ elgg.deck_river.popups = function() {
 	// function for user and group popups
 	var fillPopup = function(popupElem, response) {
 		popupElem.children('.elgg-body').html(response);
-		popupElem.find('.elgg-tabs > li > a').click(function() {console.log($(this));
+		popupElem.find('.elgg-tabs > li > a').click(function() {
 			var tab = $(this).attr('href');
 			if (popupElem.find(tab).hasClass('hidden')) {
 				popupElem.find('.elgg-tabs > li').removeClass('elgg-state-selected');
@@ -27,7 +27,7 @@ elgg.deck_river.popups = function() {
 				popupElem.find('.elgg-body > li').addClass('hidden').filter(tab).removeClass('hidden');
 			}
 			if ($(tab).find('.elgg-ajax-loader').length) {
-				elgg.deck_river[$(tab).attr('data-load-type')](tab.match(/[0-9]+/)[0], $(tab));
+				elgg.deck_river.LoadRiver($(tab), tab.match(/[0-9]+/)[0]);
 			}
 		});
 	};
@@ -36,7 +36,7 @@ elgg.deck_river.popups = function() {
 	$('.user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
-		elgg.post('ajax/view/deck_river/ajax/user_info', {
+		elgg.post('ajax/view/deck_river/ajax_view/user_info', {
 			dataType: "html",
 			data: {
 				user: $(this).attr('title'),
@@ -54,7 +54,7 @@ elgg.deck_river.popups = function() {
 	$('.group-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:group-info-header'));
 
-		elgg.post('ajax/view/deck_river/ajax/group_info', {
+		elgg.post('ajax/view/deck_river/ajax_view/group_info', {
 			dataType: "html",
 			data: {
 				group: $(this).attr('title'),
@@ -74,22 +74,19 @@ elgg.deck_river.popups = function() {
 			'hashtag-info-popup',
 			elgg.echo('deck_river:hashtag-info-header', [$(this).attr('title')]),
 			function() {
-				$('#hashtag-info-popup').find('.elgg-ajax-loader').wrap($('<ul>', {'class': 'elgg-river elgg-list'}));
+				$('#hashtag-info-popup').find('.elgg-ajax-loader').wrap($('<ul>', {'class': 'elgg-river elgg-list'})).before($('<ul>', {'class': 'column-header hidden', 'data-network': 'elgg', 'data-view_type': 'entity_river'}));
 			}
 		);
 
-		elgg.deck_river.LoadEntity($(this).attr('title'), $('#hashtag-info-popup'));
+		elgg.deck_river.LoadRiver($('#hashtag-info-popup'), $(this).attr('title'));
 	});
 
 	// Twitter user info popup
 	$('.twitter-user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
-		$.ajax({
-			url: 'https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
-			dataType: "jsonP",
-			success: function(response) {
-				console.log(response);
+		$.get('https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
+			function(response) {
 				var tabs = ['profile', 'activity', 'mentions', 'favoris'];
 				var output = $('<ul>', {'class': 'elgg-tabs elgg-htabs'}).html(function() {
 								var tabsHtml = '';
@@ -101,7 +98,7 @@ elgg.deck_river.popups = function() {
 							).after($('<ul>', {'class': 'elgg-body'}).html(function() {
 								var lisHtml = '';
 								$.each(tabs, function(i, e) {
-									lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="hidden" data-load-type="LoadTwitter_'+e + '"><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
+									lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="column-river hidden" data-load_type="LoadTwitter_'+e + '"><ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1.1/statuses/user_timeline.json"></ul><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
 								});
 								return lisHtml;
 							}));
@@ -128,10 +125,9 @@ elgg.deck_river.popups = function() {
 					))
 				);
 				fillPopup($('#user-info-popup'), output);
-			},
-			error: function() {
+			},'jsonP'
+		).fail(function() {
 				$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
-			}
 		});
 	});
 

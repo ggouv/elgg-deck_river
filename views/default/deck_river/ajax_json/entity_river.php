@@ -15,13 +15,13 @@ if (strpos($entity_guid, '#') === 0) {
 } else {
 	$entity_guid = (int)$entity_guid; // force to guid
 	$user = elgg_get_logged_in_user_guid();
-	
+
 	if (!$entity_guid || !$user) {
 		return;
 	}
-	
+
 	$entity = get_entity($entity_guid);
-	
+
 	// group, user or object ?
 	if ($entity->type == 'group') {
 		$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
@@ -29,7 +29,7 @@ if (strpos($entity_guid, '#') === 0) {
 	} else if ($entity->type == 'user') {
 		$options['subject_guid'] = $entity_guid;
 	} else if ($entity->type == 'object') {
-		
+
 	} else {
 		return;
 	}
@@ -88,14 +88,14 @@ if (is_array($items)) {
 $temp_subjects = array();
 foreach ($jsonexport['activity'] as $item) {
 	if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
-	
+
 	$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
-	
+
 	$menus = elgg_trigger_plugin_hook('register', "menu:river", array('item' => $item)); // add menus
 	foreach ($menus as $menu) {
 		$item->menu[] = $menu->getData('name');
 	}
-	
+
 	unset($item->view); // delete view
 }
 
