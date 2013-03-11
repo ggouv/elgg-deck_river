@@ -24,8 +24,12 @@ $buttons .= elgg_view('output/url', $params);
 $title = elgg_echo($column_settings['title']);
 $subtitle = elgg_echo($column_settings['subtitle']);
 
+if (isset($column_settings['types_filter']) || isset($column_settings['subtypes_filter'])) {
+	$subtitle .= ' | ' . elgg_echo('river:filtred');
+}
+
 echo <<<HTML
-<ul class="column-header" data-network="{$column_settings['network']}" data-direct="{$column_settings['direct']}" data-view_type="column_river">
+<ul class="column-header gwfb" data-network="{$column_settings['network']}" data-direct="{$column_settings['direct']}" data-view_type="column_river">
 	<li>
 		<h3 class="title">$title</h3>
 		<h6 class="subtitle">$subtitle</h6>

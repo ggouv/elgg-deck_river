@@ -33,25 +33,25 @@ if ($submit == 'delete') {
 
 	switch ($type) {
 		case 'all':
-			$user_river_options[$tab][$column]['title'] = elgg_echo('river:all');
+			$user_river_options[$tab][$column]['title'] = 'river:all';
 			$user_river_options[$tab][$column]['subtitle'] = '';
 			break;
 		case 'friends':
-			$user_river_options[$tab][$column]['title'] = elgg_echo('river:timeline');
-			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:timeline:definition');
+			$user_river_options[$tab][$column]['title'] = 'river:timeline';
+			$user_river_options[$tab][$column]['subtitle'] = 'river:timeline:definition';
 			break;
 		case 'mine':
-			$user_river_options[$tab][$column]['title'] = elgg_echo('river:mine');
+			$user_river_options[$tab][$column]['title'] = 'river:mine';
 			$user_river_options[$tab][$column]['subtitle'] = get_entity($owner)->name;
 			break;
 		case 'mention':
 			$user_river_options[$tab][$column]['title'] = '@' . get_entity($owner)->name;
-			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:mentions');
+			$user_river_options[$tab][$column]['subtitle'] = 'river:mentions';
 			break;
 		case 'group':
 			$user_river_options[$tab][$column]['group'] = $group;
 			$user_river_options[$tab][$column]['title'] = '!' . get_entity($group)->name;
-			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:group');
+			$user_river_options[$tab][$column]['subtitle'] = 'river:group';
 			break;
 		case 'search':
 			$user_river_options[$tab][$column]['search'] = explode(' ', $search);
@@ -95,10 +95,6 @@ if ($submit == 'delete') {
 		} else {
 			$user_river_options[$tab][$column]['types_filter'] = $types_filter;
 			$user_river_options[$tab][$column]['subtypes_filter'] = $subtypes_filter;
-		}
-
-		if (isset($user_river_options[$tab][$column]['types_filter']) || isset($user_river_options[$tab][$column]['subtypes_filter'])) {
-			$user_river_options[$tab][$column]['subtitle'] .= ' | ' . elgg_echo('river:filtred');
 		}
 
 	}

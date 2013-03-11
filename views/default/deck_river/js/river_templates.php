@@ -22,7 +22,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 	var responseToWire = function(wireGuidValue, responseToUser, WireID) {
 		$('.elgg-list-item.thewire').removeClass('responseAt');
 		var wireForm = wirearea.parents('fieldset'),
-			message = $('.item-river-'+WireID).addClass('responseAt').find('.elgg-river-message').first().text();;
+			message = $('.item-river-'+WireID).addClass('responseAt').find('.elgg-river-message').first().text();
 
 		if (wireForm.find('input[name=parent_guid]').length) {
 			wireForm.find('input[name=parent_guid]').val(wireGuidValue);
@@ -90,7 +90,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 		}
 
 		output = output.after(
-			$('<li>', {'class': 'elgg-list-item item-river-'+ value.id +' '+ value.subtype +' '+ value.action_type}).mouseleave(function() {
+			$('<li>', {'class': 'elgg-list-item item-river-'+ value.id +' '+ value.subtype +' '+ value.action_type}).data('timeID', value.posted).mouseleave(function() {
 				$(this).find('.elgg-submenu-river').removeClass('hover');
 			}).append(
 				$('<div>', {'class': 'elgg-image-block elgg-river-item clearfix'}).append(
@@ -137,20 +137,17 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
  * @param {array}	json response
  */
 elgg.deck_river.twitterDisplayItems = function(response, thread) {
+	//console.log(response.results);
 	var thread = thread || false,
 		output = $(),
 		wirearea = $('#thewire-textarea');
 
-	if (response.results) { // json returned by Twitter is different between twitter search api and twitter main api
-		response = response.results;
-		$.each(response, function(key, value) {
-			response[key].user = {screen_name: value.from_user};
-			response[key].user.profile_image_url = response[key].profile_image_url;
-		});
-	}
-
-	$.each(response, function(key, value) {
+	$.each(response.results, function(key, value) {
 		var menuOutput = subMenuOutput = riverResponses = $();
+
+		if (!value.user) { // json returned by Twitter is different between twitter search api and twitter main api
+			value.user = {screen_name: value.from_user, profile_image_url_https: value.profile_image_url_https};
+		}
 //console.log(value);
 		// make menu and submenu
 		if (!thread) {
@@ -203,14 +200,14 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 
 		var postedTimestamp = value.created_at.TwitterFormatDate();
 		output = output.after(
-			$('<li>', {'class': 'elgg-list-item item-twitter-'+ value.id}).mouseleave(function() {
+			$('<li>', {'class': 'elgg-list-item item-twitter-'+ value.id_str}).data('timeID', value.id_str).mouseleave(function() {
 				$(this).find('.elgg-submenu-river').removeClass('hover');
 			}).append(
 				$('<div>', {'class': 'elgg-image-block elgg-river-item clearfix'}).append(
 					$('<div>', {'class': 'elgg-image'}).append(
 						$('<div>', {'class': 'elgg-avatar elgg-avatar-small'}).append(
 							$('<div>', {'class': 'twitter-user-info-popup', title: value.user.screen_name}).append(
-								$('<img>', {title: value.user.screen_name, alt: value.user.screen_name, src: value.user.profile_image_url})
+								$('<img>', {title: value.user.screen_name, alt: value.user.screen_name, src: value.user.profile_image_url_https})
 				)))).append(
 					$('<div>', {'class': 'elgg-body'}).append(function() {
 						if (menuOutput.length) return $('<ul>', {'class': 'elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default'}).append(

@@ -74,10 +74,13 @@ elgg.deck_river.popups = function() {
 			'hashtag-info-popup',
 			elgg.echo('deck_river:hashtag-info-header', [$(this).attr('title')]),
 			function() {
-				$('#hashtag-info-popup').find('.elgg-ajax-loader').wrap($('<ul>', {'class': 'elgg-river elgg-list'})).before($('<ul>', {'class': 'column-header hidden', 'data-network': 'elgg', 'data-view_type': 'entity_river'}));
+				$('#hashtag-info-popup').find('.elgg-ajax-loader').wrap(
+					$('<ul>', {'class': 'elgg-river elgg-list'})
+				).before(
+					$('<ul>', {'class': 'column-header hidden', 'data-network': 'elgg', 'data-view_type': 'entity_river'})
+				);
 			}
 		);
-
 		elgg.deck_river.LoadRiver($('#hashtag-info-popup'), $(this).attr('title'));
 	});
 
@@ -98,7 +101,7 @@ elgg.deck_river.popups = function() {
 							).after($('<ul>', {'class': 'elgg-body'}).html(function() {
 								var lisHtml = '';
 								$.each(tabs, function(i, e) {
-									lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="column-river hidden" data-load_type="LoadTwitter_'+e + '"><ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1.1/statuses/user_timeline.json"></ul><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
+									lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="column-river hidden" data-load_type="LoadTwitter_'+e + '"><ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1/statuses/user_timeline.json"></ul><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
 								});
 								return lisHtml;
 							}));

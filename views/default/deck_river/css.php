@@ -570,9 +570,6 @@ body.fixed-deck {
 .elgg-list {
 	margin: 0;
 }
-#deck-river-lists .elgg-list > li {
-	padding: 5px;
-}
 #deck-river-lists .column-river {
 	float: left;
 	border-left: 1px solid #CCC;

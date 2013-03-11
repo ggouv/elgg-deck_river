@@ -115,7 +115,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				tab: $('#deck-river-lists').data('tab'),
 				column: TheColumn.attr('id'),
 				time_method: 'lower',
-				time_posted: TheColumn.find('.elgg-river .elgg-list-item:first .elgg-friendlytime span').first().text() || 0
+				time_posted: TheColumn.find('.elgg-list-item').first().data('timeID') || 0
 			},
 			success: function(response) {
 				TheColumn.removeClass('loadingRefresh').find('.elgg-list-item').removeClass('newRiverItem');
@@ -144,7 +144,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
  */
 elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 	var TheColumnHeader = TheColumn.addClass('loadingMore').find('.column-header'),
-		LastItem = TheColumn.find('.elgg-river .elgg-list-item:last'),
+		LastItem = TheColumn.find('.elgg-list-item').last(),
 		networkDisplay = TheColumnHeader.data('network')+ 'DisplayItems',
 		displayItems = function(response) {
 			TheColumn.removeClass('loadingMore').find('.elgg-river').append(elgg.deck_river[networkDisplay](response))
@@ -175,7 +175,7 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				tab: $('#deck-river-lists').data('tab'),
 				column: TheColumn.attr('id'),
 				time_method: 'upper',
-				time_posted: LastItem.find('.elgg-friendlytime span').text(),
+				time_posted: LastItem.data('timeID'),
 				guid: TheEntity ? TheEntity : null,
 			},
 			success: function(response) {

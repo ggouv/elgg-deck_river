@@ -524,7 +524,7 @@ elgg.deck_river.SetColumnsWidth = function() {
 		i++;
 	}
 	$('.elgg-river, .column-header, .column-placeholder').width(ListWidth - 2);
-	$('.deck-river-lists-container').width(ListWidth * CountLists);
+	$('.deck-river-lists-container').removeClass('hidden').width(ListWidth * CountLists);
 };
 
 

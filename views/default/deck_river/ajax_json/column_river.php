@@ -20,13 +20,33 @@ if ($column_settings['network'] == 'twitter') {
 	$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
 	$account = get_entity($column_settings['account']);
 
-	/*elgg_load_library('deck_river:twitter_async');
+	elgg_load_library('deck_river:twitter_async');
 	$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $account->oauth_token, $account->oauth_token_secret);
-	$result = $twitterObj->get_statusesHome_timeline();
-	global $fb; $fb->info($result->__get('response'));*/
+
+	try {
+		if ($time_method == 'lower') {
+			$result = call_user_func(array($twitterObj, $column_settings['type']), array(
+				'count' => 30,
+				'since_id' => $time_posted+1 // +1 for not repeat first river item
+			))->__get('response');
+		} elseif ($time_method == 'upper') {
+			$result = call_user_func(array($twitterObj, $column_settings['type']), array(
+				'count' => 30,
+				'max_id' => $time_posted-1 // -1 for not repeat last river item
+			))->__get('response');
+		} else {
+			$result = call_user_func(array($twitterObj, $column_settings['type']), array('count' => 30))->__get('response');
+		}
+	} catch(Exception $e) {
+		$result = json_decode($e->getMessage())->errors[0];
+	}
+
+	$jsonexport = array();
+	$jsonexport['column_type'] = $column_settings['type'];
+	$jsonexport['results'] = $result;
+	echo json_encode($jsonexport);
+
 } else {
-
-
 
 // Set column user settings
 switch ($column_settings['type']) {
@@ -94,7 +114,7 @@ if ($options['types_filter']) {
 
 $defaults = array(
 	'offset' => (int) get_input('offset', 0),
-	'limit' => (int) get_input('limit', 20),
+	'limit' => (int) get_input('limit', 30),
 	'pagination' => FALSE,
 	'count' => FALSE,
 );
@@ -106,11 +126,11 @@ $jsonexport['activity'] = array();
 
 if (is_array($items)) {
 	foreach ($items as $item) {
-		if (elgg_view_exists($item->view, 'json')) {
+		//if (elgg_view_exists($item->view, 'json')) {
 			elgg_view($item->view, array('item' => $item), '', '', 'json');
-		} else {
-			elgg_view('river/item', array('item' => $item), '', '', 'json');
-		}
+		//} else {
+		//	elgg_view('river/item', array('item' => $item), '', '', 'json');
+		//}
 	}
 }
 
