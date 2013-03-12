@@ -9,19 +9,107 @@
  *
  */
 
+
+/**
+ * Return html river
+ */
+elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
+	var network = TheColumnHeader.data('network'),
+		thread = thread || false;
+
+	elgg.deck_river.processResponse(response, TheColumnHeader);
+
+	if (response.activity instanceof String) {
+		return response.activity;
+	} else if (response.activity || response.results) {
+		return elgg.deck_river[network + 'DisplayItems'](response, thread);
+	}
+};
+
+
+
+/**
+ * Put users and groups in array
+ */
+elgg.deck_river.processResponse = function(response, TheColumnHeader) {
+	// Put users and groups in global var usersAndGroups
+
+	// show messages
+	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
+	if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
+};
+
+
+
+/**
+ * Displays system messages via javascript rather than php.
+ *
+ * @param {String} msgs The message we want to display
+ * @param {Element} TheColumn The column we want to display
+ * @param {Number} delay The amount of time to display the message in milliseconds. Defaults to 6 seconds.
+ * @param {String} type The type of message (typically 'error' or 'message')
+ * @private
+ */
+elgg.deck_river.column_messages = function(msgs, TheColumnHeader, delay, type) {
+	if (elgg.isUndefined(msgs)) return;
+
+	var classes = ['column-message'],
+		messages_html = [],
+		appendMessage = function(msg) {
+			messages_html.push('<li class="' + classes.join(' ') + '"><p>' + msg + '</p></li>');
+		};
+
+	//validate delay.  Must be a positive integer.
+	delay = parseInt(delay || 6000, 10);
+	if (isNaN(delay) || delay <= 0) {
+		delay = 6000;
+	}
+
+	//Handle non-arrays
+	if (!elgg.isArray(msgs)) msgs = [msgs];
+
+	if (type === 'error') {
+		classes.push('elgg-state-error');
+	} else {
+		classes.push('elgg-state-success');
+	}
+
+	msgs.forEach(appendMessage);
+	TheColumnHeader.parent().find('.column-messages').append($(messages_html.join('')))
+		.effect('slide',{direction: 'up'}, 300).delay(delay).toggle('slide',{direction: 'up'}, 300, function() {$(this).html('')});
+};
+
+/**
+ * Wrapper function for column_messages. Specifies "messages" as the type of message
+ * @param {String} msgs  The message to display
+ * @param {Number} delay How long to display the message (milliseconds)
+ */
+elgg.deck_river.column_message = function(msgs, TheColumn, delay) {
+	elgg.deck_river.column_messages(msgs, TheColumn, delay, "message");
+};
+
+/**
+ * Wrapper function for column_messages.  Specifies "errors" as the type of message
+ * @param {String} errors The error message to display
+ * @param {Number} delay  How long to dispaly the error message (milliseconds)
+ */
+elgg.deck_river.column_error = function(errors, TheColumn, delay) {
+	elgg.deck_river.column_messages(errors, TheColumn, delay, "error");
+};
+
+
 /**
  * Javascript template for river element @todo waiting for Elgg core developers to see wich library they will use (ember.js, ...) in elgg 1.9 or 2 and replace it with a js MVC system.
  *
  * @param {array}	json response
  */
 elgg.deck_river.elggDisplayItems = function(response, thread) {
-	var thread = thread || false,
-		output = $(),
+	var output = $(),
 		wirearea = $('#thewire-textarea');
 
 	var responseToWire = function(wireGuidValue, responseToUser, WireID) {
 		$('.elgg-list-item.thewire').removeClass('responseAt');
-		var wireForm = wirearea.parents('fieldset'),
+		var wireForm = wirearea.closest('fieldset'),
 			message = $('.item-river-'+WireID).addClass('responseAt').find('.elgg-river-message').first().text();
 
 		if (wireForm.find('input[name=parent_guid]').length) {
@@ -54,7 +142,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 				$('<li>').append(
 					$('<span>', {'class': 'elgg-icon elgg-icon-retweet gwf tooltip s', title: elgg.echo('retweet')}).html('^').click(function() {
 						//wirearea.val('RT @' + user.username + ' ' + value.message.replace(/<a.*?>|<\/a>/ig, '')).focus().keydown();
-						wirearea.val('RT @' + user.username + ' ' + $(this).parents('.elgg-river').find('.item-river-'+value.id+' .elgg-river-message').text().replace(/^rt /i, '')).focus().keydown();
+						wirearea.val('RT @' + user.username + ' ' + $(this).closest('.elgg-river').find('.item-river-'+value.id+' .elgg-river-message').text().replace(/^rt /i, '')).focus().keydown();
 					})
 				)
 			);
@@ -138,8 +226,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
  */
 elgg.deck_river.twitterDisplayItems = function(response, thread) {
 	//console.log(response.results);
-	var thread = thread || false,
-		output = $(),
+	var output = $(),
 		wirearea = $('#thewire-textarea');
 
 	$.each(response.results, function(key, value) {
@@ -155,7 +242,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 				$('<li>').append(
 					$('<span>', {'class': 'elgg-icon elgg-icon-response gwf tooltip s', title: elgg.echo('reply')}).html('&lt;').click(function() {
 						wirearea.val('@' + value.user.screen_name).focus().keydown();
-						//wirearea.parents('fieldset').append('<input type="hidden" value="'+ value.object_guid +'" name="parent_guid">');
+						//wirearea.closest('fieldset').append('<input type="hidden" value="'+ value.object_guid +'" name="parent_guid">');
 					})
 				)
 			);
@@ -163,7 +250,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 				$('<li>').append(
 					$('<span>', {'class': 'elgg-icon elgg-icon-retweet gwf tooltip s', title: elgg.echo('retweet')}).html('^').click(function() {
 						//wirearea.val('RT @' + user.username + ' ' + value.message.replace(/<a.*?>|<\/a>/ig, '')).focus().keydown();
-						wirearea.val('RT @' + value.user.screen_name + ' ' + $(this).parents('.elgg-list-item').find('.elgg-river-message').text().replace(/^rt /i, '')).focus().keydown();
+						wirearea.val('RT @' + value.user.screen_name + ' ' + $(this).closest('.elgg-list-item').find('.elgg-river-message').text().replace(/^rt /i, '')).focus().keydown();
 					})
 				)
 			);

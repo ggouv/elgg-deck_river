@@ -110,19 +110,19 @@ if ($submit == 'delete') {
 	switch ($twitter_type) {
 		case 'searchTweets':
 			$user_river_options[$tab][$column]['title'] = $search;
-			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('deck_river:twitter:feed:search');
+			$user_river_options[$tab][$column]['subtitle'] = 'deck_river:twitter:feed:search';
 			$user_river_options[$tab][$column]['search'] = $search;
 			$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1';
 			break;
 		case 'searchTweets-popular':
 			$user_river_options[$tab][$column]['title'] = $search;
-			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('deck_river:twitter:feed:search');
+			$user_river_options[$tab][$column]['subtitle'] = 'deck_river:twitter:feed:search';
 			$user_river_options[$tab][$column]['search'] = $search;
 			$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1&result_type=popular';
 			break;
 
 		case 'get_statusesHome_timeline':
-			$user_river_options[$tab][$column]['title'] = elgg_echo('deck_river:twitter:feed:home');
+			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:home:title';
 			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
 			$user_river_options[$tab][$column]['account'] = $twitter_account;
 			break;

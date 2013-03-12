@@ -22,7 +22,6 @@
 elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
-		networkDisplay = TheColumnHeader.data('network')+ 'DisplayItems',
 		loadMoreItem = $('<li>', {'class': 'moreItem'}).append($('<li>', {'class': 'response-loader hidden'}), elgg.echo('deck_river:more'));
 
 	if (TheColumnHeader.data('direct')) { // this is a direct link. Feed is loaded by user's browser.
@@ -30,7 +29,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			url: TheColumnHeader.data('direct'),
 			dataType: 'jsonP',
 			success: function(response) {
-				TheColumnRiver.html(elgg.deck_river[networkDisplay](response));
+				TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
 				if (response.refresh_url !== undefined) {
 					TheColumnHeader.data('refresh_url', response.refresh_url);
 				} else {
@@ -57,13 +56,11 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 				guid: TheEntity ? TheEntity : null,
 			},
 			success: function(response) {
-				response.TheColumn = TheColumn;
-				$output = elgg.trigger_hook('deck-river', 'column:'+response.column_type, response, 'nohook');
-				if ($output == 'nohook') {
-					TheColumnRiver.html(elgg.deck_river[networkDisplay](response));
-					if ( TheColumn.find('.elgg-list-item').length >= 20 ) {
-						TheColumnRiver.append(loadMoreItem);
-					} else if ( TheColumn.find('.elgg-list-item').length == 0 ) {
+				response.TheColumn = TheColumn.removeClass('loadingRefresh');
+				if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
+					TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
+					if ( TheColumn.find('.elgg-list-item').length >= 30 ) TheColumnRiver.append(loadMoreItem);
+					/*} else if ( TheColumn.find('.elgg-list-item').length == 0 ) {
 						var user = elgg.get_logged_in_user_entity(),
 							c_type = response.column_type;
 
@@ -72,9 +69,8 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 							$('<tr>').append(
 								$('<td>', {'class': 'helper'}).html(elgg.echo('deck_river:helper:'+c_type, [user.location])))
 						));
-					}
+					}*/
 				}
-				TheColumn.removeClass('loadingRefresh');
 			}
 		});
 	}
@@ -93,7 +89,18 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 elgg.deck_river.RefreshColumn = function(TheColumn) {
 	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
-		networkDisplay = TheColumnHeader.data('network')+ 'DisplayItems';
+		displayItems = function(response) {
+			TheColumn.removeClass('loadingRefresh').find('.elgg-list-item').removeClass('newRiverItem');
+			response.TheColumn = TheColumn;
+			if (elgg.trigger_hook('deck-river', 'refresh:column:'+response.column_type, response, true)) {
+				var responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
+
+				responseHTML.filter('.elgg-list-item').addClass('newRiverItem');
+				if (responseHTML.length) TheColumn.find('.elgg-river > table').remove();
+				TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", {}, 2000);
+				elgg.deck_river.displayCount(response, TheColumn);
+			}
+		}
 
 	if (TheColumnHeader.data('direct')) { // this is a direct link. Feed is loaded by user's browser.
 		var url = elgg.parse_url(TheColumnHeader.data('direct'));
@@ -101,11 +108,8 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 			url: url.scheme+'://'+url.host+url.path + TheColumnHeader.data('refresh_url'),
 			dataType: 'jsonP',
 			success: function(response) {
-				var responseHTML = elgg.deck_river[networkDisplay](response);
-				TheColumn.removeClass('loadingRefresh').find('.elgg-list-item').removeClass('newRiverItem');
+				displayItems(response);
 				TheColumnHeader.data('refresh_url', response.refresh_url);
-				responseHTML.filter('.elgg-list-item').addClass('newRiverItem');
-				TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').fadeIn('slow');
 			}
 		});
 	} else {
@@ -117,17 +121,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				time_method: 'lower',
 				time_posted: TheColumn.find('.elgg-list-item').first().data('timeID') || 0
 			},
-			success: function(response) {
-				TheColumn.removeClass('loadingRefresh').find('.elgg-list-item').removeClass('newRiverItem');
-				response.TheColumn = TheColumn;
-				$output = elgg.trigger_hook('deck-river', 'column:'+response.column_type, response, 'nohook');
-				if ($output == 'nohook') {
-					var res = elgg.deck_river[networkDisplay](response);
-					res.filter('.elgg-list-item').addClass('newRiverItem');
-					if (res.length) TheColumn.find('.elgg-river > table').remove();
-					TheColumn.find('.elgg-river').prepend(res).find('.newRiverItem').fadeIn('slow');
-				}
-			}
+			success: function(response) {displayItems(response)},
 		});
 	}
 };
@@ -144,13 +138,15 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
  */
 elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 	var TheColumnHeader = TheColumn.addClass('loadingMore').find('.column-header'),
-		LastItem = TheColumn.find('.elgg-list-item').last(),
-		networkDisplay = TheColumnHeader.data('network')+ 'DisplayItems',
+		LastItem = TheColumn.find('.elgg-list-item').removeClass('newRiverItem').last(),
 		displayItems = function(response) {
-			TheColumn.removeClass('loadingMore').find('.elgg-river').append(elgg.deck_river[networkDisplay](response))
-				.find('.moreItem').appendTo(TheColumn.find('.elgg-river'));
-			//	var pos = LastItem.next().position();
-			//TheColumn.find('.elgg-river').scrollTo('+='+pos.top+'px', 2500, {easing:'easeOutQuart'});
+			var TheColumnRiver = TheColumn.removeClass('loadingMore').find('.elgg-river'),
+				responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
+
+			TheColumnHeader.find('.count').addClass('hidden');
+			TheColumnRiver.append(responseHTML.effect("highlight", {}, 2000))
+				.find('.moreItem').appendTo(TheColumnRiver);
+			TheColumnRiver.scrollTo(TheColumnRiver.scrollTop()+LastItem.next().position().top+'px', 1500, {easing:'easeOutQuart'});
 		};
 
 	if (TheColumnHeader.data('direct')) { // this is a direct link. Feed is loaded by user's browser.
@@ -160,7 +156,6 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 			dataType: 'jsonP',
 			success: function(response) {
 				if (undefined === response.next_page) response.next_page = TheColumnHeader.data('next_page').match('^.*=')[0] + response[response.length-1].id_str.addToLargeInt(-1);
-				console.log(response.next_page, 'nextpage');
 				TheColumnHeader.data('next_page', response.next_page);
 				displayItems(response);
 			},
@@ -178,9 +173,7 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				time_posted: LastItem.data('timeID'),
 				guid: TheEntity ? TheEntity : null,
 			},
-			success: function(response) {
-				displayItems(response);
-			},
+			success: function(response) {displayItems(response)},
 			error: function() {
 				TheColumn.removeClass('loadingMore');
 			}
@@ -199,27 +192,34 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
  * @return void
  */
 elgg.deck_river.LoadDiscussion = function(athread) {
+	var athreadResponses = athread.parent('.elgg-river-responses'),
+		TheColumnHeader = athread.closest('.column-river').find('.column-header'),
+		displayItems = function(response) {
+			var idToggle = athreadResponses
+				.find('.response-loader').addClass('hidden')
+				.closest('.column-river').attr('id') + '-' + athread.closest('.elgg-list-item').attr('class').match(/item-river-\d+/);
+
+			athreadResponses.append($('<div>', {id: idToggle, 'class': 'thread mts float'}).html(
+				elgg.deck_river.displayRiver(response, TheColumnHeader, true)
+			));
+			athread.attr({
+				rel: 'toggle',
+				href: '#' + idToggle
+			}).html(elgg.echo('deck_river:toggle_discussion'));
+		};
+
 	// if already exist, skip
-	if (athread.parent('.elgg-river-responses').find('div.thread').length) return;
+	if (athreadResponses.find('div.thread').length) return;
 
-	athread.parent('.elgg-river-responses').find('.response-loader').removeClass('hidden');
+	athreadResponses.find('.response-loader').removeClass('hidden');
 
-	if (athread.find('.column-header').data('network')) {
+	if (TheColumnHeader.data('network') == 'twitter') {
 		//http://api.twitter.com/1/related_results/show/254208368070258688.json?include_entities=1
 		$.ajax({
 			url: 'https://api.twitter.com/1.1/statuses/show.json?id='+ athread.data('thread'),
 			//url: 'http://api.twitter.com/1/related_results/show/'+ athread.data('thread') +'.json?include_entities=1',
 			dataType: 'json',
-			success: function(response) {
-				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
-				var idToggle = athread.parents('.column-river').attr('id') + '-' + athread.parents('.elgg-list-item').attr('class').match(/item-twitter-\d+/);
-
-				athread.parent('.elgg-river-responses').append($('<div>', {id: idToggle, 'class': 'thread mts float'}).html(elgg.deck_river.TwitterDisplayItems(response, true)));
-				athread.attr({
-					rel: 'toggle',
-					href: '#' + idToggle
-				}).html(elgg.echo('deck_river:toggle_discussion'));
-			},
+			success: function(response) {displayItems(response)},
 			error: function(XHR, textStatus, errorThrown){
 				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
 				console.log(XHR);
@@ -233,19 +233,9 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 			data: {
 				discussion: athread.data('thread'),
 			},
-			success: function(response) {
-				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
-				var idToggle = athread.parents('.column-river').attr('id') + '-' + athread.parents('.elgg-list-item').attr('class').match(/item-river-\d+/);
-
-				athread.parent('.elgg-river-responses').append($('<div>', {id: idToggle, 'class': 'thread mts float'}).html(elgg.deck_river.elggDisplayItems(response, true)));
-				athread.attr({
-					rel: 'toggle',
-					href: '#' + idToggle
-				}).html(elgg.echo('deck_river:toggle_discussion'));
-			},
+			success: function(response) {displayItems(response)},
 			error: function() {
 				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
-				//$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
 	}
@@ -275,6 +265,32 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
 	});
 };
 
+
+
+/*
+ * Load Twitter timeline for an user
+ */
+elgg.deck_river.displayCount = function(response, TheColumn) {
+	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
+		TheColumnRiver = TheColumn.find('.elgg-river'),
+		networkReturn = (TheColumnHeader.data('network') == 'twitter') ? 'results' : 'activity'
+		responseLength = response[networkReturn].length,
+		countSpan = TheColumnHeader.find('.count').addClass('hidden');
+
+	if (responseLength > 0) {
+		countSpan.removeClass('hidden').text(responseLength);
+		if (TheColumnRiver.scrollTop() > 50) {
+			$('<li>', {'class': 'top-message'}).html(elgg.echo('deck_river:column:gotop', [responseLength])).click(function() {
+				TheColumnRiver.scrollTo(0, 500, {easing:'easeOutQuart'});
+			}).appendTo(TheColumn.find('.message-box')).effect('slide',{direction: 'up'}, 300);
+			TheColumnRiver.unbind('scroll').bind('scroll', function() {
+				if($(this).scrollTop() == 0) {
+					TheColumn.find('.top-message').toggle('slide', {direction: 'up'}, 300, function() {$(this).remove()});
+				}
+			});
+		}
+	}
+};
 
 
 String.prototype.addToLargeInt = function (value) {

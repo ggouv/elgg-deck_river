@@ -60,7 +60,7 @@ elgg.deck_river.init = function() {
 
 	// networks
 	$('#thewire-network .elgg-icon-delete').die().live('click', function(e) {
-		var net_input = $(this).parents('.net-profile').find('input');
+		var net_input = $(this).closest('.net-profile').find('input');
 		if ($(this).hasClass('hidden')) {
 			net_input.attr('name', '_networks[]');
 			$(this).removeClass('hidden');
@@ -75,7 +75,7 @@ elgg.deck_river.init = function() {
 		e.stopPropagation();
 	});
 	$('#thewire-network .pin').die().live('click', function() {
-		var netProfile = $(this).parents('.net-profile');
+		var netProfile = $(this).closest('.net-profile');
 		elgg.action('deck_river/network/pin', {
 			data: {
 				network: netProfile.find('input').val()
@@ -93,7 +93,7 @@ elgg.deck_river.init = function() {
 	elgg.deck_river.move_account();
 
 	$('html').die().live('click', function(e) { //Hide thewire menu if visible
-		if (!$(e.target).parents('.elgg-form-deck-river-wire-input').length) {
+		if (!$(e.target).closest('.elgg-form-deck-river-wire-input').length) {
 			$('#thewire-network').removeClass('extended');
 			$('#thewire-header').height(33).removeClass('extended');
 		}
@@ -118,7 +118,7 @@ elgg.deck_river.init = function() {
 
 	// thewire live post
 	$('#thewire-submit-button').die().live('click', function(e){
-		var thewireForm = $(this).parents('form');
+		var thewireForm = $(this).closest('form');
 		if ($('#thewire-textarea').val() == '') { // no text
 			elgg.register_error('deck_river:message:blank');
 		} else if (thewireForm.find('input[name="networks[]"]').length == 0) { // no network actived
@@ -146,7 +146,7 @@ elgg.deck_river.init = function() {
 								$.data(thisSubmit, 'clicked', false);
 								$('#submit-loader').addClass('hidden');
 								$("#thewire-characters-remaining span").html('0');
-								$('#thewire-textarea').val('').parents('.elgg-form').find('input[name=parent_guid], .responseTo').remove();
+								$('#thewire-textarea').val('').closest('.elgg-form').find('input[name=parent_guid], .responseTo').remove();
 								$('.elgg-list-item.thewire').removeClass('responseAt');
 								$('#thewire-header').height(33).removeClass('extended');
 								$('#thewire-network').removeClass('extended');
@@ -168,7 +168,7 @@ elgg.deck_river.init = function() {
 
 	// response to a wire post
 	$('#thewire-header .responseTo').die().live('click', function() {
-		$(this).parents('fieldset').find('input[name=parent_guid]').remove();
+		$(this).closest('fieldset').find('input[name=parent_guid]').remove();
 		$(this).remove();
 		$('.tipsy').remove();
 		$('#thewire-header, #thewire-textarea-border').css({height: '+=-22'});
@@ -177,25 +177,31 @@ elgg.deck_river.init = function() {
 
 	// refresh column, use 'live' for new column
 	$('.elgg-column-refresh-button').die().live('click', function() {
-		elgg.deck_river.RefreshColumn($(this).parents('.column-river'));
+		elgg.deck_river.RefreshColumn($(this).closest('.column-river'));
 	});
 
 	// refresh all columns
 	$('.elgg-refresh-all-button').die().live('click', function() {
 		$('.elgg-column-refresh-button').each(function() {
-			elgg.deck_river.RefreshColumn($(this).parents('.column-river'));
+			elgg.deck_river.RefreshColumn($(this).closest('.column-river'));
 		});
 	});
 
 	// load more in column
 	$('.moreItem').die().live('click', function() {
-		var TheColumn = $(this).parents('.column-river');
+		var TheColumn = $(this).closest('.column-river');
 		elgg.deck_river.LoadMore(TheColumn, TheColumn.attr('id').match(/[0-9]+/)[0]);
+	});
+
+	// hide messages
+	$('.column-messages').die().live('click', function() {
+		console.log($(this));
+		$(this).stop(true, true).toggle('slide',{direction: 'up'}, 300, function() {$(this).html('')});
 	});
 
 	// Column settings
 	$('.elgg-column-edit-button').die().live('click', function() {
-		elgg.deck_river.ColumnSettings($(this).parents('.column-river'));
+		elgg.deck_river.ColumnSettings($(this).closest('.column-river'));
 	});
 
 	// Delete tabs
@@ -297,12 +303,12 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			// dropdown
 			cs.find('.' + cs.find('.tab:visible .column-type').val()+'-options').show();
 			$('.column-type').change(function() {
-				var bs = $(this).parents('.box-settings');
+				var bs = $(this).closest('.box-settings');
 				bs.find('li').not(':first-child').hide();
 				bs.find('.'+$(this).val()+'-options').show();
 			});
 			$('select[name="twitter-account"]').change(function() {
-				$(this).parents('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
+				$(this).closest('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
 			});
 
 			// checkboxes
@@ -478,7 +484,7 @@ elgg.deck_river.MoveColumn = function(event, ui) {
 
 	elgg.action('deck_river/column/move', {
 		data: {
-			tab: ui.item.parents('#deck-river-lists').data('tab'),
+			tab: ui.item.closest('#deck-river-lists').data('tab'),
 			column: ui.item.attr('id'),
 			position: ui.item.index()
 		}

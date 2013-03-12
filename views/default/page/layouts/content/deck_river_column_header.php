@@ -29,11 +29,13 @@ if (isset($column_settings['types_filter']) || isset($column_settings['subtypes_
 }
 
 echo <<<HTML
+<div class="message-box"><div class="column-messages"></div></div>
 <ul class="column-header gwfb" data-network="{$column_settings['network']}" data-direct="{$column_settings['direct']}" data-view_type="column_river">
 	<li>
-		<h3 class="title">$title</h3>
-		<h6 class="subtitle">$subtitle</h6>
 		$buttons
+		<div class="count hidden"></div>
+		<h3 class="title float">$title</h3><br/>
+		<h6 class="subtitle float">$subtitle</h6>
 	</li>
 </ul>
 HTML;

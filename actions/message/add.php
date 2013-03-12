@@ -74,13 +74,13 @@ if (empty($body)) {
 					$result = $twitterObj->post_statusesUpdate(array('status' => $body));
 				}
 
-				// send result
+				// check result
 				if ($result->code == 200) {
-					system_message(elgg_echo("deck_river:twitter:posted"));
+					system_message(elgg_echo('deck_river:twitter:posted'));
 				} else {
-					$key = 'deck_river:twitter:error:' . $result->code;
+					$key = 'deck_river:twitter:post:error:' . $result->code;
 					if (elgg_echo($key) == $key) { // check if language string exist
-						register_error(elgg_echo('deck_river:twitter:error', array($result->code, $result->message)));
+						register_error(elgg_echo('deck_river:twitter:post:error', array($result->code, $result->message)));
 					} else {
 						register_error(elgg_echo($key));
 					}

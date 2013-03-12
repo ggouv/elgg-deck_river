@@ -569,9 +569,11 @@ body.fixed-deck {
 }
 .elgg-list {
 	margin: 0;
+	position: relative;
 }
 #deck-river-lists .column-river {
 	float: left;
+	position: relative;
 	border-left: 1px solid #CCC;
 	border-right: 1px solid #CCC;
 }
@@ -590,20 +592,15 @@ body.fixed-deck {
 	position: relative;
 }
 .column-river .column-header .title {
-	padding-left:5px;
 	color: #666;
 }
 .column-river .column-header .subtitle {
-	padding-left: 5px;
 	color: #999;
 	line-height: 10px;
 }
 .column-river .column-header > li > a {
-	position: absolute;
-	top: 7px;
-	display: inline-block;
-	width: 18px;
-	height: 18px;
+	float: right;
+	padding: 7px 5px 0 0;
 }
 .column-river .elgg-column-refresh-button {
 	right: 32px;
@@ -616,7 +613,40 @@ body.fixed-deck {
 .column-river .elgg-column-edit-button {
 	right: 8px;
 }
+.column-river .count, .newRiverItem:before {
+	background: #FA3;
+	border-radius: 4px;
+	color: white;
+	float: right;
+	font-size: 0.9em;
+	font-weight: bold;
+	margin: 6px;
+	padding: 0 4px;
+}
+.message-box {
+	position: absolute;
+	top: 30px;
+	width: 100%;
+	z-index: 1;
+	font-size: 0.9em;
+}
+.column-message, .top-message {
+	color: white;
+	cursor: pointer;
+	font-weight: bold;
+	opacity: 0.9;
+	padding: 3px 10px;
+	text-align: center;
+	-webkit-box-shadow: 0 2px 2px #CCCCCC;
+	-moz-box-shadow: 0 2px 2px #CCCCCC;
+	box-shadow: 0 2px 2px #CCCCCC;
+}
+.top-message {
+	background: #FFFFCC;
+	color: #555;
+}
 
+/* river */
 .elgg-river-item {
 	padding: 0;
 }
@@ -626,9 +656,11 @@ body.fixed-deck {
 .elgg-river .elgg-ajax-loader {
 	height: 100%;
 }
-.newRiverItem {
-	display: none;
-	border-right: 2px solid #4690D6;
+.newRiverItem:before {
+	content: " ";
+	height: 8px;
+	position: relative;
+	right: -4px;
 }
 .moreItem {
 	background-color: #EEE;
@@ -651,6 +683,11 @@ body.fixed-deck {
 }
 .elgg-menu-river {
 	opacity: 0;
+	color: #AAA;
+	margin: -2px;
+	position: absolute;
+	right: 0;
+	background: white;
 }
 .elgg-list-item:hover .elgg-menu-river {
 	opacity: 1;
@@ -945,6 +982,7 @@ body.fixed-deck {
 }
 .viewed .elgg-menu-river {
 	opacity: 1;
+	right: 20px;
 }
 .viewed .elgg-river-summary {
 	font-size: 115%;

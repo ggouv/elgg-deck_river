@@ -20,6 +20,7 @@ $french = array(
 	'deck-river:clean_url' => "Effacer",
 	'responseToHelper:text' => "En réponse à %s : <span>%s</span>",
 	'responseToHelper:delete' => "Ne plus répondre à %s",
+	'deck_river:column:gotop' => "⬆ %s éléments non-lus ⬆",
 
 	'deck_river:helper:friends' => "Vous n'avez pas d'abonnement ou les personnes que vous suivez n'ont aucune activité.<br/><br/><a href='" . elgg_get_site_url() . "members'>Suivez des personnes</a> dont l'activité pourrait vous intéresser ou cherchez des personnes <a href='" . elgg_get_site_url() . "groups/members/%s'>de votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/members/%s'>votre département</a>.",
 	'deck_river:helper:now' => "<h3>Bienvenue sur ggouv.fr !</h3><br/><a href='#' onclick='$(\"#thewire-textarea\").focus();'>Dites bonjour à tout le monde</a> et regardez ce qui se passe près de chez vous <a href='" . elgg_get_site_url() . "groups/profile/%s'>dans votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/profile/%s'>votre département</a>.<br/><br/>Pour collaborer et participer à des actions collectives, <a href='" . elgg_get_site_url() . "groups/all'>cherchez un groupe</a> qui partage vos centres d'intérêts, vos motivations...",
@@ -112,6 +113,9 @@ $french = array(
 	'deck_river:twitter:feed:search:popular' => "Recherche triée par tweets les plus populaires",
 	'deck_river:twitter:feed:users:search' => "Rechercher des utilisateurs",
 
+	'deck_river:twitter:feed:home' => "Flux d'accueil : votre timeline sur Twitter",
+	'deck_river:twitter:feed:home:title' => "Flux d'accueil",
+
 	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
 
 	// messages
@@ -124,9 +128,11 @@ $french = array(
 	'deck_river:delete:network:error' => "Impossible de supprimer ce compte.",
 
 	'deck_river:twitter:posted' => "Votre message a été publié sur Twitter.",
-	'deck_river:twitter:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",
-	'deck_river:twitter:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", //"You cannot send messages to users who are not following you",
+	'deck_river:twitter:post:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",
+	'deck_river:twitter:post:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", //"You cannot send messages to users who are not following you",
+	'deck_river:twitter:error' => "Il y a eu une erreur avec Twitter.<br>Erreur retourné : %s<br/>%s",
 	'deck_river:twitter:error:34' => "La page ou l'utilisateur n'existe pas sur Twitter.", //"Sorry, that page does not exist",
+	'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", //"Rate limit exceeded",
 
 
 );

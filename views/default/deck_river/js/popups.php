@@ -164,7 +164,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 					$('<a>', {href: '#', 'class': 'pin'}).append(
 						$('<span>', {'class': 'elgg-icon elgg-icon-push-pin tooltip s', title: elgg.echo('deck-river:popups:pin')})
 					).click(function() {
-						var popupP = $(this).parents('.deck-popup');
+						var popupP = $(this).closest('.deck-popup');
 						if (popupP.hasClass('pinned')) {
 							$('.elgg-page-body').append(popupP.removeClass('pinned'));
 						} else {
@@ -176,6 +176,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 					).click(function() {
 						$('#'+popupID).remove();
 						$('.tipsy').remove();
+						return false;
 					})
 				)).after(
 					$('<div>', {'class': 'elgg-body'}).append(

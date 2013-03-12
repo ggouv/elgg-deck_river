@@ -1,6 +1,6 @@
 <?php
 
-global $CONFIG;
+global $CONFIG, $jsonexport;
 $dbprefix = $CONFIG->dbprefix;
 
 // Get callbacks
@@ -13,6 +13,8 @@ $time_posted = get_input('time_posted', 'false');
 $owner = elgg_get_logged_in_user_entity();
 $user_river_options = unserialize(get_private_setting($owner->guid, 'deck_river_settings'));
 $column_settings = $user_river_options[$tab][$column];
+
+$jsonexport = array();
 
 // detect network
 if ($column_settings['network'] == 'twitter') {
@@ -28,138 +30,142 @@ if ($column_settings['network'] == 'twitter') {
 			$result = call_user_func(array($twitterObj, $column_settings['type']), array(
 				'count' => 30,
 				'since_id' => $time_posted+1 // +1 for not repeat first river item
-			))->__get('response');
+			));
 		} elseif ($time_method == 'upper') {
 			$result = call_user_func(array($twitterObj, $column_settings['type']), array(
 				'count' => 30,
 				'max_id' => $time_posted-1 // -1 for not repeat last river item
-			))->__get('response');
+			));
 		} else {
-			$result = call_user_func(array($twitterObj, $column_settings['type']), array('count' => 30))->__get('response');
+			$result = call_user_func(array($twitterObj, $column_settings['type']), array('count' => 30));
 		}
 	} catch(Exception $e) {
 		$result = json_decode($e->getMessage())->errors[0];
 	}
 
-	$jsonexport = array();
-	$jsonexport['column_type'] = $column_settings['type'];
-	$jsonexport['results'] = $result;
-	echo json_encode($jsonexport);
+	// check result
+	if ($result->code == 200) {
+		$jsonexport['column_type'] = $column_settings['type'];
+		$jsonexport['results'] = $result->__get('response');
+	} else {
+		$key = 'deck_river:twitter:error:' . $result->code;
+		if (elgg_echo($key) == $key) { // check if language string exist
+			$jsonexport['column_error'] = elgg_echo('deck_river:twitter:error', array($result->code, $result->message));
+		} else {
+			$jsonexport['column_error'] = elgg_echo($key);
+		}
+		$jsonexport['results'] = '';
+	}
 
 } else {
 
-// Set column user settings
-switch ($column_settings['type']) {
-	case 'all':
-		break;
-	case 'friends':
-		$options['joins'][] = "JOIN {$dbprefix}entity_relationships r ON r.guid_two = rv.subject_guid";
-		$options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
-		$options['wheres'][] = "(r.relationship = 'friend' AND r.guid_one = '" . $owner->guid ."')";
-		$options['wheres'][] = "(o.description IS NULL OR o.description NOT REGEXP '^@')";
-		break;
-	case 'mine':
-		$options['subject_guid'] = $owner->guid;
-		break;
-	case 'mention':
-		$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
-		$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
-		$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-		$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $owner->name . "([[:blank:]]|$|<)'))";
-		break;
-	case 'group':
-		$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
-		$options['wheres'][] = "e.container_guid = " . $column_settings['group'];
-		break;
-	case 'search':
-		$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
-		$options['wheres'][] = "(o.description REGEXP '(" . implode('|', $column_settings['search']) . ")')";
-		break;
-	default:
-		$params = array('owner' => $owner->guid, 'query' => 'activity');
-		$result = elgg_trigger_plugin_hook('deck-river', "column:{$column_settings['type']}", $params);
-		$result['column_type'] = $column_settings['type'];
-		echo json_encode($result);
-		return;
-		break;
-}
-$options['title'] = $column_settings['title'];
-$options['types_filter'] = $column_settings['types_filter'];
-$options['subtypes_filter'] = $column_settings['subtypes_filter'];
-
-
-// set time_method and set $where_with_time in case of multiple query
-if ($time_method == 'lower') {
-	$options['posted_time_lower'] = (int)$time_posted+1; // +1 for not repeat first river item
-} elseif ($time_method == 'upper') {
-	$options['posted_time_upper'] = (int)$time_posted-1; // -1 for not repeat last river item
-}
-
-// Prepare wheres clause for filter
-if ($options['subtypes_filter']) {
-	$filters = "object' AND (rv.subtype IN ('";
-	$filters .= implode("','", $options['subtypes_filter']);
-	$options['types_filter'][] = $filters . "'))";
-}
-if ($options['types_filter']) {
-	$filters = "((rv.type = '";
-	$filters .= implode("') OR (rv.type = '", $options['types_filter']);
-	if (substr($filters, -1) == ')') {
-		$filters .= ')) ';
-	} else {
-		$filters .= "')) ";
+	// Set column user settings
+	switch ($column_settings['type']) {
+		case 'all':
+			break;
+		case 'friends':
+			$options['joins'][] = "JOIN {$dbprefix}entity_relationships r ON r.guid_two = rv.subject_guid";
+			$options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+			$options['wheres'][] = "(r.relationship = 'friend' AND r.guid_one = '" . $owner->guid ."')";
+			$options['wheres'][] = "(o.description IS NULL OR o.description NOT REGEXP '^@')";
+			break;
+		case 'mine':
+			$options['subject_guid'] = $owner->guid;
+			break;
+		case 'mention':
+			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
+			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
+			$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $owner->name . "([[:blank:]]|$|<)'))";
+			break;
+		case 'group':
+			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
+			$options['wheres'][] = "e.container_guid = " . $column_settings['group'];
+			break;
+		case 'search':
+			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+			$options['wheres'][] = "(o.description REGEXP '(" . implode('|', $column_settings['search']) . ")')";
+			break;
+		default:
+			$params = array('owner' => $owner->guid, 'query' => 'activity');
+			$result = elgg_trigger_plugin_hook('deck-river', "column:{$column_settings['type']}", $params);
+			$result['column_type'] = $column_settings['type'];
+			echo json_encode($result);
+			return;
+			break;
 	}
-	$options['wheres'][] = $filters;
-}
-
-$defaults = array(
-	'offset' => (int) get_input('offset', 0),
-	'limit' => (int) get_input('limit', 30),
-	'pagination' => FALSE,
-	'count' => FALSE,
-);
-$options = array_merge($defaults, $options);
-$items = elgg_get_river($options);
-
-global $jsonexport;
-$jsonexport['activity'] = array();
-
-if (is_array($items)) {
-	foreach ($items as $item) {
-		//if (elgg_view_exists($item->view, 'json')) {
-			elgg_view($item->view, array('item' => $item), '', '', 'json');
-		//} else {
-		//	elgg_view('river/item', array('item' => $item), '', '', 'json');
-		//}
-	}
-}
+	$options['title'] = $column_settings['title'];
+	$options['types_filter'] = $column_settings['types_filter'];
+	$options['subtypes_filter'] = $column_settings['subtypes_filter'];
 
 
-$temp_subjects = array();
-foreach ($jsonexport['activity'] as $item) {
-	if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
-
-	$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
-
-	$menus = elgg_trigger_plugin_hook('register', "menu:river", array('item' => $item)); // add menus
-	foreach ($menus as $menu) {
-		$item->menu[] = $menu->getData('name');
+	// set time_method and set $where_with_time in case of multiple query
+	if ($time_method == 'lower') {
+		$options['posted_time_lower'] = (int)$time_posted+1; // +1 for not repeat first river item
+	} elseif ($time_method == 'upper') {
+		$options['posted_time_upper'] = (int)$time_posted-1; // -1 for not repeat last river item
 	}
 
-	unset($item->view); // delete view
-}
+	// Prepare wheres clause for filter
+	if ($options['subtypes_filter']) {
+		$filters = "object' AND (rv.subtype IN ('";
+		$filters .= implode("','", $options['subtypes_filter']);
+		$options['types_filter'][] = $filters . "'))";
+	}
+	if ($options['types_filter']) {
+		$filters = "((rv.type = '";
+		$filters .= implode("') OR (rv.type = '", $options['types_filter']);
+		if (substr($filters, -1) == ')') {
+			$filters .= ')) ';
+		} else {
+			$filters .= "')) ";
+		}
+		$options['wheres'][] = $filters;
+	}
 
-$jsonexport['users'] = array();
-foreach ($temp_subjects as $item) {
-	$entity = get_entity($item);
-	$jsonexport['users'][] = array(
-		'guid' => $item,
-		'type' => $entity->type,
-		'username' => $entity->username,
-		'icon' => $entity->getIconURL('small'),
+	$defaults = array(
+		'offset' => (int) get_input('offset', 0),
+		'limit' => (int) get_input('limit', 30),
+		'pagination' => FALSE,
+		'count' => FALSE,
 	);
+	$options = array_merge($defaults, $options);
+	$items = elgg_get_river($options);
+
+	$jsonexport['activity'] = array();
+	if (is_array($items)) {
+		foreach ($items as $item) {
+			elgg_view($item->view, array('item' => $item), '', '', 'json'); // this view fill the global $jsonexport
+		}
+	}
+
+	$temp_subjects = array();
+	foreach ($jsonexport['activity'] as $item) {
+		if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
+
+		$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
+
+		$menus = elgg_trigger_plugin_hook('register', "menu:river", array('item' => $item)); // add menus
+		foreach ($menus as $menu) {
+			$item->menu[] = $menu->getData('name');
+		}
+
+		unset($item->view); // delete view
+	}
+
+	$jsonexport['users'] = array();
+	foreach ($temp_subjects as $item) {
+		$entity = get_entity($item);
+		$jsonexport['users'][] = array(
+			'guid' => $item,
+			'type' => $entity->type,
+			'username' => $entity->username,
+			'icon' => $entity->getIconURL('small'),
+		);
+	}
+
+	$jsonexport['column_type'] = $column_settings['type'];
+
 }
 
-$jsonexport['column_type'] = $column_settings['type'];
 echo json_encode($jsonexport);
-}
