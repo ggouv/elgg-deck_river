@@ -122,7 +122,37 @@ if ($submit == 'delete') {
 			break;
 
 		case 'get_statusesHome_timeline':
-			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:home:title';
+			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:home';
+			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			break;
+
+		case 'get_statusesMentions_timeline':
+			$user_river_options[$tab][$column]['title'] = '@'.get_entity($twitter_account)->screen_name;
+			$user_river_options[$tab][$column]['subtitle'] = 'river:mentions';
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			break;
+
+		case 'get_statusesUser_timeline':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:user';
+			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			break;
+
+		case 'get_direct_messages':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:dm:recept';
+			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			break;
+
+		case 'get_direct_messagesSent':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:dm:sent';
+			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			break;
+
+		case 'get_favoritesList':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:favorites';
 			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
 			$user_river_options[$tab][$column]['account'] = $twitter_account;
 			break;
@@ -141,8 +171,6 @@ if ($submit == 'delete') {
 	}
 
 	$user_river_options[$tab][$column]['type'] = $twitter_type;
-	$user_river_options[$tab][$column]['title'] = $user_river_options[$tab][$column]['title'];
-	$user_river_options[$tab][$column]['subtitle'] = $user_river_options[$tab][$column]['subtitle'];
 	$user_river_options[$tab][$column]['network'] = 'twitter';
 }
 

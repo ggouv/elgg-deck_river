@@ -225,17 +225,20 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
  * @param {array}	json response
  */
 elgg.deck_river.twitterDisplayItems = function(response, thread) {
-	//console.log(response.results);
 	var output = $(),
 		wirearea = $('#thewire-textarea');
 
 	$.each(response.results, function(key, value) {
 		var menuOutput = subMenuOutput = riverResponses = $();
 
-		if (!value.user) { // json returned by Twitter is different between twitter search api and twitter main api
+		if (!response.column_type) { // json returned by Twitter is different between twitter search api and twitter main api
 			value.user = {screen_name: value.from_user, profile_image_url_https: value.profile_image_url_https};
+		} else if (response.column_type == 'get_direct_messages') { // json is different with direct_messages
+			value.user = value.sender;
+		} else if (response.column_type == 'get_direct_messagesSent') { // json is different with direct_messages
+			value.user = value.recipient;
 		}
-//console.log(value);
+
 		// make menu and submenu
 		if (!thread) {
 			menuOutput = menuOutput.after(

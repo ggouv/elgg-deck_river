@@ -592,7 +592,10 @@ body.fixed-deck {
 	position: relative;
 }
 .column-river .column-header .title {
-	color: #666;
+	color: #666666;
+	height: 20px;
+	overflow: hidden;
+	margin-bottom: -20px;
 }
 .column-river .column-header .subtitle {
 	color: #999;

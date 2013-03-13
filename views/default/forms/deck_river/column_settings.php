@@ -187,6 +187,11 @@ $column_title = $user_river_column_options['title'];
 				'searchTweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
 				'searchTweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
 				'get_statusesHome_timeline' => elgg_echo('deck_river:twitter:feed:home'),
+				'get_statusesMentions_timeline' => elgg_echo('river:mentions'),
+				'get_statusesUser_timeline' => elgg_echo('deck_river:twitter:feed:user'),
+				'get_direct_messages' => elgg_echo('deck_river:twitter:feed:dm:recept'),
+				'get_direct_messagesSent' => elgg_echo('deck_river:twitter:feed:dm:sent'),
+				'get_favoritesList' => elgg_echo('deck_river:twitter:feed:favorites'),
 			);
 
 			if (count($twitter_account) == 0) { // No account registred, send user off to validate account

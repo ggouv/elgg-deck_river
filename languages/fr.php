@@ -113,8 +113,11 @@ $french = array(
 	'deck_river:twitter:feed:search:popular' => "Recherche triée par tweets les plus populaires",
 	'deck_river:twitter:feed:users:search' => "Rechercher des utilisateurs",
 
-	'deck_river:twitter:feed:home' => "Flux d'accueil : votre timeline sur Twitter",
-	'deck_river:twitter:feed:home:title' => "Flux d'accueil",
+	'deck_river:twitter:feed:home' => "Flux d'accueil",
+	'deck_river:twitter:feed:user' => "Mes tweets",
+	'deck_river:twitter:feed:dm:recept' => "Messages directs (Boîte de réception)",
+	'deck_river:twitter:feed:dm:sent' => "Messages directs (Boîte d'envoi)",
+	'deck_river:twitter:feed:favorites' => "Mes tweets favoris",
 
 	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
 

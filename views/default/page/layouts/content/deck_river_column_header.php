@@ -34,8 +34,8 @@ echo <<<HTML
 	<li>
 		$buttons
 		<div class="count hidden"></div>
-		<h3 class="title float">$title</h3><br/>
-		<h6 class="subtitle float">$subtitle</h6>
+		<h3 class="title">$title</h3><br/>
+		<h6 class="subtitle">$subtitle</h6>
 	</li>
 </ul>
 HTML;
