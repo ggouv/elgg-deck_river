@@ -48,7 +48,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			}
 		});
 	} else {
-		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('view_type'), {
+		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('river_type'), {
 			dataType: 'json',
 			data: {
 				tab: $('#deck-river-lists').data('tab'), // used only with 'column_river' call
@@ -164,7 +164,7 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 			}
 		});
 	} else {
-		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('view_type'), {
+		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('river_type'), {
 			dataType: 'json',
 			data: {
 				tab: $('#deck-river-lists').data('tab'),
@@ -289,8 +289,77 @@ elgg.deck_river.displayCount = function(response, TheColumn) {
 				}
 			});
 		}
+		// column is hidden by #deck-river-lists scroll ?
+		if (TheColumn.position().left < -TheColumn.width()+80) { // hidden at left
+			var c = $('.deck-river-scroll-arrow.left div');
+			(c.html() == '') ? c.html(responseLength) : c.html(parseInt(c.html()) + responseLength);
+		} else if (TheColumn.position().left + TheColumn.width()-15 > $('#deck-river-lists').width()) { //hidden at right
+			var c = $('.deck-river-scroll-arrow.right div');
+			(c.html() == '') ? c.html(responseLength) : c.html(parseInt(c.html()) + responseLength);
+		}
 	}
 };
+
+
+
+/**
+ * Displays messages in column
+ *
+ * @param {String} msgs The message we want to display
+ * @param {dom} TheColumn The column we want to display
+ * @param {Number} delay The amount of time to display the message in milliseconds. Defaults to 6 seconds.
+ * @param {String} type The type of message (typically 'error' or 'message')
+ * @private
+ */
+elgg.deck_river.column_messages = function(msgs, TheColumnHeader, delay, type) {
+	if (elgg.isUndefined(msgs)) return;
+
+	var classes = ['column-message'],
+		messages_html = [],
+		appendMessage = function(msg) {
+			messages_html.push('<li class="' + classes.join(' ') + '"><p>' + msg + '</p></li>');
+		};
+
+	//validate delay.  Must be a positive integer.
+	delay = parseInt(delay || 6000, 10);
+	if (isNaN(delay) || delay <= 0) {
+		delay = 6000;
+	}
+
+	//Handle non-arrays
+	if (!elgg.isArray(msgs)) msgs = [msgs];
+
+	if (type === 'error') {
+		classes.push('elgg-state-error');
+	} else {
+		classes.push('elgg-state-success');
+	}
+
+	msgs.forEach(appendMessage);
+	TheColumnHeader.parent().find('.column-messages').append($(messages_html.join('')))
+		.effect('slide',{direction: 'up'}, 300).delay(delay).toggle('slide',{direction: 'up'}, 300, function() {$(this).html('')});
+};
+
+/**
+ * Wrapper function for column_messages. Specifies "messages" as the type of message
+ * @param {String} msgs  The message to display
+ * @param {dom} TheColumn The column we want to display
+ * @param {Number} delay How long to display the message (milliseconds)
+ */
+elgg.deck_river.column_message = function(msgs, TheColumn, delay) {
+	elgg.deck_river.column_messages(msgs, TheColumn, delay, "message");
+};
+
+/**
+ * Wrapper function for column_messages.  Specifies "errors" as the type of message
+ * @param {String} errors The error message to display
+ * @param {dom} TheColumn The column we want to display
+ * @param {Number} delay  How long to dispaly the error message (milliseconds)
+ */
+elgg.deck_river.column_error = function(errors, TheColumn, delay) {
+	elgg.deck_river.column_messages(errors, TheColumn, delay, "error");
+};
+
 
 
 String.prototype.addToLargeInt = function (value) {

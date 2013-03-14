@@ -29,7 +29,7 @@ elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
 
 
 /**
- * Put users and groups in array
+ * Put users and groups in array for autocomplete
  */
 elgg.deck_river.processResponse = function(response, TheColumnHeader) {
 	// Put users and groups in global var usersAndGroups
@@ -39,63 +39,6 @@ elgg.deck_river.processResponse = function(response, TheColumnHeader) {
 	if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
 };
 
-
-
-/**
- * Displays system messages via javascript rather than php.
- *
- * @param {String} msgs The message we want to display
- * @param {Element} TheColumn The column we want to display
- * @param {Number} delay The amount of time to display the message in milliseconds. Defaults to 6 seconds.
- * @param {String} type The type of message (typically 'error' or 'message')
- * @private
- */
-elgg.deck_river.column_messages = function(msgs, TheColumnHeader, delay, type) {
-	if (elgg.isUndefined(msgs)) return;
-
-	var classes = ['column-message'],
-		messages_html = [],
-		appendMessage = function(msg) {
-			messages_html.push('<li class="' + classes.join(' ') + '"><p>' + msg + '</p></li>');
-		};
-
-	//validate delay.  Must be a positive integer.
-	delay = parseInt(delay || 6000, 10);
-	if (isNaN(delay) || delay <= 0) {
-		delay = 6000;
-	}
-
-	//Handle non-arrays
-	if (!elgg.isArray(msgs)) msgs = [msgs];
-
-	if (type === 'error') {
-		classes.push('elgg-state-error');
-	} else {
-		classes.push('elgg-state-success');
-	}
-
-	msgs.forEach(appendMessage);
-	TheColumnHeader.parent().find('.column-messages').append($(messages_html.join('')))
-		.effect('slide',{direction: 'up'}, 300).delay(delay).toggle('slide',{direction: 'up'}, 300, function() {$(this).html('')});
-};
-
-/**
- * Wrapper function for column_messages. Specifies "messages" as the type of message
- * @param {String} msgs  The message to display
- * @param {Number} delay How long to display the message (milliseconds)
- */
-elgg.deck_river.column_message = function(msgs, TheColumn, delay) {
-	elgg.deck_river.column_messages(msgs, TheColumn, delay, "message");
-};
-
-/**
- * Wrapper function for column_messages.  Specifies "errors" as the type of message
- * @param {String} errors The error message to display
- * @param {Number} delay  How long to dispaly the error message (milliseconds)
- */
-elgg.deck_river.column_error = function(errors, TheColumn, delay) {
-	elgg.deck_river.column_messages(errors, TheColumn, delay, "error");
-};
 
 
 /**

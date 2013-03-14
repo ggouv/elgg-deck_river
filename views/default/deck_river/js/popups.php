@@ -77,7 +77,7 @@ elgg.deck_river.popups = function() {
 				$('#hashtag-info-popup').find('.elgg-ajax-loader').wrap(
 					$('<ul>', {'class': 'elgg-river elgg-list'})
 				).before(
-					$('<ul>', {'class': 'column-header hidden', 'data-network': 'elgg', 'data-view_type': 'entity_river'})
+					$('<ul>', {'class': 'column-header hidden', 'data-network': 'elgg', 'data-river_type': 'entity_river'})
 				);
 			}
 		);

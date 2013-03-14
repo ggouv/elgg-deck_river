@@ -556,7 +556,38 @@ body.fixed-deck {
 .elgg-icon-deck-river-delete:hover {
 	background-position: 0 -189px;
 }
+li.elgg-menu-item-arrow-left {
+	border: none;
+	width: 160px;
+}
+.elgg-menu-item-arrow-left:hover, li.elgg-menu-item-arrow-left a:hover {
+	background: transparent;
+}
+.deck-river-scroll-arrow.left {
+	position: absolute;
+	top: -3px;
+}
+.deck-river-scroll-arrow.right {
+	position: absolute;
+	right: 20px;
+	top: 10px;
+}
+.deck-river-scroll-arrow .count {
+	background: none repeat scroll 0 0 #FFAA33;
+	border-radius: 4px 4px 4px 4px;
+	color: white;
+	font-size: 0.9em;
+	font-weight: bold;
+	padding: 0 4px;
+}
+.deck-river-scroll-arrow.right .count {
+	float: left;
+}
+.deck-river-scroll-arrow.left .count {
+	float: right;
+}
 
+/* deck */
 #deck-river-lists {
 	overflow-x: scroll;
 	overflow-y: hidden;

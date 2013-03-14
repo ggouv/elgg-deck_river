@@ -71,6 +71,14 @@ if (elgg_is_logged_in()) {
 		'title' => elgg_echo('deck_river:add-tab')
 	);
 
+	$tabs['arrow-left'] = array(
+		'text' => elgg_view_icon('arrow-left', 'link hidden') . '<div class="count mlm"></div>',
+		'href' => '#',
+		'class' => 'deck-river-scroll-arrow left',
+		'selected' => 0,
+		'priority' =>($priority+1) * 10,
+	);
+
 	echo "<div id='add-deck-river-tab' class='elgg-module-popup hidden add-deck-river-tab-popup'>" .
 			elgg_view_form('deck_river/tab/add') .
 		"</div>";
@@ -85,4 +93,6 @@ if (elgg_is_logged_in()) {
 	}
 
 	echo elgg_view_menu('filter', array('sort_by' => 'priority', 'class' => 'elgg-menu-deck-river'));
+
+	echo '<div class="deck-river-scroll-arrow right"><div class="count"></div>' . elgg_view_icon('arrow-right', 'link') . '</div>';
 }
