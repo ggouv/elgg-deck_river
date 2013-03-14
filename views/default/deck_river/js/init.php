@@ -22,6 +22,7 @@ elgg.provide('elgg.deck_river');
 elgg.deck_river.init = function() {
 	$(document).ready(function() {
 		if ( $('.deck-river').length ) {
+
 			$('body').addClass('fixed-deck');
 			$('.elgg-page-default .elgg-page-body > .elgg-inner').css('width','100%');
 			elgg.deck_river.SetColumnsHeight();
@@ -43,15 +44,18 @@ elgg.deck_river.init = function() {
 			});
 			$('#deck-river-lists').unbind('scroll').scroll(function() {
 				var $this = $(this),
-					containerWidth = $('.deck-river-lists-container').width() - $(this).width();
+					containerWidth = $('.deck-river-lists-container').width() - $(this).width()
+					arrows = $('.deck-river-scroll-arrow');
 				if ($this.scrollLeft() == 0) {
-					$('.deck-river-scroll-arrow.left span').addClass('hidden');
+					arrows.filter('.left').find('span').addClass('hidden');
 				} else if ($this.scrollLeft() == containerWidth) {
-					$('.deck-river-scroll-arrow.right span').addClass('hidden');
+					arrows.filter('.right').find('span').addClass('hidden');
 				} else {
-					$('.deck-river-scroll-arrow span').removeClass('hidden');
+					arrows.find('span').removeClass('hidden');
 				}
 			});
+			if ($('#deck-river-lists').get(0).scrollWidth == $('#deck-river-lists').get(0).clientWidth) $('.deck-river-scroll-arrow span').addClass('hidden');
+
 		} else {
 			$('body').removeClass('fixed-deck');
 		}

@@ -88,23 +88,23 @@ elgg.deck_river.popups = function() {
 	$('.twitter-user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
-		$.get('https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
-			function(response) {
-				var tabs = ['profile', 'activity', 'mentions', 'favoris'];
-				var output = $('<ul>', {'class': 'elgg-tabs elgg-htabs'}).html(function() {
-								var tabsHtml = '';
-								$.each(tabs, function(i, e) {
-									tabsHtml += '<li class="' + (i==0 ? 'elgg-state-selected' : '') + '"><a href="#'+response.id+'-info-'+e+'">' + elgg.echo(e) + '</a></li>';
-								});
-								return tabsHtml;
-							}
-							).after($('<ul>', {'class': 'elgg-body'}).html(function() {
-								var lisHtml = '';
-								$.each(tabs, function(i, e) {
-									lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="column-river hidden" data-load_type="LoadTwitter_'+e + '"><ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1/statuses/user_timeline.json"></ul><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
-								});
-								return lisHtml;
-							}));
+		var userInfo = $(this).closest('.elgg-list-item').data('user-info'),
+			makeProfile = function(response) {
+				var tabs = ['profile', 'activity', 'mentions', 'favoris'],
+					output = $('<ul>', {'class': 'elgg-tabs elgg-htabs'}).html(function() {
+						var tabsHtml = '';
+						$.each(tabs, function(i, e) {
+							tabsHtml += '<li class="' + (i==0 ? 'elgg-state-selected' : '') + '"><a href="#'+response.id+'-info-'+e+'">' + elgg.echo(e) + '</a></li>';
+						});
+						return tabsHtml;
+					}).after($('<ul>', {'class': 'elgg-body'}).html(function() {
+						var lisHtml = '';
+						$.each(tabs, function(i, e) {
+							lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="column-river hidden" data-load_type="LoadTwitter_'+e + '"><ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1/statuses/user_timeline.json"></ul><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
+						});
+						return lisHtml;
+					}));
+q
 				output.filter('.elgg-body').find('li:first-child').html(
 					$('<div>', {'class': 'elgg-avatar elgg-avatar-large float'}).html(
 						$('<a>', {title: response.screen_name, rel: 'nofollow', href: 'http://twitter.com/'+response.screen_name}).append(
@@ -127,11 +127,20 @@ elgg.deck_river.popups = function() {
 						$('<div>', {'class': 'even'}).html('<b>' + elgg.echo('profile:time_created') + ' :</b> ' + response.created_at)
 					))
 				);
-				fillPopup($('#user-info-popup'), output);
-			},'jsonP'
-		).fail(function() {
-				$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
-		});
+				return output;
+			};
+
+		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
+			$.get('https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
+				function(response) {
+					fillPopup($('#user-info-popup'), makeProfile(response));
+				},'jsonP'
+			).fail(function() {
+					$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+			});
+		} else {
+			fillPopup($('#user-info-popup'), makeProfile($(this).closest('.elgg-list-item').data('user-info')));
+		}
 	});
 
 }
