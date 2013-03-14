@@ -233,7 +233,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 
 		var postedTimestamp = value.created_at.TwitterFormatDate();
 		output = output.after(
-			$('<li>', {'class': 'elgg-list-item item-twitter-'+ value.id_str}).data({'timeID': value.id_str, 'user-info': value.user}).mouseleave(function() {
+			$('<li>', {'class': 'elgg-list-item item-twitter-'+ value.id_str}).data({'timeID': value.id_str, 'user_info': value.user}).mouseleave(function() {
 				$(this).find('.elgg-submenu-river').removeClass('hover');
 			}).append(
 				$('<div>', {'class': 'elgg-image-block elgg-river-item clearfix'}).append(

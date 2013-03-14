@@ -53,11 +53,11 @@ if (!$user) {
 		</div>
 	</li>
 	<li id="<?php echo $user->guid; ?>-info-activity" class="column-river hidden">
-		<ul class="column-header hidden" data-network="elgg" data-view_type="entity_river"></ul>
+		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 	<li id="<?php echo $user->guid; ?>-info-mentions" class="column-river hidden">
-		<ul class="column-header hidden" data-network="elgg" data-view_type="entity_mention"></ul>
+		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_mention"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

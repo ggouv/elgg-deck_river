@@ -48,6 +48,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			}
 		});
 	} else {
+		console.log(TheColumnHeader);
 		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('river_type'), {
 			dataType: 'json',
 			data: {

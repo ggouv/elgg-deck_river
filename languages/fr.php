@@ -81,6 +81,7 @@ $french = array(
 	'deck-river:popups:pin' => "<div style=\"text-align: left;\">Épingler cette fenêtre<br><span class=\"elgg-text-help\">Elle ne disparaîtra pas lors des changements de page.</span></div>",
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
 	'deck_river:user-info-header' => "Informations sur %s",
+	'deck_river:group-info-header' => "Informations sur le groupe %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
 
 	// plugin settings

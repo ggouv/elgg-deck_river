@@ -52,7 +52,7 @@ elgg.deck_river.popups = function() {
 
 	// group info popup
 	$('.group-info-popup').die().live('click', function() {
-		elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:group-info-header'));
+		elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:group-info-header', [$(this).attr('title')]));
 
 		elgg.post('ajax/view/deck_river/ajax_view/group_info', {
 			dataType: "html",
@@ -88,7 +88,7 @@ elgg.deck_river.popups = function() {
 	$('.twitter-user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
-		var userInfo = $(this).closest('.elgg-list-item').data('user-info'),
+		var userInfo = $(this).closest('.elgg-list-item').data('user_info'),
 			makeProfile = function(response) {
 				var tabs = ['profile', 'activity', 'mentions', 'favoris'],
 					output = $('<ul>', {'class': 'elgg-tabs elgg-htabs'}).html(function() {
