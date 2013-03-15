@@ -17,7 +17,8 @@ elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
 	var network = TheColumnHeader.data('network'),
 		thread = thread || false;
 
-	elgg.deck_river.processResponse(response, TheColumnHeader);
+	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
+	if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
 
 	if (response.activity instanceof String) {
 		return response.activity;
@@ -29,14 +30,40 @@ elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
 
 
 /**
- * Put users and groups in array for autocomplete
+ * Put users and groups in global var DataEntities
  */
-elgg.deck_river.processResponse = function(response, TheColumnHeader) {
-	// Put users and groups in global var usersAndGroups
+elgg.deck_river.storeEntity = function(entity, network) {
+	var network = network || 'elgg';
 
-	// show messages
-	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
-	if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
+	if (network == 'twitter') {
+		// Put user in global var DataEntities.twitter
+		if (DataEntities.twitter.length) {
+			var found = false;
+			$.each(DataEntities.twitter, function(i, e) {
+				if (e.screen_name === entity.screen_name) { // the same !
+					if (!elgg.isUndefined(entity.id_str)) { // new user is complete
+						DataEntities.twitter[i] = entity; // We can fill more the profile !
+						found = true;
+						return false;
+					}
+					found = true;
+				}
+			});
+			if (!found) DataEntities.twitter.push(entity); // new
+		} else {
+			DataEntities.twitter.push(entity); // new
+		}
+	}
+};
+
+
+
+elgg.deck_river.findUser = function(name, network) {
+	var network = network || 'elgg',
+		eName = 'username';
+
+	if (network == 'twitter') eName = 'screen_name';
+	return $.grep(DataEntities[network], function(e){ return e[eName] === name; })[0];
 };
 
 
@@ -66,6 +93,11 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 			}).html(elgg.echo('responseToHelper:text', [responseToUser, message])));
 		}
 	}
+
+	// Put users and groups in global var DataEntities
+	$.each(response.users, function(n, i) {
+		if (!$.grep(DataEntities.elgg, function(e){ return e.guid === i.guid; }).length) DataEntities.elgg.push(i);
+	});
 
 	$.each(response.activity, function(key, value) {
 		var user = $.grep(response.users, function(e){ return e.guid == value.subject_guid; })[0],
@@ -182,6 +214,8 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 			value.user = value.recipient;
 		}
 
+		elgg.deck_river.storeEntity(value.user, 'twitter');
+
 		// make menu and submenu
 		if (!thread) {
 			menuOutput = menuOutput.after(
@@ -233,7 +267,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 
 		var postedTimestamp = value.created_at.TwitterFormatDate();
 		output = output.after(
-			$('<li>', {'class': 'elgg-list-item item-twitter-'+ value.id_str}).data({'timeID': value.id_str, 'user_info': value.user}).mouseleave(function() {
+			$('<li>', {'class': 'elgg-list-item item-twitter-'+ value.id_str}).data({'timeID': value.id_str}).mouseleave(function() {
 				$(this).find('.elgg-submenu-river').removeClass('hover');
 			}).append(
 				$('<div>', {'class': 'elgg-image-block elgg-river-item clearfix'}).append(
@@ -291,3 +325,5 @@ String.prototype.TwitterParseHashtag = function () {
 		return t.link("http://search.twitter.com/search?q=" + tag);
 	});
 };
+
+

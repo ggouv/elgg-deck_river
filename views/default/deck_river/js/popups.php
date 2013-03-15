@@ -88,7 +88,7 @@ elgg.deck_river.popups = function() {
 	$('.twitter-user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
-		var userInfo = $(this).closest('.elgg-list-item').data('user_info'),
+		var userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
 			makeProfile = function(response) {
 				var tabs = ['profile', 'activity', 'mentions', 'favoris'],
 					output = $('<ul>', {'class': 'elgg-tabs elgg-htabs'}).html(function() {
@@ -104,14 +104,14 @@ elgg.deck_river.popups = function() {
 						});
 						return lisHtml;
 					}));
-q
+
 				output.filter('.elgg-body').find('li:first-child').html(
 					$('<div>', {'class': 'elgg-avatar elgg-avatar-large float'}).html(
 						$('<a>', {title: response.screen_name, rel: 'nofollow', href: 'http://twitter.com/'+response.screen_name}).append(
 						$('<img>', {title: response.screen_name, alt: response.screen_name, src: response.profile_image_url.replace(/_normal/, ''), width: '200px', height: '200px'})
 					)).after(
 					$('<div>', {'class': 'elgg-body plm'}).html(
-						$('<h1>', {'class': 'mbm'}).html(response.name).after(
+						$('<h1>', {'class': 'pts mbm'}).html(response.name).after(
 						$('<h2>', {'class': 'mbs', style: 'font-weight:normal;'}).html('@'+response.screen_name).after(
 							$('<div>').html(response.description)
 					)))).after(
@@ -133,13 +133,15 @@ q
 		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
 			$.get('https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
 				function(response) {
+					console.log(response);
+					elgg.deck_river.storeEntity(response, 'twitter');
 					fillPopup($('#user-info-popup'), makeProfile(response));
 				},'jsonP'
 			).fail(function() {
 					$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
 			});
 		} else {
-			fillPopup($('#user-info-popup'), makeProfile($(this).closest('.elgg-list-item').data('user-info')));
+			fillPopup($('#user-info-popup'), makeProfile(userInfo));
 		}
 	});
 
@@ -198,3 +200,5 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 
 	if (callback) callback();
 };
+
+

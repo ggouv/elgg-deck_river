@@ -12,6 +12,9 @@
 var deck_river_min_width_column = <?php $mwc = elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); echo $mwc ? $mwc : 300; ?>;
 var deck_river_max_nbr_column = <?php $mnc = elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
 
+// Global var for Entities : users and groups from elgg, users from Twitter
+var DataEntities = DataEntities || {elgg: [], twitter: []};
+
 /**
  * Elgg-deck_river initialization
  *
@@ -219,9 +222,8 @@ elgg.deck_river.init = function() {
 		elgg.deck_river.LoadMore(TheColumn, TheColumn.attr('id').match(/[0-9]+/)[0]);
 	});
 
-	// hide messages
+	// hide alert or other messages in column
 	$('.column-messages').die().live('click', function() {
-		console.log($(this));
 		$(this).stop(true, true).toggle('slide',{direction: 'up'}, 300, function() {$(this).html('')});
 	});
 
