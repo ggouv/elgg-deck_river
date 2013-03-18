@@ -32,7 +32,7 @@ elgg.deck_river.init = function() {
 			elgg.deck_river.SetColumnsWidth();
 
 			// load columns
-			$('.column-river').each(function() {
+			$('.elgg-page .column-river').each(function() {
 				elgg.deck_river.LoadRiver($(this));
 			});
 
@@ -47,12 +47,13 @@ elgg.deck_river.init = function() {
 			});
 			$('#deck-river-lists').unbind('scroll').scroll(function() {
 				var $this = $(this),
-					containerWidth = $('.deck-river-lists-container').width() - $(this).width()
+					containerWidth = $('.deck-river-lists-container').width() - $this.width()
 					arrows = $('.deck-river-scroll-arrow');
+
 				if ($this.scrollLeft() == 0) {
-					arrows.filter('.left').find('span').addClass('hidden');
-				} else if ($this.scrollLeft() == containerWidth) {
-					arrows.filter('.right').find('span').addClass('hidden');
+					arrows.filter('.left').find('span').addClass('hidden').next().html('');
+				} else if ($this.scrollLeft() > containerWidth-2) { // -2 cause scroll bar on OSX
+					arrows.filter('.right').find('span').addClass('hidden').prev().html('');
 				} else {
 					arrows.find('span').removeClass('hidden');
 				}
@@ -66,7 +67,7 @@ elgg.deck_river.init = function() {
 		if ($('#json-river-thread').length) { // single river item view, dispalyed in his thread
 			var rThread = $('#json-river-thread');
 			$('.elgg-river.single-view').html(elgg.deck_river.elggDisplayItems($.parseJSON(rThread.text())));
-			$('.single-view .item-river-'+rThread.data('message-id')).addClass('viewed');
+			$('.single-view .item-elgg-'+rThread.data('message-id')).addClass('viewed');
 		}
 		if ($('#json-river-owner').length) { // owner river view
 			elgg.deck_river.LoadRiver($('.column-river'), $('#json-river-owner').val());
@@ -151,6 +152,8 @@ elgg.deck_river.init = function() {
 			elgg.register_error('deck_river:message:blank');
 		} else if (thewireForm.find('input[name="networks[]"]').length == 0) { // no network actived
 			elgg.register_error('deck_river:nonetwork');
+		} else if (thewireForm.find('input[name="networks[]"]').length > 5) { // too network ?
+			elgg.register_error('deck_river:toonetwork');
 		} else {
 			thisSubmit = this;
 			if ($.data(this, 'clicked')) { // Prevent double-click
@@ -174,8 +177,8 @@ elgg.deck_river.init = function() {
 								$.data(thisSubmit, 'clicked', false);
 								$('#submit-loader').addClass('hidden');
 								$("#thewire-characters-remaining span").html('0');
-								$('#thewire-textarea').val('').closest('.elgg-form').find('input[name=parent_guid], .responseTo').remove();
-								$('.elgg-list-item.thewire').removeClass('responseAt');
+								$('#thewire-textarea').val('').closest('.elgg-form').find('.responseTo').addClass('hidden').next('.parent').val('').attr('name', '');
+								$('.elgg-list-item').removeClass('responseAt');
 								$('#thewire-header').height(33).removeClass('extended');
 								$('#thewire-network').removeClass('extended');
 							} else {
@@ -196,11 +199,10 @@ elgg.deck_river.init = function() {
 
 	// response to a wire post
 	$('#thewire-header .responseTo').die().live('click', function() {
-		$(this).closest('fieldset').find('input[name=parent_guid]').remove();
-		$(this).remove();
+		$(this).addClass('hidden').next('.parent').val('').attr('name', '');
 		$('.tipsy').remove();
 		$('#thewire-header, #thewire-textarea-border').css({height: '+=-22'});
-		$('.elgg-list-item.thewire').removeClass('responseAt');
+		$('.elgg-list-item').removeClass('responseAt');
 	});
 
 	// refresh column, use 'live' for new column
@@ -551,7 +553,7 @@ elgg.deck_river.SetColumnsHeight = function() {
  */
 elgg.deck_river.SetColumnsWidth = function() {
 	var WindowWidth = $('#deck-river-lists').width();
-	var CountLists = $('.column-river').length;
+	var CountLists = $('#deck-river-lists .column-river').length;
 	var ListWidth = 0; var i = 0;
 	while ( ListWidth < deck_river_min_width_column ) {
 		ListWidth = (WindowWidth) / ( CountLists - i );
@@ -617,9 +619,9 @@ elgg.friendly_time = function(time) {
 }
 
 elgg.friendly_time.update = function() {
-	$('.elgg-friendlytime').each(function(){
-		friendlytime = elgg.friendly_time($(this).find('span').text())
-		$(this).find('acronym').text(friendlytime);
+	$('.elgg-page .elgg-friendlytime').each(function(){
+		var acronym = $(this).find('acronym');
+		acronym.html(elgg.friendly_time(acronym.attr('time')));
 	});
 }
 

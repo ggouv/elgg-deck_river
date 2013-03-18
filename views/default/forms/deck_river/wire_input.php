@@ -28,6 +28,8 @@ foreach ($twitter_accounts as $account) {
 	<div id="thewire-textarea-border"></div>
 	<textarea id="thewire-textarea" name="body"></textarea>
 	<div class="options hidden">
+		<div class="responseTo hidden tooltip s" title="<?php echo elgg_echo('responseToHelper:delete');?>"></div>
+		<input class="parent" type="hidden" name="">
 		<div class="url-shortener">
 			<?php
 				echo elgg_view('input/text', array(

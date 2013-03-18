@@ -49,8 +49,9 @@ $french = array(
 	'retweet' => "Retweeter",
 	'retweet:one' => "%s retweet",
 	'retweet:twoandmore' => "%s retweets",
-	'deck_river:show_discussion' => "Afficher la discussion",
-	'deck_river:toggle_discussion' => "Afficher/masquer la discussion",
+	'deck_river:thread' => "la discussion",
+	'deck_river:thread:show' => "Afficher ", // !space at the end
+	'deck_river:thread:hide' => "Masquer ", // !space
 
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
@@ -134,9 +135,10 @@ $french = array(
 	'deck_river:twitter:posted' => "Votre message a été publié sur Twitter.",
 	'deck_river:twitter:post:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",
 	'deck_river:twitter:post:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", //"You cannot send messages to users who are not following you",
+	'deck_river:twitter:post:error:187' => "Vous avez déjà envoyé ce message. C'est un doublon.", //"Status is a duplicate"
 	'deck_river:twitter:error' => "Il y a eu une erreur avec Twitter.<br>Erreur retourné : %s<br/>%s",
 	'deck_river:twitter:error:34' => "La page ou l'utilisateur n'existe pas sur Twitter.", //"Sorry, that page does not exist",
-	'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", //"Rate limit exceeded",
+	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", //"Rate limit exceeded",
 
 
 );

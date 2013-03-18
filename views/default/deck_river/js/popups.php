@@ -29,6 +29,7 @@ elgg.deck_river.popups = function() {
 			if ($(tab).find('.elgg-ajax-loader').length) {
 				elgg.deck_river.LoadRiver($(tab), tab.match(/[0-9]+/)[0]);
 			}
+			return false;
 		});
 	};
 
@@ -89,59 +90,23 @@ elgg.deck_river.popups = function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
 		var userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
-			makeProfile = function(response) {
-				var tabs = ['profile', 'activity', 'mentions', 'favoris'],
-					output = $('<ul>', {'class': 'elgg-tabs elgg-htabs'}).html(function() {
-						var tabsHtml = '';
-						$.each(tabs, function(i, e) {
-							tabsHtml += '<li class="' + (i==0 ? 'elgg-state-selected' : '') + '"><a href="#'+response.id+'-info-'+e+'">' + elgg.echo(e) + '</a></li>';
-						});
-						return tabsHtml;
-					}).after($('<ul>', {'class': 'elgg-body'}).html(function() {
-						var lisHtml = '';
-						$.each(tabs, function(i, e) {
-							lisHtml += '<li id="' + response.id+'-info-'+e + (i==0 ? '"' : '" class="column-river hidden" data-load_type="LoadTwitter_'+e + '"><ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1/statuses/user_timeline.json"></ul><ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul') + '></li>';
-						});
-						return lisHtml;
-					}));
-
-				output.filter('.elgg-body').find('li:first-child').html(
-					$('<div>', {'class': 'elgg-avatar elgg-avatar-large float'}).html(
-						$('<a>', {title: response.screen_name, rel: 'nofollow', href: 'http://twitter.com/'+response.screen_name}).append(
-						$('<img>', {title: response.screen_name, alt: response.screen_name, src: response.profile_image_url.replace(/_normal/, ''), width: '200px', height: '200px'})
-					)).after(
-					$('<div>', {'class': 'elgg-body plm'}).html(
-						$('<h1>', {'class': 'pts mbm'}).html(response.name).after(
-						$('<h2>', {'class': 'mbs', style: 'font-weight:normal;'}).html('@'+response.screen_name).after(
-							$('<div>').html(response.description)
-					)))).after(
-					$('<div>', {id: 'profile-details', 'class': 'elgg-body pll'}).html(
-						$('<ul>', {'class': 'user-stats mbm'}).append(
-							$('<li>').append($('<div>', {'class': 'stats'}).html(response.followers_count), elgg.echo('friends:followers')),
-							$('<li>').append($('<div>', {'class': 'stats'}).html(response.friends_count), elgg.echo('friends:following')),
-							$('<li>').append($('<div>', {'class': 'stats'}).html(response.listed_count), elgg.echo('list')),
-							$('<li>').append($('<div>', {'class': 'stats'}).html(response.statuses_count), elgg.echo('item:object:thewire'))
-					)).append(
-						$('<div>', {'class': 'even'}).html('<b>' + elgg.echo('Twitter') + ' :</b> <a target="_blank" href="http://twitter.com/'+response.screen_name + '">http://twitter.com/'+response.screen_name + '</a>'),
-						$('<div>', {'class': 'even'}).html('<b>' + elgg.echo('site') + ' :</b> <a target="_blank" href="'+ response.url + '">' + response.url + '</a>'),
-						$('<div>', {'class': 'even'}).html('<b>' + elgg.echo('profile:time_created') + ' :</b> ' + response.created_at)
-					))
-				);
-				return output;
+			templateRender = function(response) {
+				console.log(response);
+				response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
+				fillPopup($('#user-info-popup'), Mustache.render($('#templates .twitter-user-profile').html(), response));
 			};
 
 		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
 			$.get('https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
 				function(response) {
-					console.log(response);
 					elgg.deck_river.storeEntity(response, 'twitter');
-					fillPopup($('#user-info-popup'), makeProfile(response));
+					templateRender(response);
 				},'jsonP'
-			).fail(function() {
-					$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+			).error(function() {
+				$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
 			});
 		} else {
-			fillPopup($('#user-info-popup'), makeProfile(userInfo));
+			templateRender(userInfo);
 		}
 	});
 
@@ -161,38 +126,27 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 	var popupTitle = popupTitle || '';
 
 	if (!$('#'+popupID).length) {
-		//var method = 'append';
-		//$('.elgg-page-body')[method]( @todo option to always pin popup ?
 		$('.elgg-page-body').append(
-			$('<div>', {id: popupID, 'class': 'elgg-module-popup deck-popup'})
-			.draggable({
-				handle: '.elgg-head',
-				stack: '.elgg-module-popup',
-			})
-			.append(
-				$('<div>', {'class': 'elgg-head'}).append(
-					$('<h3>').html(popupTitle).after(
-					$('<a>', {href: '#', 'class': 'pin'}).append(
-						$('<span>', {'class': 'elgg-icon elgg-icon-push-pin tooltip s', title: elgg.echo('deck-river:popups:pin')})
-					).click(function() {
-						var popupP = $(this).closest('.deck-popup');
-						if (popupP.hasClass('pinned')) {
-							$('.elgg-page-body').append(popupP.removeClass('pinned'));
-						} else {
-							$('.elgg-page-body').after(popupP.addClass('pinned'));
-						}
-					})).after(
-					$('<a>', {href: '#'}).append(
-						$('<span>', {'class': 'elgg-icon elgg-icon-delete-alt tooltip s', title: elgg.echo('deck-river:popups:close')})
-					).click(function() {
-						$('#'+popupID).remove();
-						$('.tipsy').remove();
-						return false;
-					})
-				)).after(
-					$('<div>', {'class': 'elgg-body'}).append(
-						$('<div>', {'class': 'elgg-ajax-loader'})
-		))));
+			Mustache.render($('#templates .popup-template').html(), {popupID: popupID, popupTitle: popupTitle})
+		);
+		var popup = $('#'+popupID).draggable({
+			handle: '.elgg-head',
+			stack: '.elgg-module-popup',
+		});
+		popup.find('.elgg-icon-push-pin').click(function() {
+			var popupP = $(this).closest('.deck-popup');
+			if (popupP.hasClass('pinned')) {
+				$('.elgg-page-body').append(popupP.removeClass('pinned'));
+			} else {
+				$('.elgg-page-body').after(popupP.addClass('pinned'));
+			}
+			return false;
+		});
+		popup.find('.elgg-icon-delete-alt').click(function() {
+			popup.remove();
+			$('.tipsy').remove();
+			return false;
+		});
 	} else {
 		$('#'+popupID+' > .elgg-head h3').html(popupTitle);
 		$('#'+popupID+' > .elgg-body').html($('<div>', {'class': 'elgg-ajax-loader'}));

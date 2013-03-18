@@ -30,7 +30,7 @@ if (empty($body)) {
 
 	foreach ($networks as $network) {
 		if ($network == $user->getGUID()) { // network is ggouv
-			$parent_guid = (int) get_input('parent_guid');
+			$parent_guid = (int) get_input('elgg_parent', false);
 
 			$guid = deck_river_thewire_save_post($body, $user->guid, ACCESS_PUBLIC, $parent_guid, 'site');
 			if (!$guid) {
@@ -38,8 +38,11 @@ if (empty($body)) {
 			} else {
 				// Send response to original poster if not already registered to receive notification
 				if ($parent_guid) {
-					deck_river_thewire_send_response_notification($guid, $parent_guid, $user);
-					$parent_owner_guid = get_entity($parent_guid)->getOwnerGUID();
+					$parent_entity = get_entity($parent_guid);
+					if ($parent_entity && $parent_entity->getSubtype() == 'thewire') {
+						deck_river_thewire_send_response_notification($guid, $parent_guid, $user);
+						$parent_owner_guid = get_entity($parent_guid)->getOwnerGUID();
+					}
 				}
 				// send @mention
 				foreach (deck_river_thewire_get_users($body) as $user_mentioned) {
@@ -51,6 +54,7 @@ if (empty($body)) {
 			}
 		} else {
 			$network_entity = get_entity($network);
+			$parent_guid = (int) get_input('twitter_parent', false);
 
 			// twitter
 			if ($network_entity->getSubtype() == 'twitter_account' && $network_entity->getOwnerGUID() == $user->getGUID()) {
@@ -60,18 +64,22 @@ if (empty($body)) {
 				$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $network_entity->oauth_token, $network_entity->oauth_token_secret);
 
 				// post to twitter
-				if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message
-					if (!$matches[2]) {
-						register_error(elgg_echo('deck_river:message:blank'));
-						return true;
-					}
-					try {
+				try {
+					if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message
+						if (!$matches[2]) {
+							register_error(elgg_echo('deck_river:message:blank'));
+							return true;
+						}
 						$result = $twitterObj->post_direct_messagesNew(array('text' => $matches[2], 'screen_name' => $matches[1]));
-					} catch(Exception $e) {
-						$result = json_decode($e->getMessage())->errors[0];
+					} else {
+						if ($parent_guid) { // response to a tweet with in_reply_to_status_id
+							$result = $twitterObj->post_statusesUpdate(array('status' => $body, 'in_reply_to_status_id' => $parent_guid));
+						} else {
+							$result = $twitterObj->post_statusesUpdate(array('status' => $body));
+						}
 					}
-				} else {
-					$result = $twitterObj->post_statusesUpdate(array('status' => $body));
+				} catch(Exception $e) {
+					$result = json_decode($e->getMessage())->errors[0];
 				}
 
 				// check result

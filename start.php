@@ -22,6 +22,7 @@ function deck_river_init() {
 	elgg_extend_view('js/elgg', 'deck_river/js/loaders');
 	elgg_extend_view('js/elgg', 'deck_river/js/shortener_url');
 	elgg_extend_view('js/elgg', 'deck_river/js/river_templates');
+	elgg_extend_view('page/elements/foot', 'deck_river/templates_mustache', 499);
 
 	elgg_register_ajax_view('deck_river/ajax_json/column_river');
 	elgg_register_ajax_view('deck_river/ajax_json/entity_river');
@@ -63,7 +64,13 @@ function deck_river_init() {
 	// add menu in usersettings page
 	elgg_register_event_handler('pagesetup', 'system', 'authorize_applications_pagesetup');
 
+	// unregistrer trigger for river menu
+	elgg_unregister_plugin_hook_handler('register', 'menu:river', 'elgg_river_menu_setup');
+	elgg_register_plugin_hook_handler('register', 'menu:river', 'deck_river_menu_setup');
+
 }
+
+
 
 function deck_river_page_handler($page) {
 
@@ -553,6 +560,90 @@ function deck_river_thewire_owner_block_menu($hook, $type, $return, $params) {
 }
 
 
+
+/**
+ * Add the comment and like links to river actions menu
+ * @access private
+ */
+function deck_river_menu_setup($hook, $type, $return, $params) {
+	if (elgg_is_logged_in()) {
+		$item = $params['item'];
+		$object = $item->getObjectEntity();
+
+		// comments and non-objects cannot be commented on or liked. Annotation id of thewire object return 0
+		if ($item->annotation_id != 0) {
+			// comments
+			if ($object->canComment()) {
+				$options = array(
+					'name' => 'comment',
+					'href' => "#comments-add-$object->guid",
+					'text' => elgg_view_icon('speech-bubble'),
+					'class' => 'gwfb tooltip s',
+					'title' => elgg_echo('comment:this'),
+					'rel' => 'toggle',
+					'priority' => 50,
+				);
+				$return[] = ElggMenuItem::factory($options);
+			}
+		} else if ($object->getSubtype() == 'thewire') {
+			$options = array(
+				'name' => 'response',
+				'text' => elgg_view_icon('response'),
+				'class' => 'gwfb tooltip s',
+				'title' => elgg_echo('reply'),
+				'priority' => 50,
+			);
+			$return[] = ElggMenuItem::factory($options);
+
+			$options = array(
+				'name' => 'retweet',
+				'text' => elgg_view_icon('share'),
+				'class' => 'gwfb tooltip s',
+				'title' => elgg_echo('retweet'),
+				'priority' => 60,
+			);
+			$return[] = ElggMenuItem::factory($options);
+
+		}
+
+		if (true ||$item->annotation_id != 0 && elgg_is_admin_logged_in()) {
+			$options = array(
+				'name' => 'delete',
+				'section' => 'submenu',
+				'href' => "action/river/delete?id=$item->id",
+				'text' => elgg_view_icon('delete') . elgg_echo('delete'),
+				'title' => elgg_echo('delete'),
+				'confirm' => elgg_echo('deleteconfirm'),
+				'is_action' => true,
+				'priority' => 200,
+			);
+			$return[] = ElggMenuItem::factory($options);
+		}
+	}
+
+	return $return;
+}
+
+function deck_return_menu(array $vars = array(), $sort_by = 'priority') {
+	// Give plugins a chance to add menu items just before creation.
+	// This supports dynamic menus (example: user_hover).
+	$menu = elgg_trigger_plugin_hook('register', 'menu:river', $vars, $menu);
+
+	$builder = new ElggMenuBuilder($menu);
+	$vars['menu'] = $builder->getMenu($sort_by);
+
+	// Let plugins modify the menu
+	$vars['menu'] = elgg_trigger_plugin_hook('prepare', 'menu:river', $vars, $vars['menu']);
+
+	foreach ($vars['menu'] as $section => $menu_items) {
+		foreach ($menu_items as $key => $item) {
+			$return[$section][$key]['name'] = $item->getName();
+			$return[$section][$key]['content'] = $item->getContent();
+			if ($item->getSelected()) $return[$section][$key]['selected'] = true;
+		}
+	}
+	return $return;
+}
 
 /**
 * Google url shortener

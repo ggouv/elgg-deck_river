@@ -6,20 +6,24 @@
 $column_settings = elgg_extract('column_settings', $vars);
 
 $params = array(
-	'text' => elgg_view_icon('refresh'),
-	'title' => elgg_echo('deck_river:refresh'),
-	'href' => "#",
-	'class' => "elgg-column-refresh-button tooltip s",
-);
-$buttons = elgg_view('output/url', $params);
-
-$params = array(
 	'text' => elgg_view_icon('settings-alt'),
 	'title' => elgg_echo('deck_river:edit'),
 	'href' => "#",
 	'class' => "elgg-column-edit-button tooltip s",
 );
+$buttons = elgg_view('output/url', $params);
+
+$params = array(
+	'text' => elgg_view_icon('refresh'),
+	'title' => elgg_echo('deck_river:refresh'),
+	'href' => "#",
+	'class' => "elgg-column-refresh-button tooltip s",
+);
 $buttons .= elgg_view('output/url', $params);
+$buttons .= elgg_view('output/img', array(
+	'src' => elgg_get_site_url() . 'mod/elgg-deck_river/graphics/refresh.gif',
+	'class' => 'refresh-gif'
+));
 
 $title = elgg_echo($column_settings['title']);
 $subtitle = elgg_echo($column_settings['subtitle']);

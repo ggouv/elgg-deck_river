@@ -46,7 +46,23 @@ if ($column_settings['network'] == 'twitter') {
 	// check result
 	if ($result->code == 200) {
 		$jsonexport['column_type'] = $column_settings['type'];
-		$jsonexport['results'] = $result->__get('response');
+		foreach ($result->__get('response') as $value) {
+			$value['menu'] = array(
+				'default' => array(
+					array(
+						'name' => 'response',
+						'content' => '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
+					),
+					array(
+						'name' => 'retweet',
+						'content' => '<a href="" title="Retweeter" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
+					)
+				),
+				'submenu' => array()
+			);
+			$results[] = $value;
+		}
+		$jsonexport['results'] = $results;
 	} else {
 		$key = 'deck_river:twitter:error:' . $result->code;
 		if (elgg_echo($key) == $key) { // check if language string exist
@@ -135,7 +151,11 @@ if ($column_settings['network'] == 'twitter') {
 	$jsonexport['activity'] = array();
 	if (is_array($items)) {
 		foreach ($items as $item) {
-			elgg_view($item->view, array('item' => $item), '', '', 'json'); // this view fill the global $jsonexport
+			if (elgg_view_exists($item->view, 'json')) {
+				elgg_view($item->view, array('item' => $item), '', '', 'json'); // this view fill the global $jsonexport
+			} else {
+				elgg_view('river/item', array('item' => $item), '', '', 'json');
+			}
 		}
 	}
 
@@ -145,10 +165,10 @@ if ($column_settings['network'] == 'twitter') {
 
 		$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
 
-		$menus = elgg_trigger_plugin_hook('register', "menu:river", array('item' => $item)); // add menus
-		foreach ($menus as $menu) {
-			$item->menu[] = $menu->getData('name');
-		}
+		$item->menu = deck_return_menu(array(
+			'item' => $item,
+			'sort_by' => 'priority'
+		));
 
 		unset($item->view); // delete view
 	}

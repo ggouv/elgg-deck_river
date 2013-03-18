@@ -97,15 +97,16 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 
 				responseHTML.filter('.elgg-list-item').addClass('newRiverItem');
 				if (responseHTML.length) TheColumn.find('.elgg-river > table').remove();
-				TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", {}, 2000);
+				TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", 2000);
 				elgg.deck_river.displayCount(response, TheColumn);
 			}
 		}
 
 	if (TheColumnHeader.data('direct')) { // this is a direct link. Feed is loaded by user's browser.
-		var url = elgg.parse_url(TheColumnHeader.data('direct'));
+		var url = elgg.parse_url(TheColumnHeader.data('direct')),
+			refreshURL = TheColumnHeader.data('refresh_url');
 		$.ajax({
-			url: url.scheme+'://'+url.host+url.path + TheColumnHeader.data('refresh_url'),
+			url: refreshURL ? url.scheme+'://'+url.host+url.path + refreshURL : TheColumnHeader.data('direct'),
 			dataType: 'jsonP',
 			success: function(response) {
 				displayItems(response);
@@ -119,7 +120,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				tab: $('#deck-river-lists').data('tab'),
 				column: TheColumn.attr('id'),
 				time_method: 'lower',
-				time_posted: TheColumn.find('.elgg-list-item').first().data('timeID') || 0
+				time_posted: TheColumn.find('.elgg-list-item').first().data('timeid') || 0
 			},
 			success: function(response) {displayItems(response)},
 		});
@@ -142,9 +143,9 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 		displayItems = function(response) {
 			var TheColumnRiver = TheColumn.removeClass('loadingMore').find('.elgg-river'),
 				responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
-
+console.log(responseHTML);
 			TheColumnHeader.find('.count').addClass('hidden');
-			TheColumnRiver.append(responseHTML.effect("highlight", {}, 2000))
+			TheColumnRiver.append(responseHTML.effect("highlight", 2000))
 				.find('.moreItem').appendTo(TheColumnRiver);
 			TheColumnRiver.scrollTo(TheColumnRiver.scrollTop()+LastItem.next().position().top+'px', 1500, {easing:'easeOutQuart'});
 		};
@@ -170,7 +171,7 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				tab: $('#deck-river-lists').data('tab'),
 				column: TheColumn.attr('id'),
 				time_method: 'upper',
-				time_posted: LastItem.data('timeID'),
+				time_posted: LastItem.data('timeid'),
 				guid: TheEntity ? TheEntity : null,
 			},
 			success: function(response) {displayItems(response)},
@@ -195,17 +196,23 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 	var athreadResponses = athread.parent('.elgg-river-responses'),
 		TheColumnHeader = athread.closest('.column-river').find('.column-header'),
 		displayItems = function(response) {
-			var idToggle = athreadResponses
-				.find('.response-loader').addClass('hidden')
-				.closest('.column-river').attr('id') + '-' + athread.closest('.elgg-list-item').attr('class').match(/item-river-\d+/);
+			var riverID = athread.closest('.elgg-list-item').attr('class').match(/\d+/)[0],
+				itemsRiver = $('.item-elgg-' + riverID),
+				newItems = elgg.deck_river.displayRiver(response, TheColumnHeader, true);
 
-			athreadResponses.append($('<div>', {id: idToggle, 'class': 'thread mts float'}).html(
-				elgg.deck_river.displayRiver(response, TheColumnHeader, true)
-			));
-			athread.attr({
-				rel: 'toggle',
-				href: '#' + idToggle
-			}).html(elgg.echo('deck_river:toggle_discussion'));
+			$.each(itemsRiver, function() {
+				console.log($(this));
+				var idToggle = $(this).find('.response-loader').addClass('hidden')
+					.closest('.column-river').attr('id') + '-' + riverID;
+
+				$(this).find('.elgg-river-responses')
+					.append($('<div>', {id: idToggle, 'class': 'thread mts float hidden'}).html(newItems.clone()))
+				.find('a.thread').attr({
+					rel: 'toggle',
+					href: '#' + idToggle
+				});
+			});
+			athread.click(); // toggle after append
 		};
 
 	// if already exist, skip
@@ -216,8 +223,8 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 	if (TheColumnHeader.data('network') == 'twitter') {
 		//http://api.twitter.com/1/related_results/show/254208368070258688.json?include_entities=1
 		$.ajax({
-			url: 'https://api.twitter.com/1.1/statuses/show.json?id='+ athread.data('thread'),
-			//url: 'http://api.twitter.com/1/related_results/show/'+ athread.data('thread') +'.json?include_entities=1',
+			//url: 'https://api.twitter.com/1.1/statuses/show.json?id='+ athread.data('thread'),
+			url: 'http://api.twitter.com/1/related_results/show/'+ athread.data('thread') +'.json?include_entities=1',
 			dataType: 'json',
 			success: function(response) {displayItems(response)},
 			error: function(XHR, textStatus, errorThrown){
@@ -271,7 +278,7 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
  * Load Twitter timeline for an user
  */
 elgg.deck_river.displayCount = function(response, TheColumn) {
-	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
+	var TheColumnHeader = TheColumn.find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
 		networkReturn = (TheColumnHeader.data('network') == 'twitter') ? 'results' : 'activity'
 		responseLength = response[networkReturn].length,
