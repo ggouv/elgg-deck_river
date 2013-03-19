@@ -22,13 +22,33 @@
 
 
 
+<!-- Template for hashtag popup -->
+<div class="hashtag-popup">
+	<ul class="elgg-tabs elgg-htabs">
+		<li><a class="elgg" href="#{{hashtag}}-elgg">Elgg</a></li>
+		<li><a class="twitter" href="#{{hashtag}}-twitter">Twitter</a></li>
+	</ul>
+	<ul class="elgg-body">
+		<li id="{{hashtag}}-elgg" class="column-river hidden">
+			<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river" data-entity="#{{hashtag}}"></ul>
+			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
+		</li>
+		<li id="{{hashtag}}-twitter" class="column-river hidden">
+			<ul class="column-header hidden" data-network="twitter" data-direct="https://search.twitter.com/search.json?q=%23{{hashtag}}&rpp=100&include_entities=1"></ul>
+			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
+		</li>
+	</ul>
+</div>
+
+
+
 <!-- Template for Twitter user profile popup -->
 <div class="twitter-user-profile">
 	<ul class="elgg-tabs elgg-htabs">
-		<li class="elgg-state-selected"><a href="#{{id}}-info-profile">Profil</a></li>
-		<li><a href="#{{id}}-get_statusesUser_timeline">Activité</a></li>
-		<li class=""><a href="#{{id}}-mentions">Mentions</a></li>
-		<li class=""><a href="#{{id}}-get_favoritesList">Favoris</a></li>
+		<li class="elgg-state-selected"><a href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+		<li><a href="#{{id}}-get_statusesUser_timeline"><?php echo elgg_echo('activity'); ?></a></li>
+		<li><a href="#{{id}}-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
+		<li><a href="#{{id}}-get_favoritesList"><?php echo elgg_echo('favorites'); ?></a></li>
 	</ul>
 	<ul class="elgg-body">
 		<li id="{{id}}-info-profile">
@@ -62,8 +82,8 @@
 				</div>
 			</div>
 		</li>
-		<li id="{{id}}-get_statusesUser_timeline" class="column-river hidden">
-			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth"></ul>
+		<li id="{{id}}-get_statusesUser_timeline" class="column-river hidden" >
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-entity="#{{id}}"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 		<li id="{{id}}-mentions" class="column-river hidden">
@@ -71,7 +91,7 @@
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 		<li id="{{id}}-get_favoritesList" class="column-river hidden">
-			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth"></ul>
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-entity="#{{id}}"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 	</ul>

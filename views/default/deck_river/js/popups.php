@@ -16,37 +16,37 @@
  */
 elgg.deck_river.popups = function() {
 
-	// function for user and group popups
-	var fillPopup = function(popupElem, response) {
-		popupElem.children('.elgg-body').html(response);
-		popupElem.find('.elgg-tabs > li > a').click(function() {
-			var tab = $(this).attr('href');
-			if (popupElem.find(tab).hasClass('hidden')) {
-				popupElem.find('.elgg-tabs > li').removeClass('elgg-state-selected');
-				$(this).parent('li').addClass('elgg-state-selected');
-				popupElem.find('.elgg-body > li').addClass('hidden').filter(tab).removeClass('hidden');
-			}
-			if ($(tab).find('.elgg-ajax-loader').length) {
-				elgg.deck_river.LoadRiver($(tab), $(this).data('object'));
-			}
-			return false;
-		});
-	};
+	// tabs popups
+	$('.deck-popup .elgg-tabs a').die().live('click', function() {
+		var popup = $(this).closest('.deck-popup'),
+			tab = $(this).attr('href');
+
+		if (popup.find(tab).hasClass('hidden')) {
+			popup.find('.elgg-tabs li').removeClass('elgg-state-selected');
+			$(this).parent('li').addClass('elgg-state-selected');
+			popup.find('.elgg-body > li').addClass('hidden').filter(tab).removeClass('hidden');
+		}
+		if ($(tab).find('.elgg-ajax-loader').length) {
+			elgg.deck_river.LoadRiver($(tab), $(tab).children('.column-header').data('entity'));
+		}
+		return false;
+	});
 
 	// user info popup
 	$('.user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
+		var body = $('#user-info-popup > .elgg-body');
 		elgg.post('ajax/view/deck_river/ajax_view/user_info', {
 			dataType: "html",
 			data: {
 				user: $(this).attr('title'),
 			},
 			success: function(response) {
-				fillPopup($('#user-info-popup'), response);
+				body.html(response);
 			},
 			error: function() {
-				$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+				body.html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
 	});
@@ -55,44 +55,41 @@ elgg.deck_river.popups = function() {
 	$('.group-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:group-info-header', [$(this).attr('title')]));
 
+		var body = $('#group-info-popup > .elgg-body');
 		elgg.post('ajax/view/deck_river/ajax_view/group_info', {
 			dataType: "html",
 			data: {
 				group: $(this).attr('title'),
 			},
 			success: function(response) {
-				fillPopup($('#group-info-popup'), response);
+				body.html(response);
 			},
 			error: function() {
-				$('#group-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+				body.html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
 	});
 
 	// hashtag info popup
 	$('.hashtag-info-popup').die().live('click', function() {
-		elgg.deck_river.createPopup(
-			'hashtag-info-popup',
-			elgg.echo('deck_river:hashtag-info-header', [$(this).attr('title')]),
-			function() {
-				$('#hashtag-info-popup').find('.elgg-ajax-loader').wrap(
-					$('<ul>', {'class': 'elgg-river elgg-list'})
-				).before(
-					$('<ul>', {'class': 'column-header hidden', 'data-network': 'elgg', 'data-river_type': 'entity_river'})
-				);
-			}
-		);
-		elgg.deck_river.LoadRiver($('#hashtag-info-popup'), $(this).attr('title'));
+		var hashtag = $(this).attr('title'),
+			network = $(this).data('network') || 'elgg';
+
+		elgg.deck_river.createPopup('hashtag-info-popup', elgg.echo('deck_river:hashtag-info-header', [hashtag]));
+		$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#templates .hashtag-popup').html(), {hashtag: hashtag.replace('#', '')}));
+		$('#hashtag-info-popup .elgg-tabs .'+network).click();
+		//elgg.deck_river.LoadRiver($('#hashtag-info-popup'), '#'+hashtag);
 	});
 
 	// Twitter user info popup
 	$('.twitter-user-info-popup').die().live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
-		var userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
+		var body = $('#user-info-popup > .elgg-body'),
+			userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
 			templateRender = function(response) {
 				response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-				fillPopup($('#user-info-popup'), Mustache.render($('#templates .twitter-user-profile').html(), response));
+				body.html(Mustache.render($('#templates .twitter-user-profile').html(), response));
 			};
 
 		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
@@ -102,7 +99,7 @@ elgg.deck_river.popups = function() {
 					templateRender(response);
 				},'jsonP'
 			).error(function() {
-				$('#user-info-popup > .elgg-body').html(elgg.echo('deck_river:ajax:erreur'));
+				body.html(elgg.echo('deck_river:ajax:erreur'));
 			});
 		} else {
 			templateRender(userInfo);

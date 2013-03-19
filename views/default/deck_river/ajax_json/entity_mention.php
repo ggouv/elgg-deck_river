@@ -51,7 +51,7 @@ if ($options['types_filter']) {
 
 $defaults = array(
 	'offset' => (int) get_input('offset', 0),
-	'limit' => (int) get_input('limit', 20),
+	'limit' => (int) get_input('limit', 30),
 	'pagination' => FALSE,
 	'count' => FALSE,
 );

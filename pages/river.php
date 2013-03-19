@@ -22,7 +22,10 @@ $content = "<div id=\"deck-river-lists\" data-tab=\"{$page_filter}\"><ul class=\
 
 foreach ($user_river_settings[$page_filter] as $key => $column_settings) {
 	$content .= "<li class=\"column-river\" id=\"{$key}\">" .
-				elgg_view('page/layouts/content/deck_river_column_header', array('column_settings' => $column_settings)) .
+				elgg_view('page/layouts/content/deck_river_column_header', array(
+					'column_id' => $key,
+					'column_settings' => $column_settings
+				)) .
 				'<ul class="elgg-river elgg-list">' .
 					elgg_view('graphics/ajax_loader', array('hidden' => false)) .
 				'</ul>' .

@@ -589,7 +589,7 @@ li.elgg-menu-item-arrow-left {
 	overflow-y: hidden;
 	width: 100%;
 }
-#deck-river-lists .elgg-river {
+.column-river .elgg-river {
 	height: 100%;
 	overflow-y: scroll;
 	overflow-x: hidden;
@@ -945,6 +945,9 @@ li.elgg-menu-item-arrow-left {
 .deck-popup > .elgg-body > .elgg-body {
 	height: 540px;
 	overflow-y: auto;
+}
+.deck-popup .column-river {
+	height: 540px;
 }
 #hashtag-info-popup > .elgg-body {
 	height: 573px;

@@ -13,8 +13,8 @@ if (!$group) {
 ?>
 <ul class="elgg-tabs elgg-htabs">
 	<li class="elgg-state-selected"><a href="#<?php echo $group_id; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
-	<li><a href="#<?php echo $group_id; ?>-info-activity" data-object="<?php echo $group_id; ?>"><?php echo elgg_echo('activity'); ?></a></li>
-	<li><a href="#<?php echo $group_id; ?>-info-mentions" data-object="<?php echo $group_id; ?>"><?php echo elgg_echo('river:mentions'); ?></a></li>
+	<li><a href="#<?php echo $group_id; ?>-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
+	<li><a href="#<?php echo $group_id; ?>-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
 </ul>
 <ul class="elgg-body">
 	<li id="<?php echo $group_id; ?>-info-profile">
@@ -59,11 +59,11 @@ if (!$group) {
 		</div>
 	</li>
 	<li id="<?php echo $group_id; ?>-info-activity" class="column-river hidden">
-		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river"></ul>
+		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river" data-entity="<?php echo $group_id; ?>"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 		<li id="<?php echo $group_id; ?>-info-mentions" class="column-river hidden">
-		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_mention"></ul>
+		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_mention" data-entity="<?php echo $group_id; ?>"></ul>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

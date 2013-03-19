@@ -221,7 +221,7 @@ elgg.deck_river.init = function() {
 	// load more in column
 	$('.moreItem').die().live('click', function() {
 		var TheColumn = $(this).closest('.column-river');
-		elgg.deck_river.LoadMore(TheColumn, TheColumn.attr('id').match(/[0-9]+/)[0]);
+		elgg.deck_river.LoadMore(TheColumn, TheColumn.children('.column-header').data('entity'));
 	});
 
 	// hide alert or other messages in column
@@ -582,7 +582,7 @@ elgg.deck_river.SetColumnsHeight = function() {
 		return $._scrollbarWidth;
 	}
 	var offset = $('#deck-river-lists').offset();
-	$('.elgg-river').height($(window).height() - offset.top - $('.column-header').height() - scrollbarWidth());
+	$('.elgg-page-body .elgg-river').height($(window).height() - offset.top - $('.column-header').height() - scrollbarWidth());
 	$('#deck-river-lists').height($(window).height() - offset.top);
 };
 
@@ -598,7 +598,7 @@ elgg.deck_river.SetColumnsWidth = function() {
 		ListWidth = (WindowWidth) / ( CountLists - i );
 		i++;
 	}
-	$('.elgg-river, .column-header, .column-placeholder').width(ListWidth - 2);
+	$('.elgg-page-body').find('.elgg-river, .column-header, .column-placeholder').width(ListWidth - 2);
 	$('.deck-river-lists-container').removeClass('hidden').width(ListWidth * CountLists);
 };
 

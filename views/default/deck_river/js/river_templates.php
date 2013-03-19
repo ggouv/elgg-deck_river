@@ -261,9 +261,10 @@ String.prototype.TwitterParseUsername = function () {
 	});
 };
 String.prototype.TwitterParseHashtag = function () {
-	return this.replace(/#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+/g, function (t) {
-		var tag = t.replace("#", "%23")
-		return t.link("http://search.twitter.com/search?q=" + tag);
+	return this.replace(/#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+/g, function (h) {
+		//var tag = t.replace("#", "%23")
+		return '<a href="#" class="hashtag-info-popup" title="'+h+'" data-network="twitter">'+h+'</a>';
+		//return t.link("http://search.twitter.com/search?q=" + tag);
 	});
 };
 
