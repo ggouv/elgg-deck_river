@@ -226,6 +226,18 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		});
 		value.menu = tempMenu;
 
+		// Fill responses (retweet and discussion link)
+		var retweet = false, reply = false;
+		if (value.retweet_count == 1) {
+			retweet = elgg.echo('retweet:one', [value.retweet_count]);
+		} else if (value.retweet_count > 1) {
+			retweet = elgg.echo('retweet:twoandmore', [value.retweet_count]);
+		}
+		value.responses = {
+			retweet: retweet ? retweet : false,
+			reply: value.in_reply_to_status_id != null && !thread // thread id is filled by in_reply_to_status in mustache template. Only true/false is sending.
+		};
+
 		// parse tweet text
 		value.text = value.text.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag();
 

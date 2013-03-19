@@ -9,6 +9,9 @@
  *
  */
 
+/* Be carefull ! Tweet IDs are too long for a call with .data('id') ! We need use .attr('data-id')
+
+
 /**
  * Load a column
  *
@@ -95,10 +98,12 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 			if (elgg.trigger_hook('deck-river', 'refresh:column:'+response.column_type, response, true)) {
 				var responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
 
-				responseHTML.filter('.elgg-list-item').addClass('newRiverItem');
-				if (responseHTML.length) TheColumn.find('.elgg-river > table').remove();
-				TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", 2000);
-				elgg.deck_river.displayCount(response, TheColumn);
+				TheColumn.find('.elgg-river > table').remove();
+				if (!elgg.isUndefined(responseHTML)) {
+					responseHTML.filter('.elgg-list-item').addClass('newRiverItem');
+					TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", 2000);
+					elgg.deck_river.displayCount(response, TheColumn);
+				}
 			}
 		}
 
@@ -120,7 +125,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				tab: $('#deck-river-lists').data('tab'),
 				column: TheColumn.attr('id'),
 				time_method: 'lower',
-				time_posted: TheColumn.find('.elgg-list-item').first().data('timeid') || 0
+				time_posted: TheColumn.find('.elgg-list-item').first().attr('data-timeid') || 0
 			},
 			success: function(response) {displayItems(response)},
 		});
@@ -143,7 +148,7 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 		displayItems = function(response) {
 			var TheColumnRiver = TheColumn.removeClass('loadingMore').find('.elgg-river'),
 				responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
-console.log(responseHTML);
+
 			TheColumnHeader.find('.count').addClass('hidden');
 			TheColumnRiver.append(responseHTML.effect("highlight", 2000))
 				.find('.moreItem').appendTo(TheColumnRiver);
@@ -221,19 +226,28 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 	athreadResponses.find('.response-loader').removeClass('hidden');
 
 	if (TheColumnHeader.data('network') == 'twitter') {
+		$.get('http://api.twitter.com/1/related_results/show/'+ athread.attr('data-thread') +'.json?include_entities=1',
+				function(response) {
+					console.log(response);displayItems(response);
+				},'json'
+			).error(function(XHR, textStatus, errorThrown) {
+				console.log(XHR);
+				console.log("ERREUR: " + textStatus);
+				console.log("ERREUR: " + errorThrown);
+			});
 		//http://api.twitter.com/1/related_results/show/254208368070258688.json?include_entities=1
-		$.ajax({
+		/*$.ajax({
 			//url: 'https://api.twitter.com/1.1/statuses/show.json?id='+ athread.data('thread'),
-			url: 'http://api.twitter.com/1/related_results/show/'+ athread.data('thread') +'.json?include_entities=1',
-			dataType: 'json',
-			success: function(response) {displayItems(response)},
+			url: 'http://api.twitter.com/1/related_results/show/'+ athread.attr('data-thread') +'.json?include_entities=1',
+			dataType: 'jsonP',
+			success: function(response) {console.log(response);displayItems(response)},
 			error: function(XHR, textStatus, errorThrown){
 				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
 				console.log(XHR);
 				console.log("ERREUR: " + textStatus);
 				console.log("ERREUR: " + errorThrown);
 			}
-		});
+		});*/
 	} else {
 		elgg.post('ajax/view/deck_river/ajax_json/load_discussion', {
 			dataType: "json",

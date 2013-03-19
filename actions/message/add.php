@@ -63,6 +63,12 @@ if (empty($body)) {
 				$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
 				$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $network_entity->oauth_token, $network_entity->oauth_token_secret);
 
+				// parse message to replace !group by #group
+				$body = preg_replace(
+					'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
+					'$1#$2',
+					$body);
+
 				// post to twitter
 				try {
 					if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message

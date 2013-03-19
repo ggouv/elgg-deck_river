@@ -177,9 +177,8 @@
 			{{#responses}}
 			<div class="elgg-river-responses">
 				{{#responses.retweet}}
-					<span class="elgg-icon elgg-icon-retweet-sub gwf">
-						<span class="prm float">{{responses.retweet}}</span>
-					</span>
+					<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
+					<span class="prm float">{{responses.retweet}}</span>
 				{{/responses.retweet}}
 				{{#responses.reply}}
 				<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
