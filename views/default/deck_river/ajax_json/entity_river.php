@@ -91,10 +91,10 @@ foreach ($jsonexport['activity'] as $item) {
 
 	$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
 
-	$menus = elgg_trigger_plugin_hook('register', "menu:river", array('item' => $item)); // add menus
-	foreach ($menus as $menu) {
-		$item->menu[] = $menu->getData('name');
-	}
+	$item->menu = deck_return_menu(array(
+		'item' => $item,
+		'sort_by' => 'priority'
+	));
 
 	unset($item->view); // delete view
 }

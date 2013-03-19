@@ -2,7 +2,7 @@
 
 
 
-<!-- Template for Twitter user profile popup -->
+<!-- Template for popups -->
 <div class="popup-template">
 	<div id="{{popupID}}" class="elgg-module-popup deck-popup ui-draggable" style="position: relative;">
 		<div class="elgg-head">
@@ -26,16 +26,16 @@
 <div class="twitter-user-profile">
 	<ul class="elgg-tabs elgg-htabs">
 		<li class="elgg-state-selected"><a href="#{{id}}-info-profile">Profil</a></li>
-		<li><a href="#{{id}}-info-activity">Activité</a></li>
-		<li class=""><a href="#{{id}}-info-mentions">mentions</a></li>
-		<li class=""><a href="#{{id}}-info-favoris">favoris</a></li>
+		<li><a href="#{{id}}-get_statusesUser_timeline">Activité</a></li>
+		<li class=""><a href="#{{id}}-mentions">Mentions</a></li>
+		<li class=""><a href="#{{id}}-get_favoritesList">Favoris</a></li>
 	</ul>
 	<ul class="elgg-body">
 		<li id="{{id}}-info-profile">
 			<div class="elgg-avatar elgg-avatar-large float">
 				<a href="http://twitter.com/{{screen_name}}" title="{{screen_name}}" rel="nofollow">
 					<div style="width: 200px; text-align: center; overflow: hidden; line-height: 200px; height: 200px;">
-						<img title="{{screen_name}}" alt="{{screen_name}}" src="{{profile_image_url}}">
+						<img width="200px" title="{{screen_name}}" alt="{{screen_name}}" src="{{profile_image_url}}">
 					</div>
 				</a>
 			</div>
@@ -62,16 +62,16 @@
 				</div>
 			</div>
 		</li>
-		<li id="{{id}}-info-activity" class="column-river hidden" data-load_type="LoadTwitter_activity">
-			<ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1/statuses/user_timeline.json"></ul>
+		<li id="{{id}}-get_statusesUser_timeline" class="column-river hidden">
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
-		<li id="{{id}}-info-mentions" class="column-river hidden" data-load_type="LoadTwitter_mentions">
-			<ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1/statuses/user_timeline.json"></ul>
+		<li id="{{id}}-mentions" class="column-river hidden">
+			<ul class="column-header hidden" data-network="twitter" data-direct="https://search.twitter.com/search.json?q=%40{{screen_name}}&rpp=100&include_entities=1"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
-		<li id="{{id}}-info-favoris" class="column-river hidden" data-load_type="LoadTwitter_favoris">
-			<ul class="column-header hidden" data-network="twitter" data-direct="http://api.twitter.com/1/statuses/user_timeline.json"></ul>
+		<li id="{{id}}-get_favoritesList" class="column-river hidden">
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 	</ul>

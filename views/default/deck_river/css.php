@@ -630,7 +630,7 @@ li.elgg-menu-item-arrow-left {
 }
 .column-header > li > a {
 	float: right;
-	margin: 5px 7px 0 0;
+	margin: 6px 7px 0 0;
 }
 .column-river .count, .newRiverItem:before {
 	background: #FA3;

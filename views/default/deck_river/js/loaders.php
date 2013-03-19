@@ -32,7 +32,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			url: TheColumnHeader.data('direct'),
 			dataType: 'jsonP',
 			success: function(response) {
-				TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
+				TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));//.scrollTo(0);
 				if (response.refresh_url !== undefined) {
 					TheColumnHeader.data('refresh_url', response.refresh_url);
 				} else {
@@ -55,24 +55,28 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			dataType: 'json',
 			data: {
 				tab: $('#deck-river-lists').data('tab'), // used only with 'column_river' call
-				column: TheColumn.attr('id'), // used only with 'column_river' call
+				column: TheColumn.attr('id'), // used for 'column_river' call and 'twitter_OAuth' with id-method which id is the user id and method is eg: get_statusesUser_timeline
 				guid: TheEntity ? TheEntity : null,
 			},
 			success: function(response) {
+				if (response) {
 				response.TheColumn = TheColumn.removeClass('loadingRefresh');
-				if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
-					TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
-					if ( TheColumn.find('.elgg-list-item').length >= 30 ) TheColumnRiver.append(loadMoreItem);
-					/*} else if ( TheColumn.find('.elgg-list-item').length == 0 ) {
-						var user = elgg.get_logged_in_user_entity(),
-							c_type = response.column_type;
+					if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
+						TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
+						if ( TheColumn.find('.elgg-list-item').length >= 30 ) TheColumnRiver.append(loadMoreItem);
+						/*} else if ( TheColumn.find('.elgg-list-item').length == 0 ) {
+							var user = elgg.get_logged_in_user_entity(),
+								c_type = response.column_type;
 
-						if (c_type == 'mine' && Math.round($.now()/1000) - elgg.get_logged_in_user_entity().time_created  < (60*60*24*7)) c_type = 'now';
-						TheColumnRiver.html($('<table>', {height: '100%', width: '100%'}).append(
-							$('<tr>').append(
-								$('<td>', {'class': 'helper'}).html(elgg.echo('deck_river:helper:'+c_type, [user.location])))
-						));
-					}*/
+							if (c_type == 'mine' && Math.round($.now()/1000) - elgg.get_logged_in_user_entity().time_created  < (60*60*24*7)) c_type = 'now';
+							TheColumnRiver.html($('<table>', {height: '100%', width: '100%'}).append(
+								$('<tr>').append(
+									$('<td>', {'class': 'helper'}).html(elgg.echo('deck_river:helper:'+c_type, [user.location])))
+							));
+						}*/
+					}
+				} else { // @todo Make error more comprehensible
+					TheColumnRiver.html('error');
 				}
 			}
 		});

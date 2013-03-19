@@ -42,7 +42,7 @@ if ($column_settings['network'] == 'twitter') {
 	} catch(Exception $e) {
 		$result = json_decode($e->getMessage())->errors[0];
 	}
-global $fb; $fb->info($result);
+
 	// check result
 	if ($result->code == 200) {
 		$jsonexport['column_type'] = $column_settings['type'];

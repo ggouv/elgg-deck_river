@@ -13,8 +13,8 @@ if (!$group) {
 ?>
 <ul class="elgg-tabs elgg-htabs">
 	<li class="elgg-state-selected"><a href="#<?php echo $group_id; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
-	<li><a href="#<?php echo $group_id; ?>-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
-	<li><a href="#<?php echo $group_id; ?>-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
+	<li><a href="#<?php echo $group_id; ?>-info-activity" data-object="<?php echo $group_id; ?>"><?php echo elgg_echo('activity'); ?></a></li>
+	<li><a href="#<?php echo $group_id; ?>-info-mentions" data-object="<?php echo $group_id; ?>"><?php echo elgg_echo('river:mentions'); ?></a></li>
 </ul>
 <ul class="elgg-body">
 	<li id="<?php echo $group_id; ?>-info-profile">

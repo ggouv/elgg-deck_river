@@ -27,7 +27,7 @@ elgg.deck_river.popups = function() {
 				popupElem.find('.elgg-body > li').addClass('hidden').filter(tab).removeClass('hidden');
 			}
 			if ($(tab).find('.elgg-ajax-loader').length) {
-				elgg.deck_river.LoadRiver($(tab), tab.match(/[0-9]+/)[0]);
+				elgg.deck_river.LoadRiver($(tab), $(this).data('object'));
 			}
 			return false;
 		});
@@ -91,7 +91,6 @@ elgg.deck_river.popups = function() {
 
 		var userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
 			templateRender = function(response) {
-				console.log(response);
 				response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
 				fillPopup($('#user-info-popup'), Mustache.render($('#templates .twitter-user-profile').html(), response));
 			};
