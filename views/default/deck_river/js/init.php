@@ -350,7 +350,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 		dataType: "html",
 		data: {
 			tab: $('#deck-river-lists').data('tab'),
-			column: columnID,
+			column: columnID
 		},
 		success: function(response) {
 			var cs = $('#column-settings');
@@ -448,7 +448,7 @@ elgg.deck_river.move_account = function() {
 	$('#thewire-network .net-profile').draggable({
 		revert: true,
 		revertDuration: 0,
-		zIndex: 9999,
+		zIndex: 9999
 	});
 	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
 		accept:				 $('.net-profile').not('.ggouv'),

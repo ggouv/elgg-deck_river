@@ -56,7 +56,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			data: {
 				tab: $('#deck-river-lists').data('tab'), // used only with 'column_river' call
 				column: TheColumn.attr('id'), // used for 'column_river' call and 'twitter_OAuth' with id-method which id is the user id and method is eg: get_statusesUser_timeline
-				guid: TheEntity ? TheEntity : null,
+				guid: TheEntity ? TheEntity : null
 			},
 			success: function(response) {
 				if (response) {
@@ -131,7 +131,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				time_method: 'lower',
 				time_posted: TheColumn.find('.elgg-list-item').first().attr('data-timeid') || 0
 			},
-			success: function(response) {displayItems(response)},
+			success: function(response) {displayItems(response)}
 		});
 	}
 };
@@ -181,7 +181,7 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				column: TheColumn.attr('id'),
 				time_method: 'upper',
 				time_posted: LastItem.data('timeid'),
-				guid: TheEntity ? TheEntity : null,
+				guid: TheEntity ? TheEntity : null
 			},
 			success: function(response) {displayItems(response)},
 			error: function() {
@@ -256,7 +256,7 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 		elgg.post('ajax/view/deck_river/ajax_json/load_discussion', {
 			dataType: "json",
 			data: {
-				discussion: athread.data('thread'),
+				discussion: athread.data('thread')
 			},
 			success: function(response) {displayItems(response)},
 			error: function() {

@@ -40,7 +40,7 @@ elgg.deck_river.popups = function() {
 		elgg.post('ajax/view/deck_river/ajax_view/user_info', {
 			dataType: "html",
 			data: {
-				user: $(this).attr('title'),
+				user: $(this).attr('title')
 			},
 			success: function(response) {
 				body.html(response);
@@ -59,7 +59,7 @@ elgg.deck_river.popups = function() {
 		elgg.post('ajax/view/deck_river/ajax_view/group_info', {
 			dataType: "html",
 			data: {
-				group: $(this).attr('title'),
+				group: $(this).attr('title')
 			},
 			success: function(response) {
 				body.html(response);
@@ -127,7 +127,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 		);
 		var popup = $('#'+popupID).draggable({
 			handle: '.elgg-head',
-			stack: '.elgg-module-popup',
+			stack: '.elgg-module-popup'
 		});
 		popup.find('.elgg-icon-push-pin').click(function() {
 			var popupP = $(this).closest('.deck-popup');

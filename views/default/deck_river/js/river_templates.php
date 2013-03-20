@@ -185,9 +185,9 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 
 		if (!response.column_type) { // direct link. json returned by Twitter is different between twitter search api and twitter main api
 			value.user = {screen_name: value.from_user, profile_image_url_https: value.profile_image_url_https};
-			value.menu = {default: [{
+			value.menu = {'default': [{
 				name: 'response',
-				content: '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>',
+				content: '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
 			},{
 				name: 'retweet',
 				content: '<a href="" title="Retweeter" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'

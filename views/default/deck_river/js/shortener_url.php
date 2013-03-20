@@ -65,7 +65,7 @@ elgg.deck_river.ShortenerUrl = function(url, input) {
 	elgg.post('ajax/view/deck_river/ajax_json/url_shortener', {
 		dataType: "html",
 		data: {
-			url: url,
+			url: url
 		},
 		success: function(response) {
 			if (response == 'badurl') {

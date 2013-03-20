@@ -726,7 +726,7 @@ li.elgg-menu-item-arrow-left {
 .elgg-menu-river {
 	opacity: 0;
 	color: #AAA;
-	margin: -2px 5px 0 0;
+	margin: -2px 10px 0 0;
 	position: absolute;
 	right: 0;
 }
@@ -746,6 +746,9 @@ li.elgg-menu-item-arrow-left {
 .elgg-menu-river .elgg-icon:hover:before {
 	cursor: pointer;
 	color: #555;
+}
+.elgg-submenu-river {
+	margin-right: -6px;
 }
 .elgg-submenu-river.hover .elgg-module-popup {
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
