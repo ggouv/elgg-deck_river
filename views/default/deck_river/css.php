@@ -701,7 +701,7 @@ li.elgg-menu-item-arrow-left {
 	right: 2px;
 	top: -2px;
 }
-.elgg-list-item.newRiverItem:before {
+.elgg-list-item.newRiverItem:hover:before {
 	display: none;
 }
 .moreItem {
@@ -828,7 +828,7 @@ li.elgg-menu-item-arrow-left {
 	width: auto;
 	height: auto;
 	min-width: 372px;
-	max-width: 560px;
+	max-width: 540px;
 	min-height: 300px;
 }
 #column-settings .elgg-ajax-loader {
@@ -876,6 +876,7 @@ li.elgg-menu-item-arrow-left {
 }
 #column-settings .networks > li a {
 	text-align: left;
+	width: 55px;
 }
 #column-settings .networks > .elgg-state-selected a {
 	top: 0;
@@ -907,7 +908,6 @@ li.elgg-menu-item-arrow-left {
 	background: none repeat scroll 0 0 #EEEEEE;
 }
 #column-settings .twitter .elgg-module {
-	bottom: 5px;
 	font-size: 0.9em;
 	padding: 5px 5px 0;
 }

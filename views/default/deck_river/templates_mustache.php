@@ -74,9 +74,11 @@
 				<div class="even">
 					<b><?php echo elgg_echo('Twitter'); ?> :</b> <a class="external" target="_blank" href="http://twitter.com/{{screen_name}}">http://twitter.com/{{screen_name}}</a>
 				</div>
+				{{#url}}
 				<div class="even">
 					<b><?php echo elgg_echo('site'); ?> :</b> <a class="external" target="_blank" href="{{url}}">{{url}}</a>
 				</div>
+				{{/url}}
 				<div class="even">
 					<b><?php echo elgg_echo('profile:time_created'); ?> :</b> {{created_at}}
 				</div>

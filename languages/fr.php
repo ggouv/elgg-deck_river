@@ -71,7 +71,7 @@ $french = array(
 	'deck_river:search' => 'Recherche :',
 	'deck_river:filter:all' => 'Tout',
 	'deck_river:twitter:usersettings:request:title' => "Autorisez %s à accéder à votre compte Twitter",
-	'deck_river:twitter:usersettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnés, vos abonnements, vos listes...<br/><a href=\"#\" id=\"authorize-twitter\" data-url=\"%s\" class=\"elgg-button elgg-button-action mtm\">Faire la demande à Twitter</a>",
+	'deck_river:twitter:usersettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnés, vos abonnements, vos listes...<br/><a href=\"#\" class=\"ask_twitter elgg-button elgg-button-action mtm\">Faire la demande à Twitter</a>",
 	'deck_river:twitter:your_account' => "Votre profil Twitter lié à %s :",
 	'deck_river:twitter:choose:account' => "Choisissez le compte Twitter pour cette colonne :",
 	'deck_river:network:add:account' => "Ajouter un autre compte",

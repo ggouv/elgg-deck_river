@@ -25,9 +25,24 @@ $content = '';
 $twitter_accounts = deck_river_twitter_get_account($user->getGUID());
 
 if (!empty($twitter_accounts)) {
-	$content .= elgg_view_module('twitter', '<span class="twitter-icon gwfb prs"></span>' . elgg_echo('Twitter'), elgg_view_entity_list($twitter_accounts), array(
-		'class' => 'mtl',
-	));
+	$content .= elgg_view_module(
+		'twitter',
+		'<span class="twitter-icon gwfb"></span><span class="pls">' . elgg_echo('Twitter') . '</span>',
+		elgg_view_entity_list($twitter_accounts), array(
+			'class' => 'mtl',
+		)
+	);
+} else {
+	$content .= elgg_view_module(
+		'twitter',
+		'<span class="twitter-icon gwfb"></span><span class="pls">' . elgg_echo('Twitter') . '</span>',
+		elgg_view_module(
+			'featured',
+			elgg_echo('deck_river:twitter:usersettings:request:title', array($site_name)),
+			elgg_echo('deck_river:twitter:usersettings:request'),
+			array('class' => 'mts float')
+		)
+	);
 }
 
 $params = array(

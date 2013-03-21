@@ -30,7 +30,7 @@ function deck_river_twitter_authorize() {
 	$token = $twitterObj->getAccessToken();
 
 	// make sure don't register twice this twitter account for this user.
-	if (count(deck_river_twitter_get_account(elgg_get_logged_in_user_guid(), $token->user_id)) > 0) {
+	if (deck_river_twitter_get_account(elgg_get_logged_in_user_guid(), $token->user_id)) {
 		echo elgg_view('page/elements/head');
 		echo elgg_view('page/elements/foot');
 		echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.twitter_authorize(false);});</script>';
