@@ -45,7 +45,7 @@ $(document).ready(function() {
 });
 
 elgg.deck_river.responseToWire = function(riverItem, message) {
-	var network = riverItem.closest('.column-river').find('.column-header').data('network');
+	var network = riverItem.closest('.column-river').find('.column-header').data('network') || 'elgg';
 	$('.elgg-list-item').removeClass('responseAt');
 	$('.item-'+network+'-'+riverItem.attr('data-id')).addClass('responseAt');
 	$('#thewire-header').find('.responseTo')
@@ -62,7 +62,7 @@ elgg.deck_river.responseToWire = function(riverItem, message) {
  * Return html river
  */
 elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
-	var network = TheColumnHeader.data('network'),
+	var network = TheColumnHeader.data('network') || 'elgg',
 		thread = thread || false;
 
 	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);

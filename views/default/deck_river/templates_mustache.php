@@ -72,10 +72,10 @@
 					<li><div class="stats">{{statuses_count}}</div><?php echo elgg_echo('item:object:thewire'); ?></li>
 				</ul>
 				<div class="even">
-					<b><?php echo elgg_echo('Twitter'); ?> :</b> <a target="_blank" href="http://twitter.com/{{screen_name}}">http://twitter.com/{{screen_name}}</a>
+					<b><?php echo elgg_echo('Twitter'); ?> :</b> <a class="external" target="_blank" href="http://twitter.com/{{screen_name}}">http://twitter.com/{{screen_name}}</a>
 				</div>
 				<div class="even">
-					<b><?php echo elgg_echo('site'); ?> :</b> <a target="_blank" href="{{url}}">{{url}}</a>
+					<b><?php echo elgg_echo('site'); ?> :</b> <a class="external" target="_blank" href="{{url}}">{{url}}</a>
 				</div>
 				<div class="even">
 					<b><?php echo elgg_echo('profile:time_created'); ?> :</b> {{created_at}}
