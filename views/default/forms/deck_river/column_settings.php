@@ -31,6 +31,7 @@ $column_title = $user_river_column_options['title'];
 <div id='deck-column-settings' class='pas'>
 	<?php
 		$selected = $new ? 'elgg' : $user_river_column_options['network'];
+		if (!$selected) $selected = 'elgg';
 		$params = array(
 			'type' => 'vertical',
 			'class' => 'networks float',
@@ -194,7 +195,7 @@ $column_title = $user_river_column_options['title'];
 				'get_favoritesList' => elgg_echo('deck_river:twitter:feed:favorites'),
 			);
 
-			if (count($twitter_account) == 0) { // No account registred, send user off to validate account
+			if (!$twitter_account || count($twitter_account) == 0) { // No account registred, send user off to validate account
 
 				$output = elgg_view_module(
 					'featured',

@@ -6,6 +6,8 @@
 $column_settings = elgg_extract('column_settings', $vars);
 $column_id = elgg_extract('column_id', $vars);
 
+if (!$column_settings['network']) $column_settings['network'] = 'elgg';
+
 $params = array(
 	'text' => elgg_view_icon('settings-alt'),
 	'title' => elgg_echo('deck_river:edit'),

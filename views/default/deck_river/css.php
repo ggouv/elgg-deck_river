@@ -888,7 +888,7 @@ li.elgg-menu-item-arrow-left {
 	border-left: 2px solid #CCC;
 	float: left;
 	height: 100%;
-	width: 449px;
+	width: 429px;
 }
 #column-settings .elgg > * {
 	width: 205px;
@@ -910,8 +910,6 @@ li.elgg-menu-item-arrow-left {
 	bottom: 5px;
 	font-size: 0.9em;
 	padding: 5px 5px 0;
-	position: absolute;
-	width: 440px;
 }
 #column-settings .twitter .elgg-module.multi {
 	position: relative;
