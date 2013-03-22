@@ -76,7 +76,7 @@ if (empty($body)) {
 							register_error(elgg_echo('deck_river:message:blank'));
 							return true;
 						}
-						$result = $twitterObj->post_direct_messagesNew(array('text' => $matches[2], 'screen_name' => $matches[1]));
+						$result = $twitterObj->post_direct_messagesNew(array('text' => $matches[2], 'screen_name' => str_replace('@', '', $matches[1])));
 					} else {
 						if ($parent_guid) { // response to a tweet with in_reply_to_status_id
 							$result = $twitterObj->post_statusesUpdate(array('status' => $body, 'in_reply_to_status_id' => $parent_guid));

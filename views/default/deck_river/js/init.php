@@ -128,7 +128,7 @@ elgg.deck_river.init = function() {
 		}
 	});
 
-	$('.add_social_network, .ask_twitter').die().live('click', function() {
+	$('.add_social_network').die().live('click', function() {
 		elgg.deck_river.createPopup('add_social_network', elgg.echo('deck-river:add:network'), function() {
 			$('#add_social_network').find('.elgg-icon-push-pin').remove();
 		});
@@ -140,7 +140,7 @@ elgg.deck_river.init = function() {
 		});
 	});
 	$('#authorize-twitter').die().live('click', function(e){
-		var oauthWindow = window.open($(this).data('url'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
+		var oauthWindow = window.open($(this).attr('href'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
 		e.preventDefault();
 		return false;
 	});

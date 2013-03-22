@@ -859,6 +859,7 @@ li.elgg-menu-item-arrow-left {
 }
 #column-settings .tab {
 	height: 240px;
+	float: left;
 }
 #column-settings .networks {
 	border-bottom: medium none;
@@ -872,11 +873,10 @@ li.elgg-menu-item-arrow-left {
 	clear: both;
 	float: right;
 	margin: 5px 0 0;
-	width: 100%;
+	width: 77px;
 }
 #column-settings .networks > li a {
 	text-align: left;
-	width: 55px;
 }
 #column-settings .networks > .elgg-state-selected a {
 	top: 0;
@@ -887,12 +887,12 @@ li.elgg-menu-item-arrow-left {
 }
 #column-settings .tab > * {
 	border-left: 2px solid #CCC;
-	float: left;
 	height: 100%;
 	width: 429px;
 }
 #column-settings .elgg > * {
-	width: 205px;
+	width: 208px;
+	float: left;
 }
 #add-deck-river-tab, #rename-deck-river-tab {
 	width: 260px;
@@ -910,6 +910,7 @@ li.elgg-menu-item-arrow-left {
 #column-settings .twitter .elgg-module {
 	font-size: 0.9em;
 	padding: 5px 5px 0;
+	position: relative;
 }
 #column-settings .twitter .elgg-module.multi {
 	position: relative;
@@ -920,7 +921,7 @@ li.elgg-menu-item-arrow-left {
 	right: 44px;
 	top: 38px;
 }
-#column-settings .add_social_network {
+#column-settings .elgg-module-info .add_social_network {
 	font-size: 1.4em;
 	font-weight: bold;
 	position: absolute;
@@ -930,6 +931,10 @@ li.elgg-menu-item-arrow-left {
 }
 #column-settings .add_social_network:hover {
 	text-decoration: none;
+}
+#column-settings .elgg-foot {
+	float: left;
+	width: 100%;
 }
 
 /*
@@ -1058,7 +1063,7 @@ li.elgg-menu-item-arrow-left {
 }
 #add_social_network .elgg-image {
 	font-size: 10em;
-	line-height: 0.7em;
+	line-height: 1.3em;
 	padding-right: 20px;
 }
 

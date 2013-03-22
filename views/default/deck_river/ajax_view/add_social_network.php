@@ -9,10 +9,16 @@ if ($twitter_consumer_key && $twitter_consumer_secret) {
 	$twitterObjUnAuth = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret);
 	$twitterRequestUrl = $twitterObjUnAuth->getAuthenticateUrl();
 
-	$body = elgg_echo('deck_river:twitter:usersettings:request:title', array($site_name)) . '.<br/>';
-	$body .= elgg_echo('deck_river:twitter:usersettings:request', array($twitterRequestUrl));
+	$body = '<h2>' . elgg_echo('deck_river:twitter:authorize:request:title', array($site_name)) . '</h2>';
+	$body .= '<ul style="list-style: disc;" class="pll">' . elgg_echo('deck_river:twitter:add_network:request', array($site_name)) . '</ul><br />';
+	$body .= elgg_view('output/url', array(
+		'href' => $twitterRequestUrl,
+		'text' => elgg_echo('deck_river:twitter:authorize:request:button'),
+		'class' => 'elgg-button elgg-button-action mtm',
+		'id' => 'authorize-twitter'
+	));
 
-	echo elgg_view_image_block('<div class="twitter-icon gwfb t"></div>', $body, array(
+	echo elgg_view_image_block('<div class="twitter-icon gwfb"></div>', $body, array(
 		'class' => 'pam'
 	));
 }

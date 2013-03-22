@@ -197,12 +197,20 @@ $column_title = $user_river_column_options['title'];
 
 			if (!$twitter_account || count($twitter_account) == 0) { // No account registred, send user off to validate account
 
+				$body = elgg_echo('deck_river:twitter:columnsettings:request');
+				$body .= elgg_view('output/url', array(
+					'href' => '#',
+					'text' => elgg_echo('deck_river:twitter:authorize:request:button'),
+					'class' => 'add_social_network elgg-button elgg-button-action mtm',
+				));
 				$output = elgg_view_module(
 					'featured',
-					elgg_echo('deck_river:twitter:usersettings:request:title', array($site_name)),
-					elgg_echo('deck_river:twitter:usersettings:request'),
+					elgg_echo('deck_river:twitter:authorize:request:title', array($site_name)),
+					$body,
 					array('class' => 'mtl float')
 				);
+
+
 				$options_values = array( // override values
 					'searchTweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
 					'searchTweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
@@ -210,7 +218,7 @@ $column_title = $user_river_column_options['title'];
 
 			} else if (count($twitter_account) == 1) { // One account registred
 
-				$output = displayTwitterAccount($twitter_account[0], elgg_echo('deck_river:twitter:your_account', array($site_name)), 'mbn');
+				$output = displayTwitterAccount($twitter_account[0], elgg_echo('deck_river:twitter:your_account', array($site_name)), 'mtl');
 				$output .= elgg_view('input/hidden', array(
 					'name' => 'twitter-account',
 					'value' => $twitter_account[0]->getGUID(),
