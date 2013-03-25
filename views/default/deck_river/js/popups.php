@@ -76,7 +76,7 @@ elgg.deck_river.popups = function() {
 			network = $(this).data('network') || 'elgg';
 
 		elgg.deck_river.createPopup('hashtag-info-popup', elgg.echo('deck_river:hashtag-info-header', [hashtag]));
-		$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#templates .hashtag-popup').html(), {hashtag: hashtag.replace('#', '')}));
+		$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#hashtag-popup-template').html(), {hashtag: hashtag.replace('#', '')}));
 		$('#hashtag-info-popup .elgg-tabs .'+network).click();
 		//elgg.deck_river.LoadRiver($('#hashtag-info-popup'), '#'+hashtag);
 	});
@@ -89,7 +89,7 @@ elgg.deck_river.popups = function() {
 			userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
 			templateRender = function(response) {
 				response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-				body.html(Mustache.render($('#templates .twitter-user-profile').html(), response));
+				body.html(Mustache.render($('#twitter-user-profile-template').html(), response));
 			};
 
 		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
@@ -123,7 +123,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 
 	if (!$('#'+popupID).length) {
 		$('.elgg-page-body').append(
-			Mustache.render($('#templates .popup-template').html(), {popupID: popupID, popupTitle: popupTitle})
+			Mustache.render($('#popup-template').html(), {popupID: popupID, popupTitle: popupTitle})
 		);
 		var popup = $('#'+popupID).draggable({
 			handle: '.elgg-head',

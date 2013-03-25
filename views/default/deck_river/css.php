@@ -667,7 +667,7 @@ li.elgg-menu-item-arrow-left {
 .column-river .refresh-gif {
 	position: absolute;
 	right: 27px;
-	top: 1px;
+	top: 2px;
 	display: none;
 }
 .column-river.loadingRefresh .refresh-gif {
@@ -1028,6 +1028,12 @@ li.elgg-menu-item-arrow-left {
 .viewed .elgg-river-message {
 	font-size: 130%;
 	color: #333;
+}
+#message-river-activity .elgg-river {
+	overflow: visible;
+}
+#message-river-activity li {
+	background: none;
 }
 
 /* twitter */

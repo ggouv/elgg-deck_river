@@ -21,7 +21,16 @@ $title = elgg_echo('thewire:by', array($owner->name));
 elgg_push_breadcrumb(elgg_echo('thewire:user', array($owner->name)), 'message/owner/' . $owner->name);
 elgg_push_breadcrumb($title);
 
-$content = '<ul class="elgg-river elgg-list single-view">' . elgg_view('graphics/ajax_loader', array('hidden' => false)) . '</ul>';
+$loader = elgg_view('graphics/ajax_loader', array('hidden' => false));
+
+//$content = '<ul class="elgg-river elgg-list single-view">' . elgg_view('graphics/ajax_loader', array('hidden' => false)) . '</ul>';
+
+$content = <<<HTML
+<div id="message-river-activity" class="column-river">
+	<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river" data-entity="{$river_id}"></ul>
+	<ul class="elgg-river elgg-list single-view">$loader</ul>
+</div>
+HTML;
 
 elgg_load_library('deck_river:river_loader');
 $thread = htmlspecialchars(load_wire_discussion($wire->wire_thread), ENT_QUOTES, "UTF-8");

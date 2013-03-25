@@ -125,7 +125,7 @@ elgg.deck_river.findUser = function(name, network) {
  */
 elgg.deck_river.elggDisplayItems = function(response, thread) {
 	var output = '',
-		elggRiverTemplate = Mustache.compile($('#templates .elgg-river-template').html());
+		elggRiverTemplate = Mustache.compile($('#elgg-river-template').html());
 
 	// Put users and groups in global var DataEntities
 	$.each(response.users, function(i, entity) {
@@ -179,7 +179,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
  */
 elgg.deck_river.twitterDisplayItems = function(response, thread) {
 	var output = '',
-		elggRiverTemplate = Mustache.compile($('#templates .elgg-river-twitter-template').html());
+		elggRiverTemplate = Mustache.compile($('#elgg-river-twitter-template').html());
 
 	$.each(response.results, function(key, value) {
 

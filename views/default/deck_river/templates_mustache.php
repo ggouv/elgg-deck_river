@@ -1,9 +1,8 @@
-<div id="templates" class="hidden">
 
 
 
 <!-- Template for popups -->
-<div class="popup-template">
+<script id="popup-template" type="text/template">
 	<div id="{{popupID}}" class="elgg-module-popup deck-popup ui-draggable" style="position: relative;">
 		<div class="elgg-head">
 			<h3>{{popupTitle}}</h3>
@@ -18,12 +17,12 @@
 			<div class="elgg-ajax-loader"></div>
 		</div>
 	</div>
-</div>
+</script>
 
 
 
 <!-- Template for hashtag popup -->
-<div class="hashtag-popup">
+<script id="hashtag-popup-template" type="text/template">
 	<ul class="elgg-tabs elgg-htabs">
 		<li><a class="elgg" href="#{{hashtag}}-elgg">Elgg</a></li>
 		<li><a class="twitter" href="#{{hashtag}}-twitter">Twitter</a></li>
@@ -38,12 +37,12 @@
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 	</ul>
-</div>
+</script>
 
 
 
 <!-- Template for Twitter user profile popup -->
-<div class="twitter-user-profile">
+<script id="twitter-user-profile-template" type="text/template">
 	<ul class="elgg-tabs elgg-htabs">
 		<li class="elgg-state-selected"><a href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 		<li><a href="#{{id}}-get_statusesUser_timeline"><?php echo elgg_echo('activity'); ?></a></li>
@@ -97,124 +96,127 @@
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 	</ul>
-</div>
+</script>
 
 
 
 <!-- Templates for elgg river item -->
-<div class="elgg-river-template"><li class="elgg-list-item item-elgg-{{id}} {{type}} {{subtype}} {{action_type}}"
-	data-access_id="{{access_id}}"
-	data-annotation_id="{{annotation_id}}"
-	data-id="{{id}}"
-	data-object_guid="{{object_guid}}"
-	data-subject_guid="{{subject_guid}}"
-	data-username="{{user.username}}"
-	data-timeid="{{posted}}">
-	<div class="elgg-image-block elgg-river-item clearfix">
-		<div class="elgg-image">
-			<div class="elgg-avatar elgg-avatar-small">
-				<div class="user-info-popup" title="{{user.username}}">
-					<img title="{{user.username}}" alt="{{user.username}}" src="{{user.icon}}">
+<script id="elgg-river-template" type="text/template">
+	<li class="elgg-list-item item-elgg-{{id}} {{type}} {{subtype}} {{action_type}}"
+		data-access_id="{{access_id}}"
+		data-annotation_id="{{annotation_id}}"
+		data-id="{{id}}"
+		data-object_guid="{{object_guid}}"
+		data-subject_guid="{{subject_guid}}"
+		data-username="{{user.username}}"
+		data-timeid="{{posted}}">
+		<div class="elgg-image-block elgg-river-item clearfix">
+			<div class="elgg-image">
+				<div class="elgg-avatar elgg-avatar-small">
+					<div class="user-info-popup" title="{{user.username}}">
+						<img title="{{user.username}}" alt="{{user.username}}" src="{{user.icon}}">
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="elgg-body">
-			{{#menu}}
-			<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
-				{{{menu.default}}}
-				{{#menu.submenu}}
-				<li class="elgg-submenu-river">
-					<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
-					<ul class="elgg-module-popup hidden">
-						{{{menu.submenu}}}
-					</ul>
-				</li>
-				{{/menu.submenu}}
-			{{/menu}}
-			</ul>
-			<div class="elgg-river-summary">
-				{{{summary}}}<br/>
-				<span class="elgg-river-timestamp">
-					<span class="elgg-friendlytime">
-						<acronym class="tooltip w" title="{{posted_acronym}}" time="{{posted}}">{{friendly_time}}</acronym>
+			<div class="elgg-body">
+				{{#menu}}
+				<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
+					{{{menu.default}}}
+					{{#menu.submenu}}
+					<li class="elgg-submenu-river">
+						<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
+						<ul class="elgg-module-popup hidden">
+							{{{menu.submenu}}}
+						</ul>
+					</li>
+					{{/menu.submenu}}
+				{{/menu}}
+				</ul>
+				<div class="elgg-river-summary">
+					{{{summary}}}<br/>
+					<span class="elgg-river-timestamp">
+						<span class="elgg-friendlytime">
+							<acronym class="tooltip w" title="{{posted_acronym}}" time="{{posted}}">{{friendly_time}}</acronym>
+						</span>
 					</span>
-				</span>
+				</div>
+				<div class="elgg-river-message">{{{message}}}</div>
+				{{#responses}}
+				<div class="elgg-river-responses">
+					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
+					<a href="#" class="thread float" data-thread="{{responses}}">
+						<?php echo elgg_echo('deck_river:thread'); ?>
+					</a>
+					<div class="response-loader hidden"></div>
+				</div>
+				{{/responses}}
 			</div>
-			<div class="elgg-river-message">{{{message}}}</div>
-			{{#responses}}
-			<div class="elgg-river-responses">
-				<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
-				<a href="#" class="thread float" data-thread="{{responses}}">
-					<?php echo elgg_echo('deck_river:thread'); ?>
-				</a>
-				<div class="response-loader hidden"></div>
-			</div>
-			{{/responses}}
 		</div>
-	</div>
-</li></div>
+	</li>
+</script>
 
 
 
 <!-- Templates for elgg river twitter item -->
-<div class="elgg-river-twitter-template"><li class="elgg-list-item item-twitter-{{id_str}}"
-	data-timeid="{{id_str}}"
-	data-username="{{user.screen_name}}"
-	data-id="{{id_str}}"
-	data-object_guid="{{id_str}}"
-	>
-	<div class="elgg-image-block elgg-river-item clearfix">
-		<div class="elgg-image">
-			<div class="elgg-avatar elgg-avatar-small">
-				<div class="twitter-user-info-popup" title="{{user.screen_name}}">
-					<img title="{{user.screen_name}}" alt="{{user.screen_name}}" src="{{user.profile_image_url_https}}">
+<script id="elgg-river-twitter-template" type="text/template">
+	<li class="elgg-list-item item-twitter-{{id_str}}"
+		data-timeid="{{id_str}}"
+		data-username="{{user.screen_name}}"
+		data-id="{{id_str}}"
+		data-object_guid="{{id_str}}"
+		>
+		<div class="elgg-image-block elgg-river-item clearfix">
+			<div class="elgg-image">
+				<div class="elgg-avatar elgg-avatar-small">
+					<div class="twitter-user-info-popup" title="{{user.screen_name}}">
+						<img title="{{user.screen_name}}" alt="{{user.screen_name}}" src="{{user.profile_image_url_https}}">
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="elgg-body">
-			{{#menu}}
-			<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
-				{{{menu.default}}}
-				{{#menu.submenu}}
-				<li class="elgg-submenu-river">
-					<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
-					<ul class="elgg-module-popup hidden">
-						{{{menu.submenu}}}
-					</ul>
-				</li>
-				{{/menu.submenu}}
-			{{/menu}}
-			</ul>
-			<div class="elgg-river-summary">
-				<span class="twitter-user-info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
-				<span class="elgg-river-timestamp">
-					<a href="https://twitter.com/{{user.screen_name}}/status/{{id_str}}" target="_blank">
-					<span class="elgg-friendlytime">
-						<acronym class="tooltip w" title="{{created_at}}" time="{{posted}}">{{friendly_time}}</acronym>
+			<div class="elgg-body">
+				{{#menu}}
+				<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
+					{{{menu.default}}}
+					{{#menu.submenu}}
+					<li class="elgg-submenu-river">
+						<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
+						<ul class="elgg-module-popup hidden">
+							{{{menu.submenu}}}
+						</ul>
+					</li>
+					{{/menu.submenu}}
+				{{/menu}}
+				</ul>
+				<div class="elgg-river-summary">
+					<span class="twitter-user-info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
+					<span class="elgg-river-timestamp">
+						<a href="https://twitter.com/{{user.screen_name}}/status/{{id_str}}" target="_blank">
+						<span class="elgg-friendlytime">
+							<acronym class="tooltip w" title="{{created_at}}" time="{{posted}}">{{friendly_time}}</acronym>
+						</span>
+					</a>
 					</span>
-				</a>
-				</span>
+				</div>
+				<div class="elgg-river-message">{{{text}}}</div>
+				{{#responses}}
+				<div class="elgg-river-responses">
+					{{#responses.reply}}
+					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
+					<a href="#" class="thread float prm" data-thread="{{in_reply_to_status_id_str}}">
+						<?php echo elgg_echo('deck_river:thread'); ?>
+					</a>
+					<div class="response-loader hidden"></div>
+					{{/responses.reply}}
+					{{#responses.retweet}}
+						<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
+						<span class="pls float">{{responses.retweet}}</span>
+					{{/responses.retweet}}
+				</div>
+				{{/responses}}
 			</div>
-			<div class="elgg-river-message">{{{text}}}</div>
-			{{#responses}}
-			<div class="elgg-river-responses">
-				{{#responses.reply}}
-				<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
-				<a href="#" class="thread float prm" data-thread="{{in_reply_to_status_id_str}}">
-					<?php echo elgg_echo('deck_river:thread'); ?>
-				</a>
-				<div class="response-loader hidden"></div>
-				{{/responses.reply}}
-				{{#responses.retweet}}
-					<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
-					<span class="pls float">{{responses.retweet}}</span>
-				{{/responses.retweet}}
-			</div>
-			{{/responses}}
 		</div>
-	</div>
-</li></div>
+	</li>
+</script>
 
 
 
-</div>
