@@ -139,6 +139,14 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['account'] = $twitter_account;
 			break;
 
+		case 'get_listsStatuses':
+			$user_river_options[$tab][$column]['title'] = get_input('twitter_list_name');
+			$user_river_options[$tab][$column]['subtitle'] = 'deck_river:twitter:list';
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			$user_river_options[$tab][$column]['list_id'] = (int) get_input('twitter-lists', false);
+			$user_river_options[$tab][$column]['list_name'] = get_input('twitter_list_name');
+			break;
+
 		case 'get_direct_messages':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:dm:recept';
 			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;

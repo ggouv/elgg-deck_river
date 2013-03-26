@@ -116,6 +116,8 @@ $french = array(
 	'deck_river:twitter:feed:search:tweets' => "Rechercher un mot ou un hashtag",
 	'deck_river:twitter:feed:search:popular' => "Recherche triée par tweets les plus populaires",
 	'deck_river:twitter:feed:users:search' => "Rechercher des utilisateurs",
+	'deck_river:twitter:list' => "Liste",
+	'deck_river:twitter:lists' => "Listes",
 
 	'deck_river:twitter:feed:home' => "Flux d'accueil",
 	'deck_river:twitter:feed:user' => "Mes tweets",

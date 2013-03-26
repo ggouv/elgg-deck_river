@@ -372,13 +372,41 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			// dropdown
 			cs.find('.' + cs.find('.tab:visible .column-type').val()+'-options').show();
 			$('.column-type').change(function() {
-				var bs = $(this).closest('.box-settings');
+				var bs = $(this).closest('.box-settings'),
+					select = bs.find('select[name="twitter-lists"]'),
+					twitter_account = bs.find('*[name="twitter-account"]').val(); // * because can be select or input
+
 				bs.find('li').not(':first-child').hide();
 				bs.find('.'+$(this).val()+'-options').show();
+
+				// Get lists for Twitter
+				if ($(this).val() == 'get_listsStatuses' && !(select.data('list_loaded') == twitter_account) && select.parent().hasClass('hidden')) {
+					bs.find('.get_listsStatuses-options div').removeClass('hidden');
+					elgg.action('deck_river/twitter', {
+						data: {
+							twitter_account: twitter_account,
+							method: 'get_listsList'
+						},
+						dataType: 'json',
+						success: function(json) {
+							$.each(json.output.result, function(i, e) {
+								if (!select.find('option[value="'+e.id+'"]').length) select.append($('<option>').val(e.id).html(e.full_name));
+							});
+							bs.find('.get_listsStatuses-options div').addClass('hidden');
+							select.data('list_loaded', twitter_account);
+						},
+						error: function() {
+							return false;
+						}
+					});
+				}
 			});
 			$('select[name="twitter-account"]').change(function() {
 				$(this).closest('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
+				cs.find('select[name="twitter-lists"]').html('');
+				cs.find('.column-type').trigger('change');
 			});
+			cs.find('.column-type').trigger('change');
 
 			// checkboxes
 			cs.find('.filter .elgg-input-checkbox').click(function() {
@@ -387,12 +415,13 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			});
 
 			$(".elgg-foot .elgg-button").click(function(e) {
-				var submitType = $(this).attr('name');
+				var submitType = $(this).attr('name'),
+					CSForm = $(this).closest('.deck-river-form-column-settings');
 
 				if (submitType == 'delete' && !confirm(elgg.echo('deck-river:delete:column:confirm'))) return false;
 
 				elgg.action('deck_river/column/settings', {
-					data: $('.deck-river-form-column-settings').serialize() + "&submit=" + submitType,
+					data: CSForm.serialize() + '&submit=' + submitType + '&twitter_list_name=' + CSForm.find('select[name="twitter-lists"] option:selected').text(),
 					dataType: 'json',
 					success: function(json) {
 						var response = json.output;

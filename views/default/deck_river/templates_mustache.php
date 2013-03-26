@@ -3,7 +3,7 @@
 
 <!-- Template for popups -->
 <script id="popup-template" type="text/template">
-	<div id="{{popupID}}" class="elgg-module-popup deck-popup ui-draggable" style="position: relative;">
+	<div id="{{popupID}}" class="elgg-module-popup deck-popup ui-draggable" style="position: relative; z-index: 100;">
 		<div class="elgg-head">
 			<h3>{{popupTitle}}</h3>
 			<a href="#" class="pin">
@@ -67,7 +67,7 @@
 				<ul class="user-stats mbm">
 					<li><div class="stats">{{followers_count}}</div><?php echo elgg_echo('friends:followers'); ?></li>
 					<li><div class="stats">{{friends_count}}</div><?php echo elgg_echo('friends:following'); ?></li>
-					<li><div class="stats">{{listed_count}}</div><?php echo elgg_echo('twitter:list'); ?></li>
+					<li><div class="stats">{{listed_count}}</div><?php echo elgg_echo('deck_river:twitter:lists'); ?></li>
 					<li><div class="stats">{{statuses_count}}</div><?php echo elgg_echo('item:object:thewire'); ?></li>
 				</ul>
 				<div class="even">
@@ -101,59 +101,57 @@
 
 
 <!-- Templates for elgg river item -->
-<script id="elgg-river-template" type="text/template">
-	<li class="elgg-list-item item-elgg-{{id}} {{type}} {{subtype}} {{action_type}}"
-		data-access_id="{{access_id}}"
-		data-annotation_id="{{annotation_id}}"
-		data-id="{{id}}"
-		data-object_guid="{{object_guid}}"
-		data-subject_guid="{{subject_guid}}"
-		data-username="{{user.username}}"
-		data-timeid="{{posted}}">
-		<div class="elgg-image-block elgg-river-item clearfix">
-			<div class="elgg-image">
-				<div class="elgg-avatar elgg-avatar-small">
-					<div class="user-info-popup" title="{{user.username}}">
-						<img title="{{user.username}}" alt="{{user.username}}" src="{{user.icon}}">
-					</div>
+<script id="elgg-river-template" type="text/template"><li class="elgg-list-item item-elgg-{{id}} {{type}} {{subtype}} {{action_type}}"
+	data-access_id="{{access_id}}"
+	data-annotation_id="{{annotation_id}}"
+	data-id="{{id}}"
+	data-object_guid="{{object_guid}}"
+	data-subject_guid="{{subject_guid}}"
+	data-username="{{user.username}}"
+	data-timeid="{{posted}}">
+	<div class="elgg-image-block elgg-river-item clearfix">
+		<div class="elgg-image">
+			<div class="elgg-avatar elgg-avatar-small">
+				<div class="user-info-popup" title="{{user.username}}">
+					<img title="{{user.username}}" alt="{{user.username}}" src="{{user.icon}}">
 				</div>
-			</div>
-			<div class="elgg-body">
-				{{#menu}}
-				<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
-					{{{menu.default}}}
-					{{#menu.submenu}}
-					<li class="elgg-submenu-river">
-						<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
-						<ul class="elgg-module-popup hidden">
-							{{{menu.submenu}}}
-						</ul>
-					</li>
-					{{/menu.submenu}}
-				{{/menu}}
-				</ul>
-				<div class="elgg-river-summary">
-					{{{summary}}}<br/>
-					<span class="elgg-river-timestamp">
-						<span class="elgg-friendlytime">
-							<acronym class="tooltip w" title="{{posted_acronym}}" time="{{posted}}">{{friendly_time}}</acronym>
-						</span>
-					</span>
-				</div>
-				<div class="elgg-river-message">{{{message}}}</div>
-				{{#responses}}
-				<div class="elgg-river-responses">
-					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
-					<a href="#" class="thread float" data-thread="{{responses}}">
-						<?php echo elgg_echo('deck_river:thread'); ?>
-					</a>
-					<div class="response-loader hidden"></div>
-				</div>
-				{{/responses}}
 			</div>
 		</div>
-	</li>
-</script>
+		<div class="elgg-body">
+			{{#menu}}
+			<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
+				{{{menu.default}}}
+				{{#menu.submenu}}
+				<li class="elgg-submenu-river">
+					<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
+					<ul class="elgg-module-popup hidden">
+						{{{menu.submenu}}}
+					</ul>
+				</li>
+				{{/menu.submenu}}
+			{{/menu}}
+			</ul>
+			<div class="elgg-river-summary">
+				{{{summary}}}<br/>
+				<span class="elgg-river-timestamp">
+					<span class="elgg-friendlytime">
+						<acronym class="tooltip w" title="{{posted_acronym}}" time="{{posted}}">{{friendly_time}}</acronym>
+					</span>
+				</span>
+			</div>
+			<div class="elgg-river-message">{{{message}}}</div>
+			{{#responses}}
+			<div class="elgg-river-responses">
+				<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
+				<a href="#" class="thread float" data-thread="{{responses}}">
+					<?php echo elgg_echo('deck_river:thread'); ?>
+				</a>
+				<div class="response-loader hidden"></div>
+			</div>
+			{{/responses}}
+		</div>
+	</div>
+</li></script>
 
 
 

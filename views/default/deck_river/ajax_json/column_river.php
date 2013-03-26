@@ -25,20 +25,22 @@ if ($column_settings['network'] == 'twitter') {
 	elgg_load_library('deck_river:twitter_async');
 	$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $account->oauth_token, $account->oauth_token_secret);
 
+	// Set options
+	$options = array(
+		'count' => 30,
+		);
+
+	if ($column_settings['type'] == 'get_listsStatuses') $options['list_id'] = $column_settings['list_id'];
+
+	// refresh or more items
+	if ($time_method == 'lower') {
+		$options['since_id'] = $time_posted+1; // +1 for not repeat first river item
+	} elseif ($time_method == 'upper') {
+		$options['max_id'] = $time_posted-1; // -1 for not repeat last river item
+	}
+
 	try {
-		if ($time_method == 'lower') {
-			$result = call_user_func(array($twitterObj, $column_settings['type']), array(
-				'count' => 30,
-				'since_id' => $time_posted+1 // +1 for not repeat first river item
-			));
-		} elseif ($time_method == 'upper') {
-			$result = call_user_func(array($twitterObj, $column_settings['type']), array(
-				'count' => 30,
-				'max_id' => $time_posted-1 // -1 for not repeat last river item
-			));
-		} else {
-			$result = call_user_func(array($twitterObj, $column_settings['type']), array('count' => 30));
-		}
+		$result = call_user_func(array($twitterObj, $column_settings['type']), $options);
 	} catch(Exception $e) {
 		$result = json_decode($e->getMessage())->errors[0];
 	}

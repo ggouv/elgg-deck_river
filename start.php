@@ -55,6 +55,8 @@ function deck_river_init() {
 	elgg_register_action('deck_river/network/delete', "$action_path/plugins/delete_network.php");
 	elgg_register_action('elgg-deck_river/settings/save', "$action_path/plugins/save.php");
 
+	elgg_register_action('deck_river/twitter', "$action_path/twitter.php");
+
 	// Register a URL handler for thewire posts
 	elgg_register_entity_url_handler('object', 'thewire', 'deck_river_thewire_url');
 
@@ -627,7 +629,7 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 
 		}
 
-		if (true ||$item->annotation_id != 0 && elgg_is_admin_logged_in()) {
+		/*if (true ||$item->annotation_id != 0 && elgg_is_admin_logged_in()) {
 			$options = array(
 				'name' => 'delete',
 				'section' => 'submenu',
@@ -639,7 +641,7 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 				'priority' => 200,
 			);
 			$return[] = ElggMenuItem::factory($options);
-		}
+		}*/
 	}
 
 	return $return;
@@ -663,6 +665,7 @@ function deck_return_menu(array $vars = array(), $sort_by = 'priority') {
 			if ($item->getSelected()) $return[$section][$key]['selected'] = true;
 		}
 	}
+	if (!isset($return['submenu'])) $return['submenu'] = array();
 	return $return;
 }
 

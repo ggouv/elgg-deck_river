@@ -919,7 +919,7 @@ li.elgg-menu-item-arrow-left {
 #column-settings select[name="twitter-account"] {
 	position: absolute;
 	right: 44px;
-	top: 38px;
+	top: 42px;
 }
 #column-settings .elgg-module-info .add_social_network {
 	font-size: 1.4em;

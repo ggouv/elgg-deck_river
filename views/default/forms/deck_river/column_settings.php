@@ -179,7 +179,7 @@ $column_title = $user_river_column_options['title'];
 					'<span class="elgg-river-timestamp">' . $phrase . '</span>',
 					$twitter_name . $add_account,
 					array(
-						'class' => $class
+						'class' => 'float ' . $class
 					)
 				);
 			}
@@ -190,6 +190,7 @@ $column_title = $user_river_column_options['title'];
 				'get_statusesHome_timeline' => elgg_echo('deck_river:twitter:feed:home'),
 				'get_statusesMentions_timeline' => elgg_echo('river:mentions'),
 				'get_statusesUser_timeline' => elgg_echo('deck_river:twitter:feed:user'),
+				'get_listsStatuses' => elgg_echo('deck_river:twitter:list'),
 				'get_direct_messages' => elgg_echo('deck_river:twitter:feed:dm:recept'),
 				'get_direct_messagesSent' => elgg_echo('deck_river:twitter:feed:dm:sent'),
 				'get_favoritesList' => elgg_echo('deck_river:twitter:feed:favorites'),
@@ -222,6 +223,7 @@ $column_title = $user_river_column_options['title'];
 				$output .= elgg_view('input/hidden', array(
 					'name' => 'twitter-account',
 					'value' => $twitter_account[0]->getGUID(),
+					'data-screen_name' => $twitter_account[0]->screen_name
 				));
 
 			} else { // more than one account
@@ -256,6 +258,15 @@ $column_title = $user_river_column_options['title'];
 				'name' => 'twitter-search',
 				'value' => $user_river_column_options['search']
 			));
+			echo '</li>';
+
+			echo '<li class="get_listsStatuses-options hidden pts"><label>' . elgg_echo('deck_river:twitter:lists') . '</label><br />';
+			echo elgg_view('input/dropdown', array(
+				'name' => 'twitter-lists',
+				'value' => $user_river_column_options['list_id'],
+				'options_values' => array($user_river_column_options['list_id'] => $user_river_column_options['list_name']),
+				'class' => 'float'
+			)) . '<div class="response-loader hidden float" style="margin: 1px 0px 0px 30px;"></div>';
 			echo '</li>';
 
 			echo $output;
