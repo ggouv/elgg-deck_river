@@ -4,7 +4,7 @@
  *
  * @param int $thread_id Thread id
  */
-function load_wire_discussion($thread_id) {
+function load_wire_discussion($thread_id, $menu = false) {
 
 	global $CONFIG;
 	$dbprefix = $CONFIG->dbprefix;
@@ -44,7 +44,14 @@ function load_wire_discussion($thread_id) {
 
 		$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
 
-		$item->menu[] = ''; // we don't want menu in thread
+		if ($menu) { // we don't want menu in thread
+			$item->menu = deck_return_menu(array(
+				'item' => $item,
+				'sort_by' => 'priority'
+			));
+		} else {
+			$item->menu[] = ''; 
+		}
 
 		unset($item->view); // delete view
 	}

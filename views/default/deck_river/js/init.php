@@ -84,7 +84,7 @@ elgg.deck_river.init = function() {
 	$('#thewire-textarea').focusin(function() {
 		var optionsHeight = $('#thewire-header').addClass('extended').find('.options').height();
 		$('#thewire-header').height(optionsHeight+117);
-		$('#thewire-textarea-border').height(optionsHeight+118);
+		$('#thewire-textarea-border').height(optionsHeight+120);
 	});
 
 	// networks
@@ -257,8 +257,7 @@ elgg.deck_river.init = function() {
 
 	// Add new column
 	$('.elgg-add-new-column').die().live('click', function() {
-		var NbrColumn = $('.column-river').length;
-		if (NbrColumn == deck_river_max_nbr_column) {
+		if ($('#deck-river-lists .column-river').length >= deck_river_max_nbr_column) {
 			elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 		} else {
 			elgg.deck_river.ColumnSettings();

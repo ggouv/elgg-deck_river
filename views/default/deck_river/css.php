@@ -16,7 +16,10 @@ body.fixed-deck {
 }
 
 /* the wire-search textarea */
-#thewire-header {
+.elgg-form-deck-river-wire-input {
+	position: relative;
+}
+#thewire-header, #search-input {
 	background-color: white;
 	border-radius: 6px;
 	height: 33px;
@@ -27,36 +30,36 @@ body.fixed-deck {
 #thewire-header #thewire-textarea-border {
 	display: none;
 }
-#thewire-textarea {
-	background-color: transparent;
+#thewire-textarea, .elgg-search .search-input {
+	background-color: transparent !important;
 	resize: none;
 	height: 32px !important;
 	padding: 10px 2px 0 12px !important;
 	margin: 0;
 	color: #666;
 	font: 130% Arial,Helvetica,sans-serif;
-	border: none;
+	border: none !important;
 	width: 570px;
 	line-height: 1em;
 	overflow: hidden;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
 }
 #thewire-textarea-border {
 	background-color: #4690D6;
-	border-radius: 0 0 6px 6px;
+	border-radius: 0 0 8px 8px;
 	-webkit-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	height: 0;
-	left: -4px;
+	left: -7px;
 	position: absolute;
 	top: 35px;
-	width: 665px;
+	width: 671px;
 	z-index: -1;
 }
-#thewire-characters-remaining {
+.reverse-border {
 	position: absolute;
 	right: 47px;
 	top: 0;
@@ -67,7 +70,7 @@ body.fixed-deck {
 	font-weight: bold;
 	color: #333333;
 }
-#thewire-characters-remaining span {
+.reverse-border span {
 	color: #00CC00;
 	background-color: white;
 	border-radius: 0 6px 6px 0;
@@ -80,7 +83,7 @@ body.fixed-deck {
 	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
-#thewire-header > .thewire-button {
+#thewire-header > .thewire-button, .elgg-search .search-button {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -93,7 +96,7 @@ body.fixed-deck {
 	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
-#thewire-header > .thewire-button:before {
+#thewire-header > .thewire-button:before, .elgg-search .search-button:before {
 	content: "S";
 	color: #B40000;
 	font-size: 54px;
@@ -109,7 +112,7 @@ body.fixed-deck {
 	color: white;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
-#thewire-submit-button {
+#thewire-submit-button, .elgg-search .elgg-button {
 	color: transparent;
 	height: 33px;
 	text-indent: -9999px;
@@ -211,7 +214,6 @@ body.fixed-deck {
 	border-top: 1px solid #DEDEDE;
 	margin: 0 1px;
 	padding: 4px;
-	width: 647px;
 	position: relative;
 }
 #thewire-header .url-shortener .elgg-input-text {
@@ -388,12 +390,12 @@ body.fixed-deck {
 }
 #thewire-network .non-pinned {
 	background-color: #4690D6;
-	border-radius: 0 0 6px 6px;
+	border-radius: 0 0 8px 8px;
 	-webkit-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
-	padding: 4px 4px 5px;
-	margin-left: -4px;
+	padding: 4px 7px 7px;
+	margin-left: -7px;
 	float: left;
 }
 #thewire-network .non-pinned .content {
@@ -698,11 +700,11 @@ li.elgg-menu-item-arrow-left {
 	content: " ";
 	height: 8px;
 	position: relative;
-	right: 2px;
-	top: -2px;
+	right: -4px;
+	top: -1px;
 }
 .elgg-list-item.newRiverItem:hover:before {
-	display: none;
+	opacity: 0;
 }
 .moreItem {
 	background-color: #EEE;

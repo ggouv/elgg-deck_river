@@ -28,9 +28,12 @@ if ($column_settings['network'] == 'twitter') {
 	// Set options
 	$options = array(
 		'count' => 30,
-		);
+	);
 
-	if ($column_settings['type'] == 'get_listsStatuses') $options['list_id'] = $column_settings['list_id'];
+	if ($column_settings['type'] == 'get_listsStatuses') {
+		$options['list_id'] = $column_settings['list_id'];
+		$options['count'] = 31; // @todo why get_listsStatuses return only 29 items ?
+	}
 
 	// refresh or more items
 	if ($time_method == 'lower') {

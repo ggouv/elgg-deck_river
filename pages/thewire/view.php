@@ -33,7 +33,7 @@ $content = <<<HTML
 HTML;
 
 elgg_load_library('deck_river:river_loader');
-$thread = htmlspecialchars(load_wire_discussion($wire->wire_thread), ENT_QUOTES, "UTF-8");
+$thread = htmlspecialchars(load_wire_discussion($wire->wire_thread, true), ENT_QUOTES, "UTF-8");
 $river = elgg_get_river(array('object_guid' => $wire_guid));
 $river_id = $river[0]->id;
 $content .= "<div id=\"json-river-thread\" class=\"hidden\" data-message-id=\"$river_id\">$thread</div>";

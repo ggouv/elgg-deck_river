@@ -105,7 +105,11 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 				TheColumn.find('.elgg-river > table').remove();
 				if (!elgg.isUndefined(responseHTML)) {
 					responseHTML.filter('.elgg-list-item').addClass('newRiverItem');
-					TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", 2000);
+					if ($.browser.webkit) { // Need it because there is a bug with highlight in chrome. Need to be checked for next version of jqueryui
+						TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem');
+					} else {
+						TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", 2000);
+					}
 					elgg.deck_river.displayCount(response, TheColumn);
 				}
 			}
@@ -154,8 +158,13 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
 
 			TheColumnHeader.find('.count').addClass('hidden');
-			TheColumnRiver.append(responseHTML.effect("highlight", 2000))
-				.find('.moreItem').appendTo(TheColumnRiver);
+			if ($.browser.webkit) { // Need it because there is a bug with highlight in chrome. Need to be checked for next version of jqueryui
+				TheColumnRiver.append(responseHTML)
+					.find('.moreItem').appendTo(TheColumnRiver);
+			} else {
+				TheColumnRiver.append(responseHTML.effect("highlight", 2000))
+					.find('.moreItem').appendTo(TheColumnRiver);
+			}
 			TheColumnRiver.scrollTo(TheColumnRiver.scrollTop()+LastItem.next().position().top+'px', 1500, {easing:'easeOutQuart'});
 		};
 

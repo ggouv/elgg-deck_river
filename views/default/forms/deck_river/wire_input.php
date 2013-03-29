@@ -47,7 +47,7 @@ foreach ($twitter_accounts as $account) {
 			?>
 		</div>
 	</div>
-	<div id="thewire-characters-remaining">
+	<div id="thewire-characters-remaining" class="reverse-border">
 		<span>0</span>
 	</div>
 	<div id="thewire-textarea-bottom"></div>

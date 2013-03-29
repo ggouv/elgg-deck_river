@@ -156,8 +156,7 @@
 
 
 <!-- Templates for elgg river twitter item -->
-<script id="elgg-river-twitter-template" type="text/template">
-	<li class="elgg-list-item item-twitter-{{id_str}}"
+<script id="elgg-river-twitter-template" type="text/template"><li class="elgg-list-item item-twitter-{{id_str}}"
 		data-timeid="{{id_str}}"
 		data-username="{{user.screen_name}}"
 		data-id="{{id_str}}"
@@ -213,8 +212,7 @@
 				{{/responses}}
 			</div>
 		</div>
-	</li>
-</script>
+</li></script>
 
 
 
