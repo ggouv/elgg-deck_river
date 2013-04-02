@@ -142,11 +142,11 @@
 			<div class="elgg-river-message">{{{message}}}</div>
 			{{#responses}}
 			<div class="elgg-river-responses">
+				<div class="response-loader float hidden"></div>
 				<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
 				<a href="#" class="thread float" data-thread="{{responses}}">
 					<?php echo elgg_echo('deck_river:thread'); ?>
 				</a>
-				<div class="response-loader hidden"></div>
 			</div>
 			{{/responses}}
 		</div>
@@ -198,11 +198,11 @@
 				{{#responses}}
 				<div class="elgg-river-responses">
 					{{#responses.reply}}
+					<div class="response-loader float hidden"></div>
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
 					<a href="#" class="thread float prm" data-thread="{{in_reply_to_status_id_str}}">
 						<?php echo elgg_echo('deck_river:thread'); ?>
 					</a>
-					<div class="response-loader hidden"></div>
 					{{/responses.reply}}
 					{{#responses.retweet}}
 						<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>

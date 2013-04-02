@@ -213,9 +213,10 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 elgg.deck_river.LoadDiscussion = function(athread) {
 	var athreadResponses = athread.parent('.elgg-river-responses'),
 		TheColumnHeader = athread.closest('.column-river').find('.column-header'),
+		network = TheColumnHeader.data('network'),
 		displayItems = function(response) {
 			var riverID = athread.closest('.elgg-list-item').attr('class').match(/\d+/)[0],
-				itemsRiver = $('.item-elgg-' + riverID),
+				itemsRiver = $('.item-' + network + '-' + riverID),
 				newItems = elgg.deck_river.displayRiver(response, TheColumnHeader, true);
 
 			$.each(itemsRiver, function() {
@@ -238,41 +239,17 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 
 	athreadResponses.find('.response-loader').removeClass('hidden');
 
-	if (TheColumnHeader.data('network') == 'twitter') {
-		$.get('http://api.twitter.com/1/related_results/show/'+ athread.attr('data-thread') +'.json?include_entities=1',
-				function(response) {
-					console.log(response);displayItems(response);
-				},'json'
-			).error(function(XHR, textStatus, errorThrown) {
-				console.log(XHR);
-				console.log("ERREUR: " + textStatus);
-				console.log("ERREUR: " + errorThrown);
-			});
-		//http://api.twitter.com/1/related_results/show/254208368070258688.json?include_entities=1
-		/*$.ajax({
-			//url: 'https://api.twitter.com/1.1/statuses/show.json?id='+ athread.data('thread'),
-			url: 'http://api.twitter.com/1/related_results/show/'+ athread.attr('data-thread') +'.json?include_entities=1',
-			dataType: 'jsonP',
-			success: function(response) {console.log(response);displayItems(response)},
-			error: function(XHR, textStatus, errorThrown){
-				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
-				console.log(XHR);
-				console.log("ERREUR: " + textStatus);
-				console.log("ERREUR: " + errorThrown);
-			}
-		});*/
-	} else {
-		elgg.post('ajax/view/deck_river/ajax_json/load_discussion', {
-			dataType: "json",
-			data: {
-				discussion: athread.data('thread')
-			},
-			success: function(response) {displayItems(response)},
-			error: function() {
-				athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
-			}
-		});
-	}
+	elgg.post('ajax/view/deck_river/ajax_json/load_discussion', {
+		dataType: "json",
+		data: {
+			discussion: athread.attr('data-thread'),
+			network: network
+		},
+		success: function(response) {displayItems(response)},
+		error: function() {
+			athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
+		}
+	});
 };
 
 

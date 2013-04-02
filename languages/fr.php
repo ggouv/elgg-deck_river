@@ -141,6 +141,7 @@ $french = array(
 	'deck_river:twitter:post:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", //"You cannot send messages to users who are not following you",
 	'deck_river:twitter:post:error:187' => "Vous avez déjà envoyé ce message. C'est un doublon.", //"Status is a duplicate"
 	'deck_river:twitter:error' => "Il y a eu une erreur avec Twitter.<br>Erreur retourné : %s<br/>%s",
+	'deck_river:twitter:error:discussion' => "Twitter indique que ce tweet est inconnu !",
 	'deck_river:twitter:error:34' => "La page ou l'utilisateur n'existe pas sur Twitter.", //"Sorry, that page does not exist",
 	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", //"Rate limit exceeded",
 

@@ -24,7 +24,7 @@ elgg.provide('elgg.deck_river');
 
 elgg.deck_river.init = function() {
 	$(document).ready(function() {
-		if ( $('.deck-river').length ) {
+		if ( $('.elgg-page .deck-river').length ) {
 
 			$('body').addClass('fixed-deck');
 			$('.elgg-page-default .elgg-page-body > .elgg-inner').css('width','100%');

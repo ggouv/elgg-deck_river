@@ -204,8 +204,9 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		value.posted = value.created_at.TwitterFormatDate();
 		value.friendly_time = elgg.friendly_time(value.posted);
 
-		// add replyall in submenu
+		// make menus
 		if (!thread) {
+			// add replyall in submenu
 			var match_users = value.text.match(/@\w{1,}/g);
 			if (match_users && match_users.length > 1) {
 				value.menu.submenu.unshift({
@@ -213,18 +214,17 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 					content: '<a href="#">'+'<span class="elgg-icon elgg-icon-response"></span>'+elgg.echo('replyall')+'</a>'
 				});
 			}
-		}
 
-		// make menus
-		var tempMenu = {};
-		$.each(value.menu, function(i, e) {
-			var eHTML = '';
-			$.each(e, function(j, h) {
-				eHTML += '<li class="elgg-menu-item-'+h.name+'">'+h.content+'</li>';
+			var tempMenu = {};
+			$.each(value.menu, function(i, e) {
+				var eHTML = '';
+				$.each(e, function(j, h) {
+					eHTML += '<li class="elgg-menu-item-'+h.name+'">'+h.content+'</li>';
+				});
+				tempMenu[i] = eHTML;
 			});
-			tempMenu[i] = eHTML;
-		});
-		value.menu = tempMenu;
+			value.menu = tempMenu;
+		}
 
 		// Fill responses (retweet and discussion link)
 		var retweet = false, reply = false;

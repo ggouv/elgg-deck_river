@@ -11,7 +11,7 @@ $time_posted = get_input('time_posted', 'false');
 $params = explode('-', $column);
 
 $jsonexport = array();
-global $fb; $fb->info($params);
+
 // detect network
 if ($params) {
 	$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');

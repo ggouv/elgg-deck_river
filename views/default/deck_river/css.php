@@ -13,6 +13,7 @@ body.fixed-deck {
 	left: -20px;
 	position: relative;
 	width: 16px;
+	margin-right: -16px;
 }
 
 /* the wire-search textarea */
