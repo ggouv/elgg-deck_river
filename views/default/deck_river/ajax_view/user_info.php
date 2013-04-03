@@ -16,40 +16,54 @@ if (!$user) {
 </ul>
 <ul class="elgg-body">
 	<li id="<?php echo $user->guid; ?>-info-profile">
-		<?php echo elgg_view_entity_icon($user, 'large', array('class' => 'float', 'href' => $user->getURL())); ?>
+		<div class="avatar-wrapper float center">
+			<?php
+				echo elgg_view('output/img', array(
+					'src' => elgg_format_url($user->getIconURL('large')),
+					'alt' => $user->username,
+					'title' => $user->username,
+					'width' => '200px'
+				));
+			?>
+		</div>
 
-			<div class="elgg-body plm">
-				<h1 class="pts mbm"><?php echo $user->realname; ?></h1>
-				<h2 class="mbs" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
-				<div><?php echo deck_river_wire_filter($user->briefdescription); ?></div>
+		<div class="elgg-body plm">
+			<h1 class="pts mbm"><?php echo $user->realname; ?></h1>
+			<h2 class="mbs" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
+			<div><?php echo deck_river_wire_filter($user->briefdescription); ?></div>
 
-				<?php
-				// grab the actions and admin menu items from user hover
-				$menu = elgg_trigger_plugin_hook('register', "menu:user_hover", array('entity' => $user), array());
-				$builder = new ElggMenuBuilder($menu);
-				$menu = $builder->getMenu('priority');
-				$actions = elgg_extract('action', $menu, array());
-				$admin = elgg_extract('admin', $menu, array());
-				$profile_actions = '';
-				if (elgg_is_logged_in() && $actions) {
-					$profile_actions = '<ul class="elgg-menu profile-action-menu mvm float">';
-					foreach ($actions as $action) {
-						if ($action->getName() == 'reportuser') {
-							//$profile_report = '<ul class="elgg-menu profile-action-menu mtm"><li>' . $action->getContent(array('class' => 'elgg-icon-attention gwfb')) . '</li></ul>';
-						} else {
-							$action_name = $action->getName();
-							$profile_actions .= '<li>' . $action->getContent(array('class' => "elgg-button elgg-button-action gwfb $action_name")) . '</li>';
-						}
-					}
-					$profile_actions .= '</ul>';
+			<?php
+			if (elgg_is_logged_in() && $user->getGUID() != elgg_get_logged_in_user_guid()) {
+				echo '<ul class="elgg-menu profile-action-menu mvm float">';
+				if ($user->isFriend()) {
+					echo elgg_view('output/url', array(
+						'href' => elgg_add_action_tokens_to_url("action/friends/remove?friend={$user->guid}"),
+						'text' => elgg_echo('friend:remove'),
+						'class' => 'elgg-button elgg-button-action gwfb remove_friend'
+					));
+				} else {
+					echo elgg_view('output/url', array(
+						'href' => elgg_add_action_tokens_to_url("action/friends/add?friend={$user->guid}"),
+						'text' => elgg_echo('friend:add'),
+						'class' => 'elgg-button elgg-button-action gwfb add_friend'
+					));
 				}
-				echo $profile_actions;
+				echo '</ul>';
+			}
+			?>
+		</div>
 
-				?>
-			</div>
+		<?php
+			echo elgg_view_menu('owner_block', array(
+				'entity' => $user,
+				'class' => 'profile-content-menu tiny',
+			));
+		?>
 
 		<div id="profile-details" class="elgg-body pll">
-			<?php echo elgg_view('profile/details'); ?>
+			<?php
+				echo elgg_view('profile/details');
+			?>
 		</div>
 	</li>
 	<li id="<?php echo $user->guid; ?>-info-activity" class="column-river hidden">

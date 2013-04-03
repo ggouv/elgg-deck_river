@@ -965,7 +965,20 @@ li.elgg-menu-item-arrow-left {
 .deck-popup .elgg-ajax-loader {
 	height: 540px;
 }
-.deck-popup #profile-details {
+.deck-popup .avatar-wrapper {
+	height: 200px;
+	line-height: 200px;
+	overflow: hidden;
+	width: 200px;
+	background: #1F2E3D;
+}
+.deck-popup .elgg-menu-owner-block li a {
+	background: #EEE;
+}
+.deck-popup .elgg-menu-owner-block li a:hover {
+	background: #0054A7;
+}
+.deck-popup .elgg-menu-owner-block, .deck-popup #profile-details {
 	clear: both;
 	padding: 5px 0 0 0;
 }
