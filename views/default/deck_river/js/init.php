@@ -70,7 +70,7 @@ elgg.deck_river.init = function() {
 			$('.single-view .item-elgg-'+rThread.data('message-id')).addClass('viewed');
 		}
 		if ($('#json-river-owner').length) { // owner river view
-			elgg.deck_river.LoadRiver($('.column-river'), $('#json-river-owner').val());
+			elgg.deck_river.LoadRiver($('.elgg-page .column-river'), $('#json-river-owner').val());
 		}
 	});
 

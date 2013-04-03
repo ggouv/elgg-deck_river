@@ -53,7 +53,7 @@
 		<li id="{{id}}-info-profile">
 			<div class="elgg-avatar elgg-avatar-large float">
 				<a href="http://twitter.com/{{screen_name}}" title="{{screen_name}}" rel="nofollow">
-					<div class="avatar-wrapper float center">
+					<div class="avatar-wrapper center">
 						<img width="200px" title="{{screen_name}}" alt="{{screen_name}}" src="{{profile_image_url}}">
 					</div>
 				</a>

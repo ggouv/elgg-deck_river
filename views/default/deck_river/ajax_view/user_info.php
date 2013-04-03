@@ -16,15 +16,19 @@ if (!$user) {
 </ul>
 <ul class="elgg-body">
 	<li id="<?php echo $user->guid; ?>-info-profile">
-		<div class="avatar-wrapper float center">
-			<?php
-				echo elgg_view('output/img', array(
-					'src' => elgg_format_url($user->getIconURL('large')),
-					'alt' => $user->username,
-					'title' => $user->username,
-					'width' => '200px'
-				));
-			?>
+		<div class="elgg-avatar elgg-avatar-large float">
+			<a href="<?php echo $user->getURL(); ?>" title="<?php echo $user->username; ?>">
+				<div class="avatar-wrapper center">
+					<?php
+						echo elgg_view('output/img', array(
+							'src' => elgg_format_url($user->getIconURL('large')),
+							'alt' => $user->username,
+							'title' => $user->username,
+							'width' => '200px'
+						));
+					?>
+				</div>
+			</a>
 		</div>
 
 		<div class="elgg-body plm">
