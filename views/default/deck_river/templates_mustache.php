@@ -61,7 +61,7 @@
 			<div class="elgg-body plm">
 				<h1 class="pts mbm">{{screen_name}}</h1>
 				<h2 class="mbs" style="font-weight:normal;">@{{screen_name}}</h2>
-				<div>{{description}}</div>
+				<div>{{{description}}}</div>
 			</div>
 			<div id="profile-details" class="elgg-body pll">
 				<ul class="user-stats mbm">

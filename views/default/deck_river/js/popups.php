@@ -89,6 +89,7 @@ elgg.deck_river.popups = function() {
 			userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
 			templateRender = function(response) {
 				response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
+				response.description = response.description.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag();
 				body.html(Mustache.render($('#twitter-user-profile-template').html(), response));
 			};
 
