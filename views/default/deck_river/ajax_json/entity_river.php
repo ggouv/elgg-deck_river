@@ -2,7 +2,6 @@
 
 global $CONFIG;
 $dbprefix = $CONFIG->dbprefix;
-
 // Get callbacks
 $entity_guid = get_input('guid', 'false');
 $time_method = get_input('time_method', 'false');
@@ -14,9 +13,8 @@ if (strpos($entity_guid, '#') === 0) {
 	$options['wheres'][] = "(o.description REGEXP '(" . $entity_guid . ")')";
 } else {
 	$entity_guid = (int)$entity_guid; // force to guid
-	$user = elgg_get_logged_in_user_guid();
 
-	if (!$entity_guid || !$user) {
+	if (!$entity_guid) {
 		return;
 	}
 
