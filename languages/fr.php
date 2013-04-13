@@ -13,6 +13,10 @@ $french = array(
 	'deck_river:add-tab' => 'Ajouter un nouvel onglet',
 	'deck_river:limitColumnReached' => 'Le nombre maximum de colonne est atteint.',
 	'river:mentions' => "Mentions",
+	'river:a_group_activity' => "Activité d'un groupe",
+	'river:group_activity' => "Activité du groupe",
+	'river:a_group_mentions' => "Mentions d'un !groupe",
+	'river:group_mentions' => "Mentions du groupe",
 	'deck_river:more' => "Plus...",
 	'deck-river:reduce_url:string' => "Réduire un lien...",
 	'deck-river:reduce_url' => "Réduire",
@@ -56,7 +60,7 @@ $french = array(
 	// add tab form
 	'deck_river:add_tab_title' => 'Ajouter un nouvel onglet :',
 	'deck_river:add:tab:error' => 'Cannot add a new tab.',
-	'deck_river:rename_tab_title' => "renomer l'onglet :",
+	'deck_river:rename_tab_title' => "Renommer l'onglet :",
 
 	// delete
 	'deck_river:delete:tab:confirm' => "Êtes-vous sûr de supprimer l'onglet '%s' ?",
@@ -69,6 +73,7 @@ $french = array(
 	'deck_river:filter' => 'Filtre :',
 	'deck_river:title' => 'Titre de la colonne :',
 	'deck_river:search' => 'Recherche :',
+	'deck_river:a_search' => 'Une recherche',
 	'deck_river:filter:all' => 'Tout',
 	'deck_river:twitter:authorize:request:title' => "Autorisez %s à accéder à votre compte Twitter",
 	'deck_river:twitter:authorize:request:button' => "Faire la demande à Twitter",

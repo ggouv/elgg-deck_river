@@ -50,11 +50,16 @@ if ($submit == 'delete') {
 			break;
 		case 'group':
 			$user_river_options[$tab][$column]['group'] = $group;
+			$user_river_options[$tab][$column]['title'] = get_entity($group)->name;
+			$user_river_options[$tab][$column]['subtitle'] = 'river:group_activity';
+			break;
+		case 'group_mention':
+			$user_river_options[$tab][$column]['group'] = $group;
 			$user_river_options[$tab][$column]['title'] = '!' . get_entity($group)->name;
-			$user_river_options[$tab][$column]['subtitle'] = 'river:group';
+			$user_river_options[$tab][$column]['subtitle'] = 'river:group_mentions';
 			break;
 		case 'search':
-			$user_river_options[$tab][$column]['search'] = explode(' ', $search);
+			$user_river_options[$tab][$column]['search'] = sanitise_string(explode(' ', $search));
 			$user_river_options[$tab][$column]['title'] = $search;
 			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:search', array(elgg_get_site_entity()->name));
 			break;

@@ -66,7 +66,7 @@ $column_title = $user_river_column_options['title'];
 					'value' => $user_river_column_options['search']
 				)); ?>
 			</li>
-			<li class='group-options hidden pts'>
+			<li class='group-options group_mention-options hidden pts'>
 				<label><?php echo elgg_echo('group'); ?></label><br />
 				<?php
 					echo elgg_view('input/autocomplete', array(

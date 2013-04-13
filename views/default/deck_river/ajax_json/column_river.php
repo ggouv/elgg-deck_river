@@ -87,8 +87,8 @@ if ($column_settings['network'] == 'twitter') {
 		case 'friends':
 			$options['joins'][] = "JOIN {$dbprefix}entity_relationships r ON r.guid_two = rv.subject_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
-			$options['wheres'][] = "(r.relationship = 'friend' AND r.guid_one = '" . $owner->guid ."')";
-			$options['wheres'][] = "(o.description IS NULL OR o.description NOT REGEXP '^@')";
+			$options['wheres'][] = "((r.relationship = 'friend' OR r.relationship = 'member') AND r.guid_one = '" . $owner->guid ."')";
+			$options['wheres'][] = "(rv.subtype <> 'thewire' OR (o.description NOT LIKE '@%' AND o.description NOT LIKE '!%'))";
 			break;
 		case 'mine':
 			$options['subject_guid'] = $owner->guid;
@@ -97,11 +97,19 @@ if ($column_settings['network'] == 'twitter') {
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-			$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $owner->name . "([[:blank:]]|$|<)'))";
+			$options['wheres'][] = "((o.description LIKE '%@" . $owner->name . " %') OR (o.description LIKE '%@" . $owner->name . "') OR (m.string LIKE '%@" . $owner->name . " %') OR (m.string LIKE '%@" . $owner->name . "'))";
+			//$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $owner->name . "([[:blank:]]|$|<)'))"; // FASTEST ? LIKE OR REGEXP ? WHY '<'
 			break;
 		case 'group':
 			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
 			$options['wheres'][] = "e.container_guid = " . $column_settings['group'];
+			break;
+		case 'group_mention':
+			$group_name = get_entity($column_settings['group'])->name;
+			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
+			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
+			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
+			$options['wheres'][] = "((o.description LIKE '%!" . $group_name . " %') OR (o.description LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "'))";
 			break;
 		case 'search':
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";

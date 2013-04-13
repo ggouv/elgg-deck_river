@@ -310,7 +310,7 @@ body.fixed-deck {
 	width: 10px;
 }
 #thewire-network .net-profile.ggouv .network {
-	background-image: url(<?php echo elgg_get_site_url() . 'mod/elgg-ggouv_template/graphics/favicon.png'; ?>);
+	background-image: url(<?php echo elgg_get_site_url() . 'mod/elgg-ggouv_template/graphics/favicon/favicon.png'; ?>);
 	background-size: 10px 10px;
 }
 #thewire-network .net-profile.twitter .network {
@@ -898,7 +898,8 @@ li.elgg-menu-item-arrow-left {
 	float: left;
 }
 #add-deck-river-tab, #rename-deck-river-tab {
-	width: 260px;
+	width: 270px;
+	font-weight: bold;
 }
 #add-deck-river-tab .elgg-input-text, #rename-deck-river-tab .elgg-input-text {
 	width: 200px;
