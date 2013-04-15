@@ -3,6 +3,7 @@
  * Short summary of the action that occurred
  *
  * @vars['item'] ElggRiverItem
+ * @vars['hash'] String     default false    Should we add hash. eg: http://ggouv.fr/object/view/543/title#item-annotation-853
  */
 
 $item = $vars['item'];
@@ -20,8 +21,9 @@ $subject_link = elgg_view('output/url', array(
 	'is_trusted' => true,
 ));
 
+$hash = ($vars['hash'] && $vars['hash'] != false) ? $vars['hash'] : '';
 $object_link = elgg_view('output/url', array(
-	'href' => $object->getURL(),
+	'href' => $object->getURL() . $hash,
 	'text' => $object->title ? $object->title : $object->name,
 	'class' => 'elgg-river-object',
 	'is_trusted' => true,
@@ -39,7 +41,7 @@ if ($container instanceof ElggGroup && $container->guid != elgg_get_page_owner_g
 		'is_trusted' => true,
 	);
 	$group_link = elgg_view('output/url', $params);
-	
+
 	$key = "river:ingroup:$action:$type:$subtype";
 	$group_string = elgg_echo($key, array($group_link));
 	if ($group_string == $key) $group_string = elgg_echo('river:ingroup', array($group_link));
