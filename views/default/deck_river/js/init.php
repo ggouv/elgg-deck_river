@@ -60,6 +60,12 @@ elgg.deck_river.init = function() {
 			});
 			if ($('#deck-river-lists').get(0).scrollWidth == $('#deck-river-lists').get(0).clientWidth) $('.deck-river-scroll-arrow span').addClass('hidden');
 
+			$('.elgg-page .elgg-river').unbind('scroll.moreItem').bind('scroll.moreItem', function() {
+				if ($(this).scrollTop()+$(this).height() == $(this).get(0).scrollHeight) {
+					$(this).find('.moreItem').click();
+				}
+			});
+
 		} else {
 			$('body').removeClass('fixed-deck');
 		}
