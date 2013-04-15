@@ -68,9 +68,9 @@ elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
 	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
 	if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
 
-	if (response.activity instanceof String) {
-		return response.activity;
-	} else if (response.activity || response.results) {
+	if (elgg.isString(response.activity)) {
+		return $(response.activity);
+	} else if (response.activity && response.activity.length != 0 || response.results) {
 		return elgg.deck_river[network + 'DisplayItems'](response, thread);
 	}
 };

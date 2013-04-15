@@ -45,7 +45,6 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 				TheColumn.removeClass('loadingRefresh');
 			},
 			error: function(xmlhttp, status, error) {
-				//TheColumn.find('.elgg-river').html();
 				elgg.register_error(elgg.echo('deck_river:twitter:access:error', [status, error]));
 				TheColumn.removeClass('loadingRefresh');
 			}
@@ -62,18 +61,9 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 				if (response) {
 				response.TheColumn = TheColumn.removeClass('loadingRefresh');
 					if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
-						TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
-						if ( TheColumn.find('.elgg-list-item').length >= 30 ) TheColumnRiver.append(loadMoreItem);
-						/*} else if ( TheColumn.find('.elgg-list-item').length == 0 ) {
-							var user = elgg.get_logged_in_user_entity(),
-								c_type = response.column_type;
-
-							if (c_type == 'mine' && Math.round($.now()/1000) - elgg.get_logged_in_user_entity().time_created  < (60*60*24*7)) c_type = 'now';
-							TheColumnRiver.html($('<table>', {height: '100%', width: '100%'}).append(
-								$('<tr>').append(
-									$('<td>', {'class': 'helper'}).html(elgg.echo('deck_river:helper:'+c_type, [user.location])))
-							));
-						}*/
+						TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));
+						TheColumnRiver.scrollTo(0);
+						if (TheColumn.find('.elgg-list-item').length >= 30) TheColumnRiver.append(loadMoreItem);
 					}
 				} else { // @todo Make error more comprehensible
 					TheColumnRiver.html('error');
@@ -102,8 +92,8 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 			if (elgg.trigger_hook('deck-river', 'refresh:column:'+response.column_type, response, true)) {
 				var responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
 
-				TheColumn.find('.elgg-river > table').remove();
 				if (!elgg.isUndefined(responseHTML)) {
+					TheColumn.find('.elgg-river > table').remove();
 					responseHTML.filter('.elgg-list-item').addClass('newRiverItem');
 					if ($.browser.webkit) { // Need it because there is a bug with highlight in chrome. Need to be checked for next version of jqueryui
 						TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem');

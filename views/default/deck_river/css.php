@@ -737,9 +737,8 @@ li.elgg-menu-item-arrow-left {
 	opacity: 1;
 }
 .column-river .elgg-river td.helper {
-	padding: 0 10% 50%;
+	padding: 80px 20px 0;
 	text-align: center;
-	vertical-align: middle;
 }
 .elgg-river-item .elgg-avatar-small > div > img {
 	width: 32px;

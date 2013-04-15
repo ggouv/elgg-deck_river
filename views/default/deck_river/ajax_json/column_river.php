@@ -5,9 +5,9 @@ $dbprefix = $CONFIG->dbprefix;
 
 // Get callbacks
 $tab = get_input('tab', 'default');
-$column = get_input('column', 'false');
-$time_method = get_input('time_method', 'false');
-$time_posted = get_input('time_posted', 'false');
+$column = get_input('column', false);
+$time_method = get_input('time_method', false);
+$time_posted = get_input('time_posted', false);
 
 // Get the settings of the current user.
 $owner = elgg_get_logged_in_user_entity();
@@ -162,7 +162,7 @@ if ($column_settings['network'] == 'twitter') {
 	$items = elgg_get_river($options);
 
 	$jsonexport['activity'] = array();
-	if (is_array($items)) {
+	if (!empty($items)) {
 		foreach ($items as $item) {
 			if (elgg_view_exists($item->view, 'json')) {
 				elgg_view($item->view, array('item' => $item), '', '', 'json'); // this view fill the global $jsonexport
@@ -170,32 +170,50 @@ if ($column_settings['network'] == 'twitter') {
 				elgg_view('river/item', array('item' => $item), '', '', 'json');
 			}
 		}
+
+		$temp_subjects = array();
+		foreach ($jsonexport['activity'] as $item) {
+			if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
+
+			$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
+
+			$item->menu = deck_return_menu(array(
+				'item' => $item,
+				'sort_by' => 'priority'
+			));
+
+			unset($item->view); // delete view
+		}
+
+		$jsonexport['users'] = array();
+		foreach ($temp_subjects as $item) {
+			$entity = get_entity($item);
+			$jsonexport['users'][] = array(
+				'guid' => $item,
+				'type' => $entity->type,
+				'username' => $entity->username,
+				'icon' => $entity->getIconURL('small'),
+			);
+		}
+
+	} else if (!$time_method) {
+
+		// not first or second login
+		if ($owner->prev_last_login != 0) {
+		} else if($owner->last_login != 0) { // second login
+
+		} else { // first login
+		}
+
+		// @todo should be on a hook or view to be overridden
+		if (function_exists('get_dep_from_group_guid')) {
+			$dep = get_dep_from_group_guid($owner->location);
+			$echo = elgg_echo('deck_river:helper:'.$column_settings['type'], array($owner->location, $dep));
+		}
+
+		$jsonexport['activity'] = '<table height="100%" width="100%"><tr><td class="helper">'. $echo . '</td></tr></table>';
 	}
 
-	$temp_subjects = array();
-	foreach ($jsonexport['activity'] as $item) {
-		if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
-
-		$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
-
-		$item->menu = deck_return_menu(array(
-			'item' => $item,
-			'sort_by' => 'priority'
-		));
-
-		unset($item->view); // delete view
-	}
-
-	$jsonexport['users'] = array();
-	foreach ($temp_subjects as $item) {
-		$entity = get_entity($item);
-		$jsonexport['users'][] = array(
-			'guid' => $item,
-			'type' => $entity->type,
-			'username' => $entity->username,
-			'icon' => $entity->getIconURL('small'),
-		);
-	}
 
 	$jsonexport['column_type'] = $column_settings['type'];
 

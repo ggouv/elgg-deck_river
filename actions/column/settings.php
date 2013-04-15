@@ -59,7 +59,7 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['subtitle'] = 'river:group_mentions';
 			break;
 		case 'search':
-			$user_river_options[$tab][$column]['search'] = sanitise_string(explode(' ', $search));
+			$user_river_options[$tab][$column]['search'] = explode(' ', sanitise_string($search));
 			$user_river_options[$tab][$column]['title'] = $search;
 			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:search', array(elgg_get_site_entity()->name));
 			break;

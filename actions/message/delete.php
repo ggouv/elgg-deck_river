@@ -35,5 +35,5 @@ if ($thewire->getSubtype() == "thewire" && $thewire->canEdit()) {
 		register_error(elgg_echo("thewire:notdeleted"));
 	}
 
-	forward("message/owner/" . $owner->username);
+	forward(REFERER);
 }

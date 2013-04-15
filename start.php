@@ -629,11 +629,11 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 
 		}
 
-		/*if (true ||$item->annotation_id != 0 && elgg_is_admin_logged_in()) {
+		if ($item->annotation_id == 0 && $object->canEdit()) { // 0 = this is a thewire annotation
 			$options = array(
 				'name' => 'delete',
 				'section' => 'submenu',
-				'href' => "action/river/delete?id=$item->id",
+				'href' => "action/message/delete?guid=$object->guid",
 				'text' => elgg_view_icon('delete') . elgg_echo('delete'),
 				'title' => elgg_echo('delete'),
 				'confirm' => elgg_echo('deleteconfirm'),
@@ -641,7 +641,7 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 				'priority' => 200,
 			);
 			$return[] = ElggMenuItem::factory($options);
-		}*/
+		}
 	}
 
 	return $return;
