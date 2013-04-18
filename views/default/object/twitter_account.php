@@ -59,7 +59,7 @@ if ($view === 'in_network_box') {
 		</div>
 	</ul>
 	$avatar
-	<span class="network gwf">1</span>
+	<span class="network gwf">T</span>
 </div>
 HTML;
 

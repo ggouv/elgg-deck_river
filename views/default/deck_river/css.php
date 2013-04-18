@@ -98,7 +98,7 @@ body.fixed-deck {
 	box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
 #thewire-header > .thewire-button:before, .elgg-search .search-button:before {
-	content: "S";
+	content: "A";
 	color: #B40000;
 	font-size: 54px;
 	position: relative;
@@ -534,6 +534,7 @@ body.fixed-deck {
 }
 .elgg-menu-deck-river .delete-tab .elgg-icon-delete:before {
 	font-size: 40px;
+	text-indent: 2px;
 }
 .elgg-menu-deck-river > .elgg-menu-item-plus-column {
 	border-radius: 0 5px 0 0;
@@ -851,13 +852,13 @@ li.elgg-menu-item-arrow-left {
 	display: inline-block;
 	height: 18px;
 	position: absolute;
-	right: 5px;
+	right: 10px;
 	top: 5px;
 	width: 18px;
 	cursor: pointer;
 }
 .deck-popup .elgg-head a.pin {
-	right: 20px;
+	right: 25px;
 }
 #column-settings .tab {
 	height: 240px;
