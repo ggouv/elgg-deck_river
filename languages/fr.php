@@ -26,13 +26,13 @@ $french = array(
 	'responseToHelper:delete' => "Ne plus répondre à %s",
 	'deck_river:column:gotop' => "⬆ %s éléments non-lus ⬆",
 
-	'deck_river:helper:friends' => "Vous n'avez pas d'abonnement ou les personnes que vous suivez n'ont aucune activité.<br/><br/><a href='" . elgg_get_site_url() . "members'>Suivez des personnes</a> dont l'activité pourrait vous intéresser ou cherchez des personnes <a href='" . elgg_get_site_url() . "groups/members/%s'>de votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/members/%s'>votre département</a>.",
-	'deck_river:helper:mine' => "<span class='gwf'>S</span><br/><a href='#' onclick='$(\"#thewire-textarea\").focus();'>Dites bonjour à tout le monde</a> en envoyant un message de bienvenue, votre humeur ou votre motivation...",
+	'deck_river:helper:friends' => "<span class='gwf'>K</span><br/>Vous n'avez pas d'abonnement ou les personnes que vous suivez n'ont aucune activité.<br/><br/><a href='" . elgg_get_site_url() . "members'>Suivez des personnes</a> dont l'activité pourrait vous intéresser ou cherchez des personnes <a href='" . elgg_get_site_url() . "groups/members/%s'>de votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/members/%s'>votre département</a>.",
+	'deck_river:helper:mine' => "<span class='gwf'>w</span><br/><a href='#' onclick='$(\"#thewire-textarea\").focus();'>Dites bonjour à tout le monde</a> en envoyant un message de bienvenue, votre humeur ou votre motivation...",
 	//'deck_river:helper:mine' => "Vous n'avez pas d'activité.<br/>Publiez un message, entrez dans un groupe pour collaborer, ou participez à une action...",
-	'deck_river:helper:mention' => "<span class='gwf'>@</span><br/>Personne ne vous a mentionné pour l'instant.<br/><br/>Des éléments seront affichés dans cette colonne quand quelqu'un vous aura mentionné dans un message, un commentaire, un article...",
-	'deck_river:helper:group' => "Regardez ce qui se passe près de chez vous <a href='" . elgg_get_site_url() . "groups/profile/%s'>dans votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/profile/%s'>votre département</a>.<br/><br/>Pour collaborer et participer à des actions collectives, <a href='" . elgg_get_site_url() . "groups/all'>cherchez un groupe</a> qui partage vos centres d'intérêts, vos motivations...",
+	'deck_river:helper:mention' => "<span class='gwf'>m</span><br/>Personne ne vous a mentionné pour l'instant.<br/><br/>Des éléments seront affichés dans cette colonne quand quelqu'un vous aura mentionné dans un message, un commentaire, un article...",
+	'deck_river:helper:group' => "<span class='gwf'>K</span>Regardez ce qui se passe près de chez vous <a href='" . elgg_get_site_url() . "groups/profile/%s'>dans votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/profile/%s'>votre département</a>.<br/><br/>Pour collaborer et participer à des actions collectives, <a href='" . elgg_get_site_url() . "groups/all'>cherchez un groupe</a> qui partage vos centres d'intérêts, vos motivations...",
 	'deck_river:helper:group_mention' => "<span class='gwf'>!</span><br/>Le groupe n'a pas été mentionné.<br/><br/>Peut-être qu'il n'est pas très actif. Vous pouvez essayer de faire quelque chose ?<br/>Si c'est votre groupe local, faites venir du monde et essayez d'agir ensemble !",
-	'deck_river:helper:search' => "<span class='gwf'>T</span><br/>Rien ne correspond à votre recherche.<br/>Essayez autre chose...",
+	'deck_river:helper:search' => "<span class='gwf'>L</span><br/>Rien ne correspond à votre recherche.<br/>Essayez autre chose...",
 
 	'usersettings:authorize:applications' => "Vos réseaux connectés",
 	'deck_river:account:createdby' => "Compte Twitter connecté à %s par %s ",
