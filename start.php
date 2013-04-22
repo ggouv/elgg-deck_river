@@ -237,13 +237,13 @@ function deck_river_wire_filter($text) {
 
 	// usernames
 	$text = preg_replace(
-				'/(^|[^\w])@([\p{L}\p{Nd}._]+)/u',
+				'/(^|[^\w])@([\p{L}\p{Nd}_]+)/u',
 				'$1<a class="user-info-popup" href="#" title="$2">@$2</a>',
 				$text);
 
 	// groups
 	$text = preg_replace(
-				'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
+				'/(^|[^\w])!([\p{L}\p{Nd}_]+)/u',
 				'$1<a class="group-info-popup" href="#" title="$2">!$2</a>',
 				$text);
 
@@ -280,13 +280,13 @@ function deck_river_wire_filter_external($text) {
 
 	// usernames
 	$text = preg_replace(
-				'/(^|[^\w])@([\p{L}\p{Nd}._]+)/u',
+				'/(^|[^\w])@([\p{L}\p{Nd}_]+)/u',
 				'$1<a href="'. elgg_get_site_url() .'profile/$2" title="$2">@$2</a>',
 				$text);
 
 	// groups
 	$text = preg_replace(
-				'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
+				'/(^|[^\w])!([\p{L}\p{Nd}_]+)/u',
 				'$1<a href="'. elgg_get_site_url() .'groups/profile/$2" title="$2">!$2</a>',
 				$text);
 
@@ -629,7 +629,7 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 
 		}
 
-		if ($item->annotation_id == 0 && $object->canEdit()) { // 0 = this is a thewire annotation
+		if ($item->annotation_id == 0 && $object->type == 'object' && $object->canEdit()) { // 0 = this is a thewire annotation
 			$options = array(
 				'name' => 'delete',
 				'section' => 'submenu',

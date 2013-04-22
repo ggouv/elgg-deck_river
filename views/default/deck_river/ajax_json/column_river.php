@@ -97,7 +97,8 @@ if ($column_settings['network'] == 'twitter') {
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-			$options['wheres'][] = "((o.description LIKE '%@" . $owner->name . " %') OR (o.description LIKE '%@" . $owner->name . "') OR (m.string LIKE '%@" . $owner->name . " %') OR (m.string LIKE '%@" . $owner->name . "'))";
+			$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "[[:>:]]') OR (m.string REGEXP '@" . $owner->name . "[[:>:]]'))";
+			//$options['wheres'][] = "((o.description LIKE '%@" . $owner->name . " %') OR (o.description LIKE '%@" . $owner->name . "') OR (m.string LIKE '%@" . $owner->name . " %') OR (m.string LIKE '%@" . $owner->name . "'))";
 			//$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $owner->name . "([[:blank:]]|$|<)'))"; // FASTEST ? LIKE OR REGEXP ? WHY '<'
 			break;
 		case 'group':
@@ -109,7 +110,8 @@ if ($column_settings['network'] == 'twitter') {
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-			$options['wheres'][] = "((o.description LIKE '%!" . $group_name . " %') OR (o.description LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "'))";
+			$options['wheres'][] = "((o.description REGEXP '!" . $group_name . "[[:>:]]') OR (m.string REGEXP '@" . $group_name . "[[:>:]]'))";
+			//$options['wheres'][] = "((o.description LIKE '%!" . $group_name . " %') OR (o.description LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "'))";
 			break;
 		case 'search':
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
