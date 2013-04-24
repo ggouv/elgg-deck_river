@@ -31,27 +31,39 @@ if (empty($body)) {
 	foreach ($networks as $network) {
 		if ($network == $user->getGUID()) { // network is ggouv
 			$parent_guid = (int) get_input('elgg_parent', false);
+			$params = array(
+				'body' => $body,
+				'owner_guid' => $user->guid,
+				'access_id' => ACCESS_PUBLIC,
+				'parent_guid' => $parent_guid,
+				'method' => 'site'
+			);
 
-			$guid = deck_river_thewire_save_post($body, $user->guid, ACCESS_PUBLIC, $parent_guid, 'site');
-			if (!$guid) {
-				register_error(elgg_echo("thewire:error"));
-			} else {
-				// Send response to original poster if not already registered to receive notification
-				if ($parent_guid) {
-					$parent_entity = get_entity($parent_guid);
-					if ($parent_entity && $parent_entity->getSubtype() == 'thewire') {
-						deck_river_thewire_send_response_notification($guid, $parent_guid, $user);
-						$parent_owner_guid = get_entity($parent_guid)->getOwnerGUID();
+			$params = elgg_trigger_plugin_hook('deck-river', 'message:before_create:elgg', $params);
+			if ($params !== false) { // plugin can cancel river create by sending false
+
+				$guid = deck_river_thewire_save_post($params);
+				if (!$guid) {
+					register_error(elgg_echo("thewire:error"));
+				} else {
+					// Send response to original poster if not already registered to receive notification
+					if ($parent_guid) {
+						$parent_entity = get_entity($parent_guid);
+						if ($parent_entity && $parent_entity->getSubtype() == 'thewire') {
+							deck_river_thewire_send_response_notification($guid, $parent_guid, $user);
+							$parent_owner_guid = get_entity($parent_guid)->getOwnerGUID();
+						}
 					}
+					// send @mention
+					foreach (deck_river_thewire_get_users($body) as $user_mentioned) {
+						if ($user_mentioned->guid != $user->guid // don't send mention to owner of the message
+							&& $user_mentioned->guid != $parent_owner_guid) // already send mail with send response notification
+						deck_river_thewire_send_mention_notification($guid, $user_mentioned);
+					}
+					system_message(elgg_echo("thewire:posted"));
 				}
-				// send @mention
-				foreach (deck_river_thewire_get_users($body) as $user_mentioned) {
-					if ($user_mentioned->guid != $user->guid // don't send mention to owner of the message
-						&& $user_mentioned->guid != $parent_owner_guid) // already send mail with send response notification
-					deck_river_thewire_send_mention_notification($guid, $user_mentioned);
-				}
-				system_message(elgg_echo("thewire:posted"));
 			}
+
 		} else {
 			$network_entity = get_entity($network);
 			$parent_guid = (int) get_input('twitter_parent', false);

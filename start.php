@@ -76,7 +76,6 @@ function deck_river_init() {
 }
 
 
-
 function deck_river_page_handler($page) {
 
 	if (elgg_is_logged_in()) {
@@ -379,40 +378,48 @@ function deck_river_thewire_get_users($text) {
 /**
  * Create a new wire post.
  *
- * @param string $text        The post text
- * @param int    $userid      The user's guid
- * @param int    $access_id   Public/private etc
- * @param int    $parent_guid Parent post guid (if any)
- * @param string $method      The method (default: 'site')
+ * @param array $params Array in format : 
+ *              body           => string       The post text
+ *              owner_guid     => int          The owner's guid of the post
+ *              access_id      => string       Public/private etc
+ *              parent_guid    => int          Parent post guid (if any)
+ *              method         => string       The method (default: 'site')
  * @return guid or false if failure
  */
-function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid = 0, $method = "site") {
+function deck_river_thewire_save_post(array $params) {
+	$defaults = array(
+		'access_id' => ACCESS_PUBLIC,
+		'parent_guid' => 0,
+		'method' => 'site'
+	);
+	$params = array_merge($defaults, $params);
+
 	$post = new ElggObject();
 
 	$post->subtype = "thewire";
-	$post->owner_guid = $userid;
-	$post->access_id = $access_id;
-	$post->description = $text;
-	$post->method = $method; //method: site, email, api, ...
+	$post->owner_guid = $params['owner_guid'];
+	$post->access_id = $params['access_id'];
+	$post->description = $params['body'];
+	$post->method = $params['method']; //method: site, email, api, ...
 
-	$tags = deck_river_thewire_get_hashtags($text);
+	$tags = deck_river_thewire_get_hashtags($params['body']);
 	if ($tags) {
 		$post->tags = $tags;
 	}
 
 	// must do this before saving so notifications pick up that this is a reply
-	if ($parent_guid) {
+	if ($params['parent_guid']) {
 		$post->reply = true;
 	}
 
 	$guid = $post->save();
 
 	// set thread guid
-	if ($parent_guid) {
-		$post->addRelationship($parent_guid, 'parent');
+	if ($params['parent_guid']) {
+		$post->addRelationship($params['parent_guid'], 'parent');
 
 		// name conversation threads by guid of first post (works even if first post deleted)
-		$parent_post = get_entity($parent_guid);
+		$parent_post = get_entity($params['parent_guid']);
 		$post->wire_thread = $parent_post->wire_thread;
 	} else {
 		// first post in this thread
@@ -430,7 +437,7 @@ function deck_river_thewire_save_post($text, $userid, $access_id, $parent_guid =
 			'url' => $post->getURL(),
 			'origin' => 'thewire',
 		);
-		elgg_trigger_plugin_hook('status', 'user', $params);
+		elgg_trigger_plugin_hook('status', 'user', $params); // original elgg hook
 	}
 
 	return $guid;
@@ -585,7 +592,7 @@ function deck_river_thewire_owner_block_menu($hook, $type, $return, $params) {
 
 
 /**
- * Add the comment and like links to river actions menu
+ * Add the comment and delete links to river actions menu
  * @access private
  */
 function deck_river_menu_setup($hook, $type, $return, $params) {
