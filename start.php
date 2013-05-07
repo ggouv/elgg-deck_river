@@ -491,7 +491,6 @@ function deck_river_thewire_notify_message($guid, $parent_guid) {
  * @return void
  */
 function deck_river_thewire_send_response_notification($guid, $parent_guid, $user) {
-global $fb; $fb->info('response');
 	$parent_owner = get_entity($parent_guid)->getOwnerEntity();
 	if (!$user) $user = elgg_get_logged_in_user_entity();
 	// check to make sure user is not responding to self

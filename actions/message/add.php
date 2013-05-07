@@ -39,7 +39,7 @@ if (empty($body)) {
 				'method' => 'site'
 			);
 
-			$params = elgg_trigger_plugin_hook('deck-river', 'message:before_create:elgg', $params);
+			$params = elgg_trigger_plugin_hook('deck-river', 'message:before_create:elgg', $params, $params);
 			if ($params !== false) { // plugin can cancel river create by sending false
 
 				$guid = deck_river_thewire_save_post($params);
