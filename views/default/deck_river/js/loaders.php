@@ -87,6 +87,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
 		displayItems = function(response) {
+			TheColumnHeader.find('.count').addClass('hidden').text('');
 			TheColumn.removeClass('loadingRefresh').find('.elgg-list-item').removeClass('newRiverItem');
 			response.TheColumn = TheColumn;
 			if (elgg.trigger_hook('deck-river', 'refresh:column:'+response.column_type, response, true)) {
@@ -281,14 +282,18 @@ elgg.deck_river.displayCount = function(response, TheColumn) {
 	if (responseLength > 0) {
 		countSpan.removeClass('hidden').text(responseLength);
 		if (TheColumnRiver.scrollTop() > 50) {
-			$('<li>', {'class': 'top-message'}).html(elgg.echo('deck_river:column:gotop', [responseLength])).click(function() {
-				TheColumnRiver.scrollTo(0, 500, {easing:'easeOutQuart'});
-			}).appendTo(TheColumn.find('.message-box')).effect('slide',{direction: 'up'}, 300);
-			TheColumnRiver.unbind('scroll.topMessage').bind('scroll.topMessage', function() {
-				if($(this).scrollTop() == 0) {
-					TheColumn.find('.top-message').toggle('slide', {direction: 'up'}, 300, function() {$(this).remove()});
-				}
-			});
+			if (TheColumn.find('.top-message').length) {
+				TheColumn.find('.top-message').html(elgg.echo('deck_river:column:gotop', [responseLength]));
+			} else {
+				$('<li>', {'class': 'top-message'}).html(elgg.echo('deck_river:column:gotop', [responseLength])).click(function() {
+					TheColumnRiver.scrollTo(0, 500, {easing:'easeOutQuart'});
+				}).appendTo(TheColumn.find('.message-box')).effect('slide',{direction: 'up'}, 300);
+				TheColumnRiver.unbind('scroll.topMessage').bind('scroll.topMessage', function() {
+					if($(this).scrollTop() == 0) {
+						TheColumn.find('.top-message').toggle('slide', {direction: 'up'}, 300, function() {$(this).remove()});
+					}
+				});
+			}
 		}
 		// column is hidden by #deck-river-lists scroll ?
 		if (TheColumn.position().left < -TheColumn.width()+80) { // hidden at left
