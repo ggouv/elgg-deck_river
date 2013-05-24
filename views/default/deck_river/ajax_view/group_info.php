@@ -18,16 +18,20 @@ if (!$group) {
 </ul>
 <ul class="elgg-body">
 	<li id="<?php echo $group_id; ?>-info-profile">
-		<?php //echo elgg_view_entity_icon($group, 'medium', array('img_class' => 'float')); ?>
-		<div class="avatar-wrapper float center">
-			<?php
-				echo elgg_view('output/img', array(
-					'src' => elgg_format_url($group->getIconURL('large')),
-					'alt' => $group->title,
-					'title' => $group->title,
-					'width' => '200px'
-				));
-			?>
+		<div class="elgg-avatar elgg-avatar-large float">
+			<a href="<?php echo $group->getURL(); ?>" title="<?php echo $group->title; ?>">
+				<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
+				<div class="avatar-wrapper center">
+					<?php
+						echo elgg_view('output/img', array(
+							'src' => elgg_format_url($group->getIconURL('large')),
+							'alt' => $group->title,
+							'title' => $group->title,
+							'width' => '200px'
+						));
+					?>
+				</div>
+			</a>
 		</div>
 
 		<div class="elgg-body plm">

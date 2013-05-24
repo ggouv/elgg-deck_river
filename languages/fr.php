@@ -95,6 +95,7 @@ $french = array(
 	'deck_river:user-info-header' => "Informations sur %s",
 	'deck_river:group-info-header' => "Informations sur le groupe %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
+	'deck_river:go_to_profile' => "Aller sur le profil",
 
 	// plugin settings
 	'deck_river:settings:min_width_column' => "Largeur minimum des colonnes",

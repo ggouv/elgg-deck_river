@@ -1007,6 +1007,25 @@ li.elgg-menu-item-arrow-left {
 .user-info-popup {
 	cursor: pointer;
 }
+.elgg-module-popup .elgg-avatar a:hover .avatar-wrapper {
+	opacity: 0.3;
+}
+.elgg-module-popup .elgg-avatar span:before {
+	content: "o";
+	float: none;
+	font-size: 10em;
+	color: #CCC;
+}
+.elgg-module-popup .elgg-avatar a:hover span {
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+	line-height: 0;
+	position: absolute;
+	text-align: center;
+	top: 70px;
+	width: 100%;
+}
 
 /* single view */
 .single-view .elgg-list-item {

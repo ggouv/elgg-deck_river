@@ -18,6 +18,7 @@ if (!$user) {
 	<li id="<?php echo $user->guid; ?>-info-profile">
 		<div class="elgg-avatar elgg-avatar-large float">
 			<a href="<?php echo $user->getURL(); ?>" title="<?php echo $user->username; ?>">
+				<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
 				<div class="avatar-wrapper center">
 					<?php
 						echo elgg_view('output/img', array(
