@@ -44,7 +44,7 @@
 <!-- Template for Twitter user profile popup -->
 <script id="twitter-user-profile-template" type="text/template">
 	<ul class="elgg-tabs elgg-htabs">
-		<li class="elgg-state-selected"><a href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+		<li class="elgg-state-selected"><a target="_blank" href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 		<li><a href="#{{id}}-get_statusesUser_timeline"><?php echo elgg_echo('activity'); ?></a></li>
 		<li><a href="#{{id}}-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
 		<li><a href="#{{id}}-get_favoritesList"><?php echo elgg_echo('favorites'); ?></a></li>
@@ -53,6 +53,7 @@
 		<li id="{{id}}-info-profile">
 			<div class="elgg-avatar elgg-avatar-large float">
 				<a href="http://twitter.com/{{screen_name}}" title="{{screen_name}}" rel="nofollow">
+					<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
 					<div class="avatar-wrapper center">
 						<img width="200px" title="{{screen_name}}" alt="{{screen_name}}" src="{{profile_image_url}}">
 					</div>
@@ -192,6 +193,7 @@
 							<acronym class="tooltip w" title="{{created_at}}" time="{{posted}}">{{friendly_time}}</acronym>
 						</span>
 					</a>
+					{{#source}}<?php echo elgg_echo('deck_river:twitter:via'); ?>&nbsp;{{{source}}}{{/source}}
 					</span>
 				</div>
 				<div class="elgg-river-message">{{{text}}}</div>
@@ -206,7 +208,7 @@
 					{{/responses.reply}}
 					{{#responses.retweet}}
 						<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
-						<span class="pls float">{{responses.retweet}}</span>
+						<span class="pls float">{{{responses.retweet}}}</span>
 					{{/responses.retweet}}
 				</div>
 				{{/responses}}

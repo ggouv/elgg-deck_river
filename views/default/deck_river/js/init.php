@@ -155,11 +155,11 @@ elgg.deck_river.init = function() {
 	$('#thewire-submit-button').die().live('click', function(e){
 		var thewireForm = $(this).closest('form');
 		if ($('#thewire-textarea').val() == '') { // no text
-			elgg.register_error('deck_river:message:blank');
+			elgg.register_error(elgg.echo('deck_river:message:blank'));
 		} else if (thewireForm.find('input[name="networks[]"]').length == 0) { // no network actived
-			elgg.register_error('deck_river:nonetwork');
+			elgg.register_error(elgg.echo('deck_river:nonetwork'));
 		} else if (thewireForm.find('input[name="networks[]"]').length > 5) { // too network ?
-			elgg.register_error('deck_river:toonetwork');
+			elgg.register_error(elgg.echo('deck_river:toonetwork'));
 		} else {
 			thisSubmit = this;
 			if ($.data(this, 'clicked')) { // Prevent double-click

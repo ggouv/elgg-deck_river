@@ -182,15 +182,17 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		elggRiverTemplate = Mustache.compile($('#elgg-river-twitter-template').html());
 
 	$.each(response.results, function(key, value) {
+		var retweet = false,
+			reply = false;
 
 		if (!response.column_type) { // direct link. json returned by Twitter is different between twitter search api and twitter main api
 			value.user = {screen_name: value.from_user, profile_image_url_https: value.profile_image_url_https};
 			value.menu = {'default': [{
 				name: 'response',
-				content: '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
+				content: '<a href="" title="' + elgg.echo('reply') + '" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
 			},{
 				name: 'retweet',
-				content: '<a href="" title="Retweeter" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
+				content: '<a href="" title="' + elgg.echo('retweet') + '" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
 			}], submenu: []};
 		} else if (response.column_type == 'get_direct_messages') { // json is different with direct_messages
 			value.user = value.sender;
@@ -198,11 +200,34 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 			value.user = value.recipient;
 		}
 
+		// store information about twitter user
 		elgg.deck_river.storeEntity(value.user, 'twitter');
+
+		// this is a reteweet
+		if (value.retweeted_status) {
+			var which = ' <span class="twitter-user-info-popup" title="' + value.user.screen_name + '">' + value.user.screen_name + '</span>';
+
+			if (value.retweet_count === 1) {
+				retweet = elgg.echo('retweeted_by', [which]);
+			} else { // there is retweeted_satus so if is not 1 this is > 1
+				retweet = elgg.echo('retweeted_which', [value.retweet_count, which]);
+			}
+
+			$.extend(value, value.retweeted_status); // retweet_status contain all information about origin tweet, so we swich it.
+
+			elgg.deck_river.storeEntity(value.user, 'twitter'); // store original user
+		} else if (value.retweet_count === 1) {
+			retweet = elgg.echo('retweet:one');
+		} else if (value.retweet_count > 1) { // there is retweeted_satus so if is not 1 this is > 1
+			retweet = elgg.echo('retweet:twoandmore', [value.retweet_count]);
+		}
 
 		// format date and add friendly_time
 		value.posted = value.created_at.TwitterFormatDate();
 		value.friendly_time = elgg.friendly_time(value.posted);
+		if (value.source) {
+			value.source = value.source[0] == '&' ? $('<div>').html(value.source).text() : value.source ; // twitter search api retun encoded string, not main api
+		}
 
 		// make menus
 		if (!thread) {
@@ -227,12 +252,6 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		}
 
 		// Fill responses (retweet and discussion link)
-		var retweet = false, reply = false;
-		if (value.retweet_count == 1) {
-			retweet = elgg.echo('retweet:one', [value.retweet_count]);
-		} else if (value.retweet_count > 1) {
-			retweet = elgg.echo('retweet:twoandmore', [value.retweet_count]);
-		}
 		value.responses = {
 			retweet: retweet ? retweet : false,
 			reply: value.in_reply_to_status_id != null && !thread // thread id is filled by in_reply_to_status in mustache template. Only true/false is sending.
@@ -252,7 +271,7 @@ String.prototype.TwitterFormatDate = function () {
 };
 String.prototype.TwitterParseURL = function () {
 	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&\?\/.=]+/g, function (url) {
-		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
+		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url.replace(/http:\/\//g, '')+'</a>';
 	});
 };
 String.prototype.TwitterParseUsername = function () {

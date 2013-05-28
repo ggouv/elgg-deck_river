@@ -211,7 +211,6 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 				newItems = elgg.deck_river.displayRiver(response, TheColumnHeader, true);
 
 			$.each(itemsRiver, function() {
-				console.log($(this));
 				var idToggle = $(this).find('.response-loader').addClass('hidden')
 					.closest('.column-river').attr('id') + '-' + riverID;
 
