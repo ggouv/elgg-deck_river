@@ -1,11 +1,11 @@
 /**
- *	Elgg-deck_river plugin
- *	@package elgg-deck_river
- *	@author Emmanuel Salomon @ManUtopiK
- *	@license GNU Affero General Public License, version 3 or late
- *	@link https://github.com/ManUtopiK/elgg-deck_river
+ *  Elgg-deck_river plugin
+ *  @package elgg-deck_river
+ *  @author Emmanuel Salomon @ManUtopiK
+ *  @license GNU Affero General Public License, version 3 or late
+ *  @link https://github.com/ManUtopiK/elgg-deck_river
  *
- *	Elgg-deck_river shortener url js
+ *  Elgg-deck_river shortener url js
  *
  */
 
@@ -28,24 +28,31 @@ elgg.deck_river.ShortenerUrlInit = function() {
 		}
 	});
 	$('#thewire-header .url-shortener .elgg-button-submit').die().live('click', function() {
-		var longUrl = $(this).parent().find('.elgg-input-text');
-		if (longUrl.val() == elgg.echo('deck-river:reduce_url:string')) {
+		var input = $(this).parent().find('.elgg-input-text'),
+			longUrl = input.val().trim(),
+			shortUrl = false;
+
+		if (longUrl == elgg.echo('deck-river:reduce_url:string') || longUrl == '') {
 			elgg.register_error(elgg.echo('deck_river:url-not-exist'));
-		} else if (longUrl.val() != '') {
-			elgg.deck_river.ShortenerUrl(longUrl.val(), longUrl);
+		} else {
+			elgg.deck_river.ShortenUrl(longUrl, function(shortUrl) {
+				input.val(shortUrl);
+				if (shortUrl != longUrl) input.parent().find('.elgg-button-action, .elgg-icon').removeClass('hidden');
+			});
 		}
 	});
 	$('#thewire-header .url-shortener .elgg-button-action').die().live('click', function() {
 		var txtarea = $('#thewire-textarea'),
+			txtareaVal = txtarea.val(),
 			shortUrl = $(this).parent().find('.elgg-input-text').val(),
 			strPos = txtarea.getCursorPosition(),
-			front = (txtarea.val()).substring(0,strPos),
-			back = (txtarea.val()).substring(strPos,txtarea.val().length);
+			front = (txtareaVal).substring(0,strPos),
+			back = (txtareaVal).substring(strPos,txtareaVal.length);
 
 		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
-		if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) front = front + ' ';
-		if (back.substring(0, 1) != ' ' && back.length != 0) back = ' ' + back;
-		txtarea.val(front + shortUrl + back).focus().keydown();
+		if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) shortUrl = ' ' + shortUrl;
+		if (back.substring(0, 1) != ' ' && back.length != 0) shortUrl = shortUrl + ' ';
+		txtarea.val(front + shortUrl + back).focus().setCursorPosition(strPos + shortUrl.length);
 	});
 	$('#thewire-header .url-shortener .elgg-icon').die().live('click', function() {
 		var urlShortner = $(this).parent();
@@ -61,22 +68,139 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.ShortenerUrlInit);
 /**
  * Shortener url
  */
-elgg.deck_river.ShortenerUrl = function(url, input) {
-	elgg.post('ajax/view/deck_river/ajax_json/url_shortener', {
-		dataType: "html",
-		data: {
-			url: url
-		},
-		success: function(response) {
-			if (response == 'badurl') {
-				elgg.register_error(elgg.echo('deck_river:url-bad-format'));
-			} else {
-				input.val(response);
-				input.parent().find('.elgg-button-action, .elgg-icon').removeClass('hidden');
+elgg.deck_river.ShortenUrl = function(url, callback) {
+	var ajaxShort = function (url) {
+		elgg.post('ajax/view/deck_river/ajax_json/url_shortener', {
+			dataType: "html",
+			data: {
+				url: url
+			},
+			success: function(response) {
+				if (response == 'badurl') {
+					elgg.register_error(elgg.echo('deck_river:url-bad-format'));
+					callback(url);
+				} else {
+					callback(response);
+				}
+			},
+			error: function(response) {
+				// error with server
 			}
-		},
-		error: function(response) {
-			// error with server
+		});
+	};
+
+	// check if it's an internal link
+	if (url.indexOf(elgg.get_site_url()) === 0 && site_shorturl) {
+		var guid = elgg.parse_url(url).path.match(/\/\d+/g);
+
+		if (guid != null) {
+			callback(site_shorturl+AlphabeticID.encode(parseInt(guid.pop().replace('/', ''))));
+		} else {
+			ajaxShort(url);
 		}
-	});
+	} else {
+		ajaxShort(url);
+	}
+};
+
+
+
+new function($) {
+	$.fn.setCursorPosition = function(pos) {
+		if ($(this).get(0).setSelectionRange) {
+			$(this).get(0).setSelectionRange(pos, pos);
+		} else if ($(this).get(0).createTextRange) {
+			var range = $(this).get(0).createTextRange();
+			range.collapse(true);
+			range.moveEnd('character', pos);
+			range.moveStart('character', pos);
+			range.select();
+		}
+	}
+}(jQuery);
+
+
+
+/**
+ *  Javascript AlphabeticID class
+ *  (based on a script by Kevin van Zonneveld <kevin@vanzonneveld.net>)
+ *
+ *  Author: Even Simon <even.simon@gmail.com>
+ *
+ *  Description: Translates a numeric identifier into a short string and backwords.
+ *
+ *  Usage:
+ *    var str = AlphabeticID.encode(9007199254740989); // str = 'fE2XnNGpF'
+ *    var id = AlphabeticID.decode('fE2XnNGpF'); // id = 9007199254740989;
+ **/
+
+var AlphabeticID = {
+	index:'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+
+	/**
+	*  [@function](http://twitter.com/function) AlphabeticID.encode
+	*  [@description](http://twitter.com/description) Encode a number into short string
+	*  [@param](http://twitter.com/param) integer
+	*  [@return](http://twitter.com/return) string
+	**/
+	encode:function(_number){
+		if('undefined' == typeof _number){
+			return null;
+		}
+		else if('number' != typeof(_number)){
+			throw new Error('Wrong parameter type');
+		}
+
+		var ret = '';
+
+		for(var i=Math.floor(Math.log(parseInt(_number))/Math.log(AlphabeticID.index.length));i>=0;i--){
+			ret = ret + AlphabeticID.index.substr((Math.floor(parseInt(_number) / AlphabeticID.bcpow(AlphabeticID.index.length, i)) % AlphabeticID.index.length),1);
+		}
+
+		return ret.reverse();
+	},
+
+	/**
+	*  [@function](http://twitter.com/function) AlphabeticID.decode
+	*  [@description](http://twitter.com/description) Decode a short string and return number
+	*  [@param](http://twitter.com/param) string
+	*  [@return](http://twitter.com/return) integer
+	**/
+	decode:function(_string){
+		if('undefined' == typeof _string){
+			return null;
+		}
+		else if('string' != typeof _string){
+			throw new Error('Wrong parameter type');
+		}
+
+		var str = _string.reverse();
+		var ret = 0;
+
+		for(var i=0;i<=(str.length - 1);i++){
+			ret = ret + AlphabeticID.index.indexOf(str.substr(i,1)) * (AlphabeticID.bcpow(AlphabeticID.index.length, (str.length - 1) - i));
+		}
+
+		return ret;
+	},
+
+	/**
+	*  [@function](http://twitter.com/function) AlphabeticID.bcpow
+	*  [@description](http://twitter.com/description) Raise _a to the power _b
+	*  [@param](http://twitter.com/param) float _a
+	*  [@param](http://twitter.com/param) integer _b
+	*  [@return](http://twitter.com/return) string
+	**/
+	bcpow:function(_a, _b){
+		return Math.floor(Math.pow(parseFloat(_a), parseInt(_b)));
+	}
+};
+
+/**
+ *  [@function](http://twitter.com/function) String.reverse
+ *  [@description](http://twitter.com/description) Reverse a string
+ *  [@return](http://twitter.com/return) string
+ **/
+String.prototype.reverse = function(){
+	return this.split('').reverse().join('');
 };

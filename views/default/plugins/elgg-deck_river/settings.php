@@ -78,12 +78,23 @@ $reset_user_view = elgg_view('input/text', array(
 ));
 
 
+/* short url */
+if (!isset($vars['entity']->site_shorturl) || empty($vars['entity']->site_shorturl)) {
+	$vars['entity']->site_shorturl = '';
+}
+
+$site_shorturl_string = elgg_echo('deck_river:settings:site_shorturl');
+$site_shorturl_view = elgg_view('input/text', array(
+	'name' => 'params[site_shorturl]',
+	'value' => $vars['entity']->site_shorturl
+));
+
 /* google shortener */
 if (!isset($vars['entity']->googleApiKey) || empty($vars['entity']->googleApiKey)) {
 	$vars['entity']->googleApiKey = '';
 }
 
-$googleApiKeys_string = elgg_echo('deck_river:settings:googleApiKey');
+$googleApiKey_string = elgg_echo('deck_river:settings:googleApiKey');
 $googleApiKey_view = elgg_view('input/text', array(
 	'name' => 'params[googleApiKey]',
 	'value' => $vars['entity']->googleApiKey
@@ -121,8 +132,12 @@ echo <<<__HTML
 <div><label>$reset_user_string</label><br />$reset_user_view</div>
 
 <br/><hr/><br/>
+<h3>The short url of your site</h3><br/>
+<div><label>$site_shorturl_string</label><br />$site_shorturl_view</div>
+
+<br/><hr/><br/>
 <h3>Google shortener</h3><br/>
-<div><label>$googleApiKeys_string</label><br />$googleApiKeys_view</div>
+<div><label>$googleApiKey_string</label><br />$googleApiKey_view</div>
 
 <br/><hr/><br/>
 <h3>Twitter</h3><br/>
