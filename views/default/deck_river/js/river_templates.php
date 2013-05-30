@@ -254,7 +254,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		// Fill responses (retweet and discussion link)
 		value.responses = {
 			retweet: retweet ? retweet : false,
-			reply: value.in_reply_to_status_id != null && !thread // thread id is filled by in_reply_to_status in mustache template. Only true/false is sending.
+			reply: value.in_reply_to_status_id != null && !thread // thread id is filled by id_str in mustache template. Only true/false is sending.
 		};
 
 		// parse tweet text

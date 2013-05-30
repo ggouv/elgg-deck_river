@@ -199,17 +199,17 @@
 				<div class="elgg-river-message">{{{text}}}</div>
 				{{#responses}}
 				<div class="elgg-river-responses">
+					{{#responses.retweet}}
+						<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
+						<span class="pls">{{{responses.retweet}}}</span>
+					{{/responses.retweet}}
 					{{#responses.reply}}
-					<div class="response-loader float hidden"></div>
+					<br/><div class="response-loader float clearfloat hidden"></div>
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
-					<a href="#" class="thread float prm" data-thread="{{in_reply_to_status_id_str}}">
+					<a href="#" class="thread float prm" data-thread="{{id_str}}">
 						<?php echo elgg_echo('deck_river:thread'); ?>
 					</a>
 					{{/responses.reply}}
-					{{#responses.retweet}}
-						<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
-						<span class="pls float">{{{responses.retweet}}}</span>
-					{{/responses.retweet}}
 				</div>
 				{{/responses}}
 			</div>
