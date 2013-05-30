@@ -204,7 +204,7 @@
 						<span class="pls">{{{responses.retweet}}}</span>
 					{{/responses.retweet}}
 					{{#responses.reply}}
-					<br/><div class="response-loader float clearfloat hidden"></div>
+					{{#responses.retweet}}<br/>{{/responses.retweet}}<div class="response-loader float clearfloat hidden"></div>
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
 					<a href="#" class="thread float prm" data-thread="{{id_str}}">
 						<?php echo elgg_echo('deck_river:thread'); ?>
