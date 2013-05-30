@@ -23,13 +23,15 @@ if (empty($body)) {
 		return false;
 	}
 
-	// no html tags allowed so we escape
-	$body = htmlspecialchars($body, ENT_NOQUOTES, 'UTF-8');
 	// only 140 characters allowed
 	$body = elgg_substr($body, 0, 140);
 
 	foreach ($networks as $network) {
 		if ($network == $user->getGUID()) { // network is ggouv
+
+			// no html tags allowed so we escape
+			$body = htmlspecialchars($body, ENT_NOQUOTES, 'UTF-8');
+
 			$parent_guid = (int) get_input('elgg_parent', false);
 			$params = array(
 				'body' => $body,
