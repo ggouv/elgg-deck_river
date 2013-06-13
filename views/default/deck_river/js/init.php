@@ -79,6 +79,7 @@ elgg.deck_river.init = function() {
 		if ($('#json-river-owner').length) { // owner river view
 			elgg.deck_river.LoadRiver($('.elgg-page .column-river'), $('#json-river-owner').val());
 		}
+
 	});
 
 	$(window).bind("resize", function() {
@@ -92,6 +93,22 @@ elgg.deck_river.init = function() {
 		var optionsHeight = $('#thewire-header').addClass('extended').find('.options').height();
 		$('#thewire-header').height(optionsHeight+117);
 		$('#thewire-textarea-border').height(optionsHeight+120);
+	}).droppable({
+		accept: '.user-info-popup, .group-info-popup, .hashtag-info-popup, .twitter-user-info-popup',
+		drop: function(e, ui) {
+			var txt = prep = '',
+				uih = $(ui.helper);
+
+			if (uih.hasClass('user-info-popup') || uih.hasClass('twitter-user-info-popup')) prep = '@';
+			if (uih.hasClass('group-info-popup')) prep = '!';
+			elgg.deck_river.insertInThewire(prep + $(ui.helper).attr('title'));
+		},
+		over: function(e, ui) {
+			ui.helper.addClass('canDrop');
+		},
+		out: function(e, ui) {
+			ui.helper.removeClass('canDrop');
+		}
 	});
 
 	// networks
@@ -709,11 +726,33 @@ elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
 
 
 /**
+ * Insert text in Thewire textarea. Wrap text with space if needed. Keep caret position.
+ * @param  {[string]} text text to insert
+ * @return {[type]}      [description]
+ */
+elgg.deck_river.insertInThewire = function(text) {
+	var txtarea = $('#thewire-textarea'),
+		txtareaVal = txtarea.val(),
+		strPos = txtarea.getCursorPosition(),
+		front = (txtareaVal).substring(0,strPos),
+		back = (txtareaVal).substring(strPos,txtareaVal.length);
+
+	if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) text = ' ' + text;
+	if (back.substring(0, 1) != ' ' && back.length != 0) text = text + ' ';
+	txtarea.val(front + text + back).focus().setCursorPosition(strPos + text.length);
+	elgg.thewire.textCounter(txtarea, $("#thewire-characters-remaining span"), 140);
+};
+
+
+
+/**
  * Function serializeObject
  * Copied from https://github.com/macek/jquery-serialize-object
  * Version 1.0.0
  */
 (function(f){return f.fn.serializeObject=function(){var k,l,m,n,p,g,c,h=this;g={};c={};k=/^[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/;l=/[a-zA-Z0-9_]+|(?=\[\])/g;m=/^$/;n=/^\d+$/;p=/^[a-zA-Z0-9_]+$/;this.build=function(d,e,a){d[e]=a;return d};this.push_counter=function(d){void 0===c[d]&&(c[d]=0);return c[d]++};f.each(f(this).serializeArray(),function(d,e){var a,c,b,j;if(k.test(e.name)){c=e.name.match(l);b=e.value;for(j=e.name;void 0!==(a=c.pop());)m.test(a)?(a=RegExp("\\["+a+"\\]$"),j=
 j.replace(a,""),b=h.build([],h.push_counter(j),b)):n.test(a)?b=h.build([],a,b):p.test(a)&&(b=h.build({},a,b));return g=f.extend(!0,g,b)}});return g}})(jQuery);
+
+
 
 // End of js for deck-river plugin

@@ -1007,6 +1007,29 @@ li.elgg-menu-item-arrow-left {
 .user-info-popup {
 	cursor: pointer;
 }
+div.user-info-popup.ui-draggable-dragging, div.group-info-popup.ui-draggable-dragging, div.twitter-user-info-popup.ui-draggable-dragging {
+	box-shadow: 4px 4px 4px #999;
+	cursor: crosshair;
+	line-height: 0.1;
+}
+a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-dragging, .hashtag-info-popup.ui-draggable-dragging, a.twitter-user-info-popup.ui-draggable-dragging {
+	text-shadow: 4px 4px 4px #999;
+	cursor: crosshair;
+}
+.user-info-popup.canDrop:before, .group-info-popup.canDrop:before, .hashtag-info-popup.canDrop:before, .twitter-user-info-popup.canDrop:before {
+	background: #51C600;
+	border-radius: 10px;
+	color: white;
+	content: "+";
+	font-weight: bold;
+	height: 20px;
+	position: absolute;
+	right: -10px;
+	text-align: center;
+	top: -10px;
+	width: 20px;
+	line-height: 1.4em;
+}
 .elgg-module-popup .elgg-avatar a:hover .avatar-wrapper {
 	opacity: 0.3;
 }

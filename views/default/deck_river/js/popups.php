@@ -16,6 +16,26 @@
  */
 elgg.deck_river.popups = function() {
 
+	// livedraggable
+	(function ($) {
+		$.fn.liveDraggable = function () {
+			$(this).live('mouseover', function() {
+				if (!$(this).hasClass('ui-draggable')) {
+					$(this).draggable({
+						revert: true,
+						revertDuration: 0,
+						appendTo: "body",
+						containment: "window",
+						helper: "clone",
+						zIndex: 9999,
+						cursor: "crosshair"
+					});
+				}
+			});
+			return this;
+		};
+	}(jQuery));
+
 	// tabs popups
 	$('.deck-popup .elgg-tabs a').die().live('click', function() {
 		var popup = $(this).closest('.deck-popup'),
@@ -49,7 +69,7 @@ elgg.deck_river.popups = function() {
 				body.html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
-	});
+	}).liveDraggable();
 
 	// group info popup
 	$('.group-info-popup').die().live('click', function() {
@@ -68,7 +88,7 @@ elgg.deck_river.popups = function() {
 				body.html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
-	});
+	}).liveDraggable();
 
 	// hashtag info popup
 	$('.hashtag-info-popup').die().live('click', function() {
@@ -79,7 +99,7 @@ elgg.deck_river.popups = function() {
 		$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#hashtag-popup-template').html(), {hashtag: hashtag.replace('#', '')}));
 		$('#hashtag-info-popup .elgg-tabs .'+network).click();
 		//elgg.deck_river.LoadRiver($('#hashtag-info-popup'), '#'+hashtag);
-	});
+	}).liveDraggable();
 
 	// Twitter user info popup
 	$('.twitter-user-info-popup').die().live('click', function() {
@@ -105,7 +125,7 @@ elgg.deck_river.popups = function() {
 		} else {
 			templateRender(userInfo);
 		}
-	});
+	}).liveDraggable();
 
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);

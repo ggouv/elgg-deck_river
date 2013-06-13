@@ -42,17 +42,10 @@ elgg.deck_river.ShortenerUrlInit = function() {
 		}
 	});
 	$('#thewire-header .url-shortener .elgg-button-action').die().live('click', function() {
-		var txtarea = $('#thewire-textarea'),
-			txtareaVal = txtarea.val(),
-			shortUrl = $(this).parent().find('.elgg-input-text').val(),
-			strPos = txtarea.getCursorPosition(),
-			front = (txtareaVal).substring(0,strPos),
-			back = (txtareaVal).substring(strPos,txtareaVal.length);
+		var shortUrl = $(this).parent().find('.elgg-input-text').val();
 
 		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
-		if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) shortUrl = ' ' + shortUrl;
-		if (back.substring(0, 1) != ' ' && back.length != 0) shortUrl = shortUrl + ' ';
-		txtarea.val(front + shortUrl + back).focus().setCursorPosition(strPos + shortUrl.length);
+		elgg.deck_river.insertInThewire(shortUrl);
 	});
 	$('#thewire-header .url-shortener .elgg-icon').die().live('click', function() {
 		var urlShortner = $(this).parent();
@@ -63,6 +56,7 @@ elgg.deck_river.ShortenerUrlInit = function() {
 
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.ShortenerUrlInit);
+
 
 
 /**
