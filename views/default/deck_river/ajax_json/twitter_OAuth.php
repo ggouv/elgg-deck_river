@@ -4,16 +4,28 @@ global $CONFIG, $jsonexport;
 $dbprefix = $CONFIG->dbprefix;
 
 // Get callbacks
-$column = get_input('column', 'false');
+$params = get_input('params', 'false');
 $time_method = get_input('time_method', 'false');
 $time_posted = get_input('time_posted', 'false');
-
-$params = explode('-', $column);
 
 $jsonexport = array();
 
 // detect network
-if ($params) {
+if ($params && $method = $params['method']) {
+
+	unset($params['method']);
+	if (!$params['count']) $params['count'] = 30;
+
+	if ($time_method == 'lower') {
+		$params = array_merge($params, array(
+										'since_id' => $time_posted+1 // +1 for not repeat first river item
+				));
+	} else if ($time_method == 'upper') {
+		$params = array_merge($params, array(
+										'since_id' => $time_posted-1 // -1 for not repeat last river item
+				));
+	}
+
 	$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
 	$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
 
@@ -25,48 +37,46 @@ if ($params) {
 	$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $account->oauth_token, $account->oauth_token_secret);
 
 	try {
-		if ($time_method == 'lower') {
-			$result = call_user_func(array($twitterObj, $params[1]), array(
-				'user_id' => $params[0],
-				'count' => 30,
-				'since_id' => $time_posted+1 // +1 for not repeat first river item
-			));
-		} elseif ($time_method == 'upper') {
-			$result = call_user_func(array($twitterObj, $params[1]), array(
-				'user_id' => $params[0],
-				'count' => 30,
-				'max_id' => $time_posted-1 // -1 for not repeat last river item
-			));
-		} else {
-			$result = call_user_func(array($twitterObj, $params[1]), array(
-				'user_id' => $params[0],
-				'count' => 30
-			));
-		}
+		$result = call_user_func(array($twitterObj, $method), $params);
 	} catch(Exception $e) {
 		$result = json_decode($e->getMessage())->errors[0];
 	}
 
 	// check result
 	if ($result->code == 200) {
-		$jsonexport['column_type'] = $params[1];
-		foreach ($result->__get('response') as $value) {
-			$value['menu'] = array(
-				'default' => array(
-					array(
-						'name' => 'response',
-						'content' => '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
-					),
-					array(
-						'name' => 'retweet',
-						'content' => '<a href="" title="Retweeter" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
-					)
-				),
-				'submenu' => array()
-			);
-			$results[] = $value;
+		if ($method == 'get_usersShow') {
+			$jsonexport = $result;
+		} else {
+			$jsonexport['column_type'] = $method;
+
+			if ($method == 'get_searchTweets') {
+				$resp = $result->__get('response');
+				$resp = $resp['statuses'];
+			} else {
+				$resp = $result->__get('response');
+			}
+
+			if (!empty($resp)) {
+				foreach ($resp as $value) {
+					$value['menu'] = array(
+						'default' => array(
+							array(
+								'name' => 'response',
+								'content' => '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
+							),
+							array(
+								'name' => 'retweet',
+								'content' => '<a href="" title="Retweeter" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
+							)
+						),
+						'submenu' => array()
+					);
+					$jsonexport['results'][] = $value;
+				}
+			} else {
+				$jsonexport['results'] = '<table height="100%" width="100%"><tr><td class="helper">'. elgg_echo('deck_river:twitter:notweet') . '</td></tr></table>';
+			}
 		}
-		$jsonexport['results'] = $results;
 	} else {
 		$key = 'deck_river:twitter:error:' . $result->code;
 		if (elgg_echo($key) == $key) { // check if language string exist

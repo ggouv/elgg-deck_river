@@ -185,8 +185,8 @@ $column_title = $user_river_column_options['title'];
 			}
 
 			$options_values = array(
-				'searchTweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
-				'searchTweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
+				'get_searchTweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
+				'get_searchTweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
 				'get_statusesHome_timeline' => elgg_echo('deck_river:twitter:feed:home'),
 				'get_statusesMentions_timeline' => elgg_echo('river:mentions'),
 				'get_statusesUser_timeline' => elgg_echo('deck_river:twitter:feed:user'),
@@ -213,8 +213,8 @@ $column_title = $user_river_column_options['title'];
 
 
 				$options_values = array( // override values
-					'searchTweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
-					'searchTweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
+					'get_searchTweets' => elgg_echo('deck_river:twitter:feed:search:tweets'),
+					'get_searchTweets-popular' => elgg_echo('deck_river:twitter:feed:search:popular'),
 				);
 
 			} else if (count($twitter_account) == 1) { // One account registred
@@ -253,7 +253,7 @@ $column_title = $user_river_column_options['title'];
 				'options_values' => $options_values
 			));
 
-			echo '<li class="searchTweets-options searchTweets-popular-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
+			echo '<li class="get_searchTweets-options get_searchTweets-popular-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
 			echo elgg_view('input/text', array(
 				'name' => 'twitter-search',
 				'value' => $user_river_column_options['search']

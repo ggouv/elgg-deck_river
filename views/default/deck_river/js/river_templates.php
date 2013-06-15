@@ -70,6 +70,8 @@ elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
 
 	if (elgg.isString(response.activity)) {
 		return $(response.activity);
+	} else if (elgg.isString(response.results)) {
+		return $(response.results);
 	} else if (response.activity && response.activity.length != 0 || response.results) {
 		return elgg.deck_river[network + 'DisplayItems'](response, thread);
 	}
@@ -107,14 +109,47 @@ elgg.deck_river.storeEntity = function(entity, network) {
 };
 
 
-
-elgg.deck_river.findUser = function(name, network) {
+/**
+ * Find a user in DataEntities, query
+ * @param  {[type]} name    [description]
+ * @param  {[type]} network [description]
+ * @return {[type]}         [description]
+ */
+elgg.deck_river.findUser = function(name, network, key) {
 	var network = network || 'elgg',
-		eName = 'username';
+		key = key || (network == 'twitter') ? 'screen_name' : 'username';
 
-	if (network == 'twitter') eName = 'screen_name';
-	return $.grep(DataEntities[network], function(e){ return e[eName] === name; })[0];
+	//if (network == 'twitter') key = key || 'screen_name';
+	return $.grep(DataEntities[network], function(e) {
+		return e[key] == name;
+	})[0];
 };
+
+
+/**
+ * Search users in DataEntities
+ * @param  {string}  query    The name of the user to match
+ * @param  {string}  network  The network to search, default Elgg
+ * @return {array}            An array of matches
+ */
+elgg.deck_river.searchUsers = function(query, network, key) {
+	var network = network || 'elgg',
+		key = key || 'username';
+
+	if (network == 'twitter') key = key || 'screen_name';
+	if (network == 'all') {
+		var ret = [];
+		$.each(DataEntities, function(e) {
+			$.extend(ret, elgg.deck_river.searchUsers(query, e));
+		});
+		return ret;
+	} else {
+		return $.grep(DataEntities[network], function(e) {
+			return e[key].match(new RegExp(query+'.*', 'i'));
+		});
+	}
+};
+
 
 
 
@@ -271,7 +306,7 @@ String.prototype.TwitterFormatDate = function () {
 };
 String.prototype.TwitterParseURL = function () {
 	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&\?\/.=]+/g, function (url) {
-		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url.replace(/http:\/\//g, '')+'</a>';
+		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
 	});
 };
 String.prototype.TwitterParseUsername = function () {

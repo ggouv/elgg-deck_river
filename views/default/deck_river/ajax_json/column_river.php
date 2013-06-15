@@ -33,6 +33,11 @@ if ($column_settings['network'] == 'twitter') {
 	if ($column_settings['type'] == 'get_listsStatuses') {
 		$options['list_id'] = $column_settings['list_id'];
 		$options['count'] = 31; // @todo why get_listsStatuses return only 29 items ?
+	} else if ($column_settings['type'] == 'get_searchTweets-popular') {
+		$options['q'] = $column_settings['search'];
+		$options['result_type'] = 'popular';
+	} else if ($column_settings['type'] == 'get_searchTweets') {
+		$options['q'] = $column_settings['search'];
 	}
 
 	// refresh or more items
@@ -51,7 +56,15 @@ if ($column_settings['network'] == 'twitter') {
 	// check result
 	if ($result->code == 200) {
 		$jsonexport['column_type'] = $column_settings['type'];
-		foreach ($result->__get('response') as $value) {
+
+		if ($column_settings['type'] == 'get_searchTweets' || $column_settings['type'] == 'get_searchTweets-popular') {
+			$resp = $result->__get('response');
+			$resp = $resp['statuses'];
+		} else {
+			$resp = $result->__get('response');
+		}
+
+		foreach ($resp as $value) {
 			$value['menu'] = array(
 				'default' => array(
 					array(

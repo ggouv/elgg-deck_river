@@ -54,8 +54,9 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			dataType: 'json',
 			data: {
 				tab: $('#deck-river-lists').data('tab'), // used only with 'column_river' call
-				column: TheColumn.attr('id'), // used for 'column_river' call and 'twitter_OAuth' with id-method which id is the user id and method is eg: get_statusesUser_timeline
-				guid: TheEntity ? TheEntity : null
+				column: TheColumn.attr('id'), // used for 'column_river' only
+				guid: TheEntity ? TheEntity : null,
+				params: TheColumnHeader.data('params') || null // used for 'twitter_OAuth' with array as params
 			},
 			success: function(response) {
 				if (response) {
@@ -181,7 +182,8 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				column: TheColumn.attr('id'),
 				time_method: 'upper',
 				time_posted: LastItem.data('timeid'),
-				guid: TheEntity ? TheEntity : null
+				guid: TheEntity ? TheEntity : null,
+				params: TheColumnHeader.data('params') || null
 			},
 			success: function(response) {displayItems(response)},
 			error: function() {

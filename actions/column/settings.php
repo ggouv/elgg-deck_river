@@ -113,17 +113,19 @@ if ($submit == 'delete') {
 	$twitter_account = (int) get_input('twitter-account', false);
 
 	switch ($twitter_type) {
-		case 'searchTweets':
+		case 'get_searchTweets':
 			$user_river_options[$tab][$column]['title'] = $search;
 			$user_river_options[$tab][$column]['subtitle'] = 'deck_river:twitter:feed:search';
 			$user_river_options[$tab][$column]['search'] = $search;
-			$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1';
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			//$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1';
 			break;
-		case 'searchTweets-popular':
+		case 'get_searchTweets-popular':
 			$user_river_options[$tab][$column]['title'] = $search;
 			$user_river_options[$tab][$column]['subtitle'] = 'deck_river:twitter:feed:search';
 			$user_river_options[$tab][$column]['search'] = $search;
-			$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1&result_type=popular';
+			$user_river_options[$tab][$column]['account'] = $twitter_account;
+			//$user_river_options[$tab][$column]['direct'] = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1&result_type=popular';
 			break;
 
 		case 'get_statusesHome_timeline':

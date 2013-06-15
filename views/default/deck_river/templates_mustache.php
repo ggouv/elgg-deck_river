@@ -33,7 +33,7 @@
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 		<li id="{{hashtag}}-twitter" class="column-river hidden">
-			<ul class="column-header hidden" data-network="twitter" data-direct="https://search.twitter.com/search.json?q=%23{{hashtag}}&rpp=100&include_entities=1"></ul>
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-params="{&quot;method&quot;: &quot;get_searchTweets&quot;, &quot;q&quot;: &quot;%23{{hashtag}}&quot;, &quot;count&quot;: &quot;100&quot;, &quot;include_entities&quot;: &quot;1&quot;}"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 	</ul>
@@ -46,7 +46,7 @@
 	<ul class="elgg-tabs elgg-htabs">
 		<li class="elgg-state-selected"><a target="_blank" href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 		<li><a href="#{{id}}-get_statusesUser_timeline"><?php echo elgg_echo('activity'); ?></a></li>
-		<li><a href="#{{id}}-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
+		<li><a href="#{{id}}-get_searchTweets"><?php echo elgg_echo('river:mentions'); ?></a></li>
 		<li><a href="#{{id}}-get_favoritesList"><?php echo elgg_echo('favorites'); ?></a></li>
 	</ul>
 	<ul class="elgg-body">
@@ -85,15 +85,15 @@
 			</div>
 		</li>
 		<li id="{{id}}-get_statusesUser_timeline" class="column-river hidden" >
-			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-entity="#{{id}}"></ul>
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-params="{&quot;method&quot;: &quot;get_statusesUser_timeline&quot;, &quot;user_id&quot;: &quot;{{id}}&quot;, &quot;count&quot;: &quot;100&quot;}"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
-		<li id="{{id}}-mentions" class="column-river hidden">
-			<ul class="column-header hidden" data-network="twitter" data-direct="https://search.twitter.com/search.json?q=%40{{screen_name}}&rpp=100&include_entities=1"></ul>
+		<li id="{{id}}-get_searchTweets" class="column-river hidden">
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-params="{&quot;method&quot;: &quot;get_searchTweets&quot;, &quot;q&quot;: &quot;@{{screen_name}}&quot;, &quot;count&quot;: &quot;100&quot;}"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 		<li id="{{id}}-get_favoritesList" class="column-river hidden">
-			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-entity="#{{id}}"></ul>
+			<ul class="column-header hidden" data-network="twitter" data-river_type="twitter_OAuth" data-params="{&quot;method&quot;: &quot;get_favoritesList&quot;, &quot;user_id&quot;: &quot;{{id}}&quot;, &quot;count&quot;: &quot;100&quot;}"></ul>
 			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 		</li>
 	</ul>

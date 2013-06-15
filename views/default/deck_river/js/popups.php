@@ -98,7 +98,6 @@ elgg.deck_river.popups = function() {
 		elgg.deck_river.createPopup('hashtag-info-popup', elgg.echo('deck_river:hashtag-info-header', [hashtag]));
 		$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#hashtag-popup-template').html(), {hashtag: hashtag.replace('#', '')}));
 		$('#hashtag-info-popup .elgg-tabs .'+network).click();
-		//elgg.deck_river.LoadRiver($('#hashtag-info-popup'), '#'+hashtag);
 	}).liveDraggable();
 
 	// Twitter user info popup
@@ -114,13 +113,18 @@ elgg.deck_river.popups = function() {
 			};
 
 		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
-			$.get('https://api.twitter.com/1/users/show.json?include_entities=true&screen_name='+ $(this).attr('title'),
-				function(response) {
+			elgg.post('ajax/view/deck_river/ajax_json/twitter_OAuth', {
+				dataType: 'json',
+				data: {
+					params: {method: 'get_usersShow', include_entities: true, screen_name: $(this).attr('title')}
+				},
+				success: function(response) {
 					elgg.deck_river.storeEntity(response, 'twitter');
 					templateRender(response);
-				},'jsonP'
-			).error(function() {
-				body.html(elgg.echo('deck_river:ajax:erreur'));
+				},
+				error: function() {
+					body.html(elgg.echo('deck_river:ajax:erreur'));
+				}
 			});
 		} else {
 			templateRender(userInfo);

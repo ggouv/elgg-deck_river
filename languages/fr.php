@@ -137,6 +137,7 @@ $french = array(
 	'deck_river:twitter:feed:dm:recept' => "Messages directs (Boîte de réception)",
 	'deck_river:twitter:feed:dm:sent' => "Messages directs (Boîte d'envoi)",
 	'deck_river:twitter:feed:favorites' => "Mes tweets favoris",
+	'deck_river:twitter:notweet' => "Pas de tweet.",
 
 	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
 
