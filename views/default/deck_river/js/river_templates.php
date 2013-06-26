@@ -119,7 +119,6 @@ elgg.deck_river.findUser = function(name, network, key) {
 	var network = network || 'elgg',
 		key = key || (network == 'twitter') ? 'screen_name' : 'username';
 
-	//if (network == 'twitter') key = key || 'screen_name';
 	return $.grep(DataEntities[network], function(e) {
 		return e[key] == name;
 	})[0];

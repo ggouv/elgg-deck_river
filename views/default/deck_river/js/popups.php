@@ -64,6 +64,7 @@ elgg.deck_river.popups = function() {
 			},
 			success: function(response) {
 				body.html(response);
+				if ($.isFunction(elgg.markdown_wiki.view.init)) elgg.markdown_wiki.view.init();
 			},
 			error: function() {
 				body.html(elgg.echo('deck_river:ajax:erreur'));
