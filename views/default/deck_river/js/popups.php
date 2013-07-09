@@ -70,6 +70,7 @@ elgg.deck_river.popups = function() {
 				body.html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
+		return false;
 	}).liveDraggable();
 
 	// group info popup
@@ -89,6 +90,7 @@ elgg.deck_river.popups = function() {
 				body.html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
+		return false;
 	}).liveDraggable();
 
 	// hashtag info popup
@@ -99,6 +101,7 @@ elgg.deck_river.popups = function() {
 		elgg.deck_river.createPopup('hashtag-info-popup', elgg.echo('deck_river:hashtag-info-header', [hashtag]));
 		$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#hashtag-popup-template').html(), {hashtag: hashtag.replace('#', '')}));
 		$('#hashtag-info-popup .elgg-tabs .'+network).click();
+		return false;
 	}).liveDraggable();
 
 	// Twitter user info popup
