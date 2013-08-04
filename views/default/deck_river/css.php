@@ -220,23 +220,24 @@ body.fixed-deck {
 #thewire-header .url-shortener .elgg-input-text {
 	font-size: 100%;
 	padding-right: 70px;
+	width: 96%;
+	top: -1px;
+	position: relative;
 }
 #thewire-header .url-shortener .elgg-button {
-	font-size: 90%;
-	padding: 2px 2px 0;
 	position: absolute;
-	top: 8px;
+	top: 3px;
 }
 #thewire-header .url-shortener .elgg-button-submit {
-	right: 7px;
+	right: 3px;
 }
 #thewire-header .url-shortener .elgg-button-action {
-	right: 75px;
+	right: 71px;
 }
 #thewire-header .url-shortener .elgg-icon {
 	position: absolute;
-	top: 8px;
-	right: 138px;
+	top: 7px;
+	right: 142px;
 }
 #thewire-header .responseTo {
 	background-color: #FFC;

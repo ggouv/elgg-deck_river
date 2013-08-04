@@ -32,18 +32,21 @@ foreach ($twitter_accounts as $account) {
 		<input class="parent" type="hidden" name="">
 		<div class="url-shortener">
 			<?php
-				echo elgg_view('input/text', array(
-					'value' => elgg_echo('deck-river:reduce_url:string'),
-				));
-				echo '<span class="elgg-icon elgg-icon-delete hidden tooltip s" title="' . elgg_echo('deck-river:clean_url') . '"></span>';
-				echo elgg_view('input/button', array(
-					'value' => elgg_echo('deck-river:copy_url'),
-					'class' => 'elgg-button-action hidden'
-				));
-				echo elgg_view('input/button', array(
-					'value' => elgg_echo('deck-river:reduce_url'),
-					'class' => 'elgg-button-submit'
-				));
+				echo elgg_view('output/group', array(
+						'group' => array(elgg_view('input/text', array(
+								'value' => elgg_echo('deck-river:reduce_url:string')
+							)),
+							'<span class="elgg-icon elgg-icon-delete hidden tooltip s link" title="' . elgg_echo('deck-river:clean_url') . '"></span>',
+							elgg_view('input/button', array(
+								'value' => elgg_echo('deck-river:copy_url'),
+								'class' => 'elgg-button-action hidden'
+							)),
+							elgg_view('input/button', array(
+								'value' => elgg_echo('deck-river:reduce_url'),
+								'class' => 'elgg-button-submit'
+							))
+						)
+					));
 			?>
 		</div>
 	</div>
