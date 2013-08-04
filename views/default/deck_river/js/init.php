@@ -49,7 +49,7 @@ elgg.deck_river.init = function() {
 			$('#deck-river-lists').unbind('scroll').scroll(function() {
 				var $this = $(this),
 					containerWidth = $('.deck-river-lists-container').width() - $this.width()
-					arrows = $('.deck-river-scroll-arrow');
+					arrows = $('.elgg-page-body .deck-river-scroll-arrow');
 
 				if ($this.scrollLeft() == 0) {
 					arrows.filter('.left').find('span').addClass('hidden').next().html('');
@@ -59,7 +59,7 @@ elgg.deck_river.init = function() {
 					arrows.find('span').removeClass('hidden');
 				}
 			});
-			if ($('#deck-river-lists').get(0).scrollWidth == $('#deck-river-lists').get(0).clientWidth) $('.deck-river-scroll-arrow span').addClass('hidden');
+			if ($('#deck-river-lists').get(0).scrollWidth == $('#deck-river-lists').get(0).clientWidth) $('.elgg-page-body .deck-river-scroll-arrow span').addClass('hidden');
 
 			$('.elgg-page .elgg-river').unbind('scroll.moreItem').bind('scroll.moreItem', function() {
 				if ($(this).scrollTop()+$(this).height() == $(this).get(0).scrollHeight) {
@@ -236,8 +236,8 @@ elgg.deck_river.init = function() {
 
 	// refresh all columns
 	$('.elgg-refresh-all-button').die().live('click', function() {
-		$('.deck-river-scroll-arrow div').html('');
-		$('.elgg-column-refresh-button').each(function() {
+		$('.elgg-page-body .deck-river-scroll-arrow div').html('');
+		$('.elgg-page-body .elgg-column-refresh-button').each(function() {
 			elgg.deck_river.RefreshColumn($(this).closest('.column-river'));
 		});
 	});
