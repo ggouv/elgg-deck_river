@@ -298,10 +298,10 @@ elgg.deck_river.displayCount = function(response, TheColumn) {
 		}
 		// column is hidden by #deck-river-lists scroll ?
 		if (TheColumn.position().left < -TheColumn.width()+80) { // hidden at left
-			var c = $('.deck-river-scroll-arrow.left div');
+			var c = $('.elgg-page-body .deck-river-scroll-arrow.left div');
 			(c.html() == '') ? c.html(responseLength) : c.html(parseInt(c.html()) + responseLength);
 		} else if (TheColumn.position().left + TheColumn.width()-15 > $('#deck-river-lists').width()) { //hidden at right
-			var c = $('.deck-river-scroll-arrow.right div');
+			var c = $('.elgg-page-body .deck-river-scroll-arrow.right div');
 			(c.html() == '') ? c.html(responseLength) : c.html(parseInt(c.html()) + responseLength);
 		}
 	}
