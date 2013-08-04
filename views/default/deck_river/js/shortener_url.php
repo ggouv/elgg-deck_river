@@ -26,6 +26,11 @@ elgg.deck_river.ShortenerUrlInit = function() {
 			this.value = elgg.echo('deck-river:reduce_url:string');
 			$(this).parent().find('.elgg-button-action, .elgg-icon').addClass('hidden');
 		}
+	}).keydown(function(e) {
+		if (e.keyCode == 13) {
+			$('#thewire-header .url-shortener .elgg-button-submit').click();
+			return false;
+		}
 	});
 	$('#thewire-header .url-shortener .elgg-button-submit').die().live('click', function() {
 		var input = $(this).parent().find('.elgg-input-text'),
