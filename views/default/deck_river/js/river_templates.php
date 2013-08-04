@@ -247,6 +247,8 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 				retweet = elgg.echo('retweeted_which', [value.retweet_count, which]);
 			}
 
+			delete value.retweeted_status.created_at; // we remove this key to keep created_at and id_str of last retweet.
+			delete value.retweeted_status.id_str;
 			$.extend(value, value.retweeted_status); // retweet_status contain all information about origin tweet, so we swich it.
 
 			elgg.deck_river.storeEntity(value.user, 'twitter'); // store original user
