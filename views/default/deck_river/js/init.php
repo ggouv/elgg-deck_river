@@ -623,8 +623,8 @@ elgg.deck_river.MoveColumn = function(event, ui) {
 elgg.deck_river.SetColumnsHeight = function() {
 	function scrollbarWidth() {
 		if (!$._scrollbarWidth) {
-			var $body = $('body');
-			var w = $body.css('overflow', 'hidden').width();
+			var $body = $('body'),
+				w = $body.css('overflow', 'hidden').width();
 			$body.css('overflow','scroll');
 			w -= $body.width();
 			if (!w) w=$body.width()-$body[0].clientWidth; // IE in standards mode
@@ -643,15 +643,17 @@ elgg.deck_river.SetColumnsHeight = function() {
  * Resize columns width
  */
 elgg.deck_river.SetColumnsWidth = function() {
-	var WindowWidth = $('#deck-river-lists').width();
-	var CountLists = $('#deck-river-lists .column-river').length;
-	var ListWidth = 0; var i = 0;
+	var WindowWidth = $('#deck-river-lists').width(),
+		CountLists = $('.elgg-page-body #deck-river-lists .column-river').length,
+		ListWidth = 0,
+		i = 0;
+
 	while ( ListWidth < deck_river_min_width_column ) {
 		ListWidth = (WindowWidth) / ( CountLists - i );
 		i++;
 	}
 	$('.elgg-page-body').find('.elgg-river, .column-header, .column-placeholder').width(ListWidth - 2);
-	$('.deck-river-lists-container').removeClass('hidden').width(ListWidth * CountLists);
+	$('.elgg-page-body .deck-river-lists-container').removeClass('hidden').width(ListWidth * CountLists);
 };
 
 
