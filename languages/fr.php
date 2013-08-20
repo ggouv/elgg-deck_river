@@ -98,6 +98,7 @@ $french = array(
 	'deck_river:group-info-header' => "Informations sur le groupe %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
 	'deck_river:go_to_profile' => "Aller sur le profil",
+	'deck_river:twitter:choose_account' => "Choisissez le compte Twitter",
 
 	// plugin settings
 	'deck_river:settings:min_width_column' => "Largeur minimum des colonnes",
@@ -138,6 +139,8 @@ $french = array(
 	'deck_river:twitter:feed:dm:sent' => "Messages directs (Boîte d'envoi)",
 	'deck_river:twitter:feed:favorites' => "Mes tweets favoris",
 	'deck_river:twitter:notweet' => "Pas de tweet.",
+	'deck_river:twitter:follow' => "Suivre sur Twitter",
+	'deck_river:twitter:unfollow' => "Ne plus suivre sur Twitter",
 
 	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
 
@@ -152,12 +155,14 @@ $french = array(
 
 	'deck_river:twitter:posted' => "Votre message a été publié sur Twitter.",
 	'deck_river:twitter:post:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",
-	'deck_river:twitter:post:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", //"You cannot send messages to users who are not following you",
-	'deck_river:twitter:post:error:187' => "Vous avez déjà envoyé ce message. C'est un doublon.", //"Status is a duplicate"
+	'deck_river:twitter:post:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", // "You cannot send messages to users who are not following you",
+	'deck_river:twitter:post:error:187' => "Vous avez déjà envoyé ce message. C'est un doublon.", // "Status is a duplicate"
+	'deck_river:twitter:post:post_friendshipsCreate' => "Vous suivez maintenant %s sur Twitter.",
 	'deck_river:twitter:error' => "Il y a eu une erreur avec Twitter.<br>Erreur retourné : %s<br/>%s",
 	'deck_river:twitter:error:discussion' => "Twitter indique que ce tweet est inconnu !",
-	'deck_river:twitter:error:34' => "La page ou l'utilisateur n'existe pas sur Twitter.", //"Sorry, that page does not exist",
-	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", //"Rate limit exceeded",
+	'deck_river:twitter:error:34' => "La page ou l'utilisateur n'existe pas sur Twitter.", // "Sorry, that page does not exist",
+	'deck_river:twitter:error:215' => "Il y a une erreur d'identification avec Twitter.", // "Bad authentication data"
+	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", // "Rate limit exceeded",
 
 
 );

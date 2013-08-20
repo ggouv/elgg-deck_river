@@ -37,15 +37,6 @@ if (!$user) {
 			<h2 class="mbs" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
 			<div><?php echo deck_river_wire_filter($user->briefdescription); ?></div>
 
-<?php 			echo elgg_view('output/url', array(
-					'class' => 'elgg-button elgg-button-dropdown',
-					'rel' => 'popup',
-					'href' => '#twitter-dropdown-menu',
-					'text' => 'Twitter'
-				));
-				$body = '<ul class="elgg-menu elgg-menu-hover"><li></li><ul/>';
-				echo elgg_view_module('dropdown', '', $body, array('id' => 'twitter-dropdown-menu'));
-?>
 			<?php
 			if (elgg_is_logged_in() && $user->getGUID() != elgg_get_logged_in_user_guid()) {
 				echo '<ul class="elgg-menu profile-action-menu mvm float">';

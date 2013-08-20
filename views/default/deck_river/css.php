@@ -751,10 +751,14 @@ li.elgg-menu-item-arrow-left {
 	cursor: pointer;
 	color: #555;
 }
-.elgg-submenu-river {
+.elgg-submenu {
 	margin-right: -6px;
+	text-transform: none;
+	text-align: left;
+	font-weight: normal;
+	font-size: inherit;
 }
-.elgg-submenu-river.hover .elgg-module-popup {
+.elgg-submenu.elgg-state-active .elgg-module-popup {
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 	display: block;
 	position: absolute;
@@ -764,36 +768,43 @@ li.elgg-menu-item-arrow-left {
 	color: #333;
 	padding: 0;
 }
-.elgg-submenu-river li {
+.elgg-button-dropdown.elgg-state-active .elgg-module-popup {
+	right: -1px;
+	top: 24px;
+}
+.elgg-submenu li {
 	display: list-item;
 }
-.elgg-submenu-river a {
+.elgg-submenu li.section {
+	border-top: 1px solid #CCC;
+}
+.elgg-submenu a {
 	padding: 5px;
 	display: block;
 }
-.elgg-submenu-river li:hover {
+.elgg-submenu li:hover {
 	background-color: #EEE;
 }
-.elgg-submenu-river li .elgg-icon {
+.elgg-submenu li .elgg-icon {
 	vertical-align: text-top;
 	padding-right: 10px;
 }
-.elgg-submenu-river li .elgg-icon:before {
+.elgg-submenu li .elgg-icon:before {
 	transition: none;
 	-webkit-transition: none;
 	-moz-transition: none;
 	-o-transition: none;
 }
-.elgg-submenu-river li:hover a {
+.elgg-submenu li:hover a {
 	color: #555;
 }
-.elgg-submenu-river a:hover {
+.elgg-submenu a:hover {
 	text-decoration: none;
 }
-.elgg-submenu-river li:hover .elgg-icon:before {
+.elgg-submenu li:hover .elgg-icon:before {
 	color: #555;
 }
-.elgg-submenu-river li:hover .elgg-icon-delete:before {
+.elgg-submenu li:hover .elgg-icon-delete:before {
 	color: red;
 }
 
@@ -1133,3 +1144,8 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 	padding-right: 20px;
 }
 
+/* popup choose-twitter-account-popup */
+#choose-twitter-account-popup {
+	height: auto;
+	width: 300px;
+}

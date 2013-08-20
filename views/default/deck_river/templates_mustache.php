@@ -51,7 +51,7 @@
 	</ul>
 	<ul class="elgg-body">
 		<li id="{{id}}-info-profile">
-			<div class="elgg-avatar elgg-avatar-large float">
+			<div class="elgg-avatar elgg-avatar-large float prm">
 				<a href="http://twitter.com/{{screen_name}}" title="{{screen_name}}" rel="nofollow">
 					<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
 					<div class="avatar-wrapper center">
@@ -59,10 +59,27 @@
 					</div>
 				</a>
 			</div>
-			<div class="elgg-body plm">
+			<div class="plm">
 				<h1 class="pts mbm">{{screen_name}}</h1>
 				<h2 class="mbs" style="font-weight:normal;">@{{screen_name}}</h2>
 				<div>{{{description}}}</div>
+				<div class="output-group mtm">
+					{{^following}}
+					<a class="elgg-button elgg-button-action" href="#" rel="nofollow" data-twitter_action="post_friendshipsCreate" data-user_id="{{id}}">
+						<?php echo elgg_echo('deck_river:twitter:follow'); ?>
+					</a>
+					{{/following}}
+					{{#following}}
+					<a class="elgg-button elgg-button-action" href="#" rel="nofollow" data-twitter_action="post_friendshipsDestroy" data-user_id="{{id}}">
+						<?php echo elgg_echo('deck_river:twitter:unfollow'); ?>
+					</a>
+					{{/following}}
+					<ul class="elgg-button elgg-button-dropdown elgg-submenu">
+						<ul class="elgg-menu elgg-module-popup hidden">
+							<li><a href="#" data-twitter_action="post_friendshipsDestroy" data-user_id="{{id}}"><?php echo elgg_echo('deck_river:twitter:unfollow'); ?></a></li>
+						</ul>
+					</ul>
+				</div>
 			</div>
 			<div id="profile-details" class="elgg-body pll">
 				<ul class="user-stats mbm">
@@ -123,7 +140,7 @@
 			<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
 				{{{menu.default}}}
 				{{#menu.submenu}}
-				<li class="elgg-submenu-river">
+				<li class="elgg-submenu">
 					<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
 					<ul class="elgg-module-popup hidden">
 						{{{menu.submenu}}}
@@ -176,7 +193,7 @@
 				<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
 					{{{menu.default}}}
 					{{#menu.submenu}}
-					<li class="elgg-submenu-river">
+					<li class="elgg-submenu">
 						<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
 						<ul class="elgg-module-popup hidden">
 							{{{menu.submenu}}}

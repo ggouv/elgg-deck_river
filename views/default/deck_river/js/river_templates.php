@@ -12,12 +12,6 @@
 
 $(document).ready(function() {
 
-	$('.elgg-submenu-river').live('click', function() {
-		$(this).addClass('hover').find('.elgg-module-popup').add($(this).closest('.elgg-list-item')).mouseleave(function() {
-			$('.elgg-submenu-river').removeClass('hover');
-		});
-	});
-
 	$('.elgg-menu-item-response a').live('click', function() {
 		var item = $(this).closest('.elgg-list-item');
 		elgg.deck_river.responseToWire(item, '@' + item.data('username') + ' ');
@@ -42,6 +36,54 @@ $(document).ready(function() {
 		}).join('') + ' ';
 		elgg.deck_river.responseToWire(item, match_users);
 	});
+
+	$('a[data-twitter_action]').live('click', function() {
+		var action = $(this).data('twitter_action'),
+			userId = $(this).data('user_id'),
+			twitterAccount = $(this).data('twitter_account'),
+			accounts = $('#thewire-network .net-profile.twitter');
+
+		if (accounts.length > 1 && elgg.isUndefined(twitterAccount)) {
+			var accountsString = '';
+
+			elgg.deck_river.createPopup('choose-twitter-account-popup', elgg.echo('deck_river:twitter:choose_account'), function() {
+				$('#choose-twitter-account-popup').find('.elgg-icon-push-pin').remove();
+			});
+			$.each(accounts, function(i, e) {
+				accountsString += '<li><a href="#" data-twitter_action="'+action+'" data-user_id="'+userId+'" data-twitter_account="'+$(e).find('input').val()+'">'+$(e).find('.twitter-user-info-popup').attr('title')+'</a></li>';
+			});
+			$('#choose-twitter-account-popup > .elgg-body').html('<ul>'+accountsString+'</ul>');
+		} else {
+			elgg.action('deck_river/twitter', {
+				data: {
+					twitter_account: twitterAccount || accounts.find('input').val(),
+					method: action,
+					options: {'user_id': $(this).data('user_id')}
+				},
+				dataType: 'json',
+				success: function(json) {
+					if (!elgg.isUndefined(json.output.result)) {
+						var response = json.output.result;
+
+						if (action == 'post_friendshipsCreate') response.followers_count++;
+						if (action == 'post_friendshipsDestroy') response.followers_count--;
+						elgg.deck_river.storeEntity(response, 'twitter');
+						response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
+						response.description = response.description.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag();
+						$('#user-info-popup > .elgg-body').html(Mustache.render($('#twitter-user-profile-template').html(), response));
+						elgg.system_message(elgg.echo('deck_river:twitter:post:'+action, [response.screen_name]));
+						$('#choose-twitter-account-popup').remove();
+					}
+				},
+				error: function() {
+					elgg.register_error(elgg.echo('deck_river:twitter:error'));
+				}
+			});
+		}
+
+		return false;
+	});
+
 });
 
 elgg.deck_river.responseToWire = function(riverItem, message) {
@@ -109,6 +151,7 @@ elgg.deck_river.storeEntity = function(entity, network) {
 };
 
 
+
 /**
  * Find a user in DataEntities, query
  * @param  {[type]} name    [description]
@@ -125,8 +168,9 @@ elgg.deck_river.findUser = function(name, network, key) {
 };
 
 
+
 /**
- * Search users in DataEntities
+ * Search users in DataEntities (eg: twitt return all user with name started by 'twitt')
  * @param  {string}  query    The name of the user to match
  * @param  {string}  network  The network to search, default Elgg
  * @return {array}            An array of matches
@@ -148,7 +192,6 @@ elgg.deck_river.searchUsers = function(query, network, key) {
 		});
 	}
 };
-
 
 
 
