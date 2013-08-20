@@ -17,6 +17,8 @@ function deck_river_init() {
 	elgg_register_library('deck_river:twitter_async', elgg_get_plugins_path() . 'elgg-deck_river/vendors/load_twitter_async.php');
 	elgg_register_library('alphaGUID', elgg_get_plugins_path() . 'elgg-deck_river/vendors/alphaID.inc.php');
 
+	elgg_load_library('alphaGUID');
+
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js/init');
 	elgg_extend_view('js/elgg', 'deck_river/js/popups');
@@ -175,8 +177,6 @@ function authorize_page_handler($page) {
 function alphaGUID_page_handler($page) {
 
 	if (!isset($page[0])) forward('activity');
-
-	elgg_load_library('alphaGUID');
 
 	$object_guid = alphaID($page[0], true);
 	$object_entity = get_entity($object_guid);
