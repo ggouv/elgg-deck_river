@@ -1,16 +1,39 @@
 <?php
 /**
  * Dropdown menu
- * Display a dropdown menu width submenus
+ * Display a dropdown menu with submenus
  *
  * @package Elgg-deck_river
  *
- * @uses $vars['group'] An array of group views to dispaly
+ * @uses $vars['class'] Extend class. Use 'invert' to display menu above the button.
+ * @uses $vars['menu'] Array of links to compose the menu
  *
  */
 
-echo '<ul class="elgg-button elgg-button-dropdown elgg-submenu">';
+$class = 'elgg-button elgg-button-dropdown elgg-submenu';
+$additional_class = elgg_extract('class', $vars, '');
+if ($additional_class) {
+	$vars['class'] = "$class $additional_class";
+} else {
+	$vars['class'] = $class;
+}
 
-echo '<ul class="elgg-menu elgg-module-popup hidden"><li><a href="#">test</a></li></ul>';
+
+$menu = '';
+foreach ($vars['menu'] as $key => $value) {
+	$menu .= '<li>' . $value . '</li>';
+}
+
+unset($vars['menu']);
+
+$attributes = elgg_format_attributes($vars);
+
+echo '<div ' . $attributes . '>';
+
+echo '<ul class="elgg-menu elgg-module-popup hidden">';
+
+echo $menu;
 
 echo '</ul>';
+
+echo '</div>';

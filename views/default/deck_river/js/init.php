@@ -316,6 +316,9 @@ elgg.deck_river.init = function() {
 				$this.removeClass('elgg-state-active');
 				$(document).unbind('click.submenu');
 			});
+		} else if ($this.hasClass('invert')) {
+			var m = $this.find('.elgg-menu');
+			m.css('top', - m.height() -5);
 		}
 		$(document).unbind('click.submenu').bind('click.submenu', function() {
 			$this.removeClass('elgg-state-active');

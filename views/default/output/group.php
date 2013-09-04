@@ -5,14 +5,30 @@
  *
  * @package Elgg-deck_river
  *
- * @uses $vars['group'] An array of group views to dispaly
+ * @uses $vars['group'] An array of group views to display
+ * @uses $vars['class'] Class of the group
  *
  */
 
-echo '<div class="output-group">';
-
-foreach ($vars['group'] as $key => $value) {
-	echo $value;
+$class = 'output-group';
+$additional_class = elgg_extract('class', $vars, '');
+if ($additional_class) {
+	$vars['class'] = "$class $additional_class";
+} else {
+	$vars['class'] = $class;
 }
+
+$group = '';
+foreach ($vars['group'] as $key => $value) {
+	$group .= $value;
+}
+
+unset($vars['group']);
+
+$attributes = elgg_format_attributes($vars);
+
+echo "<div $attributes>";
+
+echo $group;
 
 echo '</div>';
