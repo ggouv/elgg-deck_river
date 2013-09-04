@@ -54,42 +54,13 @@ elgg.deck_river.popups = function() {
 
 	// user info popup
 	$('.user-info-popup').die().live('click', function() {
-		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
-
-		var body = $('#user-info-popup > .elgg-body');
-		elgg.post('ajax/view/deck_river/ajax_view/user_info', {
-			dataType: "html",
-			data: {
-				user: $(this).attr('title')
-			},
-			success: function(response) {
-				body.html(response);
-				if ($.isFunction(elgg.markdown_wiki.view.init)) elgg.markdown_wiki.view.init();
-			},
-			error: function() {
-				body.html(elgg.echo('deck_river:ajax:erreur'));
-			}
-		});
+		elgg.deck_river.userPopup($(this).attr('title'));
 		return false;
 	}).liveDraggable();
 
 	// group info popup
 	$('.group-info-popup').die().live('click', function() {
-		elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:group-info-header', [$(this).attr('title')]));
-
-		var body = $('#group-info-popup > .elgg-body');
-		elgg.post('ajax/view/deck_river/ajax_view/group_info', {
-			dataType: "html",
-			data: {
-				group: $(this).attr('title')
-			},
-			success: function(response) {
-				body.html(response);
-			},
-			error: function() {
-				body.html(elgg.echo('deck_river:ajax:erreur'));
-			}
-		});
+		elgg.deck_river.groupPopup($(this).attr('title'));
 		return false;
 	}).liveDraggable();
 
@@ -137,6 +108,54 @@ elgg.deck_river.popups = function() {
 
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);
+
+
+/**
+ * show user popup
+ * @param  {[string]} user username
+ */
+elgg.deck_river.userPopup = function(user) {
+	elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [user]));
+
+	var body = $('#user-info-popup > .elgg-body');
+	elgg.post('ajax/view/deck_river/ajax_view/user_info', {
+		dataType: "html",
+		data: {
+			user: user
+		},
+		success: function(response) {
+			body.html(response);
+			if ($.isFunction(elgg.markdown_wiki.view.init)) elgg.markdown_wiki.view.init();
+		},
+		error: function() {
+			body.html(elgg.echo('deck_river:ajax:erreur'));
+		}
+	});
+};
+
+
+
+/**
+ * show group popup
+ * @param  {[string]} group name
+ */
+elgg.deck_river.groupPopup = function(group) {
+	elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:group-info-header', [group]));
+
+	var body = $('#group-info-popup > .elgg-body');
+	elgg.post('ajax/view/deck_river/ajax_view/group_info', {
+		dataType: "html",
+		data: {
+			group: group
+		},
+		success: function(response) {
+			body.html(response);
+		},
+		error: function() {
+			body.html(elgg.echo('deck_river:ajax:erreur'));
+		}
+	});
+};
 
 
 
