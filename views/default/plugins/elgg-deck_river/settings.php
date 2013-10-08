@@ -122,6 +122,30 @@ $twitter_consumer_secret_view = elgg_view('input/text', array(
 	'value' => $vars['entity']->twitter_consumer_secret
 ));
 
+
+/* facebook */
+if (!isset($vars['entity']->facebook_app_id) || empty($vars['entity']->facebook_app_id)) {
+	$vars['entity']->facebook_app_id = '';
+}
+
+if (!isset($vars['entity']->facebook_app_secret) || empty($vars['entity']->facebook_app_secret)) {
+	$vars['entity']->facebook_app_secret = '';
+}
+
+$facebook_app_id_string = elgg_echo('deck_river:settings:facebook_app_id');
+$facebook_app_id_view = elgg_view('input/text', array(
+	'name' => 'params[facebook_app_id]',
+	'value' => $vars['entity']->facebook_app_id
+));
+
+$facebook_app_secret_string = elgg_echo('deck_river:settings:facebook_app_secret');
+$facebook_app_secret_view = elgg_view('input/text', array(
+	'name' => 'params[facebook_app_secret]',
+	'value' => $vars['entity']->facebook_app_secret
+));
+
+
+
 echo <<<__HTML
 <br/>
 <div><label>$min_width_column_string</label><br />$min_width_column_view</div>
@@ -143,4 +167,9 @@ echo <<<__HTML
 <h3>Twitter</h3><br/>
 <div><label>$twitter_consumer_key_string</label><br />$twitter_consumer_key_view</div>
 <div><label>$twitter_consumer_secret_string</label><br />$twitter_consumer_secret_view</div>
+
+<br/><hr/><br/>
+<h3>Facebook</h3><br/>
+<div><label>$facebook_app_id_string</label><br />$facebook_app_id_view</div>
+<div><label>$facebook_app_secret_string</label><br />$facebook_app_secret_view</div>
 __HTML;

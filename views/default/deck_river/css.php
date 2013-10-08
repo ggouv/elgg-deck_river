@@ -318,8 +318,17 @@ body.fixed-deck {
 	background-color: #00ACED;
 	border: 1px solid #00ACED;
 	color: white;
-	font-size: 15px;
-	line-height: 10px;
+	font-size: 18px;
+	line-height: 12px;
+	text-indent: -1px;
+}
+#thewire-network .net-profile.facebook .network {
+	background-color: #3B5998;
+	border: 1px solid #3B5998;
+	color: white;
+	font-size: 23px;
+	line-height: 12px;
+	text-indent: -2px;
 }
 #thewire-network .elgg-icon-delete {
 	background-color: rgba(0, 0, 0, 0.3);
@@ -1107,23 +1116,23 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 	background: none;
 }
 
-/* twitter */
-.elgg-river-summary .twitter-user-info-popup {
+/* popup links */
+.elgg-river-summary .twitter-user-info-popup, .elgg-river-summary .facebook-user-info-popup {
 	color: #4690D6;
 	font-weight: bold;
 }
-.twitter-user-info-popup:hover {
+.twitter-user-info-popup:hover, .facebook-user-info-popup:hover {
 	color: #555;
 	text-decoration: underline;
 	cursor: pointer;
 }
 
 /* applications page */
-.elgg-module-twitter .elgg-head h3 {
+.elgg-module-network .elgg-head h3 {
 	color: #555555;
 	font-size: 1.3em;
 }
-.elgg-module-twitter .twitter-icon:before {
+.elgg-module-network .network-icon:before {
 	cursor: default;
 	font-size: 2.2em;
 }

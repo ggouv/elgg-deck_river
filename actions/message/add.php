@@ -68,7 +68,6 @@ if (empty($body)) {
 
 		} else {
 			$network_entity = get_entity($network);
-			$parent_guid = (int) get_input('twitter_parent', false);
 
 			// twitter
 			if ($network_entity->getSubtype() == 'twitter_account' && $network_entity->getOwnerGUID() == $user->getGUID()) {
@@ -84,6 +83,7 @@ if (empty($body)) {
 					$body);
 
 				// post to twitter
+				$parent_guid = (int) get_input('twitter_parent', false);
 				try {
 					if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message
 						if (!$matches[2]) {

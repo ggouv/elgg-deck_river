@@ -163,9 +163,8 @@ elgg.deck_river.init = function() {
 			}
 		});
 	});
-	$('#authorize-twitter').die().live('click', function(e){
+	$('#authorize-twitter, #authorize-facebook').die().live('click', function(){
 		var oauthWindow = window.open($(this).attr('href'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
-		e.preventDefault();
 		return false;
 	});
 
@@ -548,23 +547,24 @@ elgg.deck_river.move_account = function() {
 
 
 /**
- * Called by twitter callback
+ * Called by twitter and facebook callback
  *
  * Add new account in non-pinned network and reload the column-settings if open
  *
- * @param {token} false if twitter error, else it contain the account view
+ * @param {token} false if network error, else it contain the account view
  * @return void
  */
-elgg.deck_river.twitter_authorize = function(token) {
+elgg.deck_river.network_authorize = function(token) {
 	var p = window.opener;
+
 	if (token == false) {
-		p.elgg.system_message(p.elgg.echo('deck_river:twitter:authorize:already_done'));
+		p.elgg.system_message(p.elgg.echo('deck_river:network:authorize:already_done'));
 		window.close();
 	} else {
 		// reload column settings popup if it's open
 		if (p.$('#column-settings').length) {
 			var c = p.$('#'+p.$('#column-settings input[name="column"]').val());
-			p.$('#column-settings').data('network', 'twitter');
+			p.$('#column-settings').data('network', token.network);
 			if (c.length == 1) {
 				c.find('.elgg-column-edit-button').click();
 			} else {
@@ -573,22 +573,24 @@ elgg.deck_river.twitter_authorize = function(token) {
 		}
 
 		// add new network in applications page
-		if (p.$('.elgg-module-twitter').length) {
-			p.$('.elgg-module-twitter .elgg-list').prepend(token.full);
+		if (p.$('.elgg-module-'+token.network).length) {
+			p.$('.elgg-module-'+token.network+' .elgg-list').prepend(token.full);
 		}
 
 		// remove add-network popup
 		p.$('#add_social_network').remove();
 
-		// add new twitter account in #thewire-network
+		// add new network account in #thewire-network
 		p.$('#thewire-network .non-pinned .net-profiles').prepend(token.network_box);
 		p.elgg.deck_river.move_account();
 
 		// show message
-		p.elgg.system_message(p.elgg.echo('deck_river:twitter:authorize:success'));
+		p.elgg.system_message(p.elgg.echo('deck_river:'+token.network+':authorize:success'));
 		window.close();
 	}
 }
+
+
 
 /**
  * Rename a column

@@ -14,9 +14,17 @@ $user_deck_river_pinned_accounts = unserialize(get_private_setting($user->getGUI
 $accounts = array();
 // get and format twitter accounts
 elgg_load_library('deck_river:authorize');
-$twitter_accounts = deck_river_twitter_get_account();
+$twitter_accounts = deck_river_get_networks_account('twitter');
 
 foreach ($twitter_accounts as $account) {
+	$accounts[$account->getGUID()] = elgg_view_entity($account, array(
+		'view_type' => 'in_network_box',
+		'pinned' => in_array($account->getGUID(), $user_deck_river_pinned_accounts) ? true : false,
+	));
+}
+
+$facebook_accounts = deck_river_get_networks_account('facebook');
+foreach ($facebook_accounts as $account) {
 	$accounts[$account->getGUID()] = elgg_view_entity($account, array(
 		'view_type' => 'in_network_box',
 		'pinned' => in_array($account->getGUID(), $user_deck_river_pinned_accounts) ? true : false,

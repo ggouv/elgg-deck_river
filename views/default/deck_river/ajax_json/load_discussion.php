@@ -18,7 +18,7 @@ if ($network == 'elgg') {
 	$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
 
 	elgg_load_library('deck_river:authorize');
-	$accounts = deck_river_twitter_get_account();
+	$accounts = deck_river_get_networks_account('twitter');
 	$account = $accounts[0]; // @todo why the first ? Check limit rate and take the most free ?
 
 	elgg_load_library('deck_river:twitter_async');

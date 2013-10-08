@@ -15,6 +15,7 @@ function deck_river_init() {
 	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
 	elgg_register_library('deck_river:authorize', elgg_get_plugins_path() . 'elgg-deck_river/lib/authorize.php');
 	elgg_register_library('deck_river:twitter_async', elgg_get_plugins_path() . 'elgg-deck_river/vendors/load_twitter_async.php');
+	elgg_register_library('deck_river:facebook_sdk', elgg_get_plugins_path() . 'elgg-deck_river/vendors/facebook-php-sdk/src/facebook.php');
 	elgg_register_library('alphaGUID', elgg_get_plugins_path() . 'elgg-deck_river/vendors/alphaID.inc.php');
 
 	elgg_load_library('alphaGUID');
@@ -159,6 +160,9 @@ function authorize_page_handler($page) {
 	switch ($page[0]) {
 		case 'twitter':
 			deck_river_twitter_authorize();
+			break;
+		case 'facebook':
+			deck_river_facebook_authorize();
 			break;
 		case 'applications':
 			include elgg_get_plugins_path() . 'elgg-deck_river/pages/applications.php';

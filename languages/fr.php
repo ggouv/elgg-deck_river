@@ -43,6 +43,7 @@ $french = array(
 	'deck-river:add:network' => "Ajouter un réseau",
 	'deck-river:ggouv:account' => "Compte Ggouv :",
 	'deck-river:twitter:account' => "Compte Twitter :",
+	'deck-river:facebook:account' => "Compte Facebook :",
 	'deck-river:network:pin' => "<div style=\"text-align: left;\">Épingler<br><span class=\"elgg-text-help\">Ce compte restera toujours actifs.<br/>Vous pourrez le désactiver temporairement en cliquant dessus.</span></div>",
 	'deck-river:add:network:helper' => "<div style=\"text-align: left;\">Au dessus :<br><span class=\"elgg-text-help\">Vos comptes actifs vers lesquels vos messages seront envoyés.</span>Dessous :<br><span class=\"elgg-text-help\">Vos comptes enregistrés et inactifs.</span></div>",
 	'deck-river:add:network:slide' => "<span>↕</span> Glissez pour ajouter ou enlever <span>↕</span>",
@@ -81,14 +82,35 @@ $french = array(
 	'deck_river:search' => 'Recherche :',
 	'deck_river:a_search' => 'Une recherche',
 	'deck_river:filter:all' => 'Tout',
+
+	// accounts managment
+	'deck_river:network:add:account' => "Ajouter un autre compte",
+	'deck_river:network:manage_account' => "Gérer mes comptes",
+	'deck_river:network:authorize:already_done' => "Vous avez déjà associé ce compte.",
+	'deck_river:network:authorize:error' => "Le compte n'a pas pu être autorisé.",
+	'deck_river:network:revoke:error' => "Le compte n'a pas pu être supprimé.",
+
+	'deck_river:twitter:authorize:servor_fail' => "%s ne peut pas accéder à Twitter.",
 	'deck_river:twitter:authorize:request:title' => "Autorisez %s à accéder à votre compte Twitter",
 	'deck_river:twitter:authorize:request:button' => "Faire la demande à Twitter",
+	'deck_river:twitter:authorize:success' => "Twitter a autorisé l'accès à votre compte.",
+	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
 	'deck_river:twitter:columnsettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnements, vos listes, vos messages directs...",
 	'deck_river:twitter:add_network:request' => "<li>Vous pourrez suivre les flux vos abonnements, vos listes, vos messages directs... directement depuis %s !</li><li>Vous pourrez aussi envoyer vos tweets sans aller sur Twitter...</li>",
 	'deck_river:twitter:your_account' => "Votre profil Twitter lié à %s :",
 	'deck_river:twitter:choose:account' => "Choisissez le compte Twitter pour cette colonne :",
-	'deck_river:network:add:account' => "Ajouter un autre compte",
-	'deck_river:network:manage_account' => "Gérer mes comptes",
+
+	'deck_river:facebook:authorize:servor_fail' => "%s ne peut pas accéder à Facebook.",
+	'deck_river:facebook:authorize:request:title' => "Autorisez %s à accéder à votre compte Facebook",
+	'deck_river:facebook:authorize:request:button' => "Faire la demande à Facebook",
+	'deck_river:facebook:authorize:success' => "Facebook a autorisé l'accès à votre compte.",
+	'deck_river:facebook:authorize:error' => "Le compte Facebook n'a pas pu être autorisé par Facebook.",
+	'deck_river:facebook:revoke:success' => "L'accès à Facebook a été supprimé.",
+	'deck_river:facebook:revoke:error' => "Le compte Facebook n'a pas pu être supprimé.",
+	'deck_river:facebook:columnsettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnements, vos listes, vos messages directs...",
+	'deck_river:facebook:add_network:request' => "<li>Vous pourrez suivre les flux vos abonnements, vos listes, vos messages directs... directement depuis %s !</li><li>Vous pourrez aussi envoyer vos tweets sans aller sur Facebook...</li>",
+	'deck_river:facebook:your_account' => "Votre profil Facebook lié à %s :",
+	'deck_river:facebook:choose:account' => "Choisissez le compte Facebook pour cette colonne :",
 
 	//info popups
 	'deck-river:popups:close' => "Fermer cette fenêtre",
@@ -113,6 +135,8 @@ $french = array(
 	'deck_river:settings:reset_user:nok' => "Impossible de remettre à zéro les paramètres des colonnes de l'utilisateur %s.",
 	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
 	'deck_river:settings:twitter_consumer_secret' => "Consumer secret :",
+	'deck_river:settings:facebook_app_id' => "App ID :",
+	'deck_river:settings:facebook_app_secret' => "App secret :",
 
 	// urlshortener
 	'deck_river:url-not-exist' => "Il n'y a pas l'url à réduire.",
@@ -120,11 +144,6 @@ $french = array(
 
 	// Twitter
 	'item:object:twitter_account' => "Comptes Twitter",
-	'deck_river:twitter:authorize:success' => "Twitter a autorisé l'accès à votre compte.",
-	'deck_river:twitter:authorize:error' => "Le compte Twitter n'a pas pu être autorisé par Twitter.",
-	'deck_river:twitter:authorize:already_done' => "Vous avez déjà associé ce compte Twitter.",
-	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
-	'deck_river:twitter:revoke:error' => "Le compte Twitter n'a pas pu être supprimé.",
 	'deck_river:twitter:feed:search' => "Recherche sur Twitter",
 	'deck_river:twitter:feed:search:tweets' => "Rechercher un mot ou un hashtag",
 	'deck_river:twitter:feed:search:popular' => "Recherche triée par tweets les plus populaires",

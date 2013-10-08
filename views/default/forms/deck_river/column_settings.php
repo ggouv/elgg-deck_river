@@ -140,7 +140,7 @@ $column_title = $user_river_column_options['title'];
 
 			// get twitter account
 			elgg_load_library('deck_river:authorize');
-			$twitter_account = deck_river_twitter_get_account();
+			$twitter_account = deck_river_get_networks_account('twitter');
 
 			function displayTwitterAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;

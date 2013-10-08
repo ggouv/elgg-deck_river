@@ -41,7 +41,7 @@ elgg.deck_river.popups = function() {
 		var popup = $(this).closest('.deck-popup'),
 			tab = $(this).attr('href');
 
-		if (popup.find(tab).hasClass('hidden')) {
+		if (popup.find($(tab)).hasClass('hidden')) {
 			popup.find('.elgg-tabs li').removeClass('elgg-state-selected');
 			$(this).parent('li').addClass('elgg-state-selected');
 			popup.find('.elgg-body > li').addClass('hidden').filter(tab).removeClass('hidden');

@@ -6,7 +6,7 @@
  *	@license GNU Affero General Public License, version 3 or late
  *	@link https://github.com/ggouv/elgg-deck_river
  *
- * View for twitter_account object
+ * View for facebook_account object
  *
  * @uses $vars['entity'] The account to display
  * @uses $vars['view_type'] View type. Default full. in_network_box or in_column_settings.
@@ -19,8 +19,8 @@ $view = elgg_extract('view_type', $vars, false);
 $pinned = elgg_extract('pinned', $vars, false);
 
 $avatar = elgg_view('output/img', array(
-	'src' => $account->avatar,
-	'alt' => $account->screen_name,
+	'src' => 'https://graph.facebook.com/' . $account->username . '/picture',
+	'alt' => $account->username,
 	'class' => 'float',
 ));
 
@@ -32,12 +32,12 @@ if ($view === 'in_network_box') {
 		$input_name = '_networks[]';
 	}
 
-	$info = elgg_echo('deck-river:twitter:account');
-	$info .= '<div class="elgg-river-summary"><span class="twitter-user-info-popup" title="' . $account->screen_name . '">' . $account->screen_name . '</span>';
+	$info = elgg_echo('deck-river:facebook:account');
+	$info .= '<div class="elgg-river-summary"><span class="facebook-user-info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
 	$info .= elgg_view('output/url', array(
-		'href' => 'http://twitter.com/' . $account->screen_name,
-		'text' => 'http://twitter.com/' . $account->screen_name,
+		'href' => 'http://facebook.com/' . $account->username,
+		'text' => 'http://facebook.com/' . $account->username,
 		'target' => '_blank',
 		'rel' => 'nofollow'
 	));
@@ -46,7 +46,7 @@ if ($view === 'in_network_box') {
 	$pin_tooltip = htmlspecialchars(elgg_echo('deck-river:network:pin'));
 
 	$output = <<<HTML
-<div class="net-profile float mlm twitter$pinned">
+<div class="net-profile float mlm facebook$pinned">
 	<input type="hidden" value="{$account->getGUID()}" name="$input_name">
 	<ul>
 		<span class="elgg-icon elgg-icon-delete pas hidden"></span>
@@ -59,7 +59,7 @@ if ($view === 'in_network_box') {
 		</div>
 	</ul>
 	$avatar
-	<span class="network gwf">T</span>
+	<span class="network gwf">F</span>
 </div>
 HTML;
 
@@ -92,8 +92,8 @@ HTML;
 	$subtitle = "$author_text $date";
 
 	$link = elgg_view('output/url', array(
-		'href' => 'http://twitter.com/' . $account->screen_name,
-		'text' => 'http://twitter.com/' . $account->screen_name,
+		'href' => 'http://facebook.com/' . $account->username,
+		'text' => 'http://facebook.com/' . $account->username,
 		'class' => 'external',
 		'target' => '_blank'
 	));
@@ -102,14 +102,14 @@ HTML;
 <div class="elgg-content">
 	<div class="elgg-image-block clearfix">
 		<div class="elgg-image">
-			<span title="{$account->screen_name}" class="twitter-user-info-popup">$avatar</span>
+			<span title="{$account->user_id}" class="facebook-user-info-popup">$avatar</span>
 		</div>
 		<div class="elgg-body">
 			<ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default">
 				<li class="elgg-menu-item-access">$access</li>
 				<li class="elgg-menu-item-delete">$delete</li>
 			</ul>
-			<h3><span class="twitter-user-info-popup" title="{$account->screen_name}">{$account->screen_name}</span></h3>
+			<h3><span class="facebook-user-info-popup" title="{$account->user_id}">{$account->name}</span></h3>
 			$link
 			<div class="elgg-subtext">$subtitle</div>
 		</div>

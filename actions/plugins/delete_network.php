@@ -6,16 +6,21 @@
 $network_guid = (int) get_input('guid');
 
 if (!$network_guid) {
-	register_error(elgg_echo('deck_river:twitter:revoke:error'));
+	register_error(elgg_echo('deck_river:network:revoke:error'));
 } else {
 
 	$network = get_entity($network_guid);
 
 	if ($network->canEdit()) {
 		elgg_load_library('deck_river:authorize');
-		deck_river_twitter_api_revoke(null, $network->user_id);
+		if ($network->getSubtype() == 'twitter_account') {
+			deck_river_twitter_api_revoke(null, $network->user_id);
+		}
+		if ($network->getSubtype() == 'facebook_account') {
+			deck_river_facebook_revoke(null, $network->user_id);
+		}
 	} else {
-		register_error(elgg_echo('deck_river:twitter:revoke:error'));
+		register_error(elgg_echo('deck_river:network:revoke:error'));
 	}
 }
 

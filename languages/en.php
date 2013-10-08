@@ -19,7 +19,15 @@ $english = array(
 	'deck-river:clean_url' => "Erase",
 	'responseToHelper:text' => "Reply to %s : <span>%s</span>",
 	'responseToHelper:delete' => "Stop reply to %s",
-		'deck-river:add:network' => "Add a network",
+
+	// thewire network
+	'deck-river:add:network' => "Add a network",
+	'deck-river:ggouv:account' => "Ggouv account:",
+	'deck-river:twitter:account' => "Twitter account:",
+	'deck-river:facebook:account' => "Facebook account:",
+	'deck-river:network:pin' => "<div style=\"text-align: left;\">Épingler<br><span class=\"elgg-text-help\">Ce compte restera toujours actifs.<br/>Vous pourrez le désactiver temporairement en cliquant dessus.</span></div>",
+	'deck-river:add:network:helper' => "<div style=\"text-align: left;\">Au dessus :<br><span class=\"elgg-text-help\">Vos comptes actifs vers lesquels vos messages seront envoyés.</span>Dessous :<br><span class=\"elgg-text-help\">Vos comptes enregistrés et inactifs.</span></div>",
+	'deck-river:add:network:slide' => "<span>↕</span> Glissez pour ajouter ou enlever <span>↕</span>",
 
 	// river menu
 	'replyall' => "Reply to all",
@@ -52,6 +60,22 @@ $english = array(
 	'deck_river:search' => 'Search:',
 	'deck_river:filter:all' => 'All',
 
+	// accounts managment
+	'deck_river:network:add:account' => "Add an account",
+	'deck_river:network:manage_account' => "Manage my accounts",
+	'deck_river:network:authorize:error' => "The account cannot be authorized.",
+	'deck_river:network:revoke:error' => "Twitter account cannot be removed.",
+
+	'deck_river:twitter:authorize:servor_fail' => "%s cannot access to Twitter",
+	'deck_river:twitter:authorize:request:title' => "Authorize %s to access to your Twitter account",
+	'deck_river:twitter:authorize:request:button' => "Ask to Twitter",
+	'deck_river:twitter:authorize:success' => 'Twitter access has been authorized.',
+	'deck_river:twitter:revoke:success' => 'Twitter access has been revoked.',
+	'deck_river:twitter:columnsettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnements, vos listes, vos messages directs...",
+	'deck_river:twitter:add_network:request' => "<li>Vous pourrez suivre les flux vos abonnements, vos listes, vos messages directs... directement depuis %s !</li><li>Vous pourrez aussi envoyer vos tweets sans aller sur Twitter...</li>",
+	'deck_river:twitter:your_account' => "Your Twitter account link to %s :",
+	'deck_river:twitter:choose:account' => "Choose Twitter account for this column:",
+
 	// user info popup
 	'deck-river:popups:close' => "Close this window",
 	'deck-river:popups:pin' => "Pin this window",
@@ -72,6 +96,8 @@ $english = array(
 	'deck_river:settings:reset_user:nok' => "Impossible to reset column's settings of user %s.",
 	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
 	'deck_river:settings:twitter_consumer_secret' => "Consumer secret :",
+	'deck_river:settings:facebook_app_id' => "App ID :",
+	'deck_river:settings:facebook_app_secret' => "App secret :",
 	'deck_river:settings:default_column:default' => "array(
 	'default' => array(
 		'column-1' => array(
@@ -111,8 +137,6 @@ $english = array(
 	// Twitter
 	'deck_river:twitter:usersettings:request:title' => "Authorize %s to access your Twitter account",
 	'deck_river:twitter:usersettings:request' => "You can add Twitter feed...<br/><a id=\"authorize-twitter\" type=\"submit\" data-url=\"%s\" class=\"elgg-button elgg-button-action\">authorize %s</a>",
-	'deck_river:twitter:authorize:success' => 'Twitter access has been authorized.',
-	'deck_river:twitter:revoke:success' => 'Twitter access has been revoked.',
 	'deck_river:twitter:your_account' => 'Your Twitter account linked with %s:',
 	'deck_river:twitter:feed:search:tweets' => "Search word or hashtag",
 	'deck_river:twitter:feed:users:search' => "Search users"

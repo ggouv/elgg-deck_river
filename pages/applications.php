@@ -22,12 +22,13 @@ elgg_push_breadcrumb($title);
 
 $content = '';
 
-$twitter_accounts = deck_river_twitter_get_account($user->getGUID());
+// twitter
+$twitter_accounts = deck_river_get_networks_account('twitter', $user->getGUID());
 
 if (!empty($twitter_accounts)) {
 	$content .= elgg_view_module(
-		'twitter',
-		'<span class="twitter-icon gwfb"></span><span class="pls">' . elgg_echo('Twitter') . '</span>',
+		'network',
+		'<span class="network-icon twitter-icon gwfb"></span><span class="pls">' . elgg_echo('Twitter') . '</span>',
 		elgg_view_entity_list($twitter_accounts), array(
 			'class' => 'mtl',
 		)
@@ -58,6 +59,53 @@ if (!empty($twitter_accounts)) {
 		);
 	}
 }
+
+// facebook
+$facebook_accounts = deck_river_get_networks_account('facebook', $user->getGUID());
+
+if (!empty($facebook_accounts)) {
+	$content .= elgg_view_module(
+		'network',
+		'<span class="network-icon facebook-icon gwfb"></span><span class="pls">' . elgg_echo('Facebook') . '</span>',
+		elgg_view_entity_list($facebook_accounts), array(
+			'class' => 'mtl',
+		)
+	);
+} else {
+	$facebook_app_id = elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river');
+	$facebook_app_secret = elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck_river');
+	if ($facebook_app_id && $facebook_app_secret) {
+		elgg_load_library('deck_river:facebook_sdk');
+		$facebook = new Facebook(array(
+			'appId'  => $facebook_app_id,
+			'secret' => $facebook_app_secret,
+			'cookie' => true
+		));
+		$loginUrl = $facebook->getLoginUrl(array(
+			'redirect_uri' => (elgg_get_site_url() . 'authorize/facebook'),
+			'scope' => deck_river_get_facebook_scope(),
+		));
+
+		$site_name = elgg_get_site_entity()->name;
+		$content .= elgg_view_module(
+			'facebook',
+			'<span class="facebook-icon gwfb"></span><span class="pls">' . elgg_echo('Facebook') . '</span>',
+			elgg_view_module(
+				'featured',
+				elgg_echo('deck_river:facebook:authorize:request:title', array($site_name)),
+				elgg_echo('deck_river:facebook:add_network:request', array($site_name)) . elgg_view('output/url', array(
+					'href' => $loginUrl,
+					'text' => elgg_echo('deck_river:facebook:authorize:request:button'),
+					'class' => 'elgg-button elgg-button-action mtm',
+					'id' => 'authorize-facebook'
+				)),
+				array('class' => 'mts float')
+			)
+		);
+	}
+}
+
+
 
 $params = array(
 	'content' => $content,
