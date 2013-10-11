@@ -38,6 +38,9 @@ foreach ($facebook_accounts as $account) {
 	<div class="options hidden">
 		<div class="responseTo hidden tooltip s" title="<?php echo elgg_echo('responseToHelper:delete');?>"></div>
 		<input class="parent" type="hidden" name="">
+		<div id="linkbox" class="hidden phm pvs">
+			<?php echo elgg_view('graphics/ajax_loader', array('hidden' => false)); ?>
+		</div>
 		<div class="url-shortener">
 			<?php
 				echo elgg_view('output/group', array(
@@ -76,7 +79,7 @@ foreach ($facebook_accounts as $account) {
 <div id="thewire-network">
 	<div class="selected-profile pvs">
 		<div class="net-profile float mls ggouv">
-			<input type="hidden" value="<?php echo $user->getGUID(); ?>" name="networks[]">
+			<input type="hidden" value="<?php echo $user->getGUID(); ?>" name="networks[]" data-network="ggouv">
 			<ul>
 				<span class="elgg-icon elgg-icon-delete pas hidden"></span>
 				<div class="elgg-module-popup hidden">

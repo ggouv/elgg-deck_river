@@ -21,7 +21,7 @@ body.fixed-deck {
 	position: relative;
 }
 #thewire-header, #search-input {
-	background-color: white;
+	background: white;
 	border-radius: 6px;
 	height: 33px;
 	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
@@ -32,7 +32,7 @@ body.fixed-deck {
 	display: none;
 }
 #thewire-textarea, .elgg-search .search-input {
-	background-color: transparent !important;
+	background: transparent !important;
 	resize: none;
 	height: 32px !important;
 	padding: 10px 2px 0 12px !important;
@@ -48,12 +48,12 @@ body.fixed-deck {
 	box-shadow: none !important;
 }
 #thewire-textarea-border {
-	background-color: #4690D6;
+	background: #4690D6;
 	border-radius: 0 0 8px 8px;
 	-webkit-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
-	height: 0;
+	padding-bottom: 3px;
 	left: -7px;
 	position: absolute;
 	top: 35px;
@@ -73,7 +73,7 @@ body.fixed-deck {
 }
 .reverse-border span {
 	color: #00CC00;
-	background-color: white;
+	background: white;
 	border-radius: 0 6px 6px 0;
 	display: block;
 	font-size: 1.2em;
@@ -91,8 +91,7 @@ body.fixed-deck {
 	border-radius: 6px 6px 6px 6px;
 	height: 33px;
 	overflow: hidden;
-	right: 0;
-	background-color: #FFE6E6;
+	background: #FFE6E6;
 	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	box-shadow: inset 0 2px 2px 0 #1F2E3D;
@@ -107,7 +106,7 @@ body.fixed-deck {
 	position: absolute;
 }
 #thewire-header > .thewire-button:hover {
-	background-color: #FF0000;
+	background: #FF0000;
 }
 #thewire-header > .thewire-button:hover:before {
 	color: white;
@@ -117,7 +116,7 @@ body.fixed-deck {
 	color: transparent;
 	height: 33px;
 	text-indent: -9999px;
-	background-color: transparent;
+	background: transparent;
 	border: none;
 	width: 60px;
 }
@@ -130,7 +129,7 @@ body.fixed-deck {
 	z-index: 7004;
 }
 #thewire-header.extended #submit-loader {
-	background-color: transparent;
+	background: transparent;
 	left: 526px;
 	top: 8px;
 }
@@ -153,13 +152,13 @@ body.fixed-deck {
 	top: auto;
 }
 #thewire-header.extended #thewire-characters-remaining span {
-	background-color: transparent;
+	background: transparent;
 	box-shadow: none;
 	margin-left: 5px;
 	text-align: left;
 }
 #thewire-header.extended #thewire-textarea-bottom {
-	background-color: #F4F4F4;
+	background: #F4F4F4;
 	border-radius: 0 0 6px 6px;
 	bottom: -31px;
 	height: 40px;
@@ -171,7 +170,7 @@ body.fixed-deck {
 	box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
 #thewire-header.extended .thewire-button {
-	background-color: white;
+	background: white;
 	border: 1px solid #999999;
 	box-shadow: none;
 	height: 21px;
@@ -201,7 +200,7 @@ body.fixed-deck {
 	width: 97px;
 }
 #thewire-header.extended > .thewire-button:hover {
-	background-color: #FF3019;
+	background: #FF3019;
 	border: 1px solid #CF0404;
 	color: white;
 }
@@ -240,7 +239,7 @@ body.fixed-deck {
 	right: 142px;
 }
 #thewire-header .responseTo {
-	background-color: #FFC;
+	background: #FFC;
 	color: #666;
 	margin: 0 2px;
 	padding: 2px 5px;
@@ -253,9 +252,72 @@ body.fixed-deck {
 	font-style: italic;
 }
 #thewire-header .responseTo:hover {
-	background-color: #FDD;
+	background: #FDD;
 	color: red;
 	cursor: pointer;
+}
+#linkbox {
+	border-top: 1px solid #DEDEDE;
+	margin: 0 1px;
+}
+#linkbox .elgg-menu {
+	margin-right: -5px;
+}
+#linkbox .image-wrapper {
+	height: 80px;
+	line-height: 80px;
+	overflow: hidden;
+	width: 80px;
+	background: #DEDEDE;
+	float: left;
+	margin: 6px;
+	position: relative;
+}
+#linkbox .elgg-image {
+	margin: 0 5px 0 -6px;
+	background: white;
+	position: absolute;
+	max-height: 460px;
+	overflow: auto;
+}
+#linkbox .elgg-image:hover {
+	z-index: 7004;
+	box-shadow: 0 0 4px #CCC;
+	cursor: pointer;
+}
+#linkbox .elgg-image + .elgg-body {
+	margin-left: 90px;
+	min-height: 87px;
+}
+#linkbox li.image-wrapper {
+	display: none;
+}
+#linkbox div.image-wrapper:before {
+	content: "\2715";
+	position: absolute;
+	color: transparent;
+	z-index: 10000;
+	font-size: 6em;
+	width: 80px;
+	background: transparent;
+	left: 0;
+}
+#linkbox div.image-wrapper:active:before {
+	font-size: 7em;
+}
+#linkbox div.image-wrapper:hover:before, #linkbox div.image-wrapper.noimg:before {
+	color: red;
+	background: rgba(0, 0, 0, 0.3);
+}
+#linkbox li.image-wrapper:hover {
+	-webkit-box-shadow: 0 0 4px 4px #4690D6;
+	box-shadow: 0 0 4px 4px #4690D6;
+}
+#linkbox .elgg-image:hover li {
+	display: block;
+}
+#linkbox .link_name:hover, #linkbox .link_description:hover {
+	background: #e4ecf5;
 }
 
 
@@ -270,7 +332,7 @@ body.fixed-deck {
 	height: 25px;
 }
 #thewire-network .selected-profile {
-	background-color: white;
+	background: white;
 	border: medium none;
 	border-radius: 4px 4px 4px 4px;
 	height: 23px;
@@ -302,7 +364,7 @@ body.fixed-deck {
 	position: relative;
 }
 #thewire-network .network {
-	background-color: white;
+	background: white;
 	border: 1px solid #666666;
 	height: 10px;
 	left: 17px;
@@ -315,7 +377,7 @@ body.fixed-deck {
 	background-size: 10px 10px;
 }
 #thewire-network .net-profile.twitter .network {
-	background-color: #00ACED;
+	background: #00ACED;
 	border: 1px solid #00ACED;
 	color: white;
 	font-size: 18px;
@@ -323,7 +385,7 @@ body.fixed-deck {
 	text-indent: -1px;
 }
 #thewire-network .net-profile.facebook .network {
-	background-color: #3B5998;
+	background: #3B5998;
 	border: 1px solid #3B5998;
 	color: white;
 	font-size: 23px;
@@ -331,13 +393,16 @@ body.fixed-deck {
 	text-indent: -2px;
 }
 #thewire-network .elgg-icon-delete {
-	background-color: rgba(0, 0, 0, 0.3);
+	background: rgba(0, 0, 0, 0.3);
 	height: 15px;
 	left: -2px;
 	position: absolute;
-	text-indent: 1.5px;
+	text-indent: 1px;
 	width: 15px;
 	cursor: pointer;
+}
+#thewire-network .elgg-icon-delete:active {
+	background: rgba(0, 0, 0, 0.6);
 }
 #thewire-network .elgg-icon-delete:before {
 	color: red;
@@ -400,7 +465,7 @@ body.fixed-deck {
 	z-index: 0;
 }
 #thewire-network .non-pinned {
-	background-color: #4690D6;
+	background: #4690D6;
 	border-radius: 0 0 8px 8px;
 	-webkit-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.3);
@@ -423,7 +488,7 @@ body.fixed-deck {
 #thewire-network .helper div {
 	margin-top: -7px;
 	padding: 8px 0 3px;
-	background: none repeat scroll 0 0 #F0F0F0;
+	background: #F0F0F0;
 	box-shadow: 0 2px 2px 0 #1F2E3D inset;
 	color: #999999;
 	font-size: 0.85em;
@@ -520,16 +585,16 @@ body.fixed-deck {
 	margin: 0;
 }
 .elgg-menu-deck-river > li {
-	background-color: white;
+	background: white;
 }
 .elgg-menu-deck-river > li > a:first-letter {
 	text-transform: uppercase;
 }
 .elgg-menu-deck-river > .elgg-state-selected {
-	background-color: #EEE;
+	background: #EEE;
 }
 .elgg-menu-deck-river > .elgg-state-selected > a {
-	background-color: #EEE;
+	background: #EEE;
 }
 .elgg-menu-deck-river > .elgg-menu-item-refresh-all {
 	border-radius: 5px 0 0 0;
@@ -561,7 +626,7 @@ body.fixed-deck {
 .elgg-menu-deck-river > .elgg-menu-item-plus-column:hover,
 .elgg-menu-deck-river > .elgg-menu-item-refresh-all:hover > a,
 .elgg-menu-deck-river > .elgg-menu-item-plus-column:hover > a {
-	background-color: #EEE;
+	background: #EEE;
 }
 .column-deletable, .delete-tab {
 	float: left;
@@ -628,7 +693,7 @@ li.elgg-menu-item-arrow-left {
 .column-header {
 	cursor: move;
 	height: 30px;
-	background-color: #EEE;
+	background: #EEE;
 	overflow: hidden;
 	position: relative;
 }
@@ -719,7 +784,7 @@ li.elgg-menu-item-arrow-left {
 	opacity: 0;
 }
 .moreItem {
-	background-color: #EEE;
+	background: #EEE;
 	cursor: pointer;
 	text-align: center;
 	position: relative;
@@ -792,7 +857,7 @@ li.elgg-menu-item-arrow-left {
 	display: block;
 }
 .elgg-submenu li:hover {
-	background-color: #EEE;
+	background: #EEE;
 }
 .elgg-submenu li .elgg-icon {
 	vertical-align: text-top;
@@ -839,7 +904,7 @@ li.elgg-menu-item-arrow-left {
 	content: "<?php echo elgg_echo('deck_river:thread:hide'); ?>";
 }
 .elgg-list-item.responseAt {
-	background-color: #FFFFCC !important;
+	background: #FFFFCC !important;
 }
 
 
@@ -859,7 +924,7 @@ li.elgg-menu-item-arrow-left {
 	height: 270px;
 }
 .deck-popup > .elgg-head {
-	background-color: #EEE;
+	background: #EEE;
 	margin: -5px -5px 5px;
 	padding-bottom: 5px;
 	cursor: move;
@@ -1032,10 +1097,12 @@ div.user-info-popup.ui-draggable-dragging, div.group-info-popup.ui-draggable-dra
 	box-shadow: 4px 4px 4px #999;
 	cursor: crosshair;
 	line-height: 0.1;
+	pointer-events: none;
 }
 a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-dragging, .hashtag-info-popup.ui-draggable-dragging, a.twitter-user-info-popup.ui-draggable-dragging {
 	text-shadow: 4px 4px 4px #999;
 	cursor: crosshair;
+	pointer-events: none;
 }
 .user-info-popup.canDrop:before, .group-info-popup.canDrop:before, .hashtag-info-popup.canDrop:before, .twitter-user-info-popup.canDrop:before {
 	background: #51C600;

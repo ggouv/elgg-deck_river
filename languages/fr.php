@@ -25,6 +25,7 @@ $french = array(
 	'responseToHelper:text' => "En réponse à %s : <span>%s</span>",
 	'responseToHelper:delete' => "Ne plus répondre à %s",
 	'deck_river:column:gotop' => "⬆ %s éléments non-lus ⬆",
+	'deck_river:linkbox:hidepicture' => "Cliquez pour ne pas ajouter d'image",
 
 	'deck_river:helper:friends' => "<span class='gwf'>w</span><br/>Vous n'avez pas d'abonnement ou les personnes que vous suivez n'ont aucune activité.<br/><br/><a href='" . elgg_get_site_url() . "members'>Suivez des personnes</a> dont l'activité pourrait vous intéresser ou cherchez des personnes <a href='" . elgg_get_site_url() . "groups/members/%s'>de votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/members/%s'>votre département</a>.",
 	'deck_river:helper:mine' => "<span class='gwf'>A</span><br/><a href='#' onclick='$(\"#thewire-textarea\").focus();'>Dites bonjour à tout le monde</a> en envoyant un message de bienvenue, votre humeur ou votre motivation...",
@@ -36,8 +37,8 @@ $french = array(
 	'deck_river:helper:nothing' => "Aucun élément à afficher.",
 
 	'usersettings:authorize:applications' => "Vos réseaux connectés",
-	'deck_river:account:createdby' => "Compte Twitter connecté à %s par %s ",
-	'deck_river:account:deleteconfirm' => "Êtes-vous sur de vouloir supprimer ce compte Twitter ?",
+	'deck_river:account:createdby' => "Compte %s connecté à %s par %s ",
+	'deck_river:account:deleteconfirm' => "Êtes-vous sur de vouloir supprimer ce compte ?",
 
 	// wire network
 	'deck-river:add:network' => "Ajouter un réseau",
@@ -183,6 +184,9 @@ $french = array(
 	'deck_river:twitter:error:215' => "Il y a une erreur d'identification avec Twitter.", // "Bad authentication data"
 	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", // "Rate limit exceeded",
 
+	//Facebook
+	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
+	'deck_river:facebook:posted:error' => "Erreur avec l'API de Facebook",
 
 );
 

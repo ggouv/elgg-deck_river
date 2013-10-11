@@ -6,6 +6,10 @@
 // don't filter since we strip and filter escapes some characters
 $body = get_input('body', '', false);
 $networks = (array) get_input('networks');
+$link_url = get_input('link_url', false);
+$link_name = get_input('link_name', false);
+$link_description = get_input('link_description', false);
+$link_picture = get_input('link_picture', false);
 
 $user = elgg_get_logged_in_user_entity();
 
@@ -23,14 +27,13 @@ if (empty($body)) {
 		return false;
 	}
 
-	// only 140 characters allowed
-	$body = elgg_substr($body, 0, 140);
+	// no html tags allowed so we escape
+	$body = htmlspecialchars($body, ENT_NOQUOTES, 'UTF-8');
 
 	foreach ($networks as $network) {
 		if ($network == $user->getGUID()) { // network is ggouv
 
-			// no html tags allowed so we escape
-			$body = htmlspecialchars($body, ENT_NOQUOTES, 'UTF-8');
+			$body = elgg_substr($body, 0, 140); // only 140 characters allowed
 
 			$parent_guid = (int) get_input('elgg_parent', false);
 			$params = array(
@@ -76,6 +79,8 @@ if (empty($body)) {
 				$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
 				$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $network_entity->oauth_token, $network_entity->oauth_token_secret);
 
+				$body = elgg_substr($body, 0, 140); // only 140 characters allowed
+
 				// parse message to replace !group by #group
 				$body = preg_replace(
 					'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
@@ -113,6 +118,40 @@ if (empty($body)) {
 						register_error(elgg_echo($key));
 					}
 				}
+			}
+
+			// facebook
+			if ($network_entity->getSubtype() == 'facebook_account' && $network_entity->getOwnerGUID() == $user->getGUID()) {
+				elgg_load_library('deck_river:facebook_sdk');
+				$facebook = new Facebook(array(
+					'appId'  => elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river'),
+					'secret' => elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck_river')
+				));
+				$facebook->setAccessToken($network_entity->oauth_token);
+
+				$params = array(
+					'message' => $body
+				);
+				if ($link_url && !in_array($link_url, array('null', 'undefined'))) {
+					$params['link'] = $params['caption'] = $link_url;
+				}
+				if ($link_name && !in_array($link_name, array('null', 'undefined'))) $params['name'] = $link_name;
+				if ($link_description && !in_array($link_description, array('null', 'undefined'))) $params['description'] = $link_description;
+				if ($link_picture && !in_array($link_picture, array('null', 'undefined'))) $params['picture'] = $link_picture;
+				//'privacy' => json_encode(array('value' => 'EVERYONE')) // https://developers.facebook.com/docs/reference/api/privacy-parameter/
+
+				try {
+					$result = $facebook->api($network_entity->user_id . '/feed', 'post', $params);
+				} catch(FacebookApiException $e) {
+					$result = json_decode($e);
+				}
+
+				if ($result['id']) {
+					system_message(elgg_echo('deck_river:facebook:posted', array("https://facebook.com/{$result['id']}")));
+				} else {
+					register_error(elgg_echo('deck_river:facebook:posted:error'));
+				}
+
 			}
 		}
 	}

@@ -89,69 +89,6 @@ elgg.deck_river.init = function() {
 		}
 	});
 
-	$('#thewire-textarea').focusin(function() {
-		var optionsHeight = $('#thewire-header').addClass('extended').find('.options').height();
-		$('#thewire-header').height(optionsHeight+117);
-		$('#thewire-textarea-border').height(optionsHeight+120);
-	}).droppable({
-		accept: '.user-info-popup, .group-info-popup, .hashtag-info-popup, .twitter-user-info-popup',
-		drop: function(e, ui) {
-			var txt = prep = '',
-				uih = $(ui.helper);
-
-			if (uih.hasClass('user-info-popup') || uih.hasClass('twitter-user-info-popup')) prep = '@';
-			if (uih.hasClass('group-info-popup')) prep = '!';
-			elgg.deck_river.insertInThewire(prep + $(ui.helper).attr('title'));
-		},
-		over: function(e, ui) {
-			ui.helper.addClass('canDrop');
-		},
-		out: function(e, ui) {
-			ui.helper.removeClass('canDrop');
-		}
-	});
-
-	// networks
-	$('#thewire-network .elgg-icon-delete').die().live('click', function(e) {
-		var net_input = $(this).closest('.net-profile').find('input');
-		if ($(this).hasClass('hidden')) {
-			net_input.attr('name', '_networks[]');
-			$(this).removeClass('hidden');
-		} else {
-			net_input.attr('name', 'networks[]');
-			$(this).addClass('hidden');
-		}
-		e.stopPropagation();
-	});
-	$('#thewire-network .more_networks, #thewire-network .selected-profile').die().live('click', function(e) {
-		$('#thewire-network').toggleClass('extended');
-		e.stopPropagation();
-	});
-	$('#thewire-network .pin').die().live('click', function() {
-		var netProfile = $(this).closest('.net-profile');
-		elgg.action('deck_river/network/pin', {
-			data: {
-				network: netProfile.find('input').val()
-			},
-			success: function (response) {
-				if (response.output) {
-					netProfile.toggleClass('pinned');
-				}
-			},
-			error: function (response) {
-				elgg.register_error(response);
-			}
-		});
-	});
-	elgg.deck_river.move_account();
-
-	$('html').die().live('click', function(e) { //Hide thewire menu if visible
-		if (!$(e.target).closest('.elgg-form-deck-river-wire-input').length) {
-			$('#thewire-network').removeClass('extended');
-			$('#thewire-header').height(33).removeClass('extended');
-		}
-	});
-
 	$('.add_social_network').die().live('click', function() {
 		elgg.deck_river.createPopup('add_social_network', elgg.echo('deck-river:add:network'), function() {
 			$('#add_social_network').find('.elgg-icon-push-pin').remove();
@@ -166,66 +103,6 @@ elgg.deck_river.init = function() {
 	$('#authorize-twitter, #authorize-facebook').die().live('click', function(){
 		var oauthWindow = window.open($(this).attr('href'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
 		return false;
-	});
-
-	// thewire live post
-	$('#thewire-submit-button').die().live('click', function(e){
-		var thewireForm = $(this).closest('form');
-		if ($('#thewire-textarea').val() == '') { // no text
-			elgg.register_error(elgg.echo('deck_river:message:blank'));
-		} else if (thewireForm.find('input[name="networks[]"]').length == 0) { // no network actived
-			elgg.register_error(elgg.echo('deck_river:nonetwork'));
-		} else if (thewireForm.find('input[name="networks[]"]').length > 5) { // too network ?
-			elgg.register_error(elgg.echo('deck_river:toonetwork'));
-		} else {
-			thisSubmit = this;
-			if ($.data(this, 'clicked')) { // Prevent double-click
-				return false;
-			} else {
-				//$.data(this, 'clicked', true);
-				$('#submit-loader').removeClass('hidden');
-				var dataObject = thewireForm.serializeObject(),
-					networksCount = dataObject.networks.length;
-
-				$.each(dataObject.networks, function(i, e) {
-					var dataString = dataObject;
-					// format data for each network
-					dataString.networks = [e];
-					dataString = $.param(dataString);
-
-					elgg.action('deck_river/add_message', {
-						data: dataString,
-						success: function(json) {
-							if (networksCount == 1) {
-								$.data(thisSubmit, 'clicked', false);
-								$('#submit-loader').addClass('hidden');
-								$("#thewire-characters-remaining span").html('0');
-								$('#thewire-textarea').val('').closest('.elgg-form').find('.responseTo').addClass('hidden').next('.parent').val('').removeAttr('name');
-								$('.elgg-list-item').removeClass('responseAt');
-								$('#thewire-header').height(33).removeClass('extended');
-								$('#thewire-network').removeClass('extended');
-							} else {
-								networksCount--;
-							}
-						},
-						error: function(){
-							$('#submit-loader').addClass('hidden');
-							$.data(thisSubmit, 'clicked', false);
-						}
-					});
-				});
-			}
-		}
-		e.preventDefault();
-		return false;
-	});
-
-	// response to a wire post
-	$('#thewire-header .responseTo').die().live('click', function() {
-		$(this).addClass('hidden').next('.parent').val('').removeAttr('name');
-		$('.tipsy').remove();
-		$('#thewire-header, #thewire-textarea-border').css({height: '+=-22'});
-		$('.elgg-list-item').removeClass('responseAt');
 	});
 
 	// refresh column, use 'live' for new column
@@ -329,44 +206,6 @@ elgg.deck_river.init = function() {
 elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
 
 
-/**
- * Counter for thewire area
- */
-elgg.provide('elgg.thewire');
-
-elgg.thewire.init = function() {
-	$("#thewire-textarea").live('keydown', function() {
-		elgg.thewire.textCounter($(this), $("#thewire-characters-remaining span"), 140);
-	});
-	$("#thewire-textarea").live('keyup', function() {
-		elgg.thewire.textCounter($(this), $("#thewire-characters-remaining span"), 140);
-	});
-}
-
-/**
- * Update the number of characters with every keystroke
- *
- * @param {Object}  textarea
- * @param {Object}  status
- * @param {integer} limit
- * @return void
- */
-elgg.thewire.textCounter = function(textarea, status, limit) {
-	var remaining_chars = textarea.val().length;
-	status.html(remaining_chars);
-
-	if (remaining_chars > limit) {
-		status.css("color", "#D40D12");
-		$(".thewire-button").addClass('elgg-state-disabled').children().attr('disabled', 'disabled');
-	} else {
-		status.css("color", "");
-		$(".thewire-button").removeClass('elgg-state-disabled').children().removeAttr('disabled', 'disabled');
-	}
-};
-elgg.register_hook_handler('init', 'system', elgg.thewire.init);
-
-
-
 
 /**
  * Call settings of a column in popup
@@ -456,7 +295,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				if ( $(this).val() != 'All' ) cs.find('.filter .elgg-input-checkbox[value="All"]').removeAttr('checked');
 			});
 
-			$(".elgg-foot .elgg-button").click(function(e) {
+			$(".elgg-foot .elgg-button").click(function() {
 				var submitType = $(this).attr('name'),
 					CSForm = $(this).closest('.deck-river-form-column-settings');
 
@@ -503,46 +342,11 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 						return false;
 					}
 				});
-				e.preventDefault();
 				return false;
 			});
 		}
 	});
 };
-
-
-
-/**
- * Initiate draggable and droppable for net-profile in thewire network
- */
-elgg.deck_river.move_account = function() {
-	$('#thewire-network .net-profile').draggable({
-		revert: true,
-		revertDuration: 0,
-		zIndex: 9999
-	});
-	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
-		accept:				 $('.net-profile').not('.ggouv'),
-		activeClass:			'ui-state-highlight',
-		hoverClass:			 'ui-state-active',
-		drop: function(e, ui) {
-			$('#thewire-network *').removeClass('ui-start');
-			if ($(this).hasClass('selected-profile')) {
-				if ($(this).find('input[name="networks[]"]').length < 5) {
-					ui.draggable.appendTo($(this)).find('input').attr('name', 'networks[]');
-					ui.draggable.find('.elgg-icon-delete').addClass('hidden');
-				} else {
-					elgg.register_error('deck_river:error:pin:too_much');
-				}
-			} else {
-				ui.draggable.appendTo($(this)).find('input').attr('name', '_networks[]');
-			}
-		},
-		activate: function(e, ui) {
-			ui.draggable.parent().addClass('ui-start');
-		}
-	});
-}
 
 
 
@@ -755,16 +559,16 @@ elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
  * @return {[type]}      [description]
  */
 elgg.deck_river.insertInThewire = function(text) {
-	var txtarea = $('#thewire-textarea'),
-		txtareaVal = txtarea.val(),
-		strPos = txtarea.getCursorPosition(),
-		front = (txtareaVal).substring(0,strPos),
-		back = (txtareaVal).substring(strPos,txtareaVal.length);
+	var $twT = $('#thewire-textarea'),
+		twTval = $twT.val(),
+		strPos = $twT.getCursorPosition(),
+		front = (twTval).substring(0,strPos),
+		back = (twTval).substring(strPos,twTval.length);
 
 	if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) text = ' ' + text;
 	if (back.substring(0, 1) != ' ' && back.length != 0) text = text + ' ';
-	txtarea.val(front + text + back).focus().setCursorPosition(strPos + text.length);
-	elgg.thewire.textCounter(txtarea, $("#thewire-characters-remaining span"), 140);
+	$twT.val(front + text + back).focus().setCursorPosition(strPos + text.length);
+	elgg.thewire.textCounter();
 };
 
 

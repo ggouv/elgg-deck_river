@@ -19,6 +19,7 @@ $english = array(
 	'deck-river:clean_url' => "Erase",
 	'responseToHelper:text' => "Reply to %s : <span>%s</span>",
 	'responseToHelper:delete' => "Stop reply to %s",
+	'deck_river:linkbox:hidepicture' => "Click to not join picture",
 
 	// thewire network
 	'deck-river:add:network' => "Add a network",
@@ -28,6 +29,10 @@ $english = array(
 	'deck-river:network:pin' => "<div style=\"text-align: left;\">Épingler<br><span class=\"elgg-text-help\">Ce compte restera toujours actifs.<br/>Vous pourrez le désactiver temporairement en cliquant dessus.</span></div>",
 	'deck-river:add:network:helper' => "<div style=\"text-align: left;\">Au dessus :<br><span class=\"elgg-text-help\">Vos comptes actifs vers lesquels vos messages seront envoyés.</span>Dessous :<br><span class=\"elgg-text-help\">Vos comptes enregistrés et inactifs.</span></div>",
 	'deck-river:add:network:slide' => "<span>↕</span> Glissez pour ajouter ou enlever <span>↕</span>",
+
+	'usersettings:authorize:applications' => "Your connected networks",
+	'deck_river:account:createdby' => "%s account connected at %s by %s ",
+	'deck_river:account:deleteconfirm' => "are you sure to delete this account ?",
 
 	// river menu
 	'replyall' => "Reply to all",
@@ -139,7 +144,11 @@ $english = array(
 	'deck_river:twitter:usersettings:request' => "You can add Twitter feed...<br/><a id=\"authorize-twitter\" type=\"submit\" data-url=\"%s\" class=\"elgg-button elgg-button-action\">authorize %s</a>",
 	'deck_river:twitter:your_account' => 'Your Twitter account linked with %s:',
 	'deck_river:twitter:feed:search:tweets' => "Search word or hashtag",
-	'deck_river:twitter:feed:users:search' => "Search users"
+	'deck_river:twitter:feed:users:search' => "Search users",
+
+	//Facebook
+	'deck_river:facebook:posted' => "Your message has been posted on Facebook. <a href=\"%s\" target=\"_blank\">See the message</a>.",
+	'deck_river:facebook:posted:error' => "Error with Facebook API",
 
 );
 

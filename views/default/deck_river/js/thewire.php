@@ -1,12 +1,307 @@
+
 /**
- * [scrapWebpage description]
+ * Counter for thewire area
+ */
+elgg.provide('elgg.thewire');
+
+elgg.thewire.init = function() {
+	var linkParsed = null;
+
+	$(document).mousedown(function(e) {
+		$(document).bind('mousemove.thewire', function(e){
+			if ($(e.target).attr('id') == 'thewire-textarea') {
+				elgg.thewire.resize();
+				$('.ui-draggable-dragging').addClass('canDrop');
+			}
+		});
+	})
+	.mouseup(function() {
+		$(document).unbind('mousemove.thewire');
+	});
+	$('#thewire-textarea').focusin(function() {
+		elgg.thewire.resize();
+	}).droppable({
+		accept: '.user-info-popup, .group-info-popup, .hashtag-info-popup, .twitter-user-info-popup',
+		drop: function(e, ui) {
+			var txt = prep = '',
+				uih = $(ui.helper);
+
+			if (uih.hasClass('user-info-popup') || uih.hasClass('twitter-user-info-popup')) prep = '@';
+			if (uih.hasClass('group-info-popup')) prep = '!';
+			elgg.deck_river.insertInThewire(prep + $(ui.helper).attr('title'));
+		},
+		over: function(e, ui) {
+			ui.helper.addClass('canDrop');
+		},
+		out: function(e, ui) {
+			ui.helper.removeClass('canDrop');
+		}
+	}).live('keyup', function() {
+		var $twF = $(this).closest('form'),
+			$lb = $('#linkbox'),
+			urls = elgg.thewire.textCounter();
+
+		// scrap first url
+		// We check before if there is network which need scrapping with data-scrap
+		if (urls && $twF.find('input[name="networks[]"][data-scrap]').length && linkParsed != urls[0]) {
+			linkParsed = urls[0];
+			elgg.thewire.scrapWebpage(urls[0], {
+				beforeSend: function() {
+					$lb.removeClass('hidden');
+					elgg.thewire.resize();
+				},
+				success: function(data) {
+					if (data) {
+						if (!data.title || elgg.isNull(data.title)) data.title = data.url;
+						data.title = $('<div>').html(data.title).text(); // decode html entities
+						if (data.metatags) {
+							$.grep(data.metatags, function(e) {
+								if (e[0] == 'description') data.description = $('<div>').html(e[1]).text();
+							});
+						}
+						data.mainImage = data.images[0];
+						data.images.shift();
+						data.src = function() {
+							return this.src;
+						};
+
+						$lb.html(Mustache.render($('#linkbox-template').html(), data));
+						elgg.thewire.resize();
+
+						$lb.find('.elgg-menu .elgg-icon-delete').click(function() {
+							$lb.addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
+							elgg.thewire.resize();
+						});
+
+						$lb.find('li.image-wrapper').click(function() {
+							var $ei = $('#linkbox .elgg-image'),
+								first = $ei.children().first(),
+								firstHtml = first.html();
+
+							first.html(this.innerHTML);
+							$(this).html(firstHtml);
+							return false;
+						});
+						$lb.find('div.image-wrapper').die().live('click', function() {
+							$(this).toggleClass('noimg');
+							return false;
+						});
+
+					} else {
+						$lb.html(elgg.echo('error'));
+					}
+				},
+				error: function() {
+					console.log('erreur');
+				}
+			});
+		}
+	});
+	$('html').die().live('click', function(e) { //Hide thewire menu if visible
+		if (!$(e.target).closest('.elgg-form-deck-river-wire-input').length) {
+			elgg.thewire.resize('close');
+		}
+	});
+	$('.elgg-form-deck-river-wire-input *[contenteditable="true"]').live('keyup', function() {
+		elgg.thewire.resize();
+	});
+
+	// response to a wire post
+	$('#thewire-header .responseTo').die().live('click', function() {
+		$(this).addClass('hidden').next('.parent').val('').removeAttr('name');
+		$('.tipsy').remove();
+		$('.elgg-list-item').removeClass('responseAt');
+		elgg.thewire.resize();
+	});
+
+	// networks
+	$('#thewire-network .elgg-icon-delete').die().live('click', function() {
+		var net_input = $(this).closest('.net-profile').find('input');
+		if ($(this).hasClass('hidden')) {
+			net_input.attr('name', '_networks[]');
+			$(this).removeClass('hidden');
+		} else {
+			net_input.attr('name', 'networks[]');
+			$(this).addClass('hidden');
+		}
+		return false;
+	});
+	$('#thewire-network .more_networks, #thewire-network .selected-profile').die().live('click', function() {
+		$('#thewire-network').toggleClass('extended');
+		return false;
+	});
+	$('#thewire-network .pin').die().live('click', function() {
+		var netProfile = $(this).closest('.net-profile');
+		elgg.action('deck_river/network/pin', {
+			data: {
+				network: netProfile.find('input').val()
+			},
+			success: function (response) {
+				if (response.output) {
+					netProfile.toggleClass('pinned');
+				}
+			},
+			error: function (response) {
+				elgg.register_error(response);
+			}
+		});
+		return false;
+	});
+	elgg.thewire.move_account();
+
+
+	// thewire live post
+	$('#thewire-submit-button').die().live('click', function(){
+		var thewireForm = $(this).closest('form');
+		if ($('#thewire-textarea').val() == '') { // no text
+			elgg.register_error(elgg.echo('deck_river:message:blank'));
+		} else if (thewireForm.find('input[name="networks[]"]').length == 0) { // no network actived
+			elgg.register_error(elgg.echo('deck_river:nonetwork'));
+		} else if (thewireForm.find('input[name="networks[]"]').length > 5) { // too network ?
+			elgg.register_error(elgg.echo('deck_river:toonetwork'));
+		} else {
+			thisSubmit = this;
+			if ($.data(this, 'clicked')) { // Prevent double-click
+				return false;
+			} else {
+				$.data(this, 'clicked', true);
+				$('#submit-loader').removeClass('hidden');
+				var dataObject = thewireForm.serializeObject(),
+					networksCount = dataObject.networks.length;
+
+				$.each(dataObject.networks, function(i, e) {
+					var dataString = dataObject;
+
+					dataString.networks = [e]; // format data for each network
+					dataString.link_name = thewireForm.find('.link_name').html();
+					dataString.link_description = thewireForm.find('.link_description').html();
+					dataString.link_picture = thewireForm.find('.link_picture').not('.noimg').children().attr('src');
+					dataString = $.param(dataString);
+
+					elgg.action('deck_river/add_message', {
+						data: dataString,
+						success: function(json) {
+							if (networksCount == 1) {
+								$.data(thisSubmit, 'clicked', false);
+								$('#submit-loader').addClass('hidden');
+								$("#thewire-characters-remaining span").html('0');
+								$('#thewire-textarea').val('').closest('.elgg-form').find('.responseTo').addClass('hidden').next('.parent').val('').removeAttr('name');
+								$('.elgg-list-item').removeClass('responseAt');
+								$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
+								elgg.thewire.resize('close');
+								linkParsed = null;
+							} else {
+								networksCount--;
+							}
+						},
+						error: function(){
+							$('#submit-loader').addClass('hidden');
+							$.data(thisSubmit, 'clicked', false);
+						}
+					});
+				});
+			}
+		}
+		return false;
+	});
+
+};
+elgg.register_hook_handler('init', 'system', elgg.thewire.init);
+
+
+/**
+ * Resize thewire box
+ * @param  {[type]} action 'open', 'close' or a value
+ */
+elgg.thewire.resize = function(action) {
+	var action = action || 0,
+		$twH = $('#thewire-header'),
+		$twTB = $('#thewire-textarea-border'),
+		$twN = $('#thewire-network');
+
+	if (action == 'close') {
+		$twH.add($twTB).css({height: 33});
+		$twH.add($twN).removeClass('extended');
+	} else {
+		$twH.add($twTB).css({height: ($twH.addClass('extended').find('.options').height()+117)});
+	}
+};
+
+
+
+/**
+ * Update the number of characters with every keystroke
+ *
+ * @return array of urls in text
+ */
+elgg.thewire.textCounter = function() {
+	var $twT = $('#thewire-textarea'),
+		$twCR = $('#thewire-characters-remaining span'),
+		$twF = $twT.closest('form'),
+		$networks = $twF.find('input[name="networks[]"]'),
+		expression = /http:\/\/[-a-zA-Z0-9_.~]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+,.~#?&//=]*)?/gi,
+		regex = new RegExp(expression),
+		urls = $twT.val().match(regex),
+		remaining_chars = $twT.val().length;
+
+	$twCR.html(remaining_chars);
+
+	if (remaining_chars > 140) {
+		$twCR.css("color", "#D40D12");
+		$(".thewire-button").addClass('elgg-state-disabled').children().attr('disabled', 'disabled');
+	} else {
+		$twCR.css("color", "");
+		$(".thewire-button").removeClass('elgg-state-disabled').children().removeAttr('disabled', 'disabled');
+	}
+
+	return urls;
+};
+
+
+
+/**
+ * Initiate draggable and droppable for net-profile in thewire network
+ */
+elgg.thewire.move_account = function() {
+	$('#thewire-network .net-profile').draggable({
+		revert: true,
+		revertDuration: 0,
+		zIndex: 9999
+	});
+	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
+		accept:      $('.net-profile').not('.ggouv'),
+		activeClass: 'ui-state-highlight',
+		hoverClass:  'ui-state-active',
+		drop: function(e, ui) {
+			$('#thewire-network *').removeClass('ui-start');
+			if ($(this).hasClass('selected-profile')) {
+				if ($(this).find('input[name="networks[]"]').length < 5) {
+					ui.draggable.appendTo($(this)).find('input').attr('name', 'networks[]');
+					ui.draggable.find('.elgg-icon-delete').addClass('hidden');
+				} else {
+					elgg.register_error('deck_river:error:pin:too_much');
+				}
+			} else {
+				ui.draggable.appendTo($(this)).find('input').attr('name', '_networks[]');
+			}
+		},
+		activate: function(e, ui) {
+			ui.draggable.parent().addClass('ui-start');
+		}
+	});
+};
+
+
+
+/**
+ * Scrap a webpage and return matatags, images and links.
  * @param  [string]            url of the webpage to parse
  * @param  [object]            options
  * @return [object]            parsed datas
  */
-elgg.deck_river.scrapWebpage = function(url, options) {
+elgg.thewire.scrapWebpage = function(url, options) {
 	options = $.extend({
-					minSize: 250,                       // [string]            Title of the popup
+					minSize: 120,                       // [string]            Title of the popup
 					beforeSend: $.noop,                 // [function]          function will be executed just before request
 					success: $.noop,                    // [function]          function will be executed when success
 					error: $.noop,                      // [function]          function will be executed on error
@@ -20,6 +315,12 @@ elgg.deck_river.scrapWebpage = function(url, options) {
 		beforeSend: options.beforeSend,
 		success: function(response) {
 
+			// response.message is filled by scraper only if there is an error
+			if (response.message) {
+				options.success(false);
+				return false;
+			}
+
 			var Images = [],
 				imgsLength = response.images.length,
 				nbrLoads = 0,
@@ -30,132 +331,41 @@ elgg.deck_river.scrapWebpage = function(url, options) {
 							return (a.nDim > b.nDim) ? -1 : (a.nDim < b.nDim) ? 1 : 0;
 						});
 						// put og:image first
-						$.grep(response.metatags, function(e){
-							if (e[0] == 'og:image') Images.unshift({'src': e[1]});
-						});
+						if (response.metatags) {
+							$.grep(response.metatags, function(e){
+								if (e[0] == 'og:image') Images.unshift({'src': e[1]});
+							});
+						}
 						response.images = Images;
+
+						// Scrapping ended. We execute success function
 						options.success(response);
 					}
 				};
 
-			$.each(response.images, function(i, e) {
-				var img = new Image(),
-					iD = {};
+			if (imgsLength) {
+				$.each(response.images, function(i, e) {
+					var img = new Image(),
+						iD = {};
 
-				iD.src = img.src = e;
-				img.onload = function() {
-					iD.width = this.width;
-					iD.height = this.height;
-					iD.nDim = parseFloat(iD.width) * parseFloat(iD.height);
-					if (options.minSize != 0 && options.minSize <= iD.width && options.minSize <= iD.height) {
-						Images.push(iD);
-					} else if (options.minSize == 0) {
-						Images.push(iD);
-					}
-					imgLoaded(img);
-				};
-				img.onerror = function() {nbrLoads++;};
-			});
-
+					iD.src = img.src = e;
+					img.onload = function() {
+						iD.width = this.width;
+						iD.height = this.height;
+						iD.nDim = parseFloat(iD.width) * parseFloat(iD.height);
+						if (options.minSize != 0 && options.minSize <= iD.width && options.minSize <= iD.height) {
+							Images.push(iD);
+						} else if (options.minSize == 0) {
+							Images.push(iD);
+						}
+						imgLoaded(img);
+					};
+					img.onerror = function() {imgLoaded(img);};
+				});
+			} else {
+				options.success(response);
+			}
 		},
 		error: options.error
-	});
-};
-
-
-elgg.deck_river.scrapWebpageYQL = function(url) {
-	$.ajax({
-		url: 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from html where url="' + url + '" and xpath="*"') + '&callback=?',
-		type: 'get',
-		dataType: 'json',
-		success: function(data) {
-			// load the response into jquery element
-			// form tags are needed to get the entire html,head and body
-			var $foop = $('<form>' + data.results[0] + '</form>'),
-				output = {
-						metas: {},
-						imgs: [],
-						links: []
-					};
-console.log(data.results[0]);
-			// find meta tags
-			$.each($foop.find('meta[content]'), function(i, e) {
-				var name = $(e).attr('name');
-				if (name !== undefined) output.metas[name] = $(e).attr('content');
-			});
-
-			// find images bigger than 250x250
-			$.each($foop.find('img[src]'), function(i, e) {
-				var src = $(e).attr('src');
-				if (!/^https?:\/\//.test(src)) {
-					src = url + src;
-				}
-
-				var img = new Image();
-				img.src = src;
-				img.onload = function() {
-					if (this.width > 10 && this.height > 10) {
-						output.imgs.push(img.src);
-					}
-				}
-
-			});
-
-			// find links
-			$.each($foop.find('a[href]'), function(i, e) {
-				var href = $(e).attr('href');
-				if (/^https?:\/\//.test(href)) output.links.push(href);
-			});
-
-console.log(output, 'output');
-/*console.log(data, 'data');
-			// load the response into jquery element
-			// form tags are needed to get the entire html,head and body
-			$foop = $('<form>' + data.responseText + '</form>');
-			//console.log(data.responseText);
-
-			// find meta tags
-			$.each($foop.find("meta[content]"), function(i, e) {
-				lnk = $(e).attr("content");
-console.log(lnk);
-				//$('<option>' + lnk + '</option>').appendTo($('#meta'));
-			});
-
-			// find links
-			$.each($foop.find('a[href]'), function(i, e) {
-				lnk = $(e).attr("href");
-				console.log(lnk);
-				//$('<option>' + lnk + '</option>').appendTo($('#links'));
-			});
-
-			// find images bigger than 250x250
-			$.each($foop.find('img[src]'), function(i, e) {
-				src = $(e).attr("src");
-				if (src.indexOf('http://') == -1) {
-					src = url + src;
-				}
-
-				var img = new Image();
-				img.src = src;
-				img.onload = function() {
-					//alert(this.width + 'x' + this.height);
-					if (this.width > 250 && this.height > 250) {
-						console.log($(this));
-				//$(this).appendTo($('#images'));
-					}
-				}
-
-			});
-
-			// find contents of divs
-			$.each($foop.find('div'), function(i, e) {
-				mytext = $(e).children().remove().text();
-				//$('<div>'+mytext+'</div>').appendTo($('#divs'));
-			});*/
-
-		},
-		error: function(status) {
-			console.log("request error:"+ url);
-		}
 	});
 };

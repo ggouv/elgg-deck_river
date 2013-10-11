@@ -1,4 +1,34 @@
+<!-- Templates deck_river --><div class="hidden">
 
+
+<!-- Template for linkbox -->
+<script id="linkbox-template" type="text/template">
+	<div class="elgg-image-block clearfix">
+		{{#mainImage}}
+		<ul class="elgg-image">
+			<div class="link_picture image-wrapper center tooltip s t25 gwfb" title="<?php echo elgg_echo('deck_river:linkbox:hidepicture'); ?>">
+				<img height="80px" src="{{mainImage.src}}">
+			</div>
+			{{#images}}
+				<li class="image-wrapper center t25"><img height="80px" src="{{src}}"></li>
+			{{/images}}
+		</ul>
+		{{/mainImage}}
+		<div class="elgg-body pts">
+			<ul class="elgg-menu elgg-menu-entity elgg-menu-hz">
+				<span class="elgg-icon elgg-icon-delete link"></span>
+			</ul>
+			<div class="">
+				<h4 class="link_name pas mrl" contenteditable="true">{{title}}</h4>
+				<span class="elgg-subtext pls">
+					{{url}}
+					<input type="hidden" name="link_url" value="{{url}}">
+				</span>
+				<div class="link_description pas" contenteditable="true">{{description}}</div>
+			</div>
+		</div>
+	</div>
+</script>
 
 
 <!-- Template for popups -->
@@ -232,6 +262,8 @@
 			</div>
 		</div>
 </li></script>
+
+</div>
 
 
 

@@ -47,7 +47,7 @@ if ($view === 'in_network_box') {
 
 	$output = <<<HTML
 <div class="net-profile float mlm twitter$pinned">
-	<input type="hidden" value="{$account->getGUID()}" name="$input_name">
+	<input type="hidden" value="{$account->getGUID()}" name="$input_name" data-network="twitter">
 	<ul>
 		<span class="elgg-icon elgg-icon-delete pas hidden"></span>
 		<div class="elgg-module-popup hidden">
@@ -76,7 +76,7 @@ HTML;
 		'text' => $owner->name,
 		'is_trusted' => true,
 	));
-	$author_text = elgg_echo('deck_river:account:createdby', array(elgg_get_site_entity()->name, $owner_link));
+	$author_text = elgg_echo('deck_river:account:createdby', array('Twitter', elgg_get_site_entity()->name, $owner_link));
 	$date = elgg_view_friendly_time($account->time_created);
 
 	$access = elgg_view('output/access', array('entity' => $account));
