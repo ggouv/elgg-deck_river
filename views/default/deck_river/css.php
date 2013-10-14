@@ -1229,13 +1229,14 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 }
 
 /* applications page */
-.elgg-module-network .elgg-head h3 {
+.elgg-module-network.elgg-module-aside > .elgg-head h3 {
 	color: #555555;
-	font-size: 1.3em;
+	font-size: 2em;
+	margin-top: 5px;
 }
 .elgg-module-network .network-icon:before {
 	cursor: default;
-	font-size: 2.2em;
+	font-size: 2.5em;
 }
 
 /* popup add_social_network */

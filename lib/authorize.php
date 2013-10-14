@@ -14,21 +14,18 @@ function deck_river_get_networks_account($network, $user_guid = null, $user_id =
 	if (!$network) return false;
 	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
 
+	if ($network == 'all') $network = array('twitter_account', 'facebook_account');
+
 	$params = array(
 		'type' => 'object',
-		'subtype' => $network . '_account',
+		'subtype' => $network,
 		'owner_guid' => $user_guid,
 		'limit' => 0
 	);
 
-	if ($network == 'all') $params['subtype'] = array('twitter_account', 'facebook_account', 'fb_group_account');
-	if ($network == 'facebook') $params['subtype'] = array('facebook_account', 'fb_group_account');
-
 	if ($user_id) {
-		$meta_name = ($network == 'fb_group') ? 'group_id' : 'user_id';
-
 		$params = array_merge($params, array(
-			'metadata_name' => $meta_name,
+			'metadata_name' => 'user_id',
 			'metadata_value' => $user_id,
 		));
 	}
@@ -45,19 +42,20 @@ function deck_river_count_networks_account($network, $user_guid = null, $user_id
 	if (!$network) return false;
 	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
 
+	if ($network == 'all') $network = array('twitter_account', 'facebook_account');
+
 	$params = array(
 		'type' => 'object',
-		'subtype' => $network . '_account',
+		'subtype' => $network,
 		'owner_guid' => $user_guid,
+		'limit' => 0,
 		'count' => true
 	);
-
-	if ($network == 'all') $params['subtype'] = array('twitter_account', 'facebook_account', 'fb_group_account');
 
 	if ($user_id) {
 		$params = array_merge($params, array(
 			'metadata_name' => 'user_id',
-			'metadata_value' => $user_id
+			'metadata_value' => $user_id,
 		));
 	}
 
@@ -96,7 +94,7 @@ function deck_river_twitter_authorize() {
 	$token = $twitterObj->getAccessToken();
 
 	// make sure don't register twice this twitter account for this user.
-	if (deck_river_get_networks_account('twitter', elgg_get_logged_in_user_guid(), $token->user_id)) {
+	if (deck_river_get_networks_account('twitter_account', elgg_get_logged_in_user_guid(), $token->user_id)) {
 		$error[] = elgg_echo('deck_river:network:authorize:already_done');
 	}
 
@@ -160,7 +158,7 @@ function deck_river_twitter_api_revoke($user_guid = null, $user_id = null, $echo
 
 		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
 
-		$entities = deck_river_get_networks_account('twitter', $user_guid, $user_id);
+		$entities = deck_river_get_networks_account('twitter_account', $user_guid, $user_id);
 		foreach ($entities as $entity) {
 			if ($entity->canEdit()) {
 				// remove account from pinned accounts
@@ -230,7 +228,7 @@ function deck_river_facebook_authorize() {
 	$fbUserProfile = $facebook->api('/me'); // Récupere l'utilisateur
 
 	// make sure don't register twice this facebook account for this user.
-	if (deck_river_get_networks_account('facebook', elgg_get_logged_in_user_guid(), $fbUserProfile['id'])) {
+	if (deck_river_get_networks_account('facebook_account', elgg_get_logged_in_user_guid(), $fbUserProfile['id'])) {
 		$error[] = elgg_echo('deck_river:network:authorize:already_done');
 	}
 
@@ -292,8 +290,7 @@ function deck_river_facebook_revoke($user_guid = null, $user_id = null, $echo = 
 
 		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
 
-		$entities = deck_river_get_networks_account('facebook', $user_guid, $user_id);
-				global $fb; $fb->info($entities, 'ent');
+		$entities = deck_river_get_networks_account('facebook_account', $user_guid, $user_id);
 
 		foreach ($entities as $entity) {
 			if ($entity->canEdit()) {
@@ -312,32 +309,5 @@ function deck_river_facebook_revoke($user_guid = null, $user_id = null, $echo = 
 	}
 }
 
-
-
-function deck_river_fb_group_revoke($user_guid = null, $user_id = null, $echo = true) {
-	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
-
-	if ($user_guid && elgg_instanceof(get_entity($user_guid), 'user')) {
-
-		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
-
-		$entities = deck_river_get_networks_account('fb_group', $user_guid, $user_id);
-
-		foreach ($entities as $entity) {
-			if ($entity->canEdit()) {
-				// remove account from pinned accounts
-				$arr = array_diff($user_deck_river_pinned_accounts, array($entity->getGUID()));
-				set_private_setting($user_guid, 'deck_river_pinned_accounts', serialize($arr));
-
-				// remove account
-				$entity->delete();
-			}
-		}
-
-		if ($echo && $entities) system_message(elgg_echo('deck_river:facebook:revoke:success'));
-	} else {
-		register_error(elgg_echo('deck_river:network:revoke:error'));
-	}
-}
 
 

@@ -362,7 +362,9 @@ elgg.deck_river.network_authorize = function(token) {
 	var p = window.opener || window; // function called from a popup window on from main window
 
 	if (token == false) {
-		p.elgg.register_error(p.elgg.echo('deck_river:network:authorize:already_done'));
+		$.each(authorizeError, function(i, e) {
+			p.elgg.register_error(e);
+		})
 		window.close();
 	} else {
 		var tn = token.network;

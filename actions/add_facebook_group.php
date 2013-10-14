@@ -17,7 +17,7 @@ $group_id = (string) get_input('group_id');
 $account = get_entity($account_guid);
 $user_guid = elgg_get_logged_in_user_guid();
 
-if (deck_river_get_networks_account('fb_group', $user_guid, $group_id)) {
+if (deck_river_get_networks_account('facebook_account', $user_guid, $group_id)) {
 	return false;
 }
 
@@ -38,9 +38,9 @@ if ($account && $account->getSubtype() == 'facebook_account' && $account->getOwn
 	if ($result) {
 
 		$fb_group_account = new ElggObject;
-		$fb_group_account->subtype = 'fb_group_account';
+		$fb_group_account->subtype = 'facebook_account';
 		$fb_group_account->access_id = 0;
-		$fb_group_account->group_id = $result['id'];
+		$fb_group_account->user_id = $result['id']; // we store in user_id but in facebook api this is group_id
 		$fb_group_account->name = $result['name'];
 		$fb_group_account->icon = $result['icon'];
 		$fb_group_account->oauth_token = $account->oauth_token;

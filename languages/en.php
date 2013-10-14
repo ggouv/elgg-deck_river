@@ -82,6 +82,7 @@ $english = array(
 	'deck_river:twitter:choose:account' => "Choose Twitter account for this column:",
 	'deck_river:facebook:groups' => "Facebook groups",
 	'deck_river:facebook:groups:choose' => "Click on a group to add it in yours accounts:",
+	'deck_river:facebook:account:add_groups' => "Add group from this account",
 
 	// user info popup
 	'deck-river:popups:close' => "Close this window",

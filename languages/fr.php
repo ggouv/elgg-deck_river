@@ -107,10 +107,11 @@ $french = array(
 	'deck_river:facebook:authorize:error' => "Le compte Facebook n'a pas pu être autorisé par Facebook.",
 	'deck_river:facebook:revoke:success' => "L'accès à Facebook a été supprimé.",
 	'deck_river:facebook:revoke:error' => "Le compte Facebook n'a pas pu être supprimé.",
-	'deck_river:facebook:columnsettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnements, vos listes, vos messages directs...",
-	'deck_river:facebook:add_network:request' => "<li>Vous pourrez suivre les flux vos abonnements, vos listes, vos messages directs... directement depuis %s !</li><li>Vous pourrez aussi envoyer vos tweets sans aller sur Facebook...</li>",
+	'deck_river:facebook:columnsettings:request' => "Vous pourrez ainsi ajouter des colonnes affichant l'activité de votre mur, vos groupes et vos pages...",
+	'deck_river:facebook:add_network:request' => "<li>Vous pourrez suivre l'activité de votre mur, vos groupes et vos pages... depuis le hub de communication !</li><li>Vous pourrez aussi publier sur Facebook directement depuis %s...</li>",
 	'deck_river:facebook:your_account' => "Votre profil Facebook lié à %s :",
 	'deck_river:facebook:choose:account' => "Choisissez le compte Facebook pour cette colonne :",
+	'deck_river:facebook:account:add_groups' => "Ajouter un groupe à partir de ce compte",
 
 	//info popups
 	'deck-river:popups:close' => "Fermer cette fenêtre",

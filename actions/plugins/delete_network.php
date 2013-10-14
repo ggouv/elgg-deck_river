@@ -23,9 +23,6 @@ if (!$network_guid) {
 		if ($network->getSubtype() == 'facebook_account') {
 			deck_river_facebook_revoke($user->getGUID(), $network->user_id);
 		}
-		if ($network->getSubtype() == 'fb_group_account') {
-			deck_river_fb_group_revoke($user->getGUID(), $network->group_id);
-		}
 	} else {
 		register_error(elgg_echo('deck_river:network:revoke:error'));
 	}
