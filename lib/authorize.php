@@ -76,10 +76,15 @@ function deck_river_count_networks_account($network, $user_guid = null, $user_id
  */
 function deck_river_twitter_authorize() {
 	$oauth_token = get_input('oauth_token', false);
+	$error = false;
 
 	if (!$oauth_token) {
-		register_error(elgg_echo('deck_river:network:authorize:error'));
-		return false;
+		$error[] = elgg_echo('deck_river:network:authorize:error');
+	}
+
+	// check if user has too many accounts
+	if (deck_river_count_networks_account('all') >= elgg_get_plugin_setting('max_accounts', 'elgg-deck_river')) {
+		$error[] = elgg_echo('deck_river:network:too_many_accounts', array(elgg_get_site_entity()->name));
 	}
 
 	// get token
@@ -92,10 +97,10 @@ function deck_river_twitter_authorize() {
 
 	// make sure don't register twice this twitter account for this user.
 	if (deck_river_get_networks_account('twitter', elgg_get_logged_in_user_guid(), $token->user_id)) {
-		echo elgg_view('page/elements/head');
-		echo elgg_view('page/elements/foot');
-		echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(false);});</script>';
-	} else {
+		$error[] = elgg_echo('deck_river:network:authorize:already_done');
+	}
+
+	if (!$error && $token) {
 
 		// get avatar
 		$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $token->oauth_token, $token->oauth_token_secret);
@@ -110,12 +115,11 @@ function deck_river_twitter_authorize() {
 		$twitter_account->oauth_token_secret = $token->oauth_token_secret;
 		$twitter_account->avatar = $userInfo->response['profile_image_url_https'];
 
-		echo elgg_view('page/elements/head');
-		echo elgg_view('page/elements/foot');
-
 		if ($twitter_account->save()) {
 			// trigger authorization hook
-			elgg_trigger_plugin_hook('authorize', 'elgg-deck_river', array('token' => $token));
+			elgg_trigger_event('authorize', 'deck_river:twitter', $twitter_account);
+
+			$twitter_account->time_created = time(); // Don't now why time_created is not filled
 
 			$account_output = array(
 				'network' => 'twitter',
@@ -125,12 +129,25 @@ function deck_river_twitter_authorize() {
 				'full' => '<li id="elgg-object-' . $twitter_account->getGUID() . '" class="elgg-item">' . elgg_view_entity($twitter_account) . '</li>'
 			);
 
+			// add head and foot for js script
+			echo elgg_view('page/elements/head');
+			echo elgg_view('page/elements/foot');
+
 			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(' . json_encode($account_output) . ');});</script>';
 		} else {
-			register_error(elgg_echo('deck_river:network:authorize:error'));
-			echo elgg_echo('deck_river:network:authorize:error');
+			$error[] = elgg_echo('deck_river:network:authorize:error');
 		}
 	}
+
+	if ($error) {
+		// add head and foot for js script
+		echo elgg_view('page/elements/head');
+		echo elgg_view('page/elements/foot');
+
+		echo elgg_echo('deck_river:network:authorize:error');
+		echo '<script type="text/javascript">$(document).ready(function() {authorizeError = '. json_encode($error) .';elgg.deck_river.network_authorize(false);});</script>';
+	}
+
 }
 
 /**
@@ -190,10 +207,15 @@ function deck_river_get_facebook_scope() {
 
 function deck_river_facebook_authorize() {
 	$code = get_input('code', false);
+	$error = false;
 
 	if (!$code) {
-		register_error(elgg_echo('deck_river:network:authorize:error'));
-		return false;
+		$error[] = elgg_echo('deck_river:network:authorize:error');
+	}
+
+	// check if user has too many accounts
+	if (deck_river_count_networks_account('all') >= elgg_get_plugin_setting('max_accounts', 'elgg-deck_river')) {
+		$error[] = elgg_echo('deck_river:network:too_many_accounts', array(elgg_get_site_entity()->name));
 	}
 
 	elgg_load_library('deck_river:facebook_sdk');
@@ -204,53 +226,61 @@ function deck_river_facebook_authorize() {
 	));
 	$token = $facebook->getAccessToken();
 
-	if ($token) {
+	$facebook->setAccessToken($token);
+	$fbUserProfile = $facebook->api('/me'); // Récupere l'utilisateur
 
-		$facebook->setAccessToken($token);
-		$fbUserProfile = $facebook->api('/me'); // Récupere l'utilisateur
+	// make sure don't register twice this facebook account for this user.
+	if (deck_river_get_networks_account('facebook', elgg_get_logged_in_user_guid(), $fbUserProfile['id'])) {
+		$error[] = elgg_echo('deck_river:network:authorize:already_done');
+	}
 
-		// make sure don't register twice this facebook account for this user.
-		if (deck_river_get_networks_account('facebook', elgg_get_logged_in_user_guid(), $fbUserProfile['id'])) {
+	if (!$error && $token) {
+
+		$facebook_account = new ElggObject;
+		$facebook_account->subtype = 'facebook_account';
+		$facebook_account->access_id = 0;
+		$facebook_account->user_id = $fbUserProfile['id'];
+		$facebook_account->name = $fbUserProfile['name'];
+		$facebook_account->username = $fbUserProfile['username'];
+		$facebook_account->oauth_token = $token;
+
+		echo elgg_view('page/elements/head');
+		echo elgg_view('page/elements/foot');
+
+		if ($facebook_account->save()) {
+			// trigger authorization hook
+			elgg_trigger_event('authorize', 'deck_river:facebook', $twitter_account);
+
+			$facebook_account->time_created = time(); // Don't now why time_created is not filled
+			$fb_guid = $facebook_account->getGUID();
+
+			// add head and foot for js script
 			echo elgg_view('page/elements/head');
 			echo elgg_view('page/elements/foot');
-			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(false);});</script>';
+
+			$account_output = json_encode(array(
+				'network' => 'facebook',
+				'network_box' => elgg_view_entity($facebook_account, array(
+										'view_type' => 'in_network_box',
+									)),
+				'full' => '<li id="elgg-object-' . $fb_guid . '" class="elgg-item">' . elgg_view_entity($facebook_account) . '</li>',
+				'code' => "elgg.deck_river.getFBGroups($fb_guid);"
+			));
+			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(' . $account_output . ');});</script>';
+
 		} else {
-
-			$facebook_account = new ElggObject;
-			$facebook_account->subtype = 'facebook_account';
-			$facebook_account->access_id = 0;
-			$facebook_account->user_id = $fbUserProfile['id'];
-			$facebook_account->name = $fbUserProfile['name'];
-			$facebook_account->username = $fbUserProfile['username'];
-			$facebook_account->oauth_token = $token;
-
-			echo elgg_view('page/elements/head');
-			echo elgg_view('page/elements/foot');
-
-			if ($facebook_account->save()) {
-				// trigger authorization hook
-				elgg_trigger_plugin_hook('authorize', 'elgg-deck_river', array('token' => $token));
-
-				$facebook_account->time_created = time(); // Don't now why time_created is not filled
-				$fb_guid = $facebook_account->getGUID();
-
-				$account_output = json_encode(array(
-					'network' => 'facebook',
-					'network_box' => elgg_view_entity($facebook_account, array(
-											'view_type' => 'in_network_box',
-										)),
-					'full' => '<li id="elgg-object-' . $fb_guid . '" class="elgg-item">' . elgg_view_entity($facebook_account) . '</li>',
-					'code' => "elgg.deck_river.getFBGroups($fb_guid);"
-				));
-				echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(' . $account_output . ');});</script>';
-
-			}
-
+			$error[] = elgg_echo('deck_river:network:authorize:error');
 		}
 
-	} else {
-		register_error(elgg_echo('deck_river:network:authorize:error'));
+	}
+
+	if ($error) {
+		// add head and foot for js script
+		echo elgg_view('page/elements/head');
+		echo elgg_view('page/elements/foot');
+
 		echo elgg_echo('deck_river:network:authorize:error');
+		echo '<script type="text/javascript">$(document).ready(function() {authorizeError = '. json_encode($error) .';elgg.deck_river.network_authorize(false);});</script>';
 	}
 }
 
@@ -263,6 +293,8 @@ function deck_river_facebook_revoke($user_guid = null, $user_id = null, $echo = 
 		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
 
 		$entities = deck_river_get_networks_account('facebook', $user_guid, $user_id);
+				global $fb; $fb->info($entities, 'ent');
+
 		foreach ($entities as $entity) {
 			if ($entity->canEdit()) {
 				// remove account from pinned accounts
@@ -275,10 +307,36 @@ function deck_river_facebook_revoke($user_guid = null, $user_id = null, $echo = 
 		}
 
 		if ($echo && $entities) system_message(elgg_echo('deck_river:facebook:revoke:success'));
-		return true;
 	} else {
 		register_error(elgg_echo('deck_river:network:revoke:error'));
-		return false;
+	}
+}
+
+
+
+function deck_river_fb_group_revoke($user_guid = null, $user_id = null, $echo = true) {
+	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
+
+	if ($user_guid && elgg_instanceof(get_entity($user_guid), 'user')) {
+
+		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
+
+		$entities = deck_river_get_networks_account('fb_group', $user_guid, $user_id);
+
+		foreach ($entities as $entity) {
+			if ($entity->canEdit()) {
+				// remove account from pinned accounts
+				$arr = array_diff($user_deck_river_pinned_accounts, array($entity->getGUID()));
+				set_private_setting($user_guid, 'deck_river_pinned_accounts', serialize($arr));
+
+				// remove account
+				$entity->delete();
+			}
+		}
+
+		if ($echo && $entities) system_message(elgg_echo('deck_river:facebook:revoke:success'));
+	} else {
+		register_error(elgg_echo('deck_river:network:revoke:error'));
 	}
 }
 

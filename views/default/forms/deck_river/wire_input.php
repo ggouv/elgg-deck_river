@@ -78,7 +78,7 @@ foreach ($all_accounts as $account) {
 				<div class="elgg-module-popup hidden">
 					<div class="triangle"></div>
 					<?php
-						echo '<br/><a title="' . $user->username . '" href="#" class="user-info-popup">@' . $user->username . '</a>';
+						echo '<a title="' . $user->username . '" href="#" class="user-info-popup">@' . $user->username . '</a>';
 					?>
 				</div>
 			</ul>

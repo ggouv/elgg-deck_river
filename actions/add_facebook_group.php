@@ -8,7 +8,7 @@ elgg_load_library('deck_river:authorize');
 
 if (deck_river_count_networks_account('all') >= elgg_get_plugin_setting('max_accounts', 'elgg-deck_river')) {
 	register_error('deck_river:network:too_many_accounts', array(elgg_get_site_entity()->name));
-	return true;
+	return false;
 }
 
 $account_guid = (int) get_input('facebook_account');
@@ -18,7 +18,7 @@ $account = get_entity($account_guid);
 $user_guid = elgg_get_logged_in_user_guid();
 
 if (deck_river_get_networks_account('fb_group', $user_guid, $group_id)) {
-	return true;
+	return false;
 }
 
 if ($account && $account->getSubtype() == 'facebook_account' && $account->getOwnerGUID() == $user_guid) {
