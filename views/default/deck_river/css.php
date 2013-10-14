@@ -328,8 +328,8 @@ body.fixed-deck {
 	position: absolute;
 }
 #thewire-network img {
-	width: 25px;
-	height: 25px;
+	width: 24px;
+	height: 24px;
 }
 #thewire-network .selected-profile {
 	background: white;
@@ -337,6 +337,7 @@ body.fixed-deck {
 	border-radius: 4px 4px 4px 4px;
 	height: 23px;
 	width: 100%;
+	padding: 6px 0 4px;
 	box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
@@ -490,9 +491,25 @@ body.fixed-deck {
 	height: 24px;
 	overflow: hidden;
 	position: relative;
-	margin: -6px 0 -18px;
+	margin: -4px 0 -18px;
 	width: 194px;
 	z-index: 1;
+}
+#thewire-network.extended .non-pinned:before, #thewire-network.extended .non-pinned:after {
+	height: 2px;
+	width: 3px;
+	background: white;
+	position: absolute;
+	top: -2px;
+	content: " ";
+	display: block;
+}
+#thewire-network.extended .non-pinned:before {
+	border-left: 1px solid #999FA5;
+}
+#thewire-network.extended .non-pinned:after {
+	border-right: 1px solid #A5ABB0;
+	right: 7px;
 }
 #thewire-network .helper div {
 	margin-top: -7px;

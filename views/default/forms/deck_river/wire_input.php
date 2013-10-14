@@ -70,7 +70,7 @@ foreach ($all_accounts as $account) {
 </div>
 
 <div id="thewire-network">
-	<div class="selected-profile pvs">
+	<div class="selected-profile">
 		<div class="net-profile float mls elgg ggouv">
 			<input type="hidden" value="<?php echo $user->getGUID(); ?>" name="networks[]" data-network="elgg">
 			<ul>

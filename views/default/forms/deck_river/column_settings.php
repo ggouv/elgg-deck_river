@@ -145,7 +145,7 @@ $column_title = $user_river_column_options['title'];
 			function displayTwitterAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;
 				$twitter_user = $account->screen_name;
-				$twitter_avatar = $account->avatar;
+				$twitter_avatar = 'http://twitter.com/api/users/profile_image/' . $account->screen_name . '?size=mini'; // $account->avatar,
 
 				// User twitter block
 				$img = elgg_view('output/img', array(
@@ -153,8 +153,8 @@ $column_title = $user_river_column_options['title'];
 					'alt' => $twitter_user,
 					'class' => 'twitter-user-info-popup',
 					'title' => $twitter_user,
-					'width' => '25',
-					'height' => '25',
+					'width' => '24',
+					'height' => '24',
 				));
 				$twitter_name = '<div class="elgg-river-summary"><span class="twitter-user-info-popup" title="' . $twitter_user . '">' . $twitter_user . '</span>';
 				$twitter_name .= '<br/><span class="elgg-river-timestamp">';

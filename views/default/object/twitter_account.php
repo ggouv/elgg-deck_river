@@ -19,7 +19,7 @@ $view = elgg_extract('view_type', $vars, false);
 $pinned = elgg_extract('pinned', $vars, false);
 
 $avatar = elgg_view('output/img', array(
-	'src' => $account->avatar,
+	'src' => 'http://twitter.com/api/users/profile_image/' . $account->screen_name . '?size=mini', // $account->avatar,
 	'alt' => $account->screen_name,
 	'class' => 'float',
 ));
