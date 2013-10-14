@@ -560,26 +560,6 @@ elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
 
 
 /**
- * Insert text in Thewire textarea. Wrap text with space if needed. Keep caret position.
- * @param  {[string]} text text to insert
- * @return {[type]}      [description]
- */
-elgg.deck_river.insertInThewire = function(text) {
-	var $twT = $('#thewire-textarea'),
-		twTval = $twT.val(),
-		strPos = $twT.getCursorPosition(),
-		front = (twTval).substring(0,strPos),
-		back = (twTval).substring(strPos,twTval.length);
-
-	if (front.substring(front.length, front.length-1) != ' ' && front.length != 0) text = ' ' + text;
-	if (back.substring(0, 1) != ' ' && back.length != 0) text = text + ' ';
-	$twT.val(front + text + back).focus().setCursorPosition(strPos + text.length);
-	elgg.thewire.textCounter();
-};
-
-
-
-/**
  * Function serializeObject
  * Copied from https://github.com/macek/jquery-serialize-object
  * Version 1.0.0

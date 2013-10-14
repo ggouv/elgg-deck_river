@@ -50,7 +50,7 @@ elgg.deck_river.ShortenerUrlInit = function() {
 		var shortUrl = $(this).parent().find('.elgg-input-text').val();
 
 		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
-		elgg.deck_river.insertInThewire(shortUrl);
+		elgg.thewire.insertInThewire(shortUrl);
 	});
 	$('#thewire-header .url-shortener .elgg-icon').die().live('click', function() {
 		var urlShortner = $(this).parent();
