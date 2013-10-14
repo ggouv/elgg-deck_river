@@ -14,7 +14,7 @@ $user_deck_river_pinned_accounts = unserialize(get_private_setting($user->getGUI
 $accounts = array();
 // get and format twitter accounts
 elgg_load_library('deck_river:authorize');
-$all_accounts = deck_river_get_networks_account('all');
+$all_accounts = array_reverse(deck_river_get_networks_account('all'));
 
 foreach ($all_accounts as $account) {
 	$accounts[$account->getGUID()] = elgg_view_entity($account, array(
@@ -90,7 +90,7 @@ foreach ($all_accounts as $account) {
 					'class' => 'float',
 				));
 			?>
-			<span class="network"></span>
+			<span class="network link"></span>
 		</div>
 		<?php
 			foreach ($accounts as $account_guid => $account_output) {
@@ -105,12 +105,14 @@ foreach ($all_accounts as $account) {
 	<div class="non-pinned clearfloat hidden">
 		<div class="helper tooltip w" title="<?php echo htmlspecialchars(elgg_echo('deck-river:add:network:helper')); ?>"><div><?php echo elgg_echo('deck-river:add:network:slide'); ?></div></div>
 		<div class="content">
-			<div class="net-profiles">
-			<?php
-				foreach ($accounts as $account_output) {
-					echo $account_output;
-				}
-			?>
+			<div class="net-profiles-wrapper pts float">
+				<div class="net-profiles">
+				<?php
+					foreach ($accounts as $account_output) {
+						echo $account_output;
+					}
+				?>
+				</div>
 			</div>
 			<div class="footer">
 				<ul>

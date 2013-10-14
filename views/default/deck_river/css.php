@@ -316,10 +316,12 @@ body.fixed-deck {
 #linkbox .elgg-image:hover li {
 	display: block;
 }
-#linkbox .link_name:hover, #linkbox .link_description:hover {
+#linkbox .link_name:hover, #linkbox .link_description:hover, #linkbox .link_name:focus, #linkbox .link_description:focus {
 	background: #e4ecf5;
 }
-
+#linkbox .link_description {
+	height: 18px;
+}
 
 #thewire-network {
 	right: -201px;
@@ -342,13 +344,18 @@ body.fixed-deck {
 	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
-.net-profiles {
+#thewire-network.extended .selected-profile {
+	height: 28px;
+}
+#thewire-network .net-profiles-wrapper {
 	box-shadow: 0 2px 2px 0 #1F2E3D inset;
 	background: white;
-	float: left;
 	margin-top: -10px;
+}
+#thewire-network .net-profiles {
+	float: left;
 	min-height: 39px;
-	padding-top: 10px;
+	padding: 2px 0 1px;
 	width: 194px;
 	z-index: -1;
 	max-height: 316px;
@@ -369,7 +376,9 @@ body.fixed-deck {
 }
 #thewire-network .net-profile.ui-draggable-dragging {
 	background: white;
-	box-shadow: 4px 4px 4px #999;
+	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5) !important;
+	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+;
 	cursor: crosshair;
 }
 #thewire-network .network {
@@ -380,6 +389,7 @@ body.fixed-deck {
 	position: absolute;
 	top: -3px;
 	width: 10px;
+	pointer-events: none;
 }
 #thewire-network .net-profile.ggouv .network {
 	background-image: url(<?php echo elgg_get_site_url() . 'mod/elgg-ggouv_template/graphics/favicon/favicon.png'; ?>);
@@ -494,22 +504,6 @@ body.fixed-deck {
 	margin: -4px 0 -18px;
 	width: 194px;
 	z-index: 1;
-}
-#thewire-network.extended .non-pinned:before, #thewire-network.extended .non-pinned:after {
-	height: 2px;
-	width: 3px;
-	background: white;
-	position: absolute;
-	top: -2px;
-	content: " ";
-	display: block;
-}
-#thewire-network.extended .non-pinned:before {
-	border-left: 1px solid #999FA5;
-}
-#thewire-network.extended .non-pinned:after {
-	border-right: 1px solid #A5ABB0;
-	right: 7px;
 }
 #thewire-network .helper div {
 	margin-top: -7px;
@@ -1128,13 +1122,14 @@ li.elgg-menu-item-arrow-left {
 	cursor: pointer;
 }
 div.user-info-popup.ui-draggable-dragging, div.group-info-popup.ui-draggable-dragging, div.twitter-user-info-popup.ui-draggable-dragging {
-	box-shadow: 4px 4px 4px #999;
+	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	cursor: crosshair;
 	line-height: 0.1;
 	pointer-events: none;
 }
 a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-dragging, .hashtag-info-popup.ui-draggable-dragging, a.twitter-user-info-popup.ui-draggable-dragging {
-	text-shadow: 4px 4px 4px #999;
+	text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	cursor: crosshair;
 	pointer-events: none;
 }

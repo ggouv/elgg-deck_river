@@ -276,14 +276,14 @@ elgg.thewire.move_account = function() {
 		drop: function(e, ui) {
 			$('#thewire-network *').removeClass('ui-start');
 			if ($(this).hasClass('selected-profile')) {
-				if ($(this).find('input[name="networks[]"]').length < 5) {
+				if ($(this).find('.net-profile').length < 5) {
 					ui.draggable.appendTo($(this)).find('input').attr('name', 'networks[]');
 					ui.draggable.find('.elgg-icon-delete').addClass('hidden');
 				} else {
-					elgg.register_error('deck_river:error:pin:too_much');
+					elgg.register_error(elgg.echo('deck_river:error:pin:too_much'));
 				}
 			} else {
-				ui.draggable.appendTo($(this)).find('input').attr('name', '_networks[]');
+				ui.draggable.prependTo($(this)).find('input').attr('name', '_networks[]');
 			}
 		},
 		activate: function(e, ui) {
