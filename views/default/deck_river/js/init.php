@@ -359,16 +359,17 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
  * @return void
  */
 elgg.deck_river.network_authorize = function(token) {
-	var p = window.opener;
+	var p = window.opener || window; // function called from a popup window on from main window
 
 	if (token == false) {
-		p.elgg.system_message(p.elgg.echo('deck_river:network:authorize:already_done'));
+		p.elgg.register_error(p.elgg.echo('deck_river:network:authorize:already_done'));
 		window.close();
 	} else {
+		var tn = token.network;
 		// reload column settings popup if it's open
 		if (p.$('#column-settings').length) {
 			var c = p.$('#'+p.$('#column-settings input[name="column"]').val());
-			p.$('#column-settings').data('network', token.network);
+			p.$('#column-settings').data('network', tn);
 			if (c.length == 1) {
 				c.find('.elgg-column-edit-button').click();
 			} else {
@@ -377,8 +378,10 @@ elgg.deck_river.network_authorize = function(token) {
 		}
 
 		// add new network in applications page
-		if (p.$('.elgg-module-'+token.network).length) {
-			p.$('.elgg-module-'+token.network+' .elgg-list').prepend(token.full);
+		if (p.$('.elgg-module-'+tn).length) {
+			var $em = p.$('.elgg-module-'+tn);
+			$em.find('.elgg-module-featured').replaceWith($('<ul>', {'class': 'elgg-list elgg-list-entity'}));
+			$em.find('.elgg-list').prepend(token.full).children().first().effect("highlight", {}, 3000);
 		}
 
 		// remove add-network popup
@@ -386,10 +389,13 @@ elgg.deck_river.network_authorize = function(token) {
 
 		// add new network account in #thewire-network
 		p.$('#thewire-network .non-pinned .net-profiles').prepend(token.network_box);
-		p.elgg.deck_river.move_account();
+		p.elgg.thewire.move_account();
+
+		// execute code
+		p.eval(token.code);
 
 		// show message
-		p.elgg.system_message(p.elgg.echo('deck_river:'+token.network+':authorize:success'));
+		p.elgg.system_message(p.elgg.echo('deck_river:'+tn+':authorize:success'));
 		window.close();
 	}
 }

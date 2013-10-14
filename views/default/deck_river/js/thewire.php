@@ -266,7 +266,8 @@ elgg.thewire.move_account = function() {
 	$('#thewire-network .net-profile').draggable({
 		revert: true,
 		revertDuration: 0,
-		zIndex: 9999
+		zIndex: 9999,
+		helper: 'clone'
 	});
 	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
 		accept:      $('.net-profile').not('.ggouv'),

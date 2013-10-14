@@ -27,7 +27,7 @@ $twitter_accounts = deck_river_get_networks_account('twitter', $user->getGUID())
 
 if (!empty($twitter_accounts)) {
 	$content .= elgg_view_module(
-		'network',
+		'twitter elgg-module-network elgg-module-aside',
 		'<span class="network-icon twitter-icon gwfb"></span><span class="pls">' . elgg_echo('Twitter') . '</span>',
 		elgg_view_entity_list($twitter_accounts), array(
 			'class' => 'mtl',
@@ -43,7 +43,7 @@ if (!empty($twitter_accounts)) {
 
 		$site_name = elgg_get_site_entity()->name;
 		$content .= elgg_view_module(
-			'twitter',
+			'twitter elgg-module-network elgg-module-aside',
 			'<span class="twitter-icon gwfb"></span><span class="pls">' . elgg_echo('Twitter') . '</span>',
 			elgg_view_module(
 				'featured',
@@ -65,7 +65,7 @@ $facebook_accounts = deck_river_get_networks_account('facebook', $user->getGUID(
 
 if (!empty($facebook_accounts)) {
 	$content .= elgg_view_module(
-		'network',
+		'facebook elgg-module-network elgg-module-aside',
 		'<span class="network-icon facebook-icon gwfb"></span><span class="pls">' . elgg_echo('Facebook') . '</span>',
 		elgg_view_entity_list($facebook_accounts), array(
 			'class' => 'mtl',
@@ -88,7 +88,7 @@ if (!empty($facebook_accounts)) {
 
 		$site_name = elgg_get_site_entity()->name;
 		$content .= elgg_view_module(
-			'facebook',
+			'facebook elgg-module-network elgg-module-aside',
 			'<span class="facebook-icon gwfb"></span><span class="pls">' . elgg_echo('Facebook') . '</span>',
 			elgg_view_module(
 				'featured',

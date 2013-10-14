@@ -27,7 +27,6 @@ if ($method && $account->getSubtype() == 'twitter_account' && $account->getOwner
 	// check result
 	if ($result->code == 200) {
 		$jsonexport['result'] = $result->response;
-		echo json_encode($jsonexport);
 	} else {
 		$key = 'deck_river:twitter:error:' . $result->code;
 		if (elgg_echo($key) == $key) { // check if language string exist
@@ -37,6 +36,8 @@ if ($method && $account->getSubtype() == 'twitter_account' && $account->getOwner
 		}
 		$jsonexport['result'] = '';
 	}
+
+	echo json_encode($jsonexport);
 
 } else {
 	register_error(elgg_echo('deck_river:twitter:error'));

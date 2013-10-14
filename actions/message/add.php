@@ -31,7 +31,7 @@ if (empty($body)) {
 	$body = htmlspecialchars($body, ENT_NOQUOTES, 'UTF-8');
 
 	foreach ($networks as $network) {
-		if ($network == $user->getGUID()) { // network is ggouv
+		if ($network == $user->getGUID()) { // network is elgg
 
 			$body = elgg_substr($body, 0, 140); // only 140 characters allowed
 
@@ -121,7 +121,7 @@ if (empty($body)) {
 			}
 
 			// facebook
-			if ($network_entity->getSubtype() == 'facebook_account' && $network_entity->getOwnerGUID() == $user->getGUID()) {
+			if (in_array($network_entity->getSubtype(), array('facebook_account', 'fb_group_account')) && $network_entity->getOwnerGUID() == $user->getGUID()) {
 				elgg_load_library('deck_river:facebook_sdk');
 				$facebook = new Facebook(array(
 					'appId'  => elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river'),
@@ -140,8 +140,14 @@ if (empty($body)) {
 				if ($link_picture && !in_array($link_picture, array('null', 'undefined'))) $params['picture'] = $link_picture;
 				//'privacy' => json_encode(array('value' => 'EVERYONE')) // https://developers.facebook.com/docs/reference/api/privacy-parameter/
 
+				if ($network_entity->getSubtype() == 'facebook_account') {
+					$id = $network_entity->user_id;
+				} else if ($network_entity->getSubtype() == 'fb_group_account') {
+					$id = $network_entity->group_id;
+				}
+
 				try {
-					$result = $facebook->api($network_entity->user_id . '/feed', 'post', $params);
+					$result = $facebook->api($id . '/feed', 'post', $params);
 				} catch(FacebookApiException $e) {
 					$result = json_decode($e);
 				}

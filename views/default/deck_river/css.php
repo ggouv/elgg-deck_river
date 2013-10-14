@@ -341,7 +341,7 @@ body.fixed-deck {
 	-webkit-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 	-moz-box-shadow: inset 0 2px 2px 0 #1F2E3D;
 }
-#thewire-network .net-profiles {
+.net-profiles {
 	box-shadow: 0 2px 2px 0 #1F2E3D inset;
 	background: white;
 	float: left;
@@ -350,18 +350,26 @@ body.fixed-deck {
 	padding-top: 10px;
 	width: 194px;
 	z-index: -1;
+	max-height: 316px;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
-#thewire-network .selected-profile.ui-state-highlight, #thewire-network .non-pinned .net-profiles.ui-state-highlight {
+#thewire-network .selected-profile.ui-state-highlight, .non-pinned .net-profiles.ui-state-highlight {
 	background: #FFFFCC;
 }
-#thewire-network .selected-profile.ui-state-active, #thewire-network .non-pinned .net-profiles.ui-state-active {
+#thewire-network .selected-profile.ui-state-active, .non-pinned .net-profiles.ui-state-active {
 	background: #DDFFDD;
 }
-#thewire-network .selected-profile.ui-start, #thewire-network .non-pinned .net-profiles.ui-start {
+.selected-profile.ui-start, .non-pinned .net-profiles.ui-start {
 	background: white;
 }
 #thewire-network .net-profile {
 	position: relative;
+}
+#thewire-network .net-profile.ui-draggable-dragging {
+	background: white;
+	box-shadow: 4px 4px 4px #999;
+	cursor: crosshair;
 }
 #thewire-network .network {
 	background: white;
@@ -420,7 +428,7 @@ body.fixed-deck {
 	top: 31px;
 	background: #1F2E3D;
 	color: white;
-	width: 160px;
+	min-width: 150px;
 	border-radius: 6px;
 	border: none;
 	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
@@ -484,6 +492,7 @@ body.fixed-deck {
 	position: relative;
 	margin: -6px 0 -18px;
 	width: 194px;
+	z-index: 1;
 }
 #thewire-network .helper div {
 	margin-top: -7px;
@@ -513,6 +522,7 @@ body.fixed-deck {
 	margin: 2px;
 	padding: 3px;
 	width: 184px;
+	overflow: hidden;
 }
 #thewire-network .non-pinned .net-profile:hover {
 	background: white;
@@ -536,6 +546,7 @@ body.fixed-deck {
 	position: absolute;
 	top: -1px;
 	width: 155px;
+	z-index: 0;
 }
 #thewire-network .non-pinned .net-profile:hover .elgg-module-popup {
 	color: black !important;
@@ -546,10 +557,16 @@ body.fixed-deck {
 #thewire-network .non-pinned .elgg-module-popup span:hover {
 	color: #555;
 }
+#thewire-network .non-pinned .elgg-river-summary {
+	height: 31px;
+	display: table-cell;
+	vertical-align: middle;
+	line-height: 1.1em;
+}
 #thewire-network .non-pinned .pin {
 	float: right;
 	font-size: 0.8em;
-	padding-top: 8px;
+	padding: 8px 2px;
 }
 #thewire-network .footer {
 	background: #F0F0F0;
@@ -994,19 +1011,19 @@ li.elgg-menu-item-arrow-left {
 #add-deck-river-tab .elgg-button-submit, #rename-deck-river-tab .elgg-button-submit {
 	float: right;
 }
-#column-settings .twitter .elgg-module-info {
+#column-settings .tab .elgg-module-info {
 	background: none repeat scroll 0 0 #EEEEEE;
 }
-#column-settings .twitter .elgg-module {
+#column-settings .tab .elgg-module {
 	font-size: 0.9em;
 	padding: 5px 5px 0;
 	position: relative;
 }
-#column-settings .twitter .elgg-module.multi {
+#column-settings .tab .elgg-module.multi {
 	position: relative;
 	padding: 0 5px;
 }
-#column-settings select[name="twitter-account"] {
+#column-settings select.in-module {
 	position: absolute;
 	right: 44px;
 	top: 42px;
@@ -1136,6 +1153,11 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 	text-align: center;
 	top: 70px;
 	width: 100%;
+}
+
+/* grous facebook popup */
+#facebook-groups-popup li:hover {
+	background: #CCC;
 }
 
 /* single view */

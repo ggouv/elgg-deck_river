@@ -35,6 +35,7 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax_json/url_shortener');
 	elgg_register_ajax_view('deck_river/ajax_json/load_discussion');
 	elgg_register_ajax_view('deck_river/ajax_json/twitter_OAuth');
+	elgg_register_ajax_view('deck_river/ajax_json/facebook_API');
 	elgg_register_ajax_view('deck_river/ajax_view/column_settings');
 	elgg_register_ajax_view('deck_river/ajax_view/add_social_network');
 	elgg_register_ajax_view('deck_river/ajax_view/user_info');
@@ -60,6 +61,8 @@ function deck_river_init() {
 	elgg_register_action('elgg-deck_river/settings/save', "$action_path/plugins/save.php");
 
 	elgg_register_action('deck_river/twitter', "$action_path/twitter.php");
+	elgg_register_action('deck_river/facebook', "$action_path/facebook.php");
+	elgg_register_action('deck_river/add_facebook_group', "$action_path/add_facebook_group.php");
 
 	// Register a URL handler for thewire posts
 	elgg_register_entity_url_handler('object', 'thewire', 'deck_river_thewire_url');

@@ -19,7 +19,7 @@ $view = elgg_extract('view_type', $vars, false);
 $pinned = elgg_extract('pinned', $vars, false);
 
 $avatar = elgg_view('output/img', array(
-	'src' => 'https://graph.facebook.com/' . $account->username . '/picture',
+	'src' => $account->icon,
 	'alt' => $account->username,
 	'class' => 'float',
 ));
@@ -35,8 +35,8 @@ if ($view === 'in_network_box') {
 	$info = '<div class="elgg-river-summary"><span class="facebook-user-info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
 	$info .= elgg_view('output/url', array(
-		'href' => 'http://facebook.com/' . $account->username,
-		'text' => 'http://facebook.com/' . $account->username,
+		'href' => 'http://facebook.com/groups/' . $account->name,
+		'text' => 'http://facebook.com/groups/' . $account->name,
 		'target' => '_blank',
 		'rel' => 'nofollow'
 	));
@@ -91,8 +91,8 @@ HTML;
 	$subtitle = "$author_text $date";
 
 	$link = elgg_view('output/url', array(
-		'href' => 'http://facebook.com/' . $account->username,
-		'text' => 'http://facebook.com/' . $account->username,
+		'href' => 'http://facebook.com/' . $account->name,
+		'text' => 'http://facebook.com/' . $account->name,
 		'class' => 'external',
 		'target' => '_blank'
 	));

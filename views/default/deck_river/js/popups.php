@@ -200,3 +200,53 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 };
 
 
+
+/**
+ * Show popup to choose facebook groups of a facebook_account object
+ * @param  {[type]} account The facebook_account guid
+ * @return void
+ */
+elgg.deck_river.getFBGroups = function(account) {
+	elgg.post('ajax/view/deck_river/ajax_json/facebook_API', {
+		data: {
+			facebook_account: account,
+			method: 'groups'
+		},
+		dataType: 'json',
+		success: function(json) {
+			if (json.result) {
+				var groups = json.result.data;
+
+				groups.sort(function(a, b) {
+					return ((a.bookmark_order < b.bookmark_order) ? -1 : ((a.bookmark_order > b. bookmark_order) ? 1 : 0));
+				});
+				elgg.deck_river.createPopup('facebook-groups-popup', elgg.echo('deck_river:facebook:groups'));
+				var $fgp = $('#facebook-groups-popup');
+
+				$fgp.find('.elgg-body')
+					.html($('<h3>', {'class': 'pbs'}).html(elgg.echo('deck_river:facebook:groups:choose')))
+					.append($('<ul>').css({'overflow-y': 'scroll', height: '552px'}));
+				$.each(groups, function(i,e) {
+					$fgp.find('.elgg-body ul').append(
+						$('<li>', {'class': 'pas link', id: e.id}).html(e.name).click(function() {
+							elgg.action('deck_river/add_facebook_group', {
+								data: {
+									facebook_account: account,
+									group_id : e.id
+								},
+								success: function(json) {
+									elgg.deck_river.network_authorize(json.output);
+									console.log($fgp.find('#'+e.id));
+									$fgp.find('#'+e.id).css('background-color', '#FF7777').fadeOut();
+								}
+							});
+						})
+					);
+				});
+			}
+		},
+		error: function() {
+			return false;
+		}
+	});
+};

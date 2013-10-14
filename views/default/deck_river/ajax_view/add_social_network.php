@@ -1,5 +1,18 @@
 <?php
+/*
+ * Show modal popup to add networks accounts
+ */
+
+elgg_load_library('deck_river:authorize');
 $site_name = elgg_get_site_entity()->name;
+
+// check if user has too many accounts
+if (deck_river_count_networks_account('all') >= elgg_get_plugin_setting('max_accounts', 'elgg-deck_river')) {
+	echo elgg_echo('deck_river:network:too_many_accounts', array($site_name));
+	return true;
+}
+
+
 
 // twitter
 $twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
@@ -28,6 +41,8 @@ if ($twitter_consumer_key && $twitter_consumer_secret) {
 	));
 }
 
+
+
 // facebook
 $facebook_app_id = elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river');
 $facebook_app_secret = elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck_river');
@@ -35,7 +50,6 @@ $facebook_app_secret = elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck
 if ($facebook_app_id && $facebook_app_secret) {
 	//elgg_load_library('deck_river:facebook_async');
 	elgg_load_library('deck_river:facebook_sdk');
-	elgg_load_library('deck_river:authorize');
 	$facebook = new Facebook(array(
 		'appId'  => $facebook_app_id,
 		'secret' => $facebook_app_secret,

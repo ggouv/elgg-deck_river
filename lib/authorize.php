@@ -18,12 +18,46 @@ function deck_river_get_networks_account($network, $user_guid = null, $user_id =
 		'type' => 'object',
 		'subtype' => $network . '_account',
 		'owner_guid' => $user_guid,
+		'limit' => 0
 	);
+
+	if ($network == 'all') $params['subtype'] = array('twitter_account', 'facebook_account', 'fb_group_account');
+	if ($network == 'facebook') $params['subtype'] = array('facebook_account', 'fb_group_account');
+
+	if ($user_id) {
+		$meta_name = ($network == 'fb_group') ? 'group_id' : 'user_id';
+
+		$params = array_merge($params, array(
+			'metadata_name' => $meta_name,
+			'metadata_value' => $user_id,
+		));
+	}
+
+	return elgg_get_entities_from_metadata($params);
+}
+
+
+
+/**
+ * count networks account for the currently logged in user.
+ */
+function deck_river_count_networks_account($network, $user_guid = null, $user_id = null) {
+	if (!$network) return false;
+	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
+
+	$params = array(
+		'type' => 'object',
+		'subtype' => $network . '_account',
+		'owner_guid' => $user_guid,
+		'count' => true
+	);
+
+	if ($network == 'all') $params['subtype'] = array('twitter_account', 'facebook_account', 'fb_group_account');
 
 	if ($user_id) {
 		$params = array_merge($params, array(
 			'metadata_name' => 'user_id',
-			'metadata_value' => $user_id,
+			'metadata_value' => $user_id
 		));
 	}
 
@@ -88,7 +122,7 @@ function deck_river_twitter_authorize() {
 				'network_box' => elgg_view_entity($twitter_account, array(
 										'view_type' => 'in_network_box',
 									)),
-				'full' => '<li id="elgg-object-' . $twitter_account->getGUID() . '">' . elgg_view_entity($twitter_account) . '</li>'
+				'full' => '<li id="elgg-object-' . $twitter_account->getGUID() . '" class="elgg-item">' . elgg_view_entity($twitter_account) . '</li>'
 			);
 
 			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(' . json_encode($account_output) . ');});</script>';
@@ -197,16 +231,21 @@ function deck_river_facebook_authorize() {
 				// trigger authorization hook
 				elgg_trigger_plugin_hook('authorize', 'elgg-deck_river', array('token' => $token));
 
-				$account_output = array(
+				$facebook_account->time_created = time(); // Don't now why time_created is not filled
+				$fb_guid = $facebook_account->getGUID();
+
+				$account_output = json_encode(array(
 					'network' => 'facebook',
 					'network_box' => elgg_view_entity($facebook_account, array(
 											'view_type' => 'in_network_box',
 										)),
-					'full' => '<li id="elgg-object-' . $facebook_account->getGUID() . '">' . elgg_view_entity($facebook_account) . '</li>'
-				);
+					'full' => '<li id="elgg-object-' . $fb_guid . '" class="elgg-item">' . elgg_view_entity($facebook_account) . '</li>',
+					'code' => "elgg.deck_river.getFBGroups($fb_guid);"
+				));
+				echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(' . $account_output . ');});</script>';
 
-				echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(' . json_encode($account_output) . ');});</script>';
 			}
+
 		}
 
 	} else {

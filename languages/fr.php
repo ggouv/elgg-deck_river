@@ -42,9 +42,6 @@ $french = array(
 
 	// wire network
 	'deck-river:add:network' => "Ajouter un réseau",
-	'deck-river:ggouv:account' => "Compte Ggouv :",
-	'deck-river:twitter:account' => "Compte Twitter :",
-	'deck-river:facebook:account' => "Compte Facebook :",
 	'deck-river:network:pin' => "<div style=\"text-align: left;\">Épingler<br><span class=\"elgg-text-help\">Ce compte restera toujours actifs.<br/>Vous pourrez le désactiver temporairement en cliquant dessus.</span></div>",
 	'deck-river:add:network:helper' => "<div style=\"text-align: left;\">Au dessus :<br><span class=\"elgg-text-help\">Vos comptes actifs vers lesquels vos messages seront envoyés.</span>Dessous :<br><span class=\"elgg-text-help\">Vos comptes enregistrés et inactifs.</span></div>",
 	'deck-river:add:network:slide' => "<span>↕</span> Glissez pour ajouter ou enlever <span>↕</span>",
@@ -87,6 +84,7 @@ $french = array(
 	// accounts managment
 	'deck_river:network:add:account' => "Ajouter un autre compte",
 	'deck_river:network:manage_account' => "Gérer mes comptes",
+	'deck_river:network:too_many_accounts' => "Vous avez trop de comptes associés à %s. Vous ne pouvez plus en ajouter d'autres...",
 	'deck_river:network:authorize:already_done' => "Vous avez déjà associé ce compte.",
 	'deck_river:network:authorize:error' => "Le compte n'a pas pu être autorisé.",
 	'deck_river:network:revoke:error' => "Le compte n'a pas pu être supprimé.",
@@ -122,6 +120,8 @@ $french = array(
 	'deck_river:hashtag-info-header' => "Recherche : %s",
 	'deck_river:go_to_profile' => "Aller sur le profil",
 	'deck_river:twitter:choose_account' => "Choisissez le compte Twitter",
+	'deck_river:facebook:groups' => "Groupes Facebook",
+	'deck_river:facebook:groups:choose' => "Cliquez sur un groupe pour l'ajouter dans vos comptes :",
 
 	// plugin settings
 	'deck_river:settings:min_width_column' => "Largeur minimum des colonnes",
@@ -132,6 +132,8 @@ $french = array(
 	'deck_river:settings:keys_to_merge' => "Entités à combiner dans les paramètres de colonnes",
 	'deck_river:settings:keys_to_merge_string_register_entity' => '<strong>Exemple :</strong> page=page_top (le premier élément sera affiché. Séparez par des virgules)<br /><strong>Entités enregistrées sur ce site :</strong>',
 	'deck_river:settings:reset_user' => "Remettre à zéro les paramètres des colonnes d'un utilisateur. Entrez son ID",
+	'deck_river:settings:site_shorturl' => "ShortURL de votre site elgg",
+	'deck_river:settings:googleApiKey' => "Clé API de google",
 	'deck_river:settings:reset_user:ok' => "Les paramètres des colonnes de l'utilisateur %s ont été remis à zéro.",
 	'deck_river:settings:reset_user:nok' => "Impossible de remettre à zéro les paramètres des colonnes de l'utilisateur %s.",
 	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
@@ -172,6 +174,7 @@ $french = array(
 	'deck_river:ok:unpin' => "Ce compte n'est plus épinglé.",
 	'deck_river:error:pin:too_much' => "Vous ne pouvez pas épingler plus de 5 comptes.",
 	'deck_river:delete:network:error' => "Impossible de supprimer ce compte.",
+	'deck_river:network:too_many_accounts' => "Vous ne pouvez pas associer plus de compte !",
 
 	'deck_river:twitter:posted' => "Votre message a été publié sur Twitter.",
 	'deck_river:twitter:post:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",

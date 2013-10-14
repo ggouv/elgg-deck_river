@@ -32,8 +32,7 @@ if ($view === 'in_network_box') {
 		$input_name = '_networks[]';
 	}
 
-	$info = elgg_echo('deck-river:twitter:account');
-	$info .= '<div class="elgg-river-summary"><span class="twitter-user-info-popup" title="' . $account->screen_name . '">' . $account->screen_name . '</span>';
+	$info = '<div class="elgg-river-summary"><span class="twitter-user-info-popup" title="' . $account->screen_name . '">' . $account->screen_name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
 	$info .= elgg_view('output/url', array(
 		'href' => 'http://twitter.com/' . $account->screen_name,
@@ -53,7 +52,7 @@ if ($view === 'in_network_box') {
 		<div class="elgg-module-popup hidden">
 			<div class="triangle"></div>
 			<div class="pin float-alt">
-			<span class="elgg-icon elgg-icon-push-pin tooltip w" title="$pin_tooltip"></span>
+			<span class="elgg-icon elgg-icon-push-pin tooltip w link" title="$pin_tooltip"></span>
 			</div>
 			$info
 		</div>
