@@ -91,8 +91,8 @@ HTML;
 	$subtitle = "$author_text $date";
 
 	$link = elgg_view('output/url', array(
-		'href' => 'http://facebook.com/' . $account->username,
-		'text' => 'http://facebook.com/' . $account->username,
+		'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $account->username),
+		'text' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $account->username),
 		'class' => 'external',
 		'target' => '_blank'
 	));

@@ -320,7 +320,7 @@ body.fixed-deck {
 	background: #e4ecf5;
 }
 #linkbox .link_description {
-	height: 18px;
+	min-height: 18px;
 }
 
 #thewire-network {

@@ -28,7 +28,7 @@ if ($method && $account->getSubtype() == 'facebook_account' && $account->getOwne
 		$jsonexport['result'] = $result;
 	} else {
 		register_error(elgg_echo('deck_river:facebook:error'));
-		$jsonexport['result'] = '';
+		$jsonexport['result'] = $result;
 	}
 
 	echo json_encode($jsonexport);
