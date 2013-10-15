@@ -263,17 +263,17 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			$('.column-type').change(function() {
 				var bs = $(this).closest('.box-settings'),
 					select = bs.find('select[name="twitter-lists"]'),
-					twitter_account = bs.find('*[name="twitter-account"]').val(); // * because can be select or input
+					network_account = bs.find('.in-module').val(); // * because can be select or input
 
 				bs.find('li').not(':first-child').hide();
 				bs.find('.'+$(this).val()+'-options').show();
 
 				// Get lists for Twitter
-				if ($(this).val() == 'get_listsStatuses' && !(select.data('list_loaded') == twitter_account) && select.parent().hasClass('hidden')) {
+				if ($(this).val() == 'get_listsStatuses' && !(select.data('list_loaded') == network_account) && select.parent().hasClass('hidden')) {
 					bs.find('.get_listsStatuses-options div').removeClass('hidden');
 					elgg.action('deck_river/twitter', {
 						data: {
-							twitter_account: twitter_account,
+							twitter_account: network_account,
 							method: 'get_listsList'
 						},
 						dataType: 'json',
@@ -282,22 +282,21 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 								if (!select.find('option[value="'+e.id+'"]').length) select.append($('<option>').val(e.id).html(e.full_name));
 							});
 							bs.find('.get_listsStatuses-options div').addClass('hidden');
-							select.data('list_loaded', twitter_account);
+							select.data('list_loaded', network_account);
 						},
 						error: function() {
 							return false;
 						}
 					});
 				}
-			});
+			}).trigger('change');
 			cs.find('.in-module').change(function() {
 				var network = $(this).attr('name').replace('-account', '');
 
 				$(this).closest('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
 				cs.find('select[name="'+network+'-lists"]').html('');
 				cs.find('.column-type').trigger('change');
-			});
-			cs.find('.column-type').trigger('change');
+			}).trigger('change');
 
 			// checkboxes
 			cs.find('.filter .elgg-input-checkbox').click(function() {

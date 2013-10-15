@@ -19,7 +19,7 @@ if (!$network) {
 		register_error(elgg_echo('deck_river:error:pin'));
 	} else {
 
-		$user_deck_river_pinned_accounts = json_decode(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
+		$user_deck_river_pinned_accounts = json_decode(get_private_setting($user_guid, 'deck_river_pinned_accounts'), true);
 
 		if ($user_deck_river_pinned_accounts && in_array($network, $user_deck_river_pinned_accounts)) {
 			foreach ($user_deck_river_pinned_accounts as $key => $value) {

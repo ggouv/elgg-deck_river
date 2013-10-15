@@ -222,6 +222,7 @@ $column_title = $user_river_column_options->title;
 				$output = displayTwitterAccount($twitter_account[0], elgg_echo('deck_river:twitter:your_account', array($site_name)), 'mtl');
 				$output .= elgg_view('input/hidden', array(
 					'name' => 'twitter-account',
+					'class' => 'in-module',
 					'value' => $twitter_account[0]->getGUID(),
 					'data-screen_name' => $twitter_account[0]->screen_name
 				));
@@ -231,8 +232,7 @@ $column_title = $user_river_column_options->title;
 				if (!isset($user_river_column_options->account)) $user_river_column_options->account = $twitter_account[0]->getGUID();
 				echo '<label>' . elgg_echo('deck_river:twitter:choose:account') . '</label><br />';
 				foreach ($twitter_account as $account) {
-					$hidden = ($account->getGUID() == $user_river_column_options->account) ? '' : 'hidden ';
-					echo displayTwitterAccount($account, '', $hidden . 'mtm mbs multi ' . $account->getGUID());
+					echo displayTwitterAccount($account, '', 'mtm mbs multi ' . $account->getGUID());
 					$accounts_name[$account->getGUID()] = $account->screen_name;
 				}
 				echo elgg_view('input/dropdown', array(
@@ -288,8 +288,8 @@ $column_title = $user_river_column_options->title;
 
 			function displayFacebookAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;
-				$facebook_user = $account->username;
-				$facebook_avatar = 'https://graph.facebook.com/' . $facebook_user . '/picture';
+				$facebook_user = $account->icon ? $account->name : $account->username;
+				$facebook_avatar = $account->icon ? $account->icon : 'https://graph.facebook.com/' . $facebook_user . '/picture';
 
 				// User facebook block
 				$img = elgg_view('output/img', array(
@@ -303,8 +303,8 @@ $column_title = $user_river_column_options->title;
 				$facebook_name = '<div class="elgg-river-summary"><span class="facebook-user-info-popup" title="' . $facebook_user . '">' . $facebook_user . '</span>';
 				$facebook_name .= '<br/><span class="elgg-river-timestamp">';
 				$facebook_name .= elgg_view('output/url', array(
-					'href' => 'http://facebook.com/' . $facebook_user,
-					'text' => 'http://facebook.com/' . $facebook_user,
+					'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $facebook_user : $facebook_user),
+					'text' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $facebook_user : $facebook_user),
 					'target' => '_blank',
 					'rel' => 'nofollow'
 				));
@@ -331,7 +331,7 @@ $column_title = $user_river_column_options->title;
 			$options_values = array(
 				'get_searchTweets' => elgg_echo('deck_river:facebook:feed:search:tweets'),
 				'get_searchTweets-popular' => elgg_echo('deck_river:facebook:feed:search:popular'),
-				'get_statusesHome_timeline' => elgg_echo('deck_river:facebook:feed:home'),
+				'home' => elgg_echo('deck_river:facebook:feed:home'),
 				'get_statusesMentions_timeline' => elgg_echo('river:mentions'),
 				'get_statusesUser_timeline' => elgg_echo('deck_river:facebook:feed:user'),
 				'get_listsStatuses' => elgg_echo('deck_river:facebook:list'),
@@ -365,18 +365,19 @@ $column_title = $user_river_column_options->title;
 				$output = displayFacebookAccount($facebook_account[0], elgg_echo('deck_river:facebook:your_account', array($site_name)), 'mtl');
 				$output .= elgg_view('input/hidden', array(
 					'name' => 'facebook-account',
+					'class' => 'in-module',
 					'value' => $facebook_account[0]->getGUID(),
-					'data-username' => $facebook_account[0]->username
+					'data-username' => $facebook_account[0]->icon ? $facebook_account[0]->name : $facebook_account[0]->username
 				));
 
 			} else { // more than one account
 
 				if (!isset($user_river_column_options->account)) $user_river_column_options->account = $facebook_account[0]->getGUID();
 				echo '<label>' . elgg_echo('deck_river:facebook:choose:account') . '</label><br />';
+				$accounts_name = array();
 				foreach ($facebook_account as $account) {
-					$hidden = ($account->getGUID() == $user_river_column_options->account) ? '' : 'hidden ';
-					echo displayFacebookAccount($account, '', $hidden . 'mtm mbs multi ' . $account->getGUID());
-					$accounts_name[$account->getGUID()] = $account->username;
+					echo displayFacebookAccount($account, '', 'mtm mbs multi ' . $account->getGUID());
+					$accounts_name[$account->getGUID()] = $account->icon ? $account->name : $account->username;
 				}
 				echo elgg_view('input/dropdown', array(
 					'name' => 'facebook-account',
