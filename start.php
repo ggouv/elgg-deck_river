@@ -56,13 +56,14 @@ function deck_river_init() {
 	elgg_register_action('deck_river/tab/add', "$action_path/tab/add.php");
 	elgg_register_action('deck_river/tab/delete', "$action_path/tab/delete.php");
 	elgg_register_action('deck_river/tab/rename', "$action_path/tab/rename.php");
-	elgg_register_action('deck_river/network/pin', "$action_path/plugins/pin_network.php");
-	elgg_register_action('deck_river/network/delete', "$action_path/plugins/delete_network.php");
+	elgg_register_action('deck_river/network/pin', "$action_path/network/pin_network.php");
+	elgg_register_action('deck_river/network/delete', "$action_path/network/delete_network.php");
 	elgg_register_action('elgg-deck_river/settings/save', "$action_path/plugins/save.php");
 
-	elgg_register_action('deck_river/twitter', "$action_path/twitter.php");
-	elgg_register_action('deck_river/facebook', "$action_path/facebook.php");
-	elgg_register_action('deck_river/add_facebook_group', "$action_path/add_facebook_group.php");
+	elgg_register_action('deck_river/network/getLoginUrl', "$action_path/network/getLoginUrl.php");
+	elgg_register_action('deck_river/twitter', "$action_path/network/twitter.php");
+	elgg_register_action('deck_river/facebook', "$action_path/network/facebook.php");
+	elgg_register_action('deck_river/add_facebook_group', "$action_path/network/add_facebook_group.php");
 
 	// Register a URL handler for thewire posts
 	elgg_register_entity_url_handler('object', 'thewire', 'deck_river_thewire_url');
@@ -79,6 +80,9 @@ function deck_river_init() {
 	// unregistrer trigger for river menu
 	elgg_unregister_plugin_hook_handler('register', 'menu:river', 'elgg_river_menu_setup');
 	elgg_register_plugin_hook_handler('register', 'menu:river', 'deck_river_menu_setup');
+
+	// autofollow twitter account
+	elgg_register_event_handler('authorize', 'deck_river:twitter', 'deck_river_autofollow_twitter_account');
 
 }
 

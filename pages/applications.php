@@ -23,24 +23,17 @@ $content = '';
 $twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
 $twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
 if ($twitter_consumer_key && $twitter_consumer_secret) {
-	elgg_load_library('deck_river:twitter_async');
-
-	try {
-		$twitterObjUnAuth = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret);
-		$twitterRequestUrl = $twitterObjUnAuth->getAuthenticateUrl();
-		$add_button = elgg_view('output/url', array(
-			'href' => $twitterRequestUrl,
-			'text' => elgg_echo('deck_river:twitter:authorize:request:button'),
-			'class' => 'elgg-button elgg-button-action float-alt',
-			'id' => 'authorize-twitter'
-		));
-	} catch(Exception $e) {
-	}
 
 	$twitter_accounts = deck_river_get_networks_account('twitter_account', $user->getGUID());
 
 	$name = 'twitter elgg-module-network elgg-module-aside mvl float';
 	$title = '<span class="network-icon twitter-icon gwfb pbm float"></span><span class="pls">' . elgg_echo('Twitter') . '</span>';
+	$add_button = elgg_view('output/url', array(
+		'href' => '#',
+		'text' => elgg_echo('deck_river:twitter:authorize:request:button'),
+		'class' => 'elgg-button elgg-button-action float-alt',
+		'id' => 'authorize-twitter'
+	));
 
 	if (!empty($twitter_accounts)) {
 		$content .= elgg_view_module(
@@ -72,31 +65,17 @@ if ($twitter_consumer_key && $twitter_consumer_secret) {
 $facebook_app_id = elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river');
 $facebook_app_secret = elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck_river');
 if ($facebook_app_id && $facebook_app_secret) {
-	elgg_load_library('deck_river:facebook_sdk');
-
-	try {
-		$facebook = new Facebook(array(
-			'appId'  => $facebook_app_id,
-			'secret' => $facebook_app_secret,
-			'cookie' => true
-		));
-		$loginUrl = $facebook->getLoginUrl(array(
-			'redirect_uri' => (elgg_get_site_url() . 'authorize/facebook'),
-			'scope' => deck_river_get_facebook_scope(),
-		));
-		$add_button = elgg_view('output/url', array(
-			'href' => $loginUrl,
-			'text' => elgg_echo('deck_river:facebook:authorize:request:button'),
-			'class' => 'elgg-button elgg-button-action float-alt',
-			'id' => 'authorize-facebook'
-		));
-	} catch(FacebookApiException $e) {
-	}
 
 	$facebook_accounts = deck_river_get_networks_account('facebook_account', $user->getGUID());
 
 	$name = 'facebook elgg-module-network elgg-module-aside mvl float';
 	$title = '<span class="network-icon facebook-icon gwfb pbm float"></span><span class="pls">' . elgg_echo('Facebook') . '</span>';
+	$add_button = elgg_view('output/url', array(
+		'href' => '#',
+		'text' => elgg_echo('deck_river:facebook:authorize:request:button'),
+		'class' => 'elgg-button elgg-button-action float-alt',
+		'id' => 'authorize-facebook'
+	));
 
 	if (!empty($facebook_accounts)) {
 		$content .= elgg_view_module(

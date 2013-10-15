@@ -101,7 +101,14 @@ elgg.deck_river.init = function() {
 		});
 	});
 	$('#authorize-twitter, #authorize-facebook').die().live('click', function(){
-		var oauthWindow = window.open($(this).attr('href'), 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
+		elgg.action('deck_river/network/getLoginUrl', {
+			data: {
+				network: $(this).attr('id').replace('authorize-', '')
+			},
+			success: function(json) {
+				window.open(json.output, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
+			}
+		});
 		return false;
 	});
 
