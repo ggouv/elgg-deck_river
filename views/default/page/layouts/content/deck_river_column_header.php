@@ -6,7 +6,7 @@
 $column_settings = elgg_extract('column_settings', $vars);
 $column_id = elgg_extract('column_id', $vars);
 
-if (!$column_settings['network']) $column_settings['network'] = 'elgg';
+if (!$column_settings->network) $column_settings->network = 'elgg';
 
 $params = array(
 	'text' => elgg_view_icon('settings-alt'),
@@ -28,16 +28,16 @@ $buttons .= elgg_view('output/img', array(
 	'class' => 'refresh-gif'
 ));
 
-$title = elgg_echo($column_settings['title']);
-$subtitle = elgg_echo($column_settings['subtitle']);
+$title = elgg_echo($column_settings->title);
+$subtitle = elgg_echo($column_settings->subtitle);
 
-if (isset($column_settings['types_filter']) || isset($column_settings['subtypes_filter'])) {
+if (isset($column_settings->types_filter) || isset($column_settings->subtypes_filter)) {
 	$subtitle .= ' | ' . elgg_echo('river:filtred');
 }
 
 echo <<<HTML
 <div class="message-box"><div class="column-messages"></div></div>
-<ul class="column-header gwfb" data-network="{$column_settings['network']}" data-direct="{$column_settings['direct']}" data-river_type="column_river" data-entity="$column_id">
+<ul class="column-header gwfb" data-network="{$column_settings->network}" data-direct="{$column_settings->direct}" data-river_type="column_river" data-entity="$column_id">
 	<li>
 		$buttons
 		<div class="count hidden"></div>

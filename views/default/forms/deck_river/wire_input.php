@@ -9,10 +9,10 @@ if (!$user) {
 	return false;
 }
 
-$user_deck_river_pinned_accounts = unserialize(get_private_setting($user->getGUID(), 'deck_river_pinned_accounts'));
+$user_deck_river_pinned_accounts = json_decode(get_private_setting($user->getGUID(), 'deck_river_pinned_accounts'));
 
 $accounts = array();
-// get and format twitter accounts
+// get and format accounts
 elgg_load_library('deck_river:authorize');
 $all_accounts = array_reverse(deck_river_get_networks_account('all'));
 

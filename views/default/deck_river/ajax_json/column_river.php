@@ -11,16 +11,16 @@ $time_posted = get_input('time_posted', false);
 
 // Get the settings of the current user.
 $owner = elgg_get_logged_in_user_entity();
-$user_river_options = unserialize(get_private_setting($owner->guid, 'deck_river_settings'));
-$column_settings = $user_river_options[$tab][$column];
-
+$user_river_options = json_decode(get_private_setting($owner->guid, 'deck_river_settings'));
+$column_settings = $user_river_options->$tab->$column;
+global $fb; $fb->info($column_settings);
 $jsonexport = array();
 
 // detect network
-if ($column_settings['network'] == 'twitter') {
+if ($column_settings->network == 'twitter') {
 	$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
 	$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
-	$account = get_entity($column_settings['account']);
+	$account = get_entity($column_settings->account);
 
 	elgg_load_library('deck_river:twitter_async');
 	$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $account->oauth_token, $account->oauth_token_secret);
@@ -30,14 +30,14 @@ if ($column_settings['network'] == 'twitter') {
 		'count' => 30,
 	);
 
-	if ($column_settings['type'] == 'get_listsStatuses') {
-		$options['list_id'] = $column_settings['list_id'];
+	if ($column_settings->type == 'get_listsStatuses') {
+		$options['list_id'] = $column_settings->list_id;
 		$options['count'] = 31; // @todo why get_listsStatuses return only 29 items ?
-	} else if ($column_settings['type'] == 'get_searchTweets-popular') {
-		$options['q'] = $column_settings['search'];
+	} else if ($column_settings->type == 'get_searchTweets-popular') {
+		$options['q'] = $column_settings->search;
 		$options['result_type'] = 'popular';
-	} else if ($column_settings['type'] == 'get_searchTweets') {
-		$options['q'] = $column_settings['search'];
+	} else if ($column_settings->type == 'get_searchTweets') {
+		$options['q'] = $column_settings->search;
 	}
 
 	// refresh or more items
@@ -48,16 +48,16 @@ if ($column_settings['network'] == 'twitter') {
 	}
 
 	try {
-		$result = call_user_func(array($twitterObj, $column_settings['type']), $options);
+		$result = call_user_func(array($twitterObj, $column_settings->type), $options);
 	} catch(Exception $e) {
 		$result = json_decode($e->getMessage())->errors[0];
 	}
 
 	// check result
 	if ($result->code == 200) {
-		$jsonexport['column_type'] = $column_settings['type'];
+		$jsonexport['column_type'] = $column_settings->type;
 
-		if ($column_settings['type'] == 'get_searchTweets' || $column_settings['type'] == 'get_searchTweets-popular') {
+		if ($column_settings->type == 'get_searchTweets' || $column_settings->type == 'get_searchTweets-popular') {
 			$resp = $result->__get('response');
 			$resp = $resp['statuses'];
 		} else {
@@ -94,7 +94,7 @@ if ($column_settings['network'] == 'twitter') {
 } else {
 
 	// Set column user settings
-	switch ($column_settings['type']) {
+	switch ($column_settings->type) {
 		case 'all':
 			break;
 		case 'friends':
@@ -116,10 +116,10 @@ if ($column_settings['network'] == 'twitter') {
 			break;
 		case 'group':
 			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
-			$options['wheres'][] = "e.container_guid = " . $column_settings['group'];
+			$options['wheres'][] = "e.container_guid = " . $column_settings->group;
 			break;
 		case 'group_mention':
-			$group_name = get_entity($column_settings['group'])->name;
+			$group_name = get_entity($column_settings->group)->name;
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
@@ -128,19 +128,19 @@ if ($column_settings['network'] == 'twitter') {
 			break;
 		case 'search':
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
-			$options['wheres'][] = "(o.description REGEXP '(" . implode('|', $column_settings['search']) . ")')";
+			$options['wheres'][] = "(o.description REGEXP '(" . implode('|', $column_settings->search) . ")')";
 			break;
 		default:
 			$params = array('owner' => $owner->guid, 'query' => 'activity');
-			$result = elgg_trigger_plugin_hook('deck-river', "column:{$column_settings['type']}", $params);
-			$result['column_type'] = $column_settings['type'];
+			$result = elgg_trigger_plugin_hook('deck-river', "column:{$column_settings->type}", $params);
+			$result['column_type'] = $column_settings->type;
 			echo json_encode($result);
 			return;
 			break;
 	}
-	$options['title'] = $column_settings['title'];
-	$options['types_filter'] = $column_settings['types_filter'];
-	$options['subtypes_filter'] = $column_settings['subtypes_filter'];
+	$options['title'] = $column_settings->title;
+	$options['types_filter'] = $column_settings->types_filter;
+	$options['subtypes_filter'] = $column_settings->subtypes_filter;
 
 
 	// set time_method and set $where_with_time in case of multiple query
@@ -223,14 +223,14 @@ if ($column_settings['network'] == 'twitter') {
 		// @todo should be on a hook or view to be overridden
 		if (function_exists('get_dep_from_group_guid')) {
 			$dep = get_dep_from_group_guid($owner->location);
-			$echo = elgg_echo('deck_river:helper:'.$column_settings['type'], array($owner->location, $dep));
+			$echo = elgg_echo('deck_river:helper:'.$column_settings->type, array($owner->location, $dep));
 		}
 
 		$jsonexport['activity'] = '<table height="100%" width="100%"><tr><td class="helper">'. $echo . '</td></tr></table>';
 	}
 
 
-	$jsonexport['column_type'] = $column_settings['type'];
+	$jsonexport['column_type'] = $column_settings->type;
 
 }
 

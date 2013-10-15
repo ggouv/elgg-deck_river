@@ -25,6 +25,7 @@ elgg.provide('elgg.deck_river');
 
 elgg.deck_river.init = function() {
 	$(document).ready(function() {
+
 		if ( $('.elgg-page .deck-river').length ) {
 
 			$('body').addClass('fixed-deck');
@@ -289,9 +290,11 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 					});
 				}
 			});
-			$('select[name="twitter-account"]').change(function() {
+			cs.find('.in-module').change(function() {
+				var network = $(this).attr('name').replace('-account', '');
+
 				$(this).closest('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
-				cs.find('select[name="twitter-lists"]').html('');
+				cs.find('select[name="'+network+'-lists"]').html('');
 				cs.find('.column-type').trigger('change');
 			});
 			cs.find('.column-type').trigger('change');
