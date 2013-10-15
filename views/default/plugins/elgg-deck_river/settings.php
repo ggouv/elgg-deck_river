@@ -131,6 +131,22 @@ $twitter_consumer_secret_view = elgg_view('input/text', array(
 	'value' => $vars['entity']->twitter_consumer_secret
 ));
 
+if (!isset($vars['entity']->twitter_my_network_account) || empty($vars['entity']->twitter_my_network_account)) {
+	$vars['entity']->twitter_my_network_account = '';
+}
+
+$twitter_my_network_account_string = elgg_echo('deck_river:settings:twitter_my_network_account');
+$twitter_my_network_account_view = elgg_view('input/text', array(
+	'name' => 'params[twitter_my_network_account]',
+	'value' => $vars['entity']->twitter_my_network_account
+));
+
+$twitter_auto_follow_string = elgg_echo('deck_river:settings:twitter_auto_follow');
+$twitter_auto_follow_view = elgg_view('input/checkbox', array(
+	'name' => 'params[twitter_auto_follow]',
+	'checked' => $vars['entity']->twitter_auto_follow ? $vars['entity']->twitter_auto_follow : false,
+));
+
 
 /* facebook */
 if (!isset($vars['entity']->facebook_app_id) || empty($vars['entity']->facebook_app_id)) {
@@ -190,6 +206,8 @@ echo <<<__HTML
 		<h3>Twitter</h3><br/>
 		<div class="pbm"><label>$twitter_consumer_key_string</label><br>$twitter_consumer_key_view</div>
 		<div class="pbm"><label>$twitter_consumer_secret_string</label><br>$twitter_consumer_secret_view</div>
+		<div class="pbm"><label>$twitter_my_network_account_string</label><br>$twitter_my_network_account_view</div>
+		<div class="pbm"><label>$twitter_auto_follow_view $twitter_auto_follow_string</label></div>
 
 		<hr class="mal">
 		<h3>Facebook</h3><br/>

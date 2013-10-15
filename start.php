@@ -704,3 +704,52 @@ function goo_gl_short_url($longUrl) {
 	curl_close($curlObj);
 	return $json->id;
 }
+
+
+
+/**
+ * Return token of the site twitter account specified in plugin settings
+ * @return [type] [description]
+ */
+function deck_river_get_site_twitter_account() {
+	$ia = elgg_set_ignore_access(true);
+
+	// get token and secret of specified account
+	$my_network_account = get_entity(elgg_get_plugin_setting('twitter_my_network_account', 'elgg-deck_river'));
+	$token = array(
+		'oauth_token' => $my_network_account->oauth_token,
+		'oauth_token_secret' => $my_network_account->oauth_token_secret
+	);
+
+	elgg_set_ignore_access($ia);
+
+	return $token;
+}
+
+
+
+/**
+ * Auto follow each new twitter account
+ * @return void
+ */
+function deck_river_autofollow_twitter_account($event, $type, $params) {
+	$twitter_account = $params->screen_name;
+
+	if ($twitter_account && elgg_get_plugin_setting('twitter_auto_follow', 'elgg-deck_river') && elgg_get_plugin_setting('twitter_my_network_account', 'elgg-deck_river')) {
+		$token = deck_river_get_site_twitter_account();
+
+		$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
+		$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
+		elgg_load_library('deck_river:twitter_async');
+
+		try {
+			$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $token['oauth_token'], $token['oauth_token_secret']);
+			$follow = $twitterObj->post('/friendships/create.json', array('screen_name' => $twitter_account));
+		} catch(Exception $e) {
+		}
+	}
+
+}
+
+
+

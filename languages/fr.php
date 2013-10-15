@@ -92,7 +92,7 @@ $french = array(
 
 	'deck_river:twitter:authorize:servor_fail' => "%s ne peut pas accéder à Twitter.",
 	'deck_river:twitter:authorize:request:title' => "Autorisez %s à accéder à votre compte Twitter",
-	'deck_river:twitter:authorize:request:button' => "Faire la demande à Twitter",
+	'deck_river:twitter:authorize:request:button' => "Demander un accès à Twitter",
 	'deck_river:twitter:authorize:success' => "Twitter a autorisé l'accès à votre compte.",
 	'deck_river:twitter:revoke:success' => "L'accès à Twitter a été supprimé.",
 	'deck_river:twitter:columnsettings:request' => "Vous pourrez ainsi ajouter des colonnes avec les flux de vos abonnements, vos listes, vos messages directs...",
@@ -102,7 +102,7 @@ $french = array(
 
 	'deck_river:facebook:authorize:servor_fail' => "%s ne peut pas accéder à Facebook.",
 	'deck_river:facebook:authorize:request:title' => "Autorisez %s à accéder à votre compte Facebook",
-	'deck_river:facebook:authorize:request:button' => "Faire la demande à Facebook",
+	'deck_river:facebook:authorize:request:button' => "Demander un accès à Facebook",
 	'deck_river:facebook:authorize:success' => "Facebook a autorisé l'accès à votre compte.",
 	'deck_river:facebook:authorize:error' => "Le compte Facebook n'a pas pu être autorisé par Facebook.",
 	'deck_river:facebook:revoke:success' => "L'accès à Facebook a été supprimé.",
@@ -140,6 +140,8 @@ $french = array(
 	'deck_river:settings:reset_user:nok' => "Impossible de remettre à zéro les paramètres des colonnes de l'utilisateur %s.",
 	'deck_river:settings:twitter_consumer_key' => "Consumer key :",
 	'deck_river:settings:twitter_consumer_secret' => "Consumer secret :",
+	'deck_river:settings:twitter_my_network_account' => "GUID de l'objet du compte Twitter de votre site elgg",
+	'deck_river:settings:twitter_auto_follow' => "Suivre automatiquement les comptes Twitter créés",
 	'deck_river:settings:facebook_app_id' => "App ID :",
 	'deck_river:settings:facebook_app_secret' => "App secret :",
 
