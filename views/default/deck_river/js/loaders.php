@@ -212,18 +212,20 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 				itemsRiver = $('.item-' + network + '-' + riverID),
 				newItems = elgg.deck_river.displayRiver(response, TheColumnHeader, true);
 
-			$.each(itemsRiver, function() {
-				var idToggle = $(this).find('.response-loader').addClass('hidden')
-					.closest('.column-river').attr('id') + '-' + riverID;
+			if (response.results) {
+				$.each(itemsRiver, function() {
+					var idToggle = $(this).find('.response-loader').addClass('hidden')
+						.closest('.column-river').attr('id') + '-' + riverID;
 
-				$(this).find('.elgg-river-responses')
-					.append($('<div>', {id: idToggle, 'class': 'thread mts float hidden'}).html(newItems.clone()))
-				.find('a.thread').attr({
-					rel: 'toggle',
-					href: '#' + idToggle
+					$(this).find('.elgg-river-responses')
+						.append($('<div>', {id: idToggle, 'class': 'thread mts float hidden'}).html(newItems.clone()))
+					.find('a.thread').attr({
+						rel: 'toggle',
+						href: '#' + idToggle
+					});
 				});
-			});
-			athread.click(); // toggle after append
+				athread.click(); // toggle after append
+			}
 		};
 
 	// if already exist, skip
@@ -276,8 +278,7 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
 elgg.deck_river.displayCount = function(response, TheColumn) {
 	var TheColumnHeader = TheColumn.find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
-		networkReturn = (TheColumnHeader.data('network') == 'twitter') ? 'results' : 'activity'
-		responseLength = response[networkReturn].length,
+		responseLength = response['results'].length,
 		countSpan = TheColumnHeader.find('.count').addClass('hidden');
 
 	if (responseLength > 0) {

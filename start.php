@@ -11,6 +11,9 @@ elgg_register_event_handler('init','system','deck_river_init');
 
 function deck_river_init() {
 
+	elgg_register_js('facebook:sdk', "//connect.facebook.net/en_US/all.js");
+	elgg_load_js('facebook:sdk');
+
 	elgg_register_library('deck_river:river_loader', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_loader.php');
 	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
 	elgg_register_library('deck_river:authorize', elgg_get_plugins_path() . 'elgg-deck_river/lib/authorize.php');

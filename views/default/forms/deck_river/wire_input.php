@@ -9,7 +9,7 @@ if (!$user) {
 	return false;
 }
 
-$user_deck_river_pinned_accounts = json_decode(get_private_setting($user->getGUID(), 'deck_river_pinned_accounts'));
+$user_deck_river_pinned_accounts = json_decode(get_private_setting($user->getGUID(), 'deck_river_pinned_accounts'), true);
 
 $accounts = array();
 // get and format accounts

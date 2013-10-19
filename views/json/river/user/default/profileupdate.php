@@ -19,4 +19,4 @@ $vars['item']->summary = elgg_echo('river:update:user:profile', array($subject_l
 $object = $vars['item']->getObjectEntity();
 $vars['item']->message = elgg_get_excerpt($object->description, '140');
 
-$jsonexport['activity'][] = $vars['item'];
+$jsonexport['results'][] = $vars['item'];

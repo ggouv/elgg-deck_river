@@ -33,4 +33,4 @@ switch ($vars['item']->subtype) {
 
 $vars['item']->message = deck_river_wire_filter(elgg_get_excerpt($comment->value, 140));
 
-$jsonexport['activity'][] = $vars['item'];
+$jsonexport['results'][] = $vars['item'];

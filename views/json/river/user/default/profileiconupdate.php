@@ -21,4 +21,4 @@ $vars['item']->message = elgg_view_entity_icon($subject, 'tiny', array(
 	'use_link' => false,
 ));
 
-$jsonexport['activity'][] = $vars['item'];
+$jsonexport['results'][] = $vars['item'];

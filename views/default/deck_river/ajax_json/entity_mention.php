@@ -59,7 +59,7 @@ $options = array_merge($defaults, $options);
 $items = elgg_get_river($options);
 
 global $jsonexport;
-$jsonexport['activity'] = array();
+$jsonexport['results'] = array();
 
 if (!empty($items)) {
 	foreach ($items as $item) {
@@ -71,7 +71,7 @@ if (!empty($items)) {
 	}
 
 	$temp_subjects = array();
-	foreach ($jsonexport['activity'] as $item) {
+	foreach ($jsonexport['results'] as $item) {
 		if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
 
 		$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
@@ -97,7 +97,7 @@ if (!empty($items)) {
 
 } else if (!$time_method) {
 
-	$jsonexport['activity'] = '<table height="100%" width="100%"><tr><td class="helper">'. elgg_echo('deck_river:helper:nothing') . '</td></tr></table>';
+	$jsonexport['results'] = '<table height="100%" width="100%"><tr><td class="helper">'. elgg_echo('deck_river:helper:nothing') . '</td></tr></table>';
 
 }
 

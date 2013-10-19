@@ -33,5 +33,5 @@ if ($object->reply) $vars['item']->responses = $object->wire_thread;
 
 $vars['item']->message = $excerpt;
 
-$jsonexport['activity'][] = $vars['item'];
+$jsonexport['results'][] = $vars['item'];
 

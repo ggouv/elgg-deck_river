@@ -201,7 +201,7 @@ if ($column_settings['network'] == 'twitter') {
 	$options = array_merge($defaults, $options);
 	$items = elgg_get_river($options);
 
-	$jsonexport['activity'] = array();
+	$jsonexport['results'] = array();
 	if (!empty($items)) {
 		foreach ($items as $item) {
 			if (elgg_view_exists($item->view, 'json')) {
@@ -212,7 +212,7 @@ if ($column_settings['network'] == 'twitter') {
 		}
 
 		$temp_subjects = array();
-		foreach ($jsonexport['activity'] as $item) {
+		foreach ($jsonexport['results'] as $item) {
 			if (!in_array($item->subject_guid, $temp_subjects)) $temp_subjects[] = $item->subject_guid; // store user
 
 			$item->posted_acronym = htmlspecialchars(strftime(elgg_echo('friendlytime:date_format'), $item->posted)); // add date
@@ -251,7 +251,7 @@ if ($column_settings['network'] == 'twitter') {
 			$echo = elgg_echo('deck_river:helper:'.$column_settings['type'], array($owner->location, $dep));
 		}
 
-		$jsonexport['activity'] = '<table height="100%" width="100%"><tr><td class="helper">'. $echo . '</td></tr></table>';
+		$jsonexport['results'] = '<table height="100%" width="100%"><tr><td class="helper">'. $echo . '</td></tr></table>';
 	}
 
 

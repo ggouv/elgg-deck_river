@@ -110,11 +110,11 @@ elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
 	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
 	if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
 
-	if (elgg.isString(response.activity)) {
-		return $(response.activity);
+	if (elgg.isString(response.results)) {
+		return $(response.results);
 	} else if (elgg.isString(response.results)) {
 		return $(response.results);
-	} else if (response.activity && response.activity.length != 0 || response.results) {
+	} else if (response.results && response.results.length != 0) {
 		return elgg.deck_river[network + 'DisplayItems'](response, thread);
 	}
 };
@@ -209,7 +209,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 		elgg.deck_river.storeEntity(entity);
 	});
 
-	$.each(response.activity, function(key, value) {
+	$.each(response.results, function(key, value) {
 
 		// add user object
 		value.user = $.grep(response.users, function(e){ return e.guid == value.subject_guid; })[0];
