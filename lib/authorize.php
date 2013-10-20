@@ -186,9 +186,12 @@ function deck_river_get_facebook_scope() {
 			read_mailbox,
 			read_requests,
 			read_stream,
-			xmpp_login,
+			status_update,
 			create_event,
 			manage_friendlists,
+			manage_notifications,
+			manage_pages,
+			publish_actions,
 			publish_stream,
 			user_about_me,
 			user_activities,
@@ -308,6 +311,7 @@ function deck_river_facebook_revoke($user_guid = null, $user_id = null, $echo = 
 		register_error(elgg_echo('deck_river:network:revoke:error'));
 	}
 }
+
 
 
 

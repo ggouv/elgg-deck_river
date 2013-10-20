@@ -14,6 +14,6 @@ $subject_icon = elgg_view_entity_icon($subject, 'tiny', array('use_hover' => fal
 $object_icon = elgg_view_entity_icon($object, 'tiny', array('use_hover' => false));
 
 $vars['item']->summary = elgg_view('river/elements/summary', array('item' => $vars['item']), FALSE, FALSE, 'default');
-$vars['item']->message = $subject_icon . elgg_view_icon('arrow-right') . $object_icon;
+$vars['item']->message = '<div style="white-space: normal;">' . $subject_icon . elgg_view_icon('arrow-right') . $object_icon . '</div>';
 
 $jsonexport['results'][] = $vars['item'];

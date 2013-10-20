@@ -31,6 +31,6 @@ switch ($vars['item']->subtype) {
 }
 
 
-$vars['item']->message = deck_river_wire_filter(elgg_get_excerpt($comment->value, 140));
+$vars['item']->message = deck_river_wire_filter(preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", elgg_get_excerpt($comment->value, 140)));
 
 $jsonexport['results'][] = $vars['item'];

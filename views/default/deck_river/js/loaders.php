@@ -9,8 +9,10 @@
  *
  */
 
-/* Be carefull ! Tweet IDs are too long for a call with .data('id') ! We need use .attr('data-id')
+// Be carefull ! Tweet IDs are too long for a call with .data('id') ! We need use .attr('data-id')
 
+// facebook fields for ajay query
+var FBfields = 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)';
 
 /**
  * Load a column
@@ -48,6 +50,26 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 				elgg.register_error(elgg.echo('deck_river:twitter:access:error', [status, error]));
 				TheColumn.removeClass('loadingRefresh');
 			}
+		});
+	} else if (TheColumnHeader.data('network') == 'facebook') {
+		FB.api("ManUtopiK/home", function(response) {
+			if (response) {
+				response.results = response.data;
+				console.log(response);
+				response.TheColumn = TheColumn.removeClass('loadingRefresh');
+				if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
+					TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));
+					console.log('GOGO');
+					TheColumnRiver.scrollTo(0);
+					TheColumnRiver.append(loadMoreItem);
+					TheColumnHeader.data('next_page', response.paging.previous).data('refresh_url', response.paging.next);
+				}
+			} else { // @todo Make error more comprehensible
+				TheColumnRiver.html('error');
+			}
+		}, 'get', {
+			access_token: TheColumnHeader.data('token'),
+			fields: FBfields
 		});
 	} else {
 		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('river_type'), {

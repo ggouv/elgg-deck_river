@@ -37,7 +37,7 @@ if (isset($column_settings['types_filter']) || isset($column_settings['subtypes_
 
 echo <<<HTML
 <div class="message-box"><div class="column-messages"></div></div>
-<ul class="column-header gwfb" data-network="{$column_settings['network']}" data-direct="{$column_settings['direct']}" data-river_type="column_river" data-entity="$column_id">
+<ul class="column-header gwfb" data-network="{$column_settings['network']}" data-direct="{$column_settings['direct']}" data-river_type="column_river" data-entity="$column_id" data-token="{$column_settings['token']}">
 	<li>
 		$buttons
 		<div class="count hidden"></div>

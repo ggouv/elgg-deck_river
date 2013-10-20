@@ -186,12 +186,12 @@ if ($submit == 'delete') {
 	switch ($facebook_type) {
 		case 'home':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:home';
+			$user_river_options[$tab][$column]['token'] = get_entity($facebook_account)->oauth_token;
 			$user_river_options[$tab][$column]['subtitle'] = get_entity($facebook_account)->username;
 			break;
-		case 'get_searchTweets':
-			$user_river_options[$tab][$column]['title'] = $search;
-			$user_river_options[$tab][$column]['subtitle'] = 'deck_river:facebook:feed:search';
-			$user_river_options[$tab][$column]['search'] = $search;
+		case 'feed':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:feed';
+			$user_river_options[$tab][$column]['subtitle'] = get_entity($facebook_account)->username;
 			break;
 		case 'get_searchTweets-popular':
 			break;

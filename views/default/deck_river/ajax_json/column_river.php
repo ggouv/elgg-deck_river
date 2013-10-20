@@ -91,31 +91,6 @@ if ($column_settings['network'] == 'twitter') {
 		$jsonexport['results'] = '';
 	}
 
-} else if ($column_settings['network'] == 'facebook') {
-
-	$account = get_entity($column_settings['account']);
-
-	elgg_load_library('deck_river:facebook_sdk');
-	$facebook = new Facebook(array(
-		'appId'  => elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river'),
-		'secret' => elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck_river')
-	));
-	$facebook->setAccessToken($account->oauth_token);
-
-	try {
-		$result = $facebook->api($account->user_id . '/' . $column_settings['type'], 'get', $options);
-	} catch(FacebookApiException $e) {
-		$result = json_decode($e);
-	}
-
-	if ($result) {
-		$jsonexport['result'] = $result;
-	} else {
-		register_error(elgg_echo('deck_river:facebook:error'));
-		$jsonexport['result'] = $result;
-	}
-
-
 } else {
 
 	// Set column user settings

@@ -910,7 +910,65 @@ li.elgg-menu-item-arrow-left {
 	color: red;
 }
 
-
+.elgg-river-image {
+	height: 90px;
+	overflow: hidden;
+	background: #EEE;
+	max-width: 590px;
+}
+.elgg-river-image .elgg-body {
+	overflow: hidden;
+	border: 5px solid #EEE;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	height: inherit;
+}
+.elgg-river-image .elgg-image {
+	background-position: 50% 50%;
+	background-size: auto 90px;
+	background-repeat: no-repeat;
+	background-color: white;
+	width: 90px;
+	height: 90px;
+	margin: 0;
+}
+.elgg-river-image.big {
+	height: auto;
+}
+.elgg-river-image.big .elgg-image {
+	background-position: 50% 50%;
+	background-size: 100% auto;
+	width: 100%;
+	height: 150px;
+	max-width: 600px;
+	max-height: 600px;
+}
+.elgg-river-image.big .elgg-body {
+	height: auto;
+	float: left;
+	clear: both;
+	padding: 3px;
+}
+.elgg-river-responses.video-popup .elgg-image:before {
+	content: "v";
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+	background-color: rgba(0, 0, 0, 0.2);
+	color: rgba(255, 255, 255, 0.8);
+	font-size: 10em;
+	line-height: 0.8em;
+	display: none;
+	text-indent: 9px;
+}
+.elgg-river-responses.video-popup:hover .elgg-image:before {
+	display: block;
+}
+.elgg-river-message {
+	white-space: pre-line;
+}
 
 .elgg-river-responses a:hover {
 	cursor: pointer;
@@ -934,6 +992,18 @@ li.elgg-menu-item-arrow-left {
 .elgg-list-item.responseAt {
 	background: #FFFFCC !important;
 }
+/* facebook */
+a.elgg-river-responses {
+	color: #555555;
+	line-height: 1.2em;
+}
+a.elgg-river-responses:hover {
+	text-decoration: none;
+}
+a.elgg-river-responses:hover h4 {
+	text-decoration: underline;
+}
+
 
 
 /* settings */
@@ -960,7 +1030,7 @@ li.elgg-menu-item-arrow-left {
 .deck-popup > .elgg-head h3 {
 	color: #666666;
 	float: left;
-	padding: 4px 30px 0 5px;
+	padding: 4px 50px 0 5px;
 }
 .deck-popup > .elgg-head a {
 	display: inline-block;
@@ -1167,9 +1237,23 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 	width: 100%;
 }
 
-/* grous facebook popup */
+/* facebook popup */
 #facebook-groups-popup li:hover {
 	background: #CCC;
+}
+#video-popup {
+	height: 360px;
+}
+#video-popup .elgg-body {
+	height: 346px;
+	margin: -6px;
+}
+#video-popup.ui-draggable-dragging .overlay {
+	z-index: 999;
+	display: block;
+	height: 100%;
+	width: 100%;
+	position: absolute;
 }
 
 /* single view */
@@ -1259,4 +1343,20 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 #choose-twitter-account-popup {
 	height: auto;
 	width: 300px;
+}
+
+.ui-resizable { position: relative;}
+.ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block;}
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+.ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0px; }
+.ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0px; }
+.ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0px; height: 100%; }
+.ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0px; height: 100%; }
+.ui-resizable-se { cursor: se-resize; width: 14px; height: 14px; right: 0; bottom: 0; }
+.ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+.ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+.resizable-helper {
+	border: 2px dotted red;
+	background: rgba(255, 0, 0, 0.08);
 }

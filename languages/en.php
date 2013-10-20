@@ -39,11 +39,22 @@ $english = array(
 	'river:group' => "Group",
 	'river:filtred' => "filtred",
 	'river:search' => "Search on %s",
+
+	// river item
 	'retweet' => "Retweet",
 	'retweet:one' => "%s retweet",
 	'retweet:twoandmore' => "%s retweets",
 	'deck_river:show_discussion' => "Show discussion",
 	'deck_river:toggle_discussion' => "Toggle discussion",
+	'deck_river:via' => "via",
+	'deck_river:facebook:action:like' => "I like",
+	'deck_river:facebook:action:comment' => "Comment",
+	'deck_river:facebook:action:share' => "Share",
+	'deck_river:facebook:like' => "%s person like that.",
+	'deck_river:facebook:likes' => "%s persons likes that.",
+	'deck_river:facebook:share' => "%s share.",
+	'deck_river:facebook:shares' => "%s shares.",
+	'deck_river:facebook:show_comments' => "Show %s others comments",
 
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',

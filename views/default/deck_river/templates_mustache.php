@@ -240,7 +240,7 @@
 							<acronym class="tooltip w" title="{{created_at}}" time="{{posted}}">{{friendly_time}}</acronym>
 						</span>
 					</a>
-					{{#source}}<?php echo elgg_echo('deck_river:twitter:via'); ?>&nbsp;{{{source}}}{{/source}}
+					{{#source}}<?php echo elgg_echo('deck_river:via'); ?>&nbsp;{{{source}}}{{/source}}
 					</span>
 				</div>
 				<div class="elgg-river-message">{{{text}}}</div>
@@ -253,9 +253,7 @@
 					{{#responses.reply}}
 					{{#responses.retweet}}<br/>{{/responses.retweet}}<div class="response-loader float clearfloat hidden"></div>
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
-					<a href="#" class="thread float prm" data-thread="{{id_str}}">
-						<?php echo elgg_echo('deck_river:thread'); ?>
-					</a>
+					<a href="#" class="thread float prm" data-thread="{{id_str}}"><?php echo elgg_echo('deck_river:thread'); ?></a>
 					{{/responses.reply}}
 				</div>
 				{{/responses}}
@@ -263,7 +261,128 @@
 		</div>
 </li></script>
 
-</div>
 
+
+<!-- Templates for elgg river facebook item -->
+<script id="elgg-river-facebook-template" type="text/template"><li class="elgg-list-item item-facebook-{{id}}"
+		data-timeid="{{id}}"
+		data-username="{{from.name}}"
+		data-id="{{id}}"
+		data-object_guid="{{id}}"
+		>
+		<div class="elgg-image-block elgg-river-item clearfix">
+			<div class="elgg-image">
+				<div class="elgg-avatar elgg-avatar-small">
+					<div class="facebook-user-info-popup" title="{{from.id}}">
+						<img title="{{from.name}}" alt="{{from.name}}" src="http://graph.facebook.com/{{from.id}}/picture">
+					</div>
+				</div>
+				{{#icon}}<br/><img class="float-alt prs" src="{{icon}}">{{/icon}}
+			</div>
+			<div class="elgg-body">
+				{{#menu}}
+				<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
+					{{{menu.default}}}
+					{{#menu.submenu}}
+					<li class="elgg-submenu">
+						<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
+						<ul class="elgg-module-popup hidden">
+							{{{menu.submenu}}}
+						</ul>
+					</li>
+					{{/menu.submenu}}
+				{{/menu}}
+				</ul>
+				<div class="elgg-river-summary">
+					<span class="facebook-user-info-popup" title="{{from.name}}">{{from.name}}</span>
+					{{#via}}
+						&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;
+						<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>
+					{{/via}}
+					{{#properties}}
+						<?php echo elgg_echo('river:facebook:photo:shared_story:shared'); ?>&nbsp;
+						<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>
+						<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;
+						<a target="_blank" href="{{properties[0].href}}">{{properties[0].text}}</a>
+					{{/properties}}
+					<br><span class="elgg-river-timestamp">
+						<a href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">
+							<span class="elgg-friendlytime">
+								<acronym class="tooltip w" title="{{created_time}}" time="{{posted}}">{{friendly_time}}</acronym>
+							</span>
+						</a>
+					</span>
+				</div>
+				<div class="elgg-river-message">{{#typestatus}}<a target="_blank" href="https://facebook.com/{{id}}">{{/typestatus}}{{{message}}}{{#typestatus}}</a>{{/typestatus}}</div>
+				{{#link}}
+				{{#typevideo}}
+				<a class="elgg-river-responses video-popup" href="#" data-source="{{source}}">
+				{{/typevideo}}
+				{{^typevideo}}
+				<a class="elgg-river-responses" target="_blank" href="{{link}}">
+				{{/typevideo}}
+					<div class="elgg-river-image">
+						{{#full_picture}}
+						<div id="img{{id}}" class="elgg-image gwfb" style="background-image: url({{full_picture}});"></div>
+						{{/full_picture}}
+						<div class="elgg-body">
+							<h4>{{name}}</h4>
+							<span class="elgg-subtext">{{caption}}</span>
+							<div>{{{description}}}</div>
+						</div>
+					</div>
+				</a>
+				{{/link}}
+				<div class="elgg-river-responses pts">
+					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
+					<a href="#" class="float prm"><?php echo elgg_echo('deck_river:facebook:action:comment'); ?></a>
+					{{#likes}}<span class="elgg-icon elgg-icon-like float gwfb"></span><span class="float likes-popup prm" data-users="{{likes.users}}">{{likes.string}}</span>{{/likes}}
+					{{#shares}}<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span><span class="float shares-popup prm">{{shares.string}}</span>{{/shares}}
+				</div>
+				{{#comments}}
+				{{#comments.before}}
+					<ul class="elgg-list elgg-river-comments">
+						<li><a rel="toggle" href="#comment-part-{{id}}">{{comments.before}}</a></li>
+					</ul>
+					<ul id="comment-part-{{id}}" class="elgg-list elgg-river-comments hidden">
+						{{#comments.dataBefore}}
+							{{> erFBt-comment}}
+						{{/comments.dataBefore}}
+					</ul>
+				{{/comments.before}}
+				<ul class="elgg-list elgg-river-comments">
+					{{#comments.data}}
+						{{> erFBt-comment}}
+					{{/comments.data}}
+				</ul>
+				{{/comments}}
+			</div>
+		</div>
+</li></script>
+
+<script id="erFBt-comment" type="text/template">
+	<li class="elgg-item" id="{{id}}">
+		<div class="elgg-image-block clearfix">
+			<div class="elgg-image">
+				<img alt="from.name" src="https://graph.facebook.com/{{from.id}}/picture?width=24&height=24" width="24" height="24">
+			</div>
+			<div class="elgg-body">
+				<div class="elgg-river-summary">
+					<span class="facebook-user-info-popup" title="{{from.name}}">{{from.name}}</span>
+					<span class="elgg-river-timestamp">
+					<a target="_blank" href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">
+						<br><span class="elgg-friendlytime">
+							<acronym class="tooltip w" title="{{created_time}}" time="{{posted}}">{{friendly_time}}</acronym>
+						</span>
+					</a>
+				</span>
+				</div>
+				<div class="elgg-river-message">{{{message}}}</div>
+			</div>
+		</div>
+	</li>
+</script>
+
+</div>
 
 

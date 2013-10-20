@@ -54,6 +54,8 @@ $french = array(
 	'river:group' => "Groupe",
 	'river:filtred' => "filtré",
 	'river:search' => "Recherche sur %s",
+
+	// river item
 	'retweet' => "Retweeter",
 	'retweeted_by' => "Retweeté par %s",
 	'retweeted_which' => "%s retweets dont %s",
@@ -62,6 +64,15 @@ $french = array(
 	'deck_river:thread' => "la discussion",
 	'deck_river:thread:show' => "Afficher ", // !space at the end
 	'deck_river:thread:hide' => "Masquer ", // !space
+	'deck_river:via' => "via",
+	'deck_river:facebook:action:like' => "J'aime",
+	'deck_river:facebook:action:comment' => "Commenter",
+	'deck_river:facebook:action:share' => "Partager",
+	'deck_river:facebook:like' => "%s personne aime ça.",
+	'deck_river:facebook:likes' => "%s personnes aiment ça.",
+	'deck_river:facebook:share' => "%s partage.",
+	'deck_river:facebook:shares' => "%s partages.",
+	'deck_river:facebook:show_comments' => "Afficher %s autres commentaires",
 
 	// add tab form
 	'deck_river:add_tab_title' => "Ajouter un nouvel onglet :",
@@ -157,7 +168,6 @@ $french = array(
 	'deck_river:twitter:feed:users:search' => "Rechercher des utilisateurs",
 	'deck_river:twitter:list' => "Liste",
 	'deck_river:twitter:lists' => "Listes",
-	'deck_river:twitter:via' => "via",
 
 	'deck_river:twitter:feed:home' => "Flux d'accueil",
 	'deck_river:twitter:feed:user' => "Mes tweets",

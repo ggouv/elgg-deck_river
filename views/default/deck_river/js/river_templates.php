@@ -12,6 +12,12 @@
 
 $(document).ready(function() {
 
+FB.init({
+	appId: '213084262191194',
+	channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
+	oauth: true
+});
+
 	$('.elgg-menu-item-response a').live('click', function() {
 		var item = $(this).closest('.elgg-list-item');
 		elgg.deck_river.responseToWire(item, '@' + item.data('username') + ' ');
@@ -69,7 +75,7 @@ $(document).ready(function() {
 						if (action == 'post_friendshipsDestroy') response.followers_count--;
 						elgg.deck_river.storeEntity(response, 'twitter');
 						response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-						response.description = response.description.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag();
+						response.description = response.description.ParseEverythings('twitter');
 						$('#user-info-popup > .elgg-body').html(Mustache.render($('#twitter-user-profile-template').html(), response));
 						elgg.system_message(elgg.echo('deck_river:twitter:post:'+action, [response.screen_name]));
 						$('#choose-twitter-account-popup').remove();
@@ -302,7 +308,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		}
 
 		// format date and add friendly_time
-		value.posted = value.created_at.TwitterFormatDate();
+		value.posted = value.created_at.FormatDate();
 		value.friendly_time = elgg.friendly_time(value.posted);
 		if (value.source) {
 			value.source = value.source[0] == '&' ? $('<div>').html(value.source).text() : value.source ; // twitter search api retun encoded string, not main api
@@ -337,7 +343,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		};
 
 		// parse tweet text
-		value.text = value.text.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag();
+		value.text = value.text.ParseEverythings('twitter');
 
 		output += elggRiverTemplate(value);
 
@@ -345,28 +351,175 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 	return $(output);
 };
 
-String.prototype.TwitterFormatDate = function () {
+String.prototype.FormatDate = function () {
 	return $.datepicker.formatDate('@', new Date(this))/1000;
 };
-String.prototype.TwitterParseURL = function () {
-	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&\?\/.=]+/g, function (url) {
+String.prototype.ParseURL = function () {
+	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=]+/g, function (url) {
 		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
 	});
 };
-String.prototype.TwitterParseUsername = function () {
+String.prototype.ParseUsername = function () {
 	return this.replace(/@[A-Za-z0-9-_]+/g, function (u) {
 		return '<a href="#" class="twitter-user-info-popup" title="'+u.replace("@", "")+'">'+u+'</a>';
 	});
 };
-String.prototype.TwitterParseHashtag = function () {
-	return this.replace(/#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+/g, function (h) {
-		//var tag = t.replace("#", "%23")
-		return '<a href="#" class="hashtag-info-popup" title="'+h+'" data-network="twitter">'+h+'</a>';
-		//return t.link("http://search.twitter.com/search?q=" + tag);
+String.prototype.ParseHashtag = function (network) {
+	return this.replace(/([^"]|^)(#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+)/g, function (h, $1, $2) {
+		return $1+'<a href="#" class="hashtag-info-popup" title="'+$2+'" data-network="'+network+'">'+$2+'</a>';
+	});
+};
+String.prototype.ParseEverythings = function (network) {
+	return this.ParseURL().ParseUsername().ParseHashtag(network);
+};
+String.prototype.TruncateString = function (length, more) {
+	var length = length || 140,
+		more = more || '[...]',
+		trunc = '';
+
+	do {
+		length++;
+		trunc = this.substring(0, length);
+	} while (trunc.length !== this.length && trunc.slice(-1) != ' ');
+	if (length < this.length) {
+		var rand = (Math.random()+"").replace('.','');
+		return this.substring(0, length-1) +
+				'<span id="text-part-'+rand+'" class="hidden">' + this.substring(length-1, this.length) + '</span>' + 
+				'<a rel="toggle" href="#text-part-'+rand+'"> ' + more + '</a>';
+	} else {
+		return trunc;
+	}
+};
+
+var rpd = [];
+/**
+ * Javascript template for river element @todo waiting for Elgg core developers to see wich library they will use (ember.js, ...) in elgg 1.9 or 2 and replace it with a js MVC system.
+ *
+ * @param {array}	json response
+ */
+elgg.deck_river.facebookDisplayItems = function(response, thread) {
+	var output = '',
+		imgs = [],
+		elggRiverTemplate = Mustache.compile($('#elgg-river-facebook-template').html());
+		Mustache.compilePartial('erFBt-comment', $('#erFBt-comment').html());
+
+rpd.push(response);
+	$.each(response.data, function(key, value) {
+		// store information about facebook user
+		//elgg.deck_river.storeEntity(value.user, 'twitter');
+
+
+		// format date and add friendly_time
+		value.posted = value.created_time.FormatDate();
+		value.friendly_time = elgg.friendly_time(value.posted);
+
+		// make menus
+		value.menu = {
+			default: 
+				'<li><a href="#" class="gwfb tooltip s" title="'+elgg.echo('deck_river:facebook:action:like')+'"><span class="elgg-icon elgg-icon-like"></span></a></li>'+
+				'<li><a href="#" class="gwfb tooltip s" title="'+elgg.echo('deck_river:facebook:action:share')+'"><span class="elgg-icon elgg-icon-share"></span></a></li>'
+		};
+
+		// parse tweet text
+		//value.text = value.message.ParseEverythings('facebook');
+		if (!value.message) value.message = value.story; // somes stranges status post doesn't have message but story instead
+		if (value.message) value.message = value.message.TruncateString().ParseEverythings('facebook');
+
+		if (value.likes) {
+			var vld = value.likes.data, u = '';
+
+			value.likes.string = elgg.echo('deck_river:facebook:like'+(vld.length == 1 ? '':'s'), [vld.length]);
+			$.each(vld, function(i, e) {
+				u += ','+e.id
+			});
+			value.likes.users = u.substr(1);
+		}
+		if (value.shares) {
+			var vsc = value.shares.count;
+			value.shares.string = elgg.echo('deck_river:facebook:share'+(vsc == 1 ? '':'s'), [vsc]);
+		}
+
+		if (value.comments) {
+			var vcd = value.comments.data;
+			$.each(vcd, function(i,e) {
+				var ef = value.comments.data[i].posted = e.created_time.FormatDate();
+				value.comments.data[i].friendly_time = elgg.friendly_time(ef);
+				value.comments.data[i].message = e.message.TruncateString().ParseEverythings('facebook');
+			});
+			if (vcd.length > 3) {
+				value.comments.dataBefore = vcdb = value.comments.data.splice(0, vcd.length-3);
+				value.comments.before = elgg.echo('deck_river:facebook:show_comments', [vcdb.length]);
+			}
+		}
+
+		value['type'+value.type] = true; // used for mustache
+		if (value.status_type == 'created_note') {
+			//delete value.typelink;
+			value.typenote = 1;
+			console.log(value);
+		}
+
+		if (value.full_picture) imgs.push({src: value.full_picture, id: value.id});
+		output += elggRiverTemplate(value);
+
+	});
+
+	// resize images
+	$.each(imgs, function(i, e) {
+		var img = new Image();
+
+		img.src = e.src;
+		img.onload = function() {
+			var tw = this.width, th = this.height,
+				$eri = $('#img'+e.id).data('img', [tw, th]).parent();
+
+			if (tw >= $eri.width() || tw >= 600) $('#img'+e.id).height(Math.min($eri.addClass('big').width(), '600')/tw*th);
+			if (tw <= 1) $('#img'+e.id).remove(); // Don' know why, but sometimes facebook return a "safe_image" with 1x1 pixels
+		};
+		img.onerror = function() {$('#img'+e.id).remove()};
+	});
+
+	return $(output);
+};
+
+FBgraph = function(query, callback) {
+	$.ajax({
+		url: 'https://graph.facebook.com/' + query,
+		dataType: 'json',
+	})
+	.done(function(rep) {
+		callback(rep);
+	})
+	.fail(function() {
+		return false;
 	});
 };
 
+FBfql = function(query, callback) { //.replace(/foo/g, "bar")
+	$.ajax({
+		url: 'https://graph.facebook.com/' + query,
+		dataType: 'json',
+	})
+	.done(function(rep) {
+		callback(rep);
+	})
+	.fail(function() {
+		return false;
+	});
+};
 
+elgg.deck_river.resizeRiverImages = function() {
+	$.each($('.elgg-page-body #deck-river-lists .elgg-river-image .elgg-image'), function(i, e) {
+		var s = $(e).data('img'),
+			$eri = $(e).parent();
+
+		if (s[0] >= $eri.width() || s[0] >= 600) {
+			$(e).height(Math.min($eri.addClass('big').width(),'600')/s[0]*s[1]);
+		} else {
+			$eri.removeAttr('big')
+		}
+	});
+};
 
 
 /*! Installing mustache for waiting which MVC elgg core team going to choose.

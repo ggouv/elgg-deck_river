@@ -87,6 +87,7 @@ elgg.deck_river.init = function() {
 		if ( $('.deck-river').length ) {
 			elgg.deck_river.SetColumnsHeight();
 			elgg.deck_river.SetColumnsWidth();
+			elgg.deck_river.resizeRiverImages();
 		}
 	});
 
@@ -325,6 +326,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 							elgg.deck_river.SetColumnsHeight();
 							elgg.deck_river.SetColumnsWidth();
 							$('#deck-river-lists').animate({ scrollLeft: $('#deck-river-lists').width()});
+							elgg.deck_river.resizeRiverImages();
 						}
 
 						var TheColumn = $('#'+response.column); // redeclare because maybe it was just created.
@@ -335,6 +337,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 								$(this).animate({'width':0},'', function() {
 									$(this).remove();
 									elgg.deck_river.SetColumnsWidth();
+									elgg.deck_river.resizeRiverImages();
 								});
 							});
 							cs.remove();

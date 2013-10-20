@@ -83,7 +83,7 @@ elgg.deck_river.popups = function() {
 			userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
 			templateRender = function(response) {
 				response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-				response.description = response.description.TwitterParseURL().TwitterParseUsername().TwitterParseHashtag();
+				response.description = response.description.ParseEverythings('twitter');
 				body.html(Mustache.render($('#twitter-user-profile-template').html(), response));
 			};
 
@@ -105,6 +105,24 @@ elgg.deck_river.popups = function() {
 			templateRender(userInfo);
 		}
 	}).liveDraggable();
+
+	// video popup
+	$('.video-popup').die().live('click', function() {
+		var source = $(this).data('source');
+
+		elgg.deck_river.createPopup('video-popup', $(this).find('h4').html());
+		$('#video-popup .elgg-body').html(
+			$('<div>', {'class': 'overlay hidden'}).after(
+				$('<iframe>', {src: source, width: '100%', height: '100%'}))
+		).resizable({
+			handles: 'se',
+			helper: 'resizable-helper',
+			stop: function( event, ui ) {
+				$('#video-popup').height('auto').width('auto');
+			}
+		});
+		return false;
+	});
 
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);
@@ -170,7 +188,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 	var popupTitle = popupTitle || '';
 
 	if (!$('#'+popupID).length) {
-		$('.elgg-page-body').append(
+		$('.elgg-page-body').after(
 			Mustache.render($('#popup-template').html(), {popupID: popupID, popupTitle: popupTitle})
 		);
 		var popup = $('#'+popupID).draggable({
@@ -178,12 +196,7 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 			stack: '.elgg-module-popup'
 		});
 		popup.find('.elgg-icon-push-pin').click(function() {
-			var popupP = $(this).closest('.deck-popup');
-			if (popupP.hasClass('pinned')) {
-				$('.elgg-page-body').append(popupP.removeClass('pinned'));
-			} else {
-				$('.elgg-page-body').after(popupP.addClass('pinned'));
-			}
+			$(this).closest('.deck-popup').toggleClass('pinned');
 			return false;
 		});
 		popup.find('.elgg-icon-delete-alt').click(function() {
