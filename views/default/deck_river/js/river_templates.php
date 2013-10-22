@@ -110,7 +110,7 @@ elgg.deck_river.responseToWire = function(riverItem, message) {
  * Return html river
  */
 elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
-	var network = TheColumnHeader.data('network') || 'elgg',
+	var network = elgg.deck_river.getColumnSettings(TheColumnHeader).network || 'elgg',
 		thread = thread || false;
 
 	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);

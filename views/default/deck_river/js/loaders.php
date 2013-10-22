@@ -14,6 +14,37 @@
 // facebook fields for ajay query
 var FBfields = 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)';
 
+
+/**
+ * Return column settings for given column
+ * @param  {element}   TheColumn    the jQuery element of the column
+ * @return {object}                 the user settings
+ */
+elgg.deck_river.getColumnSettings = function(TheColumn) {
+	var tab = TheColumn.closest('#deck-river-lists').data('tab'),
+		column = TheColumn.attr('id') || TheColumn.closest('.column-river').attr('id'),
+		dRS = deckRiverSettings[tab][column];
+
+		// insert tab and column name in column settings. Aka helper.
+		dRS.tab = tab;
+		dRS.column = column;
+	return dRS;
+};
+
+
+
+/**
+ * Set column settings for given column
+ * @param  {element}   TheColumn    the jQuery element of the column
+ * @param  {object}    Data         object of new settings
+ * @return {object}                 the user settings
+ */
+elgg.deck_river.setColumnSettings = function(TheColumn, data) {
+	deckRiverSettings[TheColumn.closest('#deck-river-lists').data('tab')][TheColumn.attr('id')] = data;
+};
+
+
+
 /**
  * Load a column
  *
@@ -25,22 +56,23 @@ var FBfields = 'caption,created_time,from,link,message,story,story_tags,id,full_
  * @return void
  */
 elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
-	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
+	var columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
+		TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
 		loadMoreItem = $('<li>', {'class': 'moreItem'}).append($('<li>', {'class': 'response-loader hidden'}), elgg.echo('deck_river:more'));
 
-	if (TheColumnHeader.data('direct')) { // this is a direct link. Feed is loaded by user's browser.
+	if (columnSettings.direct) { // this is a direct link. Feed is loaded by user's browser.
 		$.ajax({
-			url: TheColumnHeader.data('direct'),
+			url: columnSettings.direct,
 			dataType: 'jsonP',
 			success: function(response) {
-				TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));//.scrollTo(0);
-				if (response.refresh_url !== undefined) {
-					TheColumnHeader.data('refresh_url', response.refresh_url);
-				} else {
+				TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
+				if (elgg.isUndefined(response.refresh_url)) {
 					TheColumnHeader.data('refresh_url', TheColumnHeader.data('direct'));
+				} else {
+					TheColumnHeader.data('refresh_url', response.refresh_url);
 				}
-				if (response.next_page !== undefined) {
+				if (!elgg.isUndefined(response.next_page)) {
 					TheColumnRiver.append(loadMoreItem);
 					TheColumnHeader.data('next_page', response.next_page);
 				}
@@ -51,38 +83,37 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 				TheColumn.removeClass('loadingRefresh');
 			}
 		});
-	} else if (TheColumnHeader.data('network') == 'facebook') {
-		FB.api("ManUtopiK/home", function(response) {
+	} else if (columnSettings.network == 'facebook') {
+		FB.api(columnSettings.id+'/'+columnSettings.type, 'get', {
+			access_token: columnSettings.token,
+			fields: FBfields,
+			limit: 30
+		}, function(response) {
 			if (response) {
 				response.results = response.data;
-				console.log(response);
 				response.TheColumn = TheColumn.removeClass('loadingRefresh');
 				if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
 					TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));
-					console.log('GOGO');
-					TheColumnRiver.scrollTo(0);
-					TheColumnRiver.append(loadMoreItem);
-					TheColumnHeader.data('next_page', response.paging.previous).data('refresh_url', response.paging.next);
+					TheColumnRiver.append(loadMoreItem).scrollTo(0);
+					TheColumnHeader.data('next_page', response.paging.next).data('refresh_url', response.paging.previous);
 				}
 			} else { // @todo Make error more comprehensible
 				TheColumnRiver.html('error');
 			}
-		}, 'get', {
-			access_token: TheColumnHeader.data('token'),
-			fields: FBfields
 		});
 	} else {
-		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('river_type'), {
+		var river_type = TheColumnHeader.data('river_type') || 'column_river';
+		elgg.post('ajax/view/deck_river/ajax_json/' + river_type, {
 			dataType: 'json',
 			data: {
-				tab: $('#deck-river-lists').data('tab'), // used only with 'column_river' call
-				column: TheColumn.attr('id'), // used for 'column_river' only
+				tab: columnSettings.tab, // used only with 'column_river' call
+				column: columnSettings.column, // used for 'column_river' only
 				guid: TheEntity ? TheEntity : null,
 				params: TheColumnHeader.data('params') || null // used for 'twitter_OAuth' with array as params
 			},
 			success: function(response) {
 				if (response) {
-				response.TheColumn = TheColumn.removeClass('loadingRefresh');
+					response.TheColumn = TheColumn.removeClass('loadingRefresh');
 					if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
 						TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));
 						TheColumnRiver.scrollTo(0);
@@ -107,7 +138,8 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
  * @return void
  */
 elgg.deck_river.RefreshColumn = function(TheColumn) {
-	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
+	var columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
+		TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
 		displayItems = function(response) {
 			TheColumnHeader.find('.count').addClass('hidden').text('');
@@ -129,23 +161,40 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 			}
 		}
 
-	if (TheColumnHeader.data('direct')) { // this is a direct link. Feed is loaded by user's browser.
-		var url = elgg.parse_url(TheColumnHeader.data('direct')),
-			refreshURL = TheColumnHeader.data('refresh_url');
+	if (columnSettings.direct) { // this is a direct link. Feed is loaded by user's browser.
+		var url = elgg.parse_url(columnSettings.direct),
+			refreshURL = columnSettings.refresh_url;
 		$.ajax({
-			url: refreshURL ? url.scheme+'://'+url.host+url.path + refreshURL : TheColumnHeader.data('direct'),
+			url: refreshURL ? url.scheme+'://'+url.host+url.path + refreshURL : columnSettings.direct,
 			dataType: 'jsonP',
 			success: function(response) {
 				displayItems(response);
 				TheColumnHeader.data('refresh_url', response.refresh_url);
 			}
 		});
+	} else if (columnSettings.network == 'facebook') {
+		FB.api(columnSettings.id+'/'+columnSettings.type, 'get', {
+			access_token: columnSettings.token,
+			fields: FBfields,
+			__previous: 1,
+			since: TheColumnHeader.data('refresh_url').match(/.*since=(\d*)/)[1],
+			limit: 30
+		}, function(response) {
+			if (response) {
+				response.results = response.data;
+				displayItems(response);
+				if (response.paging) TheColumnHeader.data('refresh_url', response.paging.previous);
+			} else { // @todo Make error more comprehensible
+				TheColumnRiver.html('error');
+			}
+		});
 	} else {
-		elgg.post('ajax/view/deck_river/ajax_json/column_river', {
+		var river_type = TheColumnHeader.data('river_type') || 'column_river';
+		elgg.post('ajax/view/deck_river/ajax_json/' + river_type, {
 			dataType: 'json',
 			data: {
-				tab: $('#deck-river-lists').data('tab'),
-				column: TheColumn.attr('id'),
+				tab: columnSettings.tab,
+				column: columnSettings.column,
 				time_method: 'lower',
 				time_posted: TheColumn.find('.elgg-list-item').first().attr('data-timeid') || 0
 			},
@@ -165,7 +214,8 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
  * @return void
  */
 elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
-	var TheColumnHeader = TheColumn.addClass('loadingMore').find('.column-header'),
+	var columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
+		TheColumnHeader = TheColumn.addClass('loadingMore').find('.column-header'),
 		LastItem = TheColumn.find('.elgg-list-item').removeClass('newRiverItem').last(),
 		displayItems = function(response) {
 			var TheColumnRiver = TheColumn.removeClass('loadingMore').find('.elgg-river'),
@@ -182,13 +232,13 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 			TheColumnRiver.scrollTo(TheColumnRiver.scrollTop()+LastItem.next().position().top+'px', 1500, {easing:'easeOutQuart'});
 		};
 
-	if (TheColumnHeader.data('direct')) { // this is a direct link. Feed is loaded by user's browser.
-		var url = elgg.parse_url(TheColumnHeader.data('direct'));
+	if (columnSettings.direct) { // this is a direct link. Feed is loaded by user's browser.
+		var url = elgg.parse_url(columnSettings.direct);
 		$.ajax({
-			url: url.scheme+'://'+url.host+url.path + TheColumnHeader.data('next_page'),
+			url: url.scheme+'://'+url.host+url.path + columnSettings.next_page,
 			dataType: 'jsonP',
 			success: function(response) {
-				if (undefined === response.next_page) response.next_page = TheColumnHeader.data('next_page').match('^.*=')[0] + response[response.length-1].id_str.addToLargeInt(-1);
+				if (elgg.isUndefined(response.next_page)) response.next_page = TheColumnHeader.data('next_page').match('^.*=')[0] + response[response.length-1].id_str.addToLargeInt(-1);
 				TheColumnHeader.data('next_page', response.next_page);
 				displayItems(response);
 			},
@@ -196,12 +246,28 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				TheColumn.removeClass('loadingMore');
 			}
 		});
+	} else if (columnSettings.network == 'facebook') {
+		FB.api(columnSettings.id+'/'+columnSettings.type, 'get', {
+			access_token: columnSettings.token,
+			fields: FBfields,
+			until: TheColumnHeader.data('next_page').match(/.*until=(\d*)/)[1],
+			limit: 30
+		}, function(response) {
+			if (response) {
+				response.results = response.data;
+				displayItems(response);
+				TheColumnHeader.data('next_page', response.paging.next);
+			} else { // @todo Make error more comprehensible
+				TheColumnRiver.html('error');
+			}
+		});
 	} else {
-		elgg.post('ajax/view/deck_river/ajax_json/' + TheColumnHeader.data('river_type'), {
+		var river_type = TheColumnHeader.data('river_type') || 'column_river';
+		elgg.post('ajax/view/deck_river/ajax_json/' + river_type, {
 			dataType: 'json',
 			data: {
-				tab: $('#deck-river-lists').data('tab'),
-				column: TheColumn.attr('id'),
+				tab: columnSettings.tab,
+				column: columnSettings.column,
 				time_method: 'upper',
 				time_posted: LastItem.data('timeid'),
 				guid: TheEntity ? TheEntity : null,
@@ -227,12 +293,12 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
  */
 elgg.deck_river.LoadDiscussion = function(athread) {
 	var athreadResponses = athread.parent('.elgg-river-responses'),
-		TheColumnHeader = athread.closest('.column-river').find('.column-header'),
-		network = TheColumnHeader.data('network'),
+		TheColumn = athread.closest('.column-river'),
+		network = athread.data('network'),
 		displayItems = function(response) {
 			var riverID = athread.closest('.elgg-list-item').attr('class').match(/\d+/)[0],
 				itemsRiver = $('.item-' + network + '-' + riverID),
-				newItems = elgg.deck_river.displayRiver(response, TheColumnHeader, true);
+				newItems = elgg.deck_river.displayRiver(response, TheColumn, true);
 
 			if (response.results) {
 				$.each(itemsRiver, function() {
@@ -262,7 +328,8 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 			network: network
 		},
 		success: function(response) {displayItems(response)},
-		error: function() {
+		error: function(response) {
+			elgg.register_error(response.responseText);
 			athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');
 		}
 	});

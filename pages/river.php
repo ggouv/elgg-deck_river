@@ -19,8 +19,7 @@ if ( !$user_river_settings || !is_array($user_river_settings) ) {
 //get page for tabs
 $page_filter = elgg_get_context();
 
-$content = '<script type="text/javascript">var deckRiverSettings = ' . json_encode($user_river_settings) . '</script>';
-$content .= "<div id=\"deck-river-lists\" data-tab=\"{$page_filter}\"><ul class=\"deck-river-lists-container hidden\">";
+$content = "<div id=\"deck-river-lists\" data-tab=\"{$page_filter}\"><ul class=\"deck-river-lists-container hidden\">";
 
 foreach ($user_river_settings[$page_filter] as $key => $column_settings) {
 	$content .= "<li class=\"column-river\" id=\"{$key}\">" .

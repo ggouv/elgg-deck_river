@@ -1,6 +1,18 @@
 <!-- Templates deck_river --><div class="hidden">
 
 
+<!-- Pass var from php to client -->
+<script type="text/javascript">
+	var deckRiverSettings = <?php
+		echo get_private_setting(elgg_get_logged_in_user_guid(), 'deck_river_settings');
+	?>;
+	var site_shorturl = <?php $site_shorturl = elgg_get_plugin_setting('site_shorturl', 'elgg-deck_river'); echo json_encode($site_shorturl ? $site_shorturl : false); ?>;
+	var deck_river_min_width_column = <?php $mwc = elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); echo $mwc ? $mwc : 300; ?>;
+	var deck_river_max_nbr_columns = <?php $mnc = elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
+	var deck_river_max_nbr_tabs = <?php $mnc = elgg_get_plugin_setting('max_nbr_tabs', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
+</script>
+
+
 <!-- Template for linkbox -->
 <script id="linkbox-template" type="text/template">
 	<div class="elgg-image-block clearfix">
@@ -253,7 +265,7 @@
 					{{#responses.reply}}
 					{{#responses.retweet}}<br/>{{/responses.retweet}}<div class="response-loader float clearfloat hidden"></div>
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
-					<a href="#" class="thread float prm" data-thread="{{id_str}}"><?php echo elgg_echo('deck_river:thread'); ?></a>
+					<a href="#" class="thread float prm" data-thread="{{id_str}}" data-network="twitter"><?php echo elgg_echo('deck_river:thread'); ?></a>
 					{{/responses.reply}}
 				</div>
 				{{/responses}}
