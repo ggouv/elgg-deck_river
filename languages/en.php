@@ -55,6 +55,8 @@ $english = array(
 	'deck_river:facebook:share' => "%s share.",
 	'deck_river:facebook:shares' => "%s shares.",
 	'deck_river:facebook:show_comments' => "Show %s others comments",
+	'river:facebook:show:status' => "Show on Facebook",
+	'river:facebook:photo:shared_story:photo' => "shared a photo",
 
 	// add tab form
 	'deck_river:add_tab_title' => 'Add a new tab:',
@@ -137,6 +139,7 @@ $english = array(
 	'deck_river:facebook:posted' => "Your message has been posted on Facebook. <a href=\"%s\" target=\"_blank\">See the message</a>.",
 	'deck_river:facebook:posted:error' => "Error with Facebook API",
 
+	'deck_river:thread-not-exist' => "Discussion cannot found",
 );
 
 add_translation('en', $english);

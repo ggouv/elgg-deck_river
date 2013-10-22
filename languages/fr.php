@@ -73,6 +73,8 @@ $french = array(
 	'deck_river:facebook:share' => "%s partage.",
 	'deck_river:facebook:shares' => "%s partages.",
 	'deck_river:facebook:show_comments' => "Afficher %s autres commentaires",
+	'river:facebook:show:status' => "Afficher sur Facebook",
+	'river:facebook:photo:shared_story:photo' => "a partagé une photo",
 
 	// add tab form
 	'deck_river:add_tab_title' => "Ajouter un nouvel onglet :",
@@ -189,6 +191,7 @@ $french = array(
 	'deck_river:error:pin:too_much' => "Vous ne pouvez pas épingler plus de 5 comptes.",
 	'deck_river:delete:network:error' => "Impossible de supprimer ce compte.",
 	'deck_river:network:too_many_accounts' => "Vous ne pouvez pas associer plus de compte !",
+	'deck_river:thread-not-exist' => "Discussion introuvable",
 
 	'deck_river:twitter:posted' => "Votre message a été publié sur Twitter.",
 	'deck_river:twitter:post:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",

@@ -918,7 +918,7 @@ li.elgg-menu-item-arrow-left {
 }
 .elgg-river-image .elgg-body {
 	overflow: hidden;
-	border: 5px solid #EEE;
+	border: 6px solid #EEE;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;

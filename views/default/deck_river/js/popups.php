@@ -111,16 +111,23 @@ elgg.deck_river.popups = function() {
 		var source = $(this).data('source');
 
 		elgg.deck_river.createPopup('video-popup', $(this).find('h4').html());
-		$('#video-popup .elgg-body').html(
-			$('<div>', {'class': 'overlay hidden'}).after(
-				$('<iframe>', {src: source, width: '100%', height: '100%'}))
-		).resizable({
+		var vp = $('#video-popup'),
+			resizeVP = function() {
+				vp.find('.elgg-body').height(vp.height() - vp.find('.elgg-head').height()+7);
+			};
+		vp.resizable({
 			handles: 'se',
 			helper: 'resizable-helper',
 			stop: function( event, ui ) {
-				$('#video-popup').height('auto').width('auto');
+				console.log(ui);
+				vp.width(ui.size.width);
+				resizeVP();
 			}
-		});
+		}).find('.elgg-body').html(
+			$('<div>', {'class': 'overlay hidden'}).after(
+				$('<iframe>', {src: source, width: '100%', height: '100%'}))
+		);
+		resizeVP();
 		return false;
 	});
 

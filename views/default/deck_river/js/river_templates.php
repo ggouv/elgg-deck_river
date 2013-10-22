@@ -12,11 +12,13 @@
 
 $(document).ready(function() {
 
-FB.init({
-	appId: '213084262191194',
-	channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
-	oauth: true
-});
+	if ($('.net-profile.facebook').length) {
+		FB.init({
+			appId: '213084262191194',
+			channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
+			oauth: true
+		});
+	}
 
 	$('.elgg-menu-item-response a').live('click', function() {
 		var item = $(this).closest('.elgg-list-item');
@@ -446,9 +448,10 @@ rpd.push(response);
 				value.comments.data[i].friendly_time = elgg.friendly_time(ef);
 				value.comments.data[i].message = e.message.TruncateString().ParseEverythings('facebook');
 			});
-			if (vcd.length > 3) {
+			if (vcd.length > 4) {
 				value.comments.dataBefore = vcdb = value.comments.data.splice(0, vcd.length-3);
 				value.comments.before = elgg.echo('deck_river:facebook:show_comments', [vcdb.length]);
+				value.rand = (Math.random()+"").replace('.','');
 			}
 		}
 

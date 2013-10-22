@@ -186,7 +186,12 @@ function deck_river_get_facebook_scope() {
 			read_mailbox,
 			read_requests,
 			read_stream,
+			share_item,
+			export_stream,
 			status_update,
+			video_upload,
+			photo_upload,
+			create_note,
 			create_event,
 			manage_friendlists,
 			manage_notifications,
@@ -196,12 +201,22 @@ function deck_river_get_facebook_scope() {
 			user_about_me,
 			user_activities,
 			user_events,
+			user_friends,
 			user_groups,
 			user_likes,
 			user_location,
 			user_relationships,
 			user_subscriptions,
-			user_website';
+			user_website,
+			friends_notes,
+			friends_status,
+			friends_groups,
+			friends_likes,
+			friends_photos,
+			friends_relationships,
+			friends_activities,
+			friends_events,
+			friends_videos';
 }
 
 

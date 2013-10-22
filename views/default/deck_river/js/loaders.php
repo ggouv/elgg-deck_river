@@ -362,7 +362,7 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
 
 
 /*
- * Load Twitter timeline for an user
+ * Display number of new items
  */
 elgg.deck_river.displayCount = function(response, TheColumn) {
 	var TheColumnHeader = TheColumn.find('.column-header'),

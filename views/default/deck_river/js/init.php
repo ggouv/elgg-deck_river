@@ -9,9 +9,6 @@
  *	Elgg-deck_river init js
  *
  */
-var site_shorturl = <?php $site_shorturl = elgg_get_plugin_setting('site_shorturl', 'elgg-deck_river'); echo json_encode($site_shorturl ? $site_shorturl : false); ?>;
-var deck_river_min_width_column = <?php $mwc = elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); echo $mwc ? $mwc : 300; ?>;
-var deck_river_max_nbr_column = <?php $mnc = elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
 
 // Global var for Entities : users and groups from elgg, users from Twitter
 var DataEntities = DataEntities || {elgg: [], twitter: []};
@@ -170,7 +167,7 @@ elgg.deck_river.init = function() {
 
 	// Add new column
 	$('.elgg-add-new-column').die().live('click', function() {
-		if ($('.elgg-river-layout:not(.hidden) .column-river').length >= deck_river_max_nbr_column) {
+		if ($('.elgg-river-layout:not(.hidden) .column-river').length >= deck_river_max_nbr_columns) {
 			elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
 		} else {
 			elgg.deck_river.ColumnSettings();
@@ -321,38 +318,41 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 					success: function(json) {
 						var response = json.output;
 
-						if (columnID == 'new') {
-							$('.deck-river-lists-container').append(
-								$('<li>', {'class': 'column-river', id: response.column}).append(
-									$('<ul>', {'class': 'column-header'}).after(
-										$('<ul>', {'class': 'elgg-river elgg-list'})
-							)));
-							elgg.deck_river.SetColumnsHeight();
-							elgg.deck_river.SetColumnsWidth();
-							elgg.deck_river.resizeRiverImages();
-							$('.elgg-river-layout:not(.hidden) #deck-river-lists').animate({scrollLeft: $(this).width()});
-						}
+						if (response) {
+							deckRiverSettings = response.deck_river_settings;
+							if (columnID == 'new') {
+								$('.deck-river-lists-container').append(
+									$('<li>', {'class': 'column-river', id: response.column}).append(
+										$('<ul>', {'class': 'column-header'}).after(
+											$('<ul>', {'class': 'elgg-river elgg-list'})
+								)));
+								elgg.deck_river.SetColumnsHeight();
+								elgg.deck_river.SetColumnsWidth();
+								elgg.deck_river.resizeRiverImages();
+								$('.elgg-river-layout:not(.hidden) #deck-river-lists').animate({scrollLeft: $(this).width()});
+							}
 
-						var TheColumn = $('#'+response.column); // redeclare because maybe it was just created.
+							var TheColumn = $('#'+response.column); // redeclare because maybe it was just created.
 
-						if (submitType == 'delete' && response.action == 'delete') {
-							TheColumn.find('*').css('background-color', '#FF7777');
-							TheColumn.fadeOut(400, function() {
-								$(this).animate({'width':0},'', function() {
-									$(this).remove();
-									elgg.deck_river.SetColumnsWidth();
-									elgg.deck_river.resizeRiverImages();
+							if (submitType == 'delete' && response.action == 'delete') {
+								TheColumn.find('*').css('background-color', '#FF7777');
+								TheColumn.fadeOut(400, function() {
+									$(this).animate({'width':0},'', function() {
+										$(this).remove();
+										elgg.deck_river.SetColumnsWidth();
+										elgg.deck_river.resizeRiverImages();
+									});
 								});
-							});
+								cs.remove();
+								return false;
+							}
+
+							TheColumn.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
+							TheColumn.find('.column-header').replaceWith(response.header);
+							elgg.deck_river.LoadRiver(TheColumn);
+
 							cs.remove();
-							return false;
 						}
-
-						TheColumn.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
-						TheColumn.find('.column-header').replaceWith(response.header);
-						elgg.deck_river.LoadRiver(TheColumn);
-
-						cs.remove();
 					},
 					error: function() {
 						return false;
