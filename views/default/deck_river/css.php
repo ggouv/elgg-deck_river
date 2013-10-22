@@ -1204,7 +1204,7 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 	cursor: crosshair;
 	pointer-events: none;
 }
-.user-info-popup.canDrop:before, .group-info-popup.canDrop:before, .hashtag-info-popup.canDrop:before, .twitter-user-info-popup.canDrop:before {
+.user-info-popup.canDrop:before, .group-info-popup.canDrop:before, .hashtag-info-popup.canDrop:before, .twitter-user-info-popup.canDrop:before, .linkbox-droppable.canDrop:before {
 	background: #51C600;
 	border-radius: 10px;
 	color: white;

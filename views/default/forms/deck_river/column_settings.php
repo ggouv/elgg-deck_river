@@ -329,15 +329,10 @@ $column_title = $user_river_column_options->title;
 			}
 
 			$options_values = array(
-				'get_searchTweets' => elgg_echo('deck_river:facebook:feed:search:tweets'),
-				'get_searchTweets-popular' => elgg_echo('deck_river:facebook:feed:search:popular'),
 				'home' => elgg_echo('deck_river:facebook:feed:home'),
-				'get_statusesMentions_timeline' => elgg_echo('river:mentions'),
 				'feed' => elgg_echo('deck_river:facebook:feed:feed'),
-				'get_listsStatuses' => elgg_echo('deck_river:facebook:list'),
-				'get_direct_messages' => elgg_echo('deck_river:facebook:feed:dm:recept'),
-				'get_direct_messagesSent' => elgg_echo('deck_river:facebook:feed:dm:sent'),
-				'get_favoritesList' => elgg_echo('deck_river:facebook:feed:favorites'),
+				'statuses' => elgg_echo('deck_river:facebook:statuses'),
+				'search' => elgg_echo('deck_river:facebook:search'),
 			);
 
 			if (!$facebook_account || count($facebook_account) == 0) { // No account registred, send user off to validate account
@@ -356,8 +351,7 @@ $column_title = $user_river_column_options->title;
 				);
 
 				$options_values = array( // override values
-					'get_searchTweets' => elgg_echo('deck_river:facebook:feed:search:tweets'),
-					'get_searchTweets-popular' => elgg_echo('deck_river:facebook:feed:search:popular'),
+					'search' => elgg_echo('deck_river:facebook:search'),
 				);
 
 			} else if (count($facebook_account) == 1) { // One account registred
@@ -392,25 +386,16 @@ $column_title = $user_river_column_options->title;
 			echo '<label>' . elgg_echo('deck_river:type') . '</label><br />';
 			echo elgg_view('input/dropdown', array(
 				'name' => 'facebook-type',
-				'value' => $selected == 'facebook' ? $user_river_column_options->type : 'facebook:search/tweets',
+				'value' => $selected == 'facebook' ? $user_river_column_options->type : 'feed',
 				'class' => 'column-type mts',
 				'options_values' => $options_values
 			));
 
-			echo '<li class="get_searchTweets-options get_searchTweets-popular-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
+			echo '<li class="search-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
 			echo elgg_view('input/text', array(
 				'name' => 'facebook-search',
 				'value' => $user_river_column_options->search
 			));
-			echo '</li>';
-
-			echo '<li class="get_listsStatuses-options hidden pts"><label>' . elgg_echo('deck_river:facebook:lists') . '</label><br />';
-			echo elgg_view('input/dropdown', array(
-				'name' => 'facebook-lists',
-				'value' => $user_river_column_options->list_id,
-				'options_values' => array($user_river_column_options->list_id => $user_river_column_options->list_name),
-				'class' => 'float'
-			)) . '<div class="response-loader hidden float" style="margin: 1px 0px 0px 30px;"></div>';
 			echo '</li>';
 
 			echo $output;

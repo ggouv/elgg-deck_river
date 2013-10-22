@@ -133,11 +133,7 @@ elgg.deck_river.popups = function() {
 	});
 
 	// drag and drop linkbox
-	$('.linkbox-droppable').liveDraggable({
-		start: function( event, ui ) {
-			$(ui.helper).find('.elgg-river-image').removeClass('big').find('.elgg-image').height(90);
-		}
-	});
+	$('.linkbox-droppable').liveDraggable();
 
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);

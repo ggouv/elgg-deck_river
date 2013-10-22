@@ -74,7 +74,9 @@ $french = array(
 	'deck_river:facebook:shares' => "%s partages.",
 	'deck_river:facebook:show_comments' => "Afficher %s autres commentaires",
 	'river:facebook:show:status' => "Afficher sur Facebook",
-	'river:facebook:photo:shared_story:photo' => "a partagé une photo",
+	'river:facebook:photo:shared_story' => "a partagé",
+	'river:facebook:photo:shared_story:of' => "de",
+	'river:facebook:photo:shared_story:photo' => "une photo",
 
 	// add tab form
 	'deck_river:add_tab_title' => "Ajouter un nouvel onglet :",

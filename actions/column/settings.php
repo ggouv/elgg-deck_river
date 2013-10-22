@@ -112,6 +112,8 @@ if ($submit == 'delete') {
 	$search = get_input('twitter-search');
 	$twitter_account = (int) get_input('twitter-account', false);
 
+	$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
+
 	switch ($twitter_type) {
 		case 'get_searchTweets':
 			$user_river_options[$tab][$column]['title'] = $search;
@@ -125,44 +127,31 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['search'] = $search;
 			//$user_river_options[$tab][$column]['direct = 'https://search.twitter.com/search.json?q=' . urlencode($search) . '&rpp=100&include_entities=1&result_type=popular';
 			break;
-
 		case 'get_statusesHome_timeline':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:home';
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
 			break;
-
 		case 'get_statusesMentions_timeline':
 			$user_river_options[$tab][$column]['title'] = '@'.get_entity($twitter_account)->screen_name;
 			$user_river_options[$tab][$column]['subtitle'] = 'river:mentions';
 			break;
-
 		case 'get_statusesUser_timeline':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:user';
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
 			break;
-
 		case 'get_listsStatuses':
 			$user_river_options[$tab][$column]['title'] = get_input('twitter_list_name');
 			$user_river_options[$tab][$column]['subtitle'] = 'deck_river:twitter:list';
 			$user_river_options[$tab][$column]['list_id'] = (int) get_input('twitter-lists', false);
 			$user_river_options[$tab][$column]['list_name'] = get_input('twitter_list_name');
 			break;
-
 		case 'get_direct_messages':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:dm:recept';
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
 			break;
-
 		case 'get_direct_messagesSent':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:dm:sent';
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
 			break;
-
 		case 'get_favoritesList':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:twitter:feed:favorites';
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($twitter_account)->screen_name;
 			break;
-
 
 		/*case 'twitter:users/search':
 			$user_river_options[$tab][$column]['title'] = 'users/search';
@@ -181,32 +170,46 @@ if ($submit == 'delete') {
 } else if ($submit == 'facebook') {
 	$facebook_type = get_input('facebook-type');
 	$search = get_input('facebook-search');
-	$facebook_account = (int) get_input('facebook-account', false);
+	$facebook_account_guid = (int) get_input('facebook-account', false);
+	$facebook_account = get_entity($facebook_account_guid);
+
+	$user_river_options[$tab][$column] = array(
+		'account' => $facebook_account_guid,
+		'type' => $facebook_type,
+		'token' => $facebook_account->oauth_token,
+		'query' => $facebook_account->user_id . '/' . $facebook_type,
+		'network' => 'facebook',
+		'subtitle' => $facebook_account->icon ? $facebook_account->name : $facebook_account->username,
+		'fields' => 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)',
+
+	);
 
 	switch ($facebook_type) {
 		case 'home':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:home';
-			$user_river_options[$tab][$column]['token'] = get_entity($facebook_account)->oauth_token;
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($facebook_account)->username;
 			break;
 		case 'feed':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:feed';
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($facebook_account)->username;
 			break;
-		case 'get_searchTweets-popular':
+		case 'statuses':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:statuses';
+			$user_river_options[$tab][$column]['fields'] = '';
+			break;
+		case 'search':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:search';
+			$user_river_options[$tab][$column]['subtitle'] = $search;
+			$user_river_options[$tab][$column]['search'] = $search;
+			$user_river_options[$tab][$column]['query'] = 'search?type=post&q=' . $search;
+			$user_river_options[$tab][$column]['fields'] = '';
 			break;
 		default:
 			break;
 	}
 
-	$user_river_options[$tab][$column]['account'] = $facebook_account;
-	$user_river_options[$tab][$column]['type'] = $facebook_type;
-	$user_river_options[$tab][$column]['network'] = 'facebook';
-
 }
-global $fb; $fb->info($user_river_options);
-$return['deck_river_settings'] = json_encode($user_river_options);
-set_private_setting($owner, 'deck_river_settings', $return['deck_river_settings']);
+
+$return['deck_river_settings'] = $user_river_options;
+set_private_setting($owner, 'deck_river_settings', json_encode($return['deck_river_settings']));
 
 $return['column'] = $column;
 $return['header'] = elgg_view('page/layouts/content/deck_river_column_header', array('column_settings' => $user_river_options[$tab][$column]));

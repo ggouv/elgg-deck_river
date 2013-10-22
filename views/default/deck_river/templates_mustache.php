@@ -307,12 +307,9 @@
 				{{/menu}}
 				</ul>
 				<div class="elgg-river-summary">
-					<span class="facebook-user-info-popup" title="{{from.name}}">{{from.name}}</span>
-					{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>{{/via}}
+					<span class="facebook-user-info-popup" title="{{from.name}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>{{/via}}
 					{{#properties}}
-						<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>
-						<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;
-						<a target="_blank" href="{{properties[0].href}}">{{properties[0].text}}</a>
+						<?php echo elgg_echo('river:facebook:photo:shared_story'); ?>&nbsp;<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>&nbsp;<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;<a target="_blank" href="{{href}}">{{text}}</a>
 					{{/properties}}
 					<br><span class="elgg-river-timestamp">
 						<a href="https://facebook.com/{{id}}" target="_blank">
