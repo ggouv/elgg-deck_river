@@ -7,6 +7,17 @@ elgg.provide('elgg.thewire');
 elgg.thewire.init = function() {
 	var linkParsed = null;
 
+	$('#linkbox div.image-wrapper').live('click', function() {
+		$(this).toggleClass('noimg');
+		return false;
+	});
+
+	$('#linkbox .elgg-menu .elgg-icon-delete').live('click', function() {
+		$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
+		elgg.thewire.resize('open');
+		return false;
+	});
+
 	$(document).mousedown(function(e) {
 		$(document).bind('mousemove.thewire', function(e){
 			if ($(e.target).attr('id') == 'thewire-textarea') {
@@ -21,14 +32,22 @@ elgg.thewire.init = function() {
 	$('#thewire-textarea').focusin(function() {
 		elgg.thewire.resize();
 	}).droppable({
-		accept: '.user-info-popup, .group-info-popup, .hashtag-info-popup, .twitter-user-info-popup',
+		accept: '.user-info-popup, .group-info-popup, .hashtag-info-popup, .twitter-user-info-popup, .linkbox-droppable',
+		tolerance: 'touch',
 		drop: function(e, ui) {
 			var txt = prep = '',
-				uih = $(ui.helper);
+				$uih = $(ui.helper);
 
-			if (uih.hasClass('user-info-popup') || uih.hasClass('twitter-user-info-popup')) prep = '@';
-			if (uih.hasClass('group-info-popup')) prep = '!';
-			elgg.thewire.insertInThewire(prep + $(ui.helper).attr('title'));
+			if ($uih.hasClass('linkbox-droppable')) {
+				var data = $uih.find('.elgg-river-image').data();
+
+				$('#linkbox').removeClass('hidden').html(Mustache.render($('#linkbox-template').html(), data));
+				elgg.thewire.resize();
+			} else {
+				if ($uih.hasClass('user-info-popup') || $uih.hasClass('twitter-user-info-popup')) prep = '@';
+				if ($uih.hasClass('group-info-popup')) prep = '!';
+				elgg.thewire.insertInThewire(prep + $(ui.helper).attr('title'));
+			}
 		},
 		over: function(e, ui) {
 			ui.helper.addClass('canDrop');
@@ -59,7 +78,7 @@ elgg.thewire.init = function() {
 								if (e[0] == 'description') data.description = $('<div>').html(e[1]).text();
 							});
 						}
-						data.mainImage = data.images[0];
+						data.mainimage = data.images[0].src;
 						data.images.shift();
 						data.src = function() {
 							return this.src;
@@ -68,11 +87,6 @@ elgg.thewire.init = function() {
 						$lb.html(Mustache.render($('#linkbox-template').html(), data));
 						elgg.thewire.resize();
 
-						$lb.find('.elgg-menu .elgg-icon-delete').click(function() {
-							$lb.addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
-							elgg.thewire.resize();
-						});
-
 						$lb.find('li.image-wrapper').click(function() {
 							var $ei = $('#linkbox .elgg-image'),
 								first = $ei.children().first(),
@@ -80,10 +94,6 @@ elgg.thewire.init = function() {
 
 							first.html(this.innerHTML);
 							$(this).html(firstHtml);
-							return false;
-						});
-						$lb.find('div.image-wrapper').die().live('click', function() {
-							$(this).toggleClass('noimg');
 							return false;
 						});
 

@@ -18,10 +18,10 @@ elgg.deck_river.popups = function() {
 
 	// livedraggable
 	(function ($) {
-		$.fn.liveDraggable = function () {
+		$.fn.liveDraggable = function (options) {
 			$(this).live('mouseover', function() {
 				if (!$(this).hasClass('ui-draggable')) {
-					$(this).draggable({
+					options = $.extend({
 						revert: true,
 						revertDuration: 0,
 						appendTo: "body",
@@ -29,15 +29,16 @@ elgg.deck_river.popups = function() {
 						helper: "clone",
 						zIndex: 9999,
 						cursor: "crosshair"
-					});
+					}, options);
+					$(this).draggable(options);
 				}
 			});
 			return this;
 		};
-	}(jQuery));
+	}($));
 
 	// tabs popups
-	$('.deck-popup .elgg-tabs a').die().live('click', function() {
+	$('.deck-popup .elgg-tabs a').live('click', function() {
 		var popup = $(this).closest('.deck-popup'),
 			tab = $(this).attr('href');
 
@@ -53,19 +54,19 @@ elgg.deck_river.popups = function() {
 	});
 
 	// user info popup
-	$('.user-info-popup').die().live('click', function() {
+	$('.user-info-popup').live('click', function() {
 		elgg.deck_river.userPopup($(this).attr('title'));
 		return false;
 	}).liveDraggable();
 
 	// group info popup
-	$('.group-info-popup').die().live('click', function() {
+	$('.group-info-popup').live('click', function() {
 		elgg.deck_river.groupPopup($(this).attr('title'));
 		return false;
 	}).liveDraggable();
 
 	// hashtag info popup
-	$('.hashtag-info-popup').die().live('click', function() {
+	$('.hashtag-info-popup').live('click', function() {
 		var hashtag = $(this).attr('title'),
 			network = $(this).data('network') || 'elgg';
 
@@ -76,7 +77,7 @@ elgg.deck_river.popups = function() {
 	}).liveDraggable();
 
 	// Twitter user info popup
-	$('.twitter-user-info-popup').die().live('click', function() {
+	$('.twitter-user-info-popup').live('click', function() {
 		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
 
 		var body = $('#user-info-popup > .elgg-body'),
@@ -107,7 +108,7 @@ elgg.deck_river.popups = function() {
 	}).liveDraggable();
 
 	// video popup
-	$('.video-popup').die().live('click', function() {
+	$('.video-popup').live('click', function() {
 		var source = $(this).data('source');
 
 		elgg.deck_river.createPopup('video-popup', $(this).find('h4').html());
@@ -129,6 +130,13 @@ elgg.deck_river.popups = function() {
 		);
 		resizeVP();
 		return false;
+	});
+
+	// drag and drop linkbox
+	$('.linkbox-droppable').liveDraggable({
+		start: function( event, ui ) {
+			$(ui.helper).find('.elgg-river-image').removeClass('big').find('.elgg-image').height(90);
+		}
 	});
 
 }

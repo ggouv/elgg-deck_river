@@ -321,6 +321,7 @@ body.fixed-deck {
 }
 #linkbox .link_description {
 	min-height: 18px;
+	font-size: .9em;
 }
 
 #thewire-network {
@@ -1060,7 +1061,7 @@ a.elgg-river-responses:hover h4 {
 	clear: both;
 	float: right;
 	margin: 5px 0 0;
-	width: 77px;
+	width: 85px;
 }
 #column-settings .networks > li a {
 	text-align: left;
@@ -1075,10 +1076,10 @@ a.elgg-river-responses:hover h4 {
 #column-settings .tab > * {
 	border-left: 2px solid #CCC;
 	height: 100%;
-	width: 429px;
+	width: 421px;
 }
 #column-settings .elgg > * {
-	width: 208px;
+	width: 204px;
 	float: left;
 }
 #add-deck-river-tab, #rename-deck-river-tab {
@@ -1254,6 +1255,11 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 	height: 100%;
 	width: 100%;
 	position: absolute;
+}
+.linkbox-droppable.ui-draggable.ui-draggable-dragging {
+	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+	cursor: crosshair;
 }
 
 /* single view */

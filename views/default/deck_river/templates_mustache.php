@@ -3,9 +3,8 @@
 
 <!-- Pass var from php to client -->
 <script type="text/javascript">
-	var deckRiverSettings = <?php
-		echo get_private_setting(elgg_get_logged_in_user_guid(), 'deck_river_settings');
-	?>;
+	var deckRiverSettings = <?php echo get_private_setting(elgg_get_logged_in_user_guid(), 'deck_river_settings'); ?>;
+	var FBappID = <?php echo elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river') ?>;
 	var site_shorturl = <?php $site_shorturl = elgg_get_plugin_setting('site_shorturl', 'elgg-deck_river'); echo json_encode($site_shorturl ? $site_shorturl : false); ?>;
 	var deck_river_min_width_column = <?php $mwc = elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); echo $mwc ? $mwc : 300; ?>;
 	var deck_river_max_nbr_columns = <?php $mnc = elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
@@ -16,26 +15,28 @@
 <!-- Template for linkbox -->
 <script id="linkbox-template" type="text/template">
 	<div class="elgg-image-block clearfix">
-		{{#mainImage}}
+		{{#mainimage}}
 		<ul class="elgg-image">
 			<div class="link_picture image-wrapper center tooltip s t25 gwfb" title="<?php echo elgg_echo('deck_river:linkbox:hidepicture'); ?>">
-				<img height="80px" src="{{mainImage.src}}">
+				<img height="80px" src="{{mainimage}}">
 			</div>
 			{{#images}}
 				<li class="image-wrapper center t25"><img height="80px" src="{{src}}"></li>
 			{{/images}}
 		</ul>
-		{{/mainImage}}
+		{{/mainimage}}
 		<div class="elgg-body pts">
 			<ul class="elgg-menu elgg-menu-entity elgg-menu-hz">
 				<span class="elgg-icon elgg-icon-delete link"></span>
 			</ul>
 			<div class="">
 				<h4 class="link_name pas mrl" contenteditable="true">{{title}}</h4>
+				{{#url}}
 				<span class="elgg-subtext pls">
 					{{url}}
-					<input type="hidden" name="link_url" value="{{url}}">
 				</span>
+				{{/url}}
+				<input type="hidden" name="link_url" value="{{url}}">
 				<div class="link_description pas" contenteditable="true">{{description}}</div>
 			</div>
 		</div>
@@ -321,17 +322,17 @@
 						</a>
 					</span>
 				</div>
-				<div class="elgg-river-message">{{{message}}}{{#typestatus}}<a target="_blank" href="https://facebook.com/{{id}}">&nbsp;<?php echo elgg_echo('river:facebook:show:status'); ?></a>{{/typestatus}}</div>
+				<div class="elgg-river-message">{{{message}}}{{#typestatus}}&nbsp;<a target="_blank" href="https://facebook.com/{{id}}"><?php echo elgg_echo('river:facebook:show:status'); ?></a>{{/typestatus}}</div>
 				{{#link}}
 				{{#typevideo}}
-				<a class="elgg-river-responses video-popup" href="#" data-source="{{source}}">
+				<a class="elgg-river-responses linkbox-droppable video-popup" href="{{link}}" data-source="{{source}}">
 				{{/typevideo}}
 				{{^typevideo}}
-				<a class="elgg-river-responses" target="_blank" href="{{link}}">
+				<a class="elgg-river-responses linkbox-droppable" target="_blank" href="{{link}}">
 				{{/typevideo}}
-					<div class="elgg-river-image">
+					<div class="elgg-river-image" data-mainimage="{{full_picture}}" data-title="{{name}}" data-url="{{caption}}" data-description="{{description}}">
 						{{#full_picture}}
-						<div id="img{{id}}" class="elgg-image gwfb" style="background-image: url({{full_picture}});"></div>
+						<div id="img{{id}}" class="elgg-image float gwfb" style="background-image: url({{full_picture}});"></div>
 						{{/full_picture}}
 						<div class="elgg-body">
 							<h4>{{name}}</h4>

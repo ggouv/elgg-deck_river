@@ -14,7 +14,7 @@ $(document).ready(function() {
 
 	if ($('.net-profile.facebook').length) {
 		FB.init({
-			appId: '213084262191194',
+			appId: FBappID,
 			channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
 			oauth: true
 		});
@@ -412,7 +412,7 @@ rpd.push(response);
 
 
 		// format date and add friendly_time
-		value.posted = value.created_time.FormatDate();
+		value.posted = value.updated_time.FormatDate();
 		value.friendly_time = elgg.friendly_time(value.posted);
 
 		// make menus

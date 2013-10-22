@@ -11,9 +11,6 @@
 
 // Be carefull ! Tweet IDs are too long for a call with .data('id') ! We need use .attr('data-id')
 
-// facebook fields for ajay query
-var FBfields = 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)';
-
 
 /**
  * Return column settings for given column
