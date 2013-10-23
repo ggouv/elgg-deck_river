@@ -4,7 +4,7 @@ global $CONFIG;
 $dbprefix = $CONFIG->dbprefix;
 
 // Get callbacks
-$entity_guid = get_input('guid', false);
+$entity_guid = get_input('entity', false);
 $time_method = get_input('time_method', false);
 $time_posted = get_input('time_posted', false);
 

@@ -48,7 +48,7 @@ elgg.deck_river.popups = function() {
 			popup.find('.elgg-body > li').addClass('hidden').filter(tab).removeClass('hidden');
 		}
 		if ($(tab).find('.elgg-ajax-loader').length) {
-			elgg.deck_river.LoadRiver($(tab), $(tab).children('.column-header').data('entity'));
+			elgg.deck_river.LoadRiver($(tab), $(tab).children('.column-header').data());
 		}
 		return false;
 	});

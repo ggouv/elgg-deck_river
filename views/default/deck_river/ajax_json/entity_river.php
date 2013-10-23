@@ -3,7 +3,7 @@
 global $CONFIG;
 $dbprefix = $CONFIG->dbprefix;
 // Get callbacks
-$entity_guid = get_input('guid', false);
+$entity_guid = get_input('entity', false);
 $time_method = get_input('time_method', false);
 $time_posted = get_input('time_posted', false);
 
@@ -34,8 +34,8 @@ if (strpos($entity_guid, '#') === 0) {
 
 }
 
-$options['types_filter'] = get_input('types_filter');
-$options['subtypes_filter'] = get_input('subtypes_filter');
+$options['types_filter'] = get_input('types_filter', false);
+$options['subtypes_filter'] = get_input('subtypes_filter', false);
 
 // set time_method and set $where_with_time in case of multiple query
 if ($time_method == 'lower') {

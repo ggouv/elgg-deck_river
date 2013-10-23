@@ -111,16 +111,11 @@ elgg.deck_river.responseToWire = function(riverItem, message) {
 /**
  * Return html river
  */
-elgg.deck_river.displayRiver = function(response, TheColumnHeader, thread) {
-	var network = elgg.deck_river.getColumnSettings(TheColumnHeader).network || 'elgg',
+elgg.deck_river.displayRiver = function(response, network, thread) {
+	var network = network || 'elgg',
 		thread = thread || false;
 
-	if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
-	if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
-
 	if (elgg.isString(response.results)) {
-		return $(response.results);
-	} else if (elgg.isString(response.results)) {
 		return $(response.results);
 	} else if (response.results && response.results.length != 0) {
 		return elgg.deck_river[network + 'DisplayItems'](response, thread);

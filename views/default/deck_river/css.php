@@ -1,10 +1,10 @@
 body {
 	width: 100%;
 }
-body.fixed-deck {
+.fixed-deck {
 	position: fixed;
 }
-.elgg-main {
+.fixed-deck .elgg-main {
 	padding: 10px 0 0;
 }
 .response-loader {
@@ -363,24 +363,36 @@ body.fixed-deck {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-#thewire-network .selected-profile.ui-state-highlight, .non-pinned .net-profiles.ui-state-highlight {
+.selected-profile.ui-state-highlight, .net-profiles.ui-state-highlight {
 	background: #FFFFCC;
 }
-#thewire-network .selected-profile.ui-state-active, .non-pinned .net-profiles.ui-state-active {
+.selected-profile.ui-state-active, .net-profiles.ui-state-active {
 	background: #DDFFDD;
 }
-.selected-profile.ui-start, .non-pinned .net-profiles.ui-start {
-	background: white;
+.selected-profile.ui-start, .net-profiles.ui-start {
+	background: transparent;
 }
 #thewire-network .net-profile {
 	position: relative;
 }
-#thewire-network .net-profile.ui-draggable-dragging {
+#thewire-network .net-profile.ui-sortable-helper{
 	background: white;
 	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5) !important;
 	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-;
 	cursor: crosshair;
+}
+#thewire-network .ui-sortable-placeholder {
+	border: 2px dashed #dedede;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	visibility: visible !important;
+}
+#thewire-network .net-profiles .ui-sortable-placeholder {
+	margin: 5px !important;
+}
+#thewire-network .selected-profile .ui-sortable-placeholder {
+	width: 24px;
 }
 #thewire-network .network {
 	background: white;
@@ -611,7 +623,7 @@ body.fixed-deck {
 
 /* deck tabs */
 .elgg-menu-deck-river {
-	margin: 0;
+	margin: 2px 0 0;
 }
 .elgg-menu-deck-river > li {
 	background: white;
@@ -742,10 +754,9 @@ li.elgg-menu-item-arrow-left {
 }
 .column-river .count, .newRiverItem:before {
 	background: #FA3;
-	border-radius: 4px;
+	border-radius: 8px;
 	color: white;
 	float: right;
-	font-size: 0.9em;
 	font-weight: bold;
 	margin: 6px;
 	padding: 0 4px;
@@ -1238,7 +1249,8 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 	text-align: center;
 	top: -10px;
 	width: 20px;
-	line-height: 1.4em;
+	line-height: 1.1em;
+	font-size: 17px;
 }
 .elgg-module-popup .elgg-avatar a:hover .avatar-wrapper {
 	opacity: 0.3;

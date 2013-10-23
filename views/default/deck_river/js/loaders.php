@@ -18,14 +18,18 @@
  * @return {object}                 the user settings
  */
 elgg.deck_river.getColumnSettings = function(TheColumn) {
-	var tab = TheColumn.closest('#deck-river-lists').data('tab'),
-		column = TheColumn.attr('id') || TheColumn.closest('.column-river').attr('id'),
-		dRS = deckRiverSettings[tab][column];
+	if (TheColumn.attr('id').match(/^column/)) {
+		var tab = TheColumn.closest('#deck-river-lists').data('tab'),
+			column = TheColumn.attr('id') || TheColumn.closest('.column-river').attr('id'),
+			dRS = deckRiverSettings[tab][column];
 
-		// insert tab and column name in column settings. Aka helper.
-		dRS.tab = tab;
-		dRS.column = column;
-	return dRS;
+			// insert tab and column name in column settings. Aka helper.
+			dRS.tab = tab;
+			dRS.column = column;
+		return dRS;
+	} else {
+		return false;
+	}
 };
 
 
@@ -48,13 +52,11 @@ elgg.deck_river.setColumnSettings = function(TheColumn, data) {
  * Makes Ajax call to persist column and inserts the column html
  *
  * @param {TheColumn} the column
- * @param {ajaxCall} the name of the view to call
- * @param {TheEntity} optional : GUID of an TheEntity
+ * @param {columnSettings} settings for load
  * @return void
  */
-elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
-	var columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
-		TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
+elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
+	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
 		loadMoreItem = $('<li>', {'class': 'moreItem'}).append($('<li>', {'class': 'response-loader hidden'}), elgg.echo('deck_river:more'));
 
@@ -63,7 +65,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 			url: columnSettings.direct,
 			dataType: 'jsonP',
 			success: function(response) {
-				TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader)).scrollTo(0);
+				TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network)).scrollTo(0);
 				if (elgg.isUndefined(response.refresh_url)) {
 					TheColumnHeader.data('refresh_url', TheColumnHeader.data('direct'));
 				} else {
@@ -90,7 +92,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 				response.results = response.data;
 				response.TheColumn = TheColumn.removeClass('loadingRefresh');
 				if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
-					TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));
+					TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network));
 					TheColumnRiver.append(loadMoreItem).scrollTo(0);
 					TheColumnHeader.data('next_page', response.paging.next).data('refresh_url', response.paging.previous);
 				}
@@ -102,19 +104,16 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
 		var river_type = TheColumnHeader.data('river_type') || 'column_river';
 		elgg.post('ajax/view/deck_river/ajax_json/' + river_type, {
 			dataType: 'json',
-			data: {
-				tab: columnSettings.tab, // used only with 'column_river' call
-				column: columnSettings.column, // used for 'column_river' only
-				guid: TheEntity ? TheEntity : null,
-				params: TheColumnHeader.data('params') || null // used for 'twitter_OAuth' with array as params
-			},
+			data: columnSettings,
 			success: function(response) {
 				if (response) {
 					response.TheColumn = TheColumn.removeClass('loadingRefresh');
 					if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
-						TheColumnRiver.html(elgg.deck_river.displayRiver(response, TheColumnHeader));
+						if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
+						if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
+						TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network));
+						if (!elgg.isString(response.results)) TheColumn.append(loadMoreItem);
 						TheColumnRiver.scrollTo(0);
-						if (TheColumn.find('.elgg-list-item').length >= 30) TheColumnRiver.append(loadMoreItem);
 					}
 				} else { // @todo Make error more comprehensible
 					TheColumnRiver.html('error');
@@ -132,18 +131,18 @@ elgg.deck_river.LoadRiver = function(TheColumn, TheEntity) {
  * Makes Ajax call to persist column and inserts items at the beginig column html
  *
  * @param {TheColumn} the column
+ * @param {columnSettings} the settings for this column
  * @return void
  */
-elgg.deck_river.RefreshColumn = function(TheColumn) {
-	var columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
-		TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
+elgg.deck_river.RefreshColumn = function(TheColumn, columnSettings) {
+	var TheColumnHeader = TheColumn.addClass('loadingRefresh').find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
 		displayItems = function(response) {
 			TheColumnHeader.find('.count').addClass('hidden').text('');
 			TheColumn.removeClass('loadingRefresh').find('.elgg-list-item').removeClass('newRiverItem');
 			response.TheColumn = TheColumn;
 			if (elgg.trigger_hook('deck-river', 'refresh:column:'+response.column_type, response, true)) {
-				var responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
+				var responseHTML = elgg.deck_river.displayRiver(response, columnSettings.network);
 
 				if (!elgg.isUndefined(responseHTML)) {
 					TheColumn.find('.elgg-river > table').remove();
@@ -153,6 +152,8 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
 					} else {
 						TheColumn.find('.elgg-river').prepend(responseHTML).find('.newRiverItem').effect("highlight", 2000);
 					}
+					if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
+					if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
 					elgg.deck_river.displayCount(response, TheColumn);
 				}
 			}
@@ -210,13 +211,12 @@ elgg.deck_river.RefreshColumn = function(TheColumn) {
  * @param {TheColumn} the column
  * @return void
  */
-elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
-	var columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
-		TheColumnHeader = TheColumn.addClass('loadingMore').find('.column-header'),
+elgg.deck_river.LoadMore = function(TheColumn, columnSettings) {
+	var TheColumnHeader = TheColumn.addClass('loadingMore').find('.column-header'),
 		LastItem = TheColumn.find('.elgg-list-item').removeClass('newRiverItem').last(),
 		displayItems = function(response) {
 			var TheColumnRiver = TheColumn.removeClass('loadingMore').find('.elgg-river'),
-				responseHTML = elgg.deck_river.displayRiver(response, TheColumnHeader);
+				responseHTML = elgg.deck_river.displayRiver(response, columnSettings.network);
 
 			TheColumnHeader.find('.count').addClass('hidden');
 			if ($.browser.webkit) { // Need it because there is a bug with highlight in chrome. Need to be checked for next version of jqueryui
@@ -226,7 +226,6 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				TheColumnRiver.append(responseHTML.effect("highlight", 2000))
 					.find('.moreItem').appendTo(TheColumnRiver);
 			}
-			TheColumnRiver.scrollTo(TheColumnRiver.scrollTop()+LastItem.next().position().top+'px', 1500, {easing:'easeOutQuart'});
 		};
 
 	if (columnSettings.direct) { // this is a direct link. Feed is loaded by user's browser.
@@ -267,8 +266,8 @@ elgg.deck_river.LoadMore = function(TheColumn, TheEntity) {
 				column: columnSettings.column,
 				time_method: 'upper',
 				time_posted: LastItem.data('timeid'),
-				guid: TheEntity ? TheEntity : null,
-				params: TheColumnHeader.data('params') || null
+				guid: columnSettings.entity || null,
+				params: columnSettings.params || null
 			},
 			success: function(response) {displayItems(response)},
 			error: function() {
@@ -295,7 +294,7 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 		displayItems = function(response) {
 			var riverID = athread.closest('.elgg-list-item').attr('class').match(/\d+/)[0],
 				itemsRiver = $('.item-' + network + '-' + riverID),
-				newItems = elgg.deck_river.displayRiver(response, TheColumn, true);
+				newItems = elgg.deck_river.displayRiver(response, network, true);
 
 			if (response.results) {
 				$.each(itemsRiver, function() {

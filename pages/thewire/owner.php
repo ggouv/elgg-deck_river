@@ -18,10 +18,9 @@ $loader = elgg_view('graphics/ajax_loader', array('hidden' => false));
 
 $content = <<<HTML
 <div id="{$owner->guid}-river-activity" class="column-river">
-	<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river" data-entity="{$owner->guid}"></ul>
+	<ul id="json-river-owner" class="column-header hidden" data-network="elgg" data-river_type="entity_river" data-entity="{$owner->guid}" data-subtypes_filter="{&quot;0&quot;: &quot;thewire&quot;}"></ul>
 	<ul class="elgg-river elgg-list">$loader</ul>
 </div>
-<input id="json-river-owner" class="hidden" value="{$owner->guid}">
 HTML;
 
 $body = elgg_view_layout('content', array(

@@ -33,7 +33,7 @@ elgg.deck_river.init = function() {
 
 			// load columns
 			$erl.find('.column-river').each(function() {
-				elgg.deck_river.LoadRiver($(this));
+				elgg.deck_river.LoadRiver($(this), elgg.deck_river.getColumnSettings($(this)));
 			});
 
 			// arrow to scroll deck columns
@@ -90,7 +90,7 @@ elgg.deck_river.init = function() {
 			$('.single-view .item-elgg-'+rThread.data('message-id')).addClass('viewed');
 		}
 		if ($('#json-river-owner').length) { // page owner river view
-			elgg.deck_river.LoadRiver($('.elgg-page .column-river'), $('#json-river-owner').val());
+			elgg.deck_river.LoadRiver($('.elgg-page .column-river'), $('#json-river-owner').data());
 		}
 
 	});
@@ -128,21 +128,23 @@ elgg.deck_river.init = function() {
 
 	// refresh column, use 'live' for new column
 	$('.elgg-column-refresh-button').die().live('click', function() {
-		elgg.deck_river.RefreshColumn($(this).closest('.column-river'));
+		var column = $(this).closest('.column-river');
+		elgg.deck_river.RefreshColumn(column, elgg.deck_river.getColumnSettings(column));
 	});
 
 	// refresh all columns
 	$('.elgg-refresh-all-button').die().live('click', function() {
 		$('.elgg-river-layout:not(.hidden) .deck-river-scroll-arrow div').html('');
 		$('.elgg-river-layout:not(.hidden) .elgg-column-refresh-button').each(function() {
-			elgg.deck_river.RefreshColumn($(this).closest('.column-river'));
+			$(this).click();
 		});
 	});
 
 	// load more in column
 	$('.moreItem').die().live('click', function() {
-		var TheColumn = $(this).closest('.column-river');
-		elgg.deck_river.LoadMore(TheColumn, TheColumn.children('.column-header').data('entity'));
+		var TheColumn = $(this).closest('.column-river'),
+			settings = elgg.deck_river.getColumnSettings(TheColumn) || TheColumn.children('.column-header').data();
+		elgg.deck_river.LoadMore(TheColumn, settings);
 	});
 
 	// hide alert or other messages in column
@@ -151,7 +153,7 @@ elgg.deck_river.init = function() {
 	});
 
 	// Column settings
-	$('.elgg-menu-deck-river .elgg-column-edit-button').die().live('click', function() {
+	$('.elgg-column-edit-button').die().live('click', function() {
 		elgg.deck_river.ColumnSettings($(this).closest('.column-river'));
 	});
 
@@ -360,7 +362,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 								$('.elgg-river-layout:not(.hidden) #deck-river-lists').animate({scrollLeft: $(this).width()});
 							}
 
-							var TheColumn = $('#'+response.column); // redeclare because maybe it was just created.
+							var TheColumn = $('.elgg-river-layout:not(.hidden) #'+response.column); // redeclare because maybe it was just created.
 
 							if (submitType == 'delete' && response.action == 'delete') {
 								TheColumn.find('*').css('background-color', '#FF7777');
@@ -377,7 +379,8 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 
 							TheColumn.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 							TheColumn.find('.column-header').replaceWith(response.header);
-							elgg.deck_river.LoadRiver(TheColumn);
+
+							elgg.deck_river.LoadRiver(TheColumn, elgg.deck_river.getColumnSettings(TheColumn));
 
 							cs.remove();
 						}

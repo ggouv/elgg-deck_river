@@ -359,7 +359,7 @@
 					{{/comments.data}}
 				</ul>
 				{{/comments}}
-				<ul class="elgg-list elgg-river-comments">
+				<ul class="elgg-list elgg-river-comments pts">
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span><a href="#comment-form-{{id}}-{{rand}}" class="prm" rel="toggle"><?php echo elgg_echo('deck_river:facebook:action:comment'); ?></a>
 					<div id="comment-form-{{id}}-{{rand}}" class="facebook-comment-form hidden">
 						<textarea class="comment"></textarea>
