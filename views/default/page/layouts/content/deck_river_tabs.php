@@ -54,7 +54,7 @@ if (elgg_is_logged_in()) {
 				$tabs[$name]['text'] = $name . '<a class="delete-tab" href="#">' . elgg_view_icon('delete') . '</a>';
 				$tabs[$name]['href'] = "activity/$name";
 			} else {
-				$tabs[$name]['href'] = '#rename-deck-river-tab';
+				$tabs[$name]['href'] = '#rename-deck-river-tab-' . $filter_context;
 				$tabs[$name]['rel'] = 'popup';
 			}
 		}
@@ -79,10 +79,7 @@ if (elgg_is_logged_in()) {
 		'priority' =>($priority+1) * 10,
 	);
 
-	echo "<div id='add-deck-river-tab' class='elgg-module-popup hidden add-deck-river-tab-popup'>" .
-			elgg_view_form('deck_river/tab/add') .
-		"</div>";
-	echo "<div id='rename-deck-river-tab' class='elgg-module-popup hidden rename-deck-river-tab-popup'>" .
+	echo "<div id='rename-deck-river-tab-$filter_context' class='rename-deck-river-tab elgg-module-popup hidden rename-deck-river-tab-popup'>" .
 			elgg_view_form('deck_river/tab/rename', '', $vars) .
 		"</div>";
 

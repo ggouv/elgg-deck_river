@@ -802,6 +802,28 @@ li.elgg-menu-item-arrow-left {
 .elgg-river .elgg-ajax-loader {
 	height: 100%;
 }
+.river-to-top {
+	height: 20px;
+	width: 20px;
+	background: rgba(200, 200, 200, 0.5);
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	border-radius: 5px;
+}
+.river-to-top:before {
+	content: "↑";
+	font-size: 2em;
+	text-align: center;
+	width: 100%;
+	color: #555;
+}
+.river-to-top:hover {
+	background: rgba(200, 200, 200, 0.8);
+}
+.river-to-top:hover:before {
+	color: #0054A7;
+}
 .newRiverItem:before {
 	content: " ";
 	height: 8px;
@@ -1082,16 +1104,16 @@ a.elgg-river-responses:hover h4 {
 	width: 204px;
 	float: left;
 }
-#add-deck-river-tab, #rename-deck-river-tab {
-	width: 270px;
+#add-deck-river-tab, .rename-deck-river-tab {
 	font-weight: bold;
+	float: left;
 }
-#add-deck-river-tab .elgg-input-text, #rename-deck-river-tab .elgg-input-text {
+#add-deck-river-tab .elgg-input-text, .rename-deck-river-tab .elgg-input-text {
 	width: 200px;
 	float: left;
 }
-#add-deck-river-tab .elgg-button-submit, #rename-deck-river-tab .elgg-button-submit {
-	float: right;
+#add-deck-river-tab .elgg-button-submit, .rename-deck-river-tab .elgg-button-submit {
+	margin-top: 8px;
 }
 #column-settings .tab .elgg-module-info {
 	background: none repeat scroll 0 0 #EEEEEE;

@@ -451,9 +451,10 @@ rpd.push(response);
 			if (vcd.length > 4) {
 				value.comments.dataBefore = vcdb = value.comments.data.splice(0, vcd.length-3);
 				value.comments.before = elgg.echo('deck_river:facebook:show_comments', [vcdb.length]);
-				value.rand = (Math.random()+"").replace('.','');
 			}
 		}
+
+		value.rand = (Math.random()+"").replace('.','');
 
 		value['type'+value.type] = true; // used for mustache
 		if (value.status_type == 'created_note') {

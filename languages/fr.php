@@ -6,12 +6,13 @@
 
 $french = array(
 	'deck_river:activity:none' => "Il n'y a pas d'activité à afficher.",
-	'deck_river:edit' => 'Modifier les paramètres de la colonne',
-	'deck_river:refresh' => 'Rafraîchir la colonne',
-	'deck_river:refresh-all' => 'Rafraîchir toutes les colonnes',
-	'deck_river:add-column' => 'Ajouter une nouvelle colonne',
-	'deck_river:add-tab' => 'Ajouter un nouvel onglet',
-	'deck_river:limitColumnReached' => 'Le nombre maximum de colonnes est atteint.',
+	'deck_river:edit' => "Modifier les paramètres de la colonne",
+	'deck_river:refresh' => "Rafraîchir la colonne",
+	'deck_river:refresh-all' => "Rafraîchir toutes les colonnes",
+	'deck_river:add-column' => "Ajouter une nouvelle colonne",
+	'deck_river:add-tab' => "Ajouter un nouvel onglet",
+	'deck_river:limitColumnReached' => "Le nombre maximum de colonnes est atteint.",
+	'deck_river:limitTabReached' => "Le nombre maximum d'onglets est atteint.",
 	'river:mentions' => "Mentions",
 	'river:a_group_activity' => "Activité d'un groupe",
 	'river:group_activity' => "Activité du groupe",
@@ -207,6 +208,9 @@ $french = array(
 	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", // "Rate limit exceeded",
 
 	//Facebook
+	'deck_river:facebook:feed:feed' => "Activitées",
+	'deck_river:facebook:feed:home' => "Fil d'actualités",
+	'deck_river:facebook:feed:statuses' => "Mes status",
 	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
 	'deck_river:facebook:posted:error' => "Erreur avec l'API de Facebook",
 

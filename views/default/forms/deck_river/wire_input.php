@@ -64,6 +64,7 @@ foreach ($all_accounts as $account) {
 		echo elgg_view('input/submit', array(
 			'value' => elgg_echo('send'),
 			'id' => 'thewire-submit-button',
+			'class' => 'noajaxified'
 		));
 	?>
 	</div>

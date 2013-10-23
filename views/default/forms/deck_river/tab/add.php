@@ -5,12 +5,12 @@
  * @package elgg-deck_river
  */
 
-echo elgg_echo('deck_river:add_tab_title');
+echo elgg_echo('deck_river:add_tab_title') . '<br>';
 
 echo elgg_view('input/text', array(
 	'name' => 'tab_name',
 	'value' => '',
-	'class' => 'mts'
+	'class' => 'mts mrm'
 ));
 
 echo elgg_view('input/submit', array(

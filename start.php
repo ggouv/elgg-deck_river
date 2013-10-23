@@ -31,6 +31,7 @@ function deck_river_init() {
 	elgg_extend_view('js/elgg', 'deck_river/js/shortener_url');
 	elgg_extend_view('js/elgg', 'deck_river/js/river_templates');
 	elgg_extend_view('page/elements/foot', 'deck_river/templates_mustache', 499);
+	elgg_extend_view('page/elements/foot', 'page/layouts/content/deck_river_add_new_tab', 500);
 
 	elgg_register_ajax_view('deck_river/ajax_json/column_river');
 	elgg_register_ajax_view('deck_river/ajax_json/entity_river');
@@ -96,13 +97,9 @@ function deck_river_page_handler($page) {
 
 		if (!isset($page[0])) {
 			$page[0] = 'default';
-		}
-
-		switch ($page[0]) {
-			default:
-				elgg_set_context(elgg_extract(0, $page, 'default'));
-				include_once dirname(__FILE__) . '/pages/river.php';
-				break;
+		} else {
+			elgg_set_context(elgg_extract(0, $page, 'default'));
+			include_once dirname(__FILE__) . '/pages/river.php';
 		}
 
 	} else {

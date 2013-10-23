@@ -120,7 +120,6 @@ elgg.deck_river.popups = function() {
 			handles: 'se',
 			helper: 'resizable-helper',
 			stop: function( event, ui ) {
-				console.log(ui);
 				vp.width(ui.size.width);
 				resizeVP();
 			}

@@ -138,9 +138,11 @@ $english = array(
 	'deck_river:twitter:feed:users:search' => "Search users",
 
 	//Facebook
+	'deck_river:facebook:feed:feed' => "Activity",
+	'deck_river:facebook:feed:home' => "News feed",
+	'deck_river:facebook:feed:statuses' => "My statuses",
 	'deck_river:facebook:posted' => "Your message has been posted on Facebook. <a href=\"%s\" target=\"_blank\">See the message</a>.",
 	'deck_river:facebook:posted:error' => "Error with Facebook API",
-
 	'deck_river:thread-not-exist' => "Discussion cannot found",
 );
 

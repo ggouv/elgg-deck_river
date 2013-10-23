@@ -40,11 +40,11 @@ elgg.deck_river.init = function() {
 			var $drl = $erl.find('#deck-river-lists');
 
 			$('.deck-river-scroll-arrow.left span').click(function() {
-				$drl.scrollTo(0, 500, {easing:'easeOutQuart'});
+				$drl.scrollTo(Math.max(0, $drl.scrollLeft()-$(window).width()+40), 500, {easing:'easeOutQuart'});
 				$erl.find('.deck-river-scroll-arrow.right span').removeClass('hidden');
 			});
 			$('.deck-river-scroll-arrow.right span').click(function() {
-				$drl.scrollTo(10000, 500, {easing:'easeOutQuart'});
+				$drl.scrollTo($drl.scrollLeft()+$(window).width()-40, 500, {easing:'easeOutQuart'});
 				$erl.find('.deck-river-scroll-arrow.left span').removeClass('hidden');
 			});
 			$drl.unbind('scroll').scroll(function() {
@@ -64,9 +64,20 @@ elgg.deck_river.init = function() {
 
 			// auto scroll columns
 			$erl.find('.elgg-river').bind('scroll.moreItem', function() {
-				if ($(this).scrollTop()+$(this).height() == $(this).get(0).scrollHeight) {
-					$(this).find('.moreItem').click();
+				var $this = $(this),
+					$rtt = $this.closest('.column-river').find('.river-to-top');
+
+				if ($this.scrollTop()+$this.height() == $this.get(0).scrollHeight) {
+					$this.find('.moreItem').click();
 				}
+				if ($this.scrollTop() > 0) {
+					$rtt.removeClass('hidden');
+				} else {
+					$rtt.addClass('hidden');
+				}
+			});
+			$('.river-to-top').live('click', function() {
+				$(this).closest('.column-river').find('.elgg-river').scrollTo(0, 500, {easing:'easeOutQuart'});
 			});
 
 		} else {
@@ -140,7 +151,7 @@ elgg.deck_river.init = function() {
 	});
 
 	// Column settings
-	$('.elgg-column-edit-button').die().live('click', function() {
+	$('.elgg-menu-deck-river .elgg-column-edit-button').die().live('click', function() {
 		elgg.deck_river.ColumnSettings($(this).closest('.column-river'));
 	});
 
@@ -155,7 +166,10 @@ elgg.deck_river.init = function() {
 					tab: tab
 				},
 				success: function(response) {
-					if (response.status == 0 ) $('li.elgg-menu-item-'+tab).remove();
+					if (response.status == 0 ) {
+						deckRiverSettings = response.output;
+						$('li.elgg-menu-item-'+tab).remove();
+					}
 				}
 			});
 		}
@@ -163,7 +177,21 @@ elgg.deck_river.init = function() {
 	});
 
 	// rename column button
-	$('.elgg-form-deck-river-tab-rename .elgg-button-submit').die().live('click', elgg.deck_river.tabRename);
+	$('.elgg-form-deck-river-tab-rename .elgg-button-submit').die().live('click', function() {
+		elgg.action('deck_river/tab/rename', {
+			data: $(this).closest('.elgg-form').serialize(),
+			success: function(json) {
+				if (json.status != -1) {
+					deckRiverSettings = json.output.user_river_settings;
+					$('#deck-river-lists').data('tab', json.output.tab_name);
+					$('.elgg-menu-item-'+json.output.old_tab_name+' a').text(json.output.tab_name.charAt(0).toUpperCase() + json.output.tab_name.slice(1));
+					$('.elgg-menu-item-'+json.output.old_tab_name).removeClass('elgg-menu-item-'+json.output.old_tab_name).addClass('elgg-menu-item-'+json.output.tab_name);
+				}
+			}
+		});
+		$('body').click();
+		return false;
+	});
 
 	// Add new column
 	$('.elgg-add-new-column').die().live('click', function() {
@@ -419,29 +447,6 @@ elgg.deck_river.network_authorize = function(token) {
 }
 
 
-
-/**
- * Rename a column
- *
- * Event callback the uses Ajax to rename the column and change its HTML
- *
- * @param {Object} event
- * @return void
- */
-elgg.deck_river.tabRename = function(event) {
-	elgg.action('deck_river/tab/rename', {
-		data: $('.elgg-form-deck-river-tab-rename').serialize(),
-		success: function(json) {
-			if (json.status != -1) {
-				$('#deck-river-lists').data('tab', json.output.tab_name);
-				$('.elgg-menu-item-'+json.output.old_tab_name+' a').text(json.output.tab_name.charAt(0).toUpperCase() + json.output.tab_name.slice(1));
-				$('.elgg-menu-item-'+json.output.old_tab_name).removeClass('elgg-menu-item-'+json.output.old_tab_name).addClass('elgg-menu-item-'+json.output.tab_name);
-			}
-		}
-	});
-	$('#rename-deck-river-tab').hide();
-	event.preventDefault();
-};
 
 /**
  * Persist the column's new position

@@ -30,6 +30,7 @@ foreach ($user_river_settings[$page_filter] as $key => $column_settings) {
 				'<ul class="elgg-river elgg-list">' .
 					elgg_view('graphics/ajax_loader', array('hidden' => false)) .
 				'</ul>' .
+				'<div class="river-to-top hidden link t25 gwfb"></div>' .
 			'</li>';
 }
 $content .= '</ul></div>';
