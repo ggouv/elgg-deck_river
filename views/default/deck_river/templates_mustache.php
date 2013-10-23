@@ -8,7 +8,6 @@
 	var site_shorturl = <?php $site_shorturl = elgg_get_plugin_setting('site_shorturl', 'elgg-deck_river'); echo json_encode($site_shorturl ? $site_shorturl : false); ?>;
 	var deck_river_min_width_column = <?php $mwc = elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); echo $mwc ? $mwc : 300; ?>;
 	var deck_river_max_nbr_columns = <?php $mnc = elgg_get_plugin_setting('max_nbr_column', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
-	var deck_river_max_nbr_tabs = <?php $mnc = elgg_get_plugin_setting('max_nbr_tabs', 'elgg-deck_river');  echo $mnc ? $mnc : 10; ?>;
 </script>
 
 

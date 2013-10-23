@@ -12,6 +12,7 @@ $english = array(
 	'deck_river:add-column' => 'Add a new column',
 	'deck_river:add-tab' => 'Add a new tab',
 	'deck_river:limitColumnReached' => 'The maximum number of columns is reached.',
+	'deck_river:limitTabReached' => "The maximum number of tabs is reached.",
 	'river:mentions' => "Mentions",
 	'deck_river:more' => "More...",
 	'deck-river:reduce_url' => "Reduce",

@@ -8,14 +8,6 @@
 $user_guid = elgg_get_logged_in_user_guid();
 $user_river_settings = json_decode(get_private_setting($user_guid, 'deck_river_settings'), true);
 
-if ( !$user_river_settings || !is_array($user_river_settings) ) {
-	$set = str_replace("&gt;", ">", elgg_get_plugin_setting('default_columns', 'elgg-deck_river'));
-	if (!$set) $set = elgg_echo('deck_river:settings:default_column:default');
-	eval("\$defaults = $set;");
-	set_private_setting($user_guid, 'deck_river_settings', json_encode($defaults));
-	$user_river_settings = $defaults;
-}
-
 //get page for tabs
 $page_filter = elgg_get_context();
 
