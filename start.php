@@ -284,6 +284,36 @@ function deck_river_wire_filter($text) {
 }
 
 
+/**
+ * Highlight mention in text
+ * @param  [string] $text    text that contains mention
+ * @param  [string] $mention mention
+ * @return [string]          text with mention highlighted
+ */
+function deck_river_highlight_mention($text, $mention) {
+	$len = mb_strlen($mention);
+	$match = preg_split('/'.$mention.'(?=\s|$)/Ums', $text);
+
+	if (count($match) >= 1) {
+		$a = array_shift($match);
+		$b = implode($mention, $match);
+
+		if (mb_strlen($b) > 70-$len) {
+			$a1 = mb_substr($a, -70);
+			$b1 = mb_substr($b, 0, 140-$len-mb_strlen($a1));
+			if (mb_strlen($b1) < mb_strlen($b)) $b1 = ' ' . trim($b1) . '...';
+		} else {
+			$b1 = $b;
+			$a1 = mb_substr($a, -(140-$len-mb_strlen($b1)));
+		}
+		if (mb_strlen($a1) < mb_strlen($a)) $a1 = '...' . trim($a1) . ' ';
+	} else {
+		return $text;
+	}
+
+	return $a1 . '<span class="search-highlight">' . $mention . '</span>' . $b1;
+}
+
 
 /**
  * Replace urls, hashtags,  ! and @ by links

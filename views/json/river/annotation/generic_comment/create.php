@@ -7,6 +7,8 @@
 
 global $jsonexport;
 
+$mention = elgg_extract('mention', $vars, false);
+
 $comment = $vars['item']->getAnnotation();
 
 switch ($vars['item']->subtype) {
@@ -30,7 +32,12 @@ switch ($vars['item']->subtype) {
 		break;
 }
 
+if ($mention) {
+	$excerpt = deck_river_highlight_mention($comment->value, $mention);
+} else {
+	$excerpt = elgg_get_excerpt($comment->value, 140);
+}
 
-$vars['item']->message = deck_river_wire_filter(preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", elgg_get_excerpt($comment->value, 140)));
+$vars['item']->message = deck_river_wire_filter(preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $excerpt));
 
 $jsonexport['results'][] = $vars['item'];

@@ -7,6 +7,8 @@
 
 global $jsonexport;
 
+$mention = elgg_extract('mention', $vars, false);
+
 $subject = $vars['item']->getSubjectEntity();
 $object = $vars['item']->getObjectEntity();
 
@@ -25,8 +27,10 @@ $object_link = elgg_view('output/url', array(
 
 $vars['item']->summary = elgg_echo("river:create:object:thewire", array($subject_link, $object_link));
 
-
 $excerpt = strip_tags($object->description);
+
+if ($mention) $excerpt = deck_river_highlight_mention($excerpt, $mention);
+
 $excerpt = deck_river_wire_filter($excerpt);
 
 if ($object->reply) $vars['item']->responses = $object->wire_thread;

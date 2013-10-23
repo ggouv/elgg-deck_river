@@ -266,7 +266,7 @@ elgg.deck_river.LoadMore = function(TheColumn, columnSettings) {
 				column: columnSettings.column,
 				time_method: 'upper',
 				time_posted: LastItem.data('timeid'),
-				guid: columnSettings.entity || null,
+				entity: columnSettings.entity || null,
 				params: columnSettings.params || null
 			},
 			success: function(response) {displayItems(response)},

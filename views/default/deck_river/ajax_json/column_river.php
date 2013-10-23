@@ -107,6 +107,7 @@ if ($column_settings['network'] == 'twitter') {
 			$options['subject_guid'] = $owner->guid;
 			break;
 		case 'mention':
+			$mention = '@'.$owner->name;
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
@@ -120,6 +121,7 @@ if ($column_settings['network'] == 'twitter') {
 			break;
 		case 'group_mention':
 			$group_name = get_entity($column_settings['group'])->name;
+			$mention = '!'.$group_name;
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
@@ -180,9 +182,9 @@ if ($column_settings['network'] == 'twitter') {
 	if (!empty($items)) {
 		foreach ($items as $item) {
 			if (elgg_view_exists($item->view, 'json')) {
-				elgg_view($item->view, array('item' => $item), '', '', 'json'); // this view fill the global $jsonexport
+				elgg_view($item->view, array('item' => $item, 'mention' => $mention), '', '', 'json'); // this view fill the global $jsonexport
 			} else {
-				elgg_view('river/item', array('item' => $item), '', '', 'json');
+				elgg_view('river/item', array('item' => $item, 'mention' => $mention), '', '', 'json');
 			}
 		}
 

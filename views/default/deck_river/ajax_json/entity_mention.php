@@ -15,9 +15,11 @@ $options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotatio
 $options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
 
 if (elgg_instanceof($entity,'group')) {
-	$options['wheres'][] = "((o.description REGEXP '!" . $entity->name . "[[:>:]]') OR (m.string REGEXP '!" . $entity->name . "[[:>:]]'))";
+	$options['wheres'][] = "((rv.action_type <> 'comment' AND o.description REGEXP '!" . $entity->name . "[[:>:]]') OR (m.string REGEXP '!" . $entity->name . "[[:>:]]'))";
+	$mention = '!'.$entity->name;
 } else if (elgg_instanceof($entity,'user')) {
-	$options['wheres'][] = "((o.description REGEXP '@" . $entity->name . "[[:>:]]') OR (m.string REGEXP '@" . $entity->name . "[[:>:]]'))";
+	$options['wheres'][] = "((rv.action_type <> 'comment' AND o.description REGEXP '@" . $entity->name . "[[:>:]]') OR (m.string REGEXP '@" . $entity->name . "[[:>:]]'))";
+	$mention = '@'.$entity->name;
 } else {
 	return;
 }
@@ -60,13 +62,13 @@ $items = elgg_get_river($options);
 
 global $jsonexport;
 $jsonexport['results'] = array();
-
+global $fb; $fb->info($mention);
 if (!empty($items)) {
 	foreach ($items as $item) {
 		if (elgg_view_exists($item->view, 'json')) {
-			elgg_view($item->view, array('item' => $item), '', '', 'json');
+			elgg_view($item->view, array('item' => $item, 'mention' => $mention), '', '', 'json');
 		} else {
-			elgg_view('river/item', array('item' => $item), '', '', 'json');
+			elgg_view('river/item', array('item' => $item, 'mention' => $mention), '', '', 'json');
 		}
 	}
 
