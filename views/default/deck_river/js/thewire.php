@@ -141,20 +141,8 @@ elgg.thewire.init = function() {
 		return false;
 	});
 	$('#thewire-network .pin').die().live('click', function() {
-		var netProfile = $(this).closest('.net-profile');
-		elgg.action('deck_river/network/pin', {
-			data: {
-				network: netProfile.find('input').val()
-			},
-			success: function (response) {
-				if (response.output) {
-					netProfile.toggleClass('pinned');
-				}
-			},
-			error: function (response) {
-				elgg.register_error(response);
-			}
-		});
+		$(this).closest('.net-profile').toggleClass('pinned');
+		elgg.thewire.manageNetworks();
 		return false;
 	});
 	elgg.thewire.move_account();
@@ -290,29 +278,57 @@ elgg.thewire.insertInThewire = function(text) {
 };
 
 
-
+/*$(".deck-river-lists-container").sortable({
+		items: '.column-river',
+		connectWith: '.deck-river-lists-container',
+		handle: '.column-header',
+		forcePlaceholderSize: true,
+		placeholder: 'column-placeholder',
+		opacity: 0.8,
+		revert: 500,
+		start: function(event, ui) { $('.column-placeholder').css('width', $('.column-header').width()-3); },
+		update: elgg.deck_river.MoveColumn
+	});*/
 /**
  * Initiate draggable and droppable for net-profile in thewire network
  */
 elgg.thewire.move_account = function() {
-	$('#thewire-network .net-profile').draggable({
-		revert: true,
-		revertDuration: 0,
+	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').sortable({
+		items: $('.net-profile').not('.ggouv'),
+		connectWith: $('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles'),
+		helper: 'clone',
+		revert: 300,
+		dropOnEmpty: true,
+		revert: 500,
 		zIndex: 9999,
-		helper: 'clone'
-	});
-	$('#thewire-network .selected-profile, #thewire-network .non-pinned .net-profiles').droppable({
+		opacity: 0.8,
+		receive: function(e, ui) {
+			if ($(this).hasClass('selected-profile') && $(this).find('.net-profile').length > 5) {
+				elgg.register_error(elgg.echo('deck_river:error:network:active:too_much'));
+				ui.sender.sortable("cancel");
+			}
+		},
+		update: function(e, ui) {
+			console.log($(this), 'this');
+			console.log(e, 'e');
+			console.log(ui, 'ui');
+			if ($(this).hasClass('net-profiles') && ui.position.top > 0) {
+				console.log('go');
+				elgg.thewire.manageNetworks();
+			}
+		}
+	}).droppable({
 		accept:      $('.net-profile').not('.ggouv'),
 		activeClass: 'ui-state-highlight',
 		hoverClass:  'ui-state-active',
 		drop: function(e, ui) {
 			$('#thewire-network *').removeClass('ui-start');
 			if ($(this).hasClass('selected-profile')) {
-				if ($(this).find('.net-profile').length < 5) {
+				if ($(this).find('.net-profile').length <= 5) {
 					ui.draggable.appendTo($(this)).find('input').attr('name', 'networks[]');
 					ui.draggable.find('.elgg-icon-delete').addClass('hidden');
 				} else {
-					elgg.register_error(elgg.echo('deck_river:error:pin:too_much'));
+					elgg.register_error(elgg.echo('deck_river:error:network:active:too_much'));
 				}
 			} else {
 				ui.draggable.prependTo($(this)).find('input').attr('name', '_networks[]');
@@ -324,6 +340,53 @@ elgg.thewire.move_account = function() {
 	});
 };
 
+
+/**
+ * Fired when account is pinned or sorted. This function format order and send it to server.
+ * @return {[type]} [description]
+ */
+elgg.thewire.manageNetworks = function() {
+	var $nps = $('#thewire-network .net-profile:not(.ggouv)'),
+		position = {},
+		pinned = [],
+		place = function(i, e) {
+			if (elgg.isUndefined(position[i])) {
+				position[i] = e.children('input').val();
+				e.data('position', i);
+			} else {
+				i++;
+				place(i, e);
+			}
+		};
+
+	$.each($nps, function(i, e) {
+		var $e = $(e),
+			p = $e.data('position');
+
+		if (!$e.hasClass('pinned')) {
+			if ($e.closest('.selected-profile').length) {
+				place(p, $e);
+			} else {
+				place(0, $e);
+			}
+		} else {
+			pinned.push($e.children('input').val());
+		}
+	});
+
+	// send to save
+	elgg.action('deck_river/network/manageNetworks', {
+		data: {
+			networks: {
+				position: position,
+				pinned: pinned
+			}
+		},
+		error: function (response) {
+			elgg.register_error(response);
+		}
+	});
+};
 
 
 /**

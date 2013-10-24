@@ -17,6 +17,7 @@
 $account = elgg_extract('entity', $vars);
 $view = elgg_extract('view_type', $vars, false);
 $pinned = elgg_extract('pinned', $vars, false);
+$position = elgg_extract('position', $vars, false);
 
 $avatar = elgg_view('output/img', array(
 	'src' => $account->icon ? $account->icon : 'https://graph.facebook.com/' . $account->username . '/picture', // facebook group use icon, else this is a user account
@@ -45,7 +46,7 @@ if ($view === 'in_network_box') {
 	$pin_tooltip = htmlspecialchars(elgg_echo('deck-river:network:pin'));
 
 	$output = <<<HTML
-<div class="net-profile float mlm facebook$pinned">
+<div class="net-profile float mlm facebook$pinned" data-position="$position">
 	<input type="hidden" value="{$account->getGUID()}" name="$input_name" data-network="facebook" data-scrap>
 	<ul>
 		<span class="elgg-icon elgg-icon-delete pas hidden"></span>

@@ -9,19 +9,24 @@ if (!$user) {
 	return false;
 }
 
-$user_deck_river_pinned_accounts = json_decode(get_private_setting($user->getGUID(), 'deck_river_pinned_accounts'), true);
-
-$accounts = array();
-// get and format accounts
 elgg_load_library('deck_river:authorize');
-$all_accounts = array_reverse(deck_river_get_networks_account('all'));
 
-foreach ($all_accounts as $account) {
-	$accounts[$account->getGUID()] = elgg_view_entity($account, array(
-		'view_type' => 'in_network_box',
-		'pinned' => in_array($account->getGUID(), $user_deck_river_pinned_accounts) ? true : false,
-	));
+// get and sort accounts
+$user_deck_river_accounts_in_wire = json_decode(get_private_setting($user->getGUID(), 'user_deck_river_accounts_in_wire'), true);
+$accounts_position = array_flip($user_deck_river_accounts_in_wire['position']);
+
+$all_accounts = deck_river_get_networks_account('all');
+
+$sorted_accounts = array();
+foreach($all_accounts as $key => $account) {
+	if (isset($accounts_position[$account->getGUID()])) {
+		$sorted_accounts[$accounts_position[$account->getGUID()]] = $account;
+		unset($all_accounts[$key]);
+	}
 }
+ksort($sorted_accounts);
+
+$position = 0;
 
 ?>
 
@@ -94,11 +99,13 @@ foreach ($all_accounts as $account) {
 			<span class="network link"></span>
 		</div>
 		<?php
-			foreach ($accounts as $account_guid => $account_output) {
-				if (in_array($account_guid, $user_deck_river_pinned_accounts)) {
-					echo $account_output;
-					unset($accounts[$account_guid]);
-				}
+			foreach ($all_accounts as $account) {
+				echo elgg_view_entity($account, array(
+					'view_type' => 'in_network_box',
+					'pinned' => true,
+					'position' => $position
+				));
+				$position++;
 			}
 		?>
 	</div>
@@ -109,8 +116,13 @@ foreach ($all_accounts as $account) {
 			<div class="net-profiles-wrapper pts float">
 				<div class="net-profiles">
 				<?php
-					foreach ($accounts as $account_output) {
-						echo $account_output;
+					foreach ($sorted_accounts as $account) {
+						echo elgg_view_entity($account, array(
+							'view_type' => 'in_network_box',
+							'pinned' => false,
+							'position' => $position
+						));
+						$position++;
 					}
 				?>
 				</div>
