@@ -54,7 +54,7 @@ if (!empty($registered_entities)) {
 							'value' => $type,
 							'checked' => in_array('All', $types_value) || in_array($type, $types_value)
 						));
-		$filter .= '<label class="gwfb t25 tooltip s link '.$type.'" title="'.$label.'" for="cb-'.$rand.'">'.$label.'</label></li>';
+		$filter .= '<label class="gwfb t25 '. ($type == 'All' ? '' : 'tooltip s') . ' link '.$type.'" title="'.$label.'" for="cb-'.$rand.'">'.$label.'</label></li>';
 	}
 	$filter .= '</ul>';
 
@@ -76,7 +76,7 @@ if (!empty($registered_entities)) {
 		'href' => "#",
 		'text' => elgg_echo('search'),
 		'class' => 'elgg-button elgg-button-submit noajaxified'
-	)) . '</ul>';
+	)) . '<div class="close-filter pas float-alt link">▲</div></ul>';
 
 }
 

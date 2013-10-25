@@ -3,7 +3,7 @@
 
 <!-- Pass var from php to client -->
 <script type="text/javascript">
-	var deckRiverSettings = <?php echo get_private_setting(elgg_get_logged_in_user_guid(), 'deck_river_settings'); ?>;
+	var deckRiverSettings = <?php echo elgg_is_logged_in() ? get_private_setting(elgg_get_logged_in_user_guid(), 'deck_river_settings') : 'null'; ?>;
 	var FBappID = <?php echo elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river') ?>;
 	var site_shorturl = <?php $site_shorturl = elgg_get_plugin_setting('site_shorturl', 'elgg-deck_river'); echo json_encode($site_shorturl ? $site_shorturl : false); ?>;
 	var deck_river_min_width_column = <?php $mwc = elgg_get_plugin_setting('min_width_column', 'elgg-deck_river'); echo $mwc ? $mwc : 300; ?>;
@@ -406,5 +406,6 @@
 </script>
 
 </div>
+<div id="fb-root"></div>
 
 

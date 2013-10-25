@@ -13,11 +13,7 @@
 $(document).ready(function() {
 
 	if ($('.net-profile.facebook').length) {
-		FB.init({
-			appId: FBappID,
-			channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
-			oauth: true
-		});
+		elgg.deck_river.initFacebook();
 	}
 
 	$('.elgg-menu-item-response a').live('click', function() {

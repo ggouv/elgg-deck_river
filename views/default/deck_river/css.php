@@ -758,7 +758,7 @@ li.elgg-menu-item-arrow-left {
 	margin-right: 85px;
 	cursor: move;
 }
-.column-river .count, .newRiverItem:before {
+.column-river .count, .newRiverItem:after {
 	background: #FA3;
 	border-radius: 8px;
 	color: white;
@@ -826,7 +826,12 @@ li.elgg-menu-item-arrow-left {
 .column-filter label {
 	font-size: 90%;
 }
-
+.column-filter .close-filter {
+	color: #555;
+}
+.column-filter .close-filter:hover {
+	color: black;
+}
 
 .river-to-top {
 	height: 17px;
@@ -864,14 +869,14 @@ li.elgg-menu-item-arrow-left {
 .elgg-river .elgg-ajax-loader {
 	height: 100%;
 }
-.newRiverItem:before {
+.newRiverItem:after {
 	content: " ";
 	height: 8px;
-	position: relative;
-	right: -4px;
-	top: -1px;
+	position: absolute;
+	right: 1px;
+	top: 3px;
 }
-.elgg-list-item.newRiverItem:hover:before {
+.elgg-list-item.newRiverItem:hover:after {
 	opacity: 0;
 }
 .moreItem {
@@ -1142,10 +1147,6 @@ a.elgg-river-responses:hover h4 {
 	border-left: 2px solid #CCC;
 	height: 100%;
 	width: 421px;
-}
-#column-settings .elgg > * {
-	width: 204px;
-	float: left;
 }
 #add-deck-river-tab, .rename-deck-river-tab {
 	font-weight: bold;

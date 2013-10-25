@@ -127,7 +127,7 @@ elgg.deck_river.init = function() {
 	});
 
 	// filter
-	$('.elgg-column-filter-button, .column-header .filtered').die().live('click', function() {
+	$('.elgg-column-filter-button, .column-header .filtered, .column-filter .close-filter').die().live('click', function() {
 		var $cr = $(this).closest('.column-river'),
 			$cf = $cr.find('.column-filter').toggleClass('elgg-state-active'),
 			$er = $cr.find('.elgg-river');
@@ -155,6 +155,8 @@ elgg.deck_river.init = function() {
 	});
 	$('.column-filter .elgg-button-submit').die().live('click', function() {
 		var TheColumn = $(this).closest('.column-river'),
+			$f = TheColumn.find('.filtered'),
+			fState = $f.hasClass('hidden'),
 			columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
 			count = 0;
 
@@ -164,6 +166,7 @@ elgg.deck_river.init = function() {
 		$.each(TheColumn.find('.column-filter .types:checkbox:checked'), function() {
 			columnSettings.types_filter.push(this.value);
 			if (this.value == 'All') return false;
+			$f.removeClass('hidden');
 		});
 		count += columnSettings.types_filter.length;
 
@@ -171,16 +174,17 @@ elgg.deck_river.init = function() {
 			$.each(TheColumn.find('.column-filter .subtypes:checkbox:checked'), function() {
 				columnSettings.subtypes_filter.push(this.value);
 			});
+			$f.removeClass('hidden');
 		} else {
-			TheColumn.find('.filtered').addClass('hidden');
+			$f.addClass('hidden');
 			delete columnSettings.types_filter;
 		}
 		count += columnSettings.subtypes_filter.length;
 
 		if (count == 0) {
 			elgg.system_message(elgg.echo('deck_river:error:no_filter'));
+			fState ? $f.addClass('hidden') : $f.removeClass('hidden');
 		} else {
-			TheColumn.find('.filtered').removeClass('hidden');
 			// make call
 			if (columnSettings.direct == false) delete columnSettings.direct;
 			elgg.deck_river.setColumnSettings(TheColumn, columnSettings);
