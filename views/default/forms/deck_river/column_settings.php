@@ -79,57 +79,6 @@ $column_title = $user_river_column_options->title;
 				?>
 			</li>
 		</ul>
-
-		<div class='filter plm'>
-			<label><?php echo elgg_echo('deck_river:filter'); ?></label><br />
-			<?php
-			// create checkboxes array
-			$types_value = array();
-			$registered_entities = elgg_get_config('registered_entities');
-			$types_label[elgg_echo('deck_river:filter:all')] = 'All';
-			if (!$user_river_column_options->types_filter && !$user_river_column_options->subtypes_filter || $user_river_column_options->types_filter == 'All' ) $types_value[] = 'All';
-			if (!empty($registered_entities)) {
-				foreach ($registered_entities as $type => $subtypes) {
-					// subtype will always be an array.
-					if (!count($subtypes)) {
-						$label = elgg_echo("item:$type");
-						$types_label[$label] .= $type;
-						if (in_array($type, $user_river_column_options->types_filter)) $types_value[] = $type;
-					} else {
-						foreach ($subtypes as $subtype) {
-							$label = elgg_echo("item:$type:$subtype");
-							$subtypes_label[$label] .= $subtype;
-							if (in_array($subtype, $user_river_column_options->subtypes_filter)) $subtypes_value[] = $subtype;
-						}
-					}
-				}
-
-				// merge keys defined by admin
-				$keys_to_merge = explode(',', elgg_get_plugin_setting('keys_to_merge', 'elgg-deck_river'));
-				foreach ($keys_to_merge as $key => $value ) {
-					$key_master = explode('=', $value);
-					foreach ($types_label as $k => $v) {
-						if ($v == $key_master[1]) unset($types_label[$k]);
-					}
-					foreach ($subtypes_label as $k => $v) {
-						if ($v == $key_master[1]) unset($subtypes_label[$k]);
-					}
-				}
-
-				// show filters
-				echo elgg_view('input/checkboxes', array(
-									'name' => 'filters_types',
-									'value' => $types_value,
-									'options' => $types_label,
-									'class' => 'mts'
-									));
-				echo elgg_view('input/checkboxes', array(
-									'name' => 'filters_subtypes',
-									'value' => $subtypes_value,
-									'options' => $subtypes_label,
-									));
-			} ?>
-		</div>
 	</div>
 
 

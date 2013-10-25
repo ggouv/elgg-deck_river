@@ -112,7 +112,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
 						if (response.column_message) elgg.deck_river.column_message(response.column_message, TheColumnHeader);
 						if (response.column_error) elgg.deck_river.column_error(response.column_error, TheColumnHeader);
 						TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network));
-						if (!elgg.isString(response.results)) TheColumn.append(loadMoreItem);
+						if (!elgg.isString(response.results)) TheColumnRiver.append(loadMoreItem);
 						TheColumnRiver.scrollTo(0);
 					}
 				} else { // @todo Make error more comprehensible

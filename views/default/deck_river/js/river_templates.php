@@ -453,9 +453,7 @@ rpd.push(response);
 
 		value['type'+value.type] = true; // used for mustache
 		if (value.status_type == 'created_note') {
-			//delete value.typelink;
 			value.typenote = 1;
-			console.log(value);
 		}
 
 		if (value.full_picture) imgs.push({src: value.full_picture, id: value.id});

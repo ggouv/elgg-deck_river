@@ -8,11 +8,19 @@ $tab = get_input('tab', 'default');
 $column = get_input('column', false);
 $time_method = get_input('time_method', false);
 $time_posted = get_input('time_posted', false);
+$save_settings = get_input('save_settings', false);
 
-// Get the settings of the current user.
 $owner = elgg_get_logged_in_user_entity();
+
+
+// Get the settings of the current user, if save_settings is true, that mean all settings are sended and we want to store it.
 $user_river_options = json_decode(get_private_setting($owner->guid, 'deck_river_settings'), true);
 $column_settings = $user_river_options[$tab][$column];
+
+if ($save_settings) {
+	$user_river_options[$tab][$column] = $column_settings = $save_settings;
+	set_private_setting($owner->guid, 'deck_river_settings', json_encode($user_river_options));
+}
 
 $jsonexport = array();
 

@@ -179,7 +179,8 @@ if ($submit == 'delete') {
 		'token' => $facebook_account->oauth_token,
 		'query' => $facebook_account->user_id . '/' . $facebook_type,
 		'network' => 'facebook',
-		'subtitle' => $facebook_account->icon ? $facebook_account->name : $facebook_account->username,
+		'username' => $facebook_account->username,
+		'subtitle' => $facebook_account->name,
 		'fields' => 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)',
 
 	);
@@ -213,5 +214,6 @@ set_private_setting($owner, 'deck_river_settings', json_encode($return['deck_riv
 
 $return['column'] = $column;
 $return['header'] = elgg_view('page/layouts/content/deck_river_column_header', array('column_settings' => $user_river_options[$tab][$column]));
+$return['header'] .= elgg_view('page/layouts/content/deck_river_column_filter', array('column_settings' => $user_river_options[$tab][$column]));
 
 echo json_encode($return);

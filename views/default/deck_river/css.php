@@ -732,7 +732,6 @@ li.elgg-menu-item-arrow-left {
 
 /* column header */
 .column-header {
-	cursor: move;
 	height: 30px;
 	background: #EEE;
 	overflow: hidden;
@@ -752,6 +751,13 @@ li.elgg-menu-item-arrow-left {
 	float: right;
 	margin: 6px 7px 0 0;
 }
+.column-header .filtered {
+	border-left: 1px solid #CCC;
+}
+.column-handle {
+	margin-right: 85px;
+	cursor: move;
+}
 .column-river .count, .newRiverItem:before {
 	background: #FA3;
 	border-radius: 8px;
@@ -765,7 +771,7 @@ li.elgg-menu-item-arrow-left {
 	position: absolute;
 	top: 30px;
 	width: 100%;
-	z-index: 1;
+	z-index: 2;
 	font-size: 0.9em;
 }
 .column-message, .top-message {
@@ -785,7 +791,7 @@ li.elgg-menu-item-arrow-left {
 }
 .column-river .refresh-gif {
 	position: absolute;
-	right: 27px;
+	right: 4px;
 	top: 2px;
 	display: none;
 }
@@ -799,23 +805,32 @@ li.elgg-menu-item-arrow-left {
 .column-header .elgg-icon:hover:before {
 	color: #4690D6;
 }
+.column-filter {
+	background: #FFC;
+	z-index: 1;
+	position: relative;
+	-webkit-box-shadow: 0 2px 2px #CCCCCC;
+	-moz-box-shadow: 0 2px 2px #CCCCCC;
+	box-shadow: 0 2px 2px #CCCCCC;
+}
+.column-filter .elgg-vertical {
+	border-bottom: 1px solid #CCC;
+	display: inline-block;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	min-height: 35px;
+}
+.column-filter label {
+	font-size: 90%;
+}
 
-/* river */
-.elgg-river-item {
-	padding: 0;
-}
-.elgg-river-item .elgg-river-timestamp a {
-	color: #999;
-}
-.elgg-river .elgg-module {
-	margin-bottom: 0;
-}
-.elgg-river .elgg-ajax-loader {
-	height: 100%;
-}
+
 .river-to-top {
-	height: 20px;
-	width: 20px;
+	height: 17px;
+	width: 17px;
 	background: rgba(200, 200, 200, 0.5);
 	position: absolute;
 	bottom: 10px;
@@ -834,6 +849,20 @@ li.elgg-menu-item-arrow-left {
 }
 .river-to-top:hover:before {
 	color: #0054A7;
+}
+
+/* river */
+.elgg-river-item {
+	padding: 0;
+}
+.elgg-river-item .elgg-river-timestamp a {
+	color: #999;
+}
+.elgg-river .elgg-module {
+	margin-bottom: 0;
+}
+.elgg-river .elgg-ajax-loader {
+	height: 100%;
 }
 .newRiverItem:before {
 	content: " ";
@@ -1037,7 +1066,10 @@ a.elgg-river-responses:hover {
 a.elgg-river-responses:hover h4 {
 	text-decoration: underline;
 }
-
+.facebook-comment-form .comment {
+	height: 60px;
+	resize: vertical;
+}
 
 
 /* settings */

@@ -92,7 +92,7 @@ $french = array(
 	// column-settings form
 	'deck_river:settings' => 'Paramètres de la colonne',
 	'deck_river:type' => "Sélectionnez le type de flux :",
-	'deck_river:filter' => 'Filtre :',
+	'deck_river:filter' => 'Filtrer le flux',
 	'deck_river:title' => 'Titre de la colonne :',
 	'deck_river:search' => 'Recherche :',
 	'deck_river:a_search' => 'Une recherche',

@@ -309,13 +309,7 @@ elgg.thewire.move_account = function() {
 			}
 		},
 		update: function(e, ui) {
-			console.log($(this), 'this');
-			console.log(e, 'e');
-			console.log(ui, 'ui');
-			if ($(this).hasClass('net-profiles') && ui.position.top > 0) {
-				console.log('go');
-				elgg.thewire.manageNetworks();
-			}
+			if ($(this).hasClass('net-profiles') && ui.position.top > 0) elgg.thewire.manageNetworks();
 		}
 	}).droppable({
 		accept:      $('.net-profile').not('.ggouv'),
