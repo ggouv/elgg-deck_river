@@ -181,7 +181,7 @@
 	data-subject_guid="{{subject_guid}}"
 	data-username="{{user.username}}"
 	data-timeid="{{posted}}"
-	data-text="{{message}}">
+	data-text="{{text}}">
 	<div class="elgg-image-block elgg-river-item clearfix">
 		<div class="elgg-image">
 			<div class="elgg-avatar elgg-avatar-small">
@@ -191,21 +191,19 @@
 			</div>
 		</div>
 		<div class="elgg-body">
-			{{#menu}}
 			<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
-				{{#default}}
-				<li class="elgg-menu-item-{{name}}">
-					<a href="#" title="{{content}}" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-{{name}}"></span></a>
-				</li>
-				{{/default}}
-				{{#submenu}}
-				<li class="elgg-submenu">
-					<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
-					<ul class="elgg-module-popup hidden">
-						<li class="elgg-menu-item-{{name}}"><a href="#"><span class="elgg-icon elgg-icon-{{name}}"></span>{{{content}}}</a>
-					</ul>
-				</li>
-				{{/submenu}}
+			{{#menu}}
+			{{^sub}}
+			<li class="elgg-menu-item-{{name}}"><a href="#" title="{{title}}" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-{{name}}"></span></a></li>
+			{{/sub}}
+			{{#sub}}
+			<li class="elgg-submenu pls">
+				<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
+				<ul class="elgg-module-popup hidden">
+					{{#childs}}<li class="elgg-menu-item-{{name}}">{{{content}}}</li>{{/childs}}
+				</ul>
+			</li>
+			{{/sub}}
 			{{/menu}}
 			</ul>
 			<div class="elgg-river-summary">
@@ -253,8 +251,12 @@
 					<li class="elgg-menu-item-response">
 						<a href="#" title="<?php echo elgg_echo('reply'); ?>" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response"></span></a>
 					</li>
-					<li class="elgg-menu-item-share">
-						<a href="#" title="<?php echo elgg_echo('retweet'); ?>" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>
+					<li class="elgg-submenu prs link">
+						<span class="elgg-icon elgg-icon-share float"></span>
+						<ul class="elgg-module-popup hidden">
+							<li class="elgg-menu-item-share-twitter"><a href="#"><span class="elgg-icon elgg-icon-twitter"></span><?php echo elgg_echo('retweet'); ?></a>
+							<li class="elgg-menu-item-share"><a href="#"><span class="elgg-icon elgg-icon-share"></span><?php echo elgg_echo('retweet_by_wire'); ?></a>
+						</ul>
 					</li>
 					{{{menu.default}}}
 					{{#submenu}}

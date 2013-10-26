@@ -218,16 +218,6 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 		// add friendly_time
 		value.friendly_time = elgg.friendly_time(value.posted);
 
-		// add replyall in submenu
-		if (!thread && value.subtype == 'thewire') {
-			if (/@\w{1,}/g.test(value.message)) {
-				value.submenu = [{
-					name: 'response-all',
-					content: elgg.echo('replyall')
-				}];
-			}
-		}
-
 		value.text = $('<div>').html(value.message).text();
 		if (value.type == 'object') value.message = value.text.ParseGroup().ParseEverythings('elgg');
 

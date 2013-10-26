@@ -913,7 +913,7 @@ li.elgg-menu-item-arrow-left {
 .elgg-menu-river {
 	opacity: 0;
 	color: #AAA;
-	margin: -2px 10px 0 0;
+	margin: -2px 4px 0 0;
 	position: absolute;
 	right: 0;
 }
@@ -934,7 +934,6 @@ li.elgg-menu-item-arrow-left {
 	color: #555;
 }
 .elgg-submenu {
-	margin-right: -6px;
 	text-transform: none;
 	text-align: left;
 	font-weight: normal;
@@ -968,8 +967,8 @@ li.elgg-menu-item-arrow-left {
 	background: #EEE;
 }
 .elgg-submenu li .elgg-icon {
-	vertical-align: text-top;
-	padding-right: 10px;
+	vertical-align: text-bottom;
+	padding-right: 15px;
 }
 .elgg-submenu li .elgg-icon:before {
 	transition: none;

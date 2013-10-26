@@ -687,18 +687,44 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 
 		}
 
-		if ($item->annotation_id == 0 && $object->type == 'object' && $object->canEdit()) { // 0 = this is a thewire annotation
-			$options = array(
-				'name' => 'delete',
-				'section' => 'submenu',
-				'href' => "action/message/delete?guid=$object->guid",
-				'text' => elgg_view_icon('delete') . elgg_echo('delete'),
-				'title' => elgg_echo('delete'),
-				'confirm' => elgg_echo('deleteconfirm'),
-				'is_action' => true,
-				'priority' => 200,
-			);
-			$return[] = ElggMenuItem::factory($options);
+		if ($object->getSubtype() == 'thewire') {
+
+			if (preg_match('/@\w{1,}/', $object->description)) {
+				$options = array(
+					'name' => 'response-all',
+					'href' => '#',
+					'text' => elgg_view_icon('response-all') . elgg_echo('replyall'),
+					'priority' => 50,
+				);
+				$reply = ElggMenuItem::factory($options);
+			}
+
+			if ($object->canEdit()) {
+				$options = array(
+					'name' => 'delete',
+					'href' => "action/message/delete?guid=$object->guid",
+					'text' => elgg_view_icon('delete') . elgg_echo('delete'),
+					'title' => elgg_echo('delete'),
+					'confirm' => elgg_echo('deleteconfirm'),
+					'is_action' => true,
+					'priority' => 200,
+				);
+				$del = ElggMenuItem::factory($options);
+			}
+
+			if ($reply || $del) {
+				$options = array(
+					'name' => 'submenu',
+					'href' => '#',
+					'text' => '+',
+					'priority' => 200,
+				);
+				$submenu = ElggMenuItem::factory($options);
+			}
+			if ($reply) $submenu->addChild($reply);
+			if ($del) $submenu->addChild($del);
+
+			$return[] = $submenu;
 		}
 	}
 
@@ -718,12 +744,28 @@ function deck_return_menu(array $vars = array(), $sort_by = 'priority') {
 
 	foreach ($vars['menu'] as $section => $menu_items) {
 		foreach ($menu_items as $key => $item) {
-			$return[$section][$key]['name'] = $item->getName();
-			$return[$section][$key]['content'] = $section == 'default' ? $item->getTooltip() : $item->getContent();
-			if ($item->getSelected()) $return[$section][$key]['selected'] = true;
+			if ($childs = $item->getChildren()) {
+				foreach ($childs as $child_item) {
+					$ch[] = array(
+						'name' => $child_item->getName(),
+						'content' => $child_item->getContent()
+					);
+				}
+				$return[] = array(
+					'name' => $item->getName(),
+					'text' => $item->getText(),
+					'sub' => true,
+					'childs' => $ch
+				);
+			} else {
+				$return[] = array(
+					'name' => $item->getName(),
+					'title' => $item->getTooltip(),
+					'selected' => $item->getSelected() ? true : false
+				);
+			}
 		}
 	}
-	if (!isset($return['submenu'])) $return['submenu'] = array();
 	return $return;
 }
 
