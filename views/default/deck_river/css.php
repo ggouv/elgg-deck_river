@@ -473,7 +473,7 @@ body {
 	position: absolute;
 	top: -6px;
 }
-#thewire-network .user-info-popup {
+#thewire-network .elgg-user-info-popup {
 	font-weight: bold;
 }
 #thewire-network .elgg-module-popup a:hover, #thewire-network .elgg-module-popup span:hover {
@@ -1079,7 +1079,10 @@ a.elgg-river-responses:hover h4 {
 	height: 60px;
 	resize: vertical;
 }
-
+.elgg-river-responses.linkbox-droppable:hover > div {
+	-webkit-box-shadow: 0 0 3px #ccc;
+	box-shadow: 0 0 3px #ccc;
+}
 
 /* settings */
 #column-settings {
@@ -1259,22 +1262,22 @@ a.elgg-river-responses:hover h4 {
 	font-size: 200%;
 	line-height: 0.9em;
 }
-.user-info-popup {
+.elgg-user-info-popup {
 	cursor: pointer;
 }
-div.user-info-popup.ui-draggable-dragging, div.group-info-popup.ui-draggable-dragging, div.twitter-user-info-popup.ui-draggable-dragging {
+div.info-popup.ui-draggable-dragging {
 	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	cursor: crosshair;
 	line-height: 0.1;
 	pointer-events: none;
 }
-a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-dragging, .hashtag-info-popup.ui-draggable-dragging, a.twitter-user-info-popup.ui-draggable-dragging {
+a.info-popup.ui-draggable-dragging {
 	text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	cursor: crosshair;
 	pointer-events: none;
 }
-.user-info-popup.canDrop:before, .group-info-popup.canDrop:before, .hashtag-info-popup.canDrop:before, .twitter-user-info-popup.canDrop:before, .linkbox-droppable.canDrop:before {
+.info-popup.canDrop:before, .linkbox-droppable.canDrop:before {
 	background: #51C600;
 	border-radius: 10px;
 	color: white;

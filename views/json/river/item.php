@@ -14,9 +14,9 @@ if (elgg_view_exists($vars['item']->view, 'default')) {
 	$object = $vars['item']->getObjectEntity();
 
 	if ($mention) {
-		$vars['item']->message = deck_river_wire_filter(deck_river_highlight_mention(preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $object->description), $mention));
+		$vars['item']->message = deck_river_highlight_mention(preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $object->description), $mention);
 	} else {
-		$vars['item']->message = deck_river_wire_filter(elgg_get_excerpt(preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $object->description), 140));
+		$vars['item']->message = elgg_get_excerpt(preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $object->description), 140);
 	}
 
 }

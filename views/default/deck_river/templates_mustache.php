@@ -185,7 +185,7 @@
 	<div class="elgg-image-block elgg-river-item clearfix">
 		<div class="elgg-image">
 			<div class="elgg-avatar elgg-avatar-small">
-				<div class="user-info-popup" title="{{user.username}}">
+				<div class="elgg-user-info-popup info-popup" title="{{user.username}}">
 					<img title="{{user.username}}" alt="{{user.username}}" src="{{user.icon}}">
 				</div>
 			</div>
@@ -243,7 +243,7 @@
 		<div class="elgg-image-block elgg-river-item clearfix">
 			<div class="elgg-image">
 				<div class="elgg-avatar elgg-avatar-small">
-					<div class="twitter-user-info-popup" title="{{user.screen_name}}">
+					<div class="twitter-user-info-popup info-popup" title="{{user.screen_name}}">
 						<img title="{{user.screen_name}}" alt="{{user.screen_name}}" src="{{user.profile_image_url_https}}">
 					</div>
 				</div>
@@ -267,7 +267,7 @@
 					{{/submenu}}
 				</ul>
 				<div class="elgg-river-summary">
-					<span class="twitter-user-info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
+					<span class="twitter-user-info-popup info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
 					<span class="elgg-river-timestamp">
 						<a href="https://twitter.com/{{user.screen_name}}/status/{{id_str}}" target="_blank">
 						<span class="elgg-friendlytime">
@@ -302,7 +302,7 @@
 		<div class="elgg-image-block elgg-river-item clearfix">
 			<div class="elgg-image">
 				<div class="elgg-avatar elgg-avatar-small">
-					<div class="facebook-user-info-popup" title="{{from.id}}">
+					<div class="facebook-user-info-popup info-popup" title="{{from.id}}">
 						<img title="{{from.name}}" alt="{{from.name}}" src="http://graph.facebook.com/{{from.id}}/picture">
 					</div>
 				</div>
@@ -327,7 +327,7 @@
 					{{/submenu}}
 				</ul>
 				<div class="elgg-river-summary">
-					<span class="facebook-user-info-popup" title="{{from.name}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>{{/via}}
+					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>{{/via}}
 					{{#properties}}
 						<?php echo elgg_echo('river:facebook:photo:shared_story'); ?>&nbsp;<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>&nbsp;<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;<a target="_blank" href="{{href}}">{{text}}</a>
 					{{/properties}}
@@ -399,7 +399,7 @@
 			</div>
 			<div class="elgg-body">
 				<div class="elgg-river-summary">
-					<span class="facebook-user-info-popup" title="{{from.name}}">{{from.name}}</span>
+					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>
 					<span class="elgg-river-timestamp">
 					<a target="_blank" href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">
 						<br><span class="elgg-friendlytime">

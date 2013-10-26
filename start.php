@@ -260,19 +260,19 @@ function deck_river_wire_filter($text) {
 	// usernames
 	$text = preg_replace(
 				'/(^|[^\w])@([\p{L}\p{Nd}_]+)/u',
-				'$1<a class="user-info-popup" href="#" title="$2">@$2</a>',
+				'$1<a class="info-popup elgg-user-info-popup" href="#" title="$2">@$2</a>',
 				$text);
 
 	// groups
 	$text = preg_replace(
 				'/(^|[^\w])!([\p{L}\p{Nd}_]+)/u',
-				'$1<a class="group-info-popup" href="#" title="$2">!$2</a>',
+				'$1<a class="info-popup group-info-popup" href="#" title="$2">!$2</a>',
 				$text);
 
 	// hashtags
 	$text = preg_replace(
 				'/(^|[^\w])#(\w*[^\s\d!-\/:-@]+\w*)/',
-				'$1<a class="hashtag-info-popup" href="#" title="#$2">#$2</a>',
+				'$1<a class="info-popup hashtag-info-popup" href="#" title="#$2">#$2</a>',
 				$text);
 
 	$text = trim($text);

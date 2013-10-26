@@ -84,7 +84,7 @@ $position = 0;
 				<div class="elgg-module-popup hidden">
 					<div class="triangle"></div>
 					<?php
-						echo '<a title="' . $user->username . '" href="#" class="user-info-popup">@' . $user->username . '</a>';
+						echo '<a title="' . $user->username . '" href="#" class="elgg-user-info-popup info-popup">@' . $user->username . '</a>';
 					?>
 				</div>
 			</ul>

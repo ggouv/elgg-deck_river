@@ -33,7 +33,7 @@ if ($view === 'in_network_box') {
 		$input_name = '_networks[]';
 	}
 
-	$info = '<div class="elgg-river-summary"><span class="twitter-user-info-popup" title="' . $account->screen_name . '">' . $account->screen_name . '</span>';
+	$info = '<div class="elgg-river-summary"><span class="twitter-user-info-popup info-popup" title="' . $account->screen_name . '">' . $account->screen_name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
 	$info .= elgg_view('output/url', array(
 		'href' => 'http://twitter.com/' . $account->screen_name,
@@ -102,14 +102,14 @@ HTML;
 <div class="elgg-content">
 	<div class="elgg-image-block clearfix">
 		<div class="elgg-image">
-			<span title="{$account->screen_name}" class="twitter-user-info-popup">$avatar</span>
+			<span title="{$account->screen_name}" class="twitter-user-info-popup info-popup">$avatar</span>
 		</div>
 		<div class="elgg-body">
 			<ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default">
 				<li class="elgg-menu-item-access">$access</li>
 				<li class="elgg-menu-item-delete">$delete</li>
 			</ul>
-			<h3><span class="twitter-user-info-popup" title="{$account->screen_name}">{$account->screen_name}</span></h3>
+			<h3><span class="twitter-user-info-popup info-popup" title="{$account->screen_name}">{$account->screen_name}</span></h3>
 			$link
 			<div class="elgg-subtext">$subtitle</div>
 		</div>

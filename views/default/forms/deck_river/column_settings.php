@@ -101,12 +101,12 @@ $column_title = $user_river_column_options->title;
 				$img = elgg_view('output/img', array(
 					'src' => $twitter_avatar,
 					'alt' => $twitter_user,
-					'class' => 'twitter-user-info-popup',
+					'class' => 'twitter-user-info-popup info-popup',
 					'title' => $twitter_user,
 					'width' => '24',
 					'height' => '24',
 				));
-				$twitter_name = '<div class="elgg-river-summary"><span class="twitter-user-info-popup" title="' . $twitter_user . '">' . $twitter_user . '</span>';
+				$twitter_name = '<div class="elgg-river-summary"><span class="twitter-user-info-popup info-popup" title="' . $twitter_user . '">' . $twitter_user . '</span>';
 				$twitter_name .= '<br/><span class="elgg-river-timestamp">';
 				$twitter_name .= elgg_view('output/url', array(
 					'href' => 'http://twitter.com/' . $twitter_user,
@@ -244,12 +244,12 @@ $column_title = $user_river_column_options->title;
 				$img = elgg_view('output/img', array(
 					'src' => $facebook_avatar,
 					'alt' => $facebook_user,
-					'class' => 'facebook-user-info-popup',
+					'class' => 'facebook-user-info-popup info-popup',
 					'title' => $facebook_user,
 					'width' => '24',
 					'height' => '24',
 				));
-				$facebook_name = '<div class="elgg-river-summary"><span class="facebook-user-info-popup" title="' . $facebook_user . '">' . $facebook_user . '</span>';
+				$facebook_name = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $facebook_user . '">' . $facebook_user . '</span>';
 				$facebook_name .= '<br/><span class="elgg-river-timestamp">';
 				$facebook_name .= elgg_view('output/url', array(
 					'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $facebook_user : $facebook_user),

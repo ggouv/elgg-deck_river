@@ -229,6 +229,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 		}
 
 		value.text = $('<div>').html(value.message).text();
+		if (value.type == 'object') value.message = value.text.ParseGroup().ParseEverythings('elgg');
 
 		// Remove responses if in thread
 		if (thread && !elgg.isNull(value.responses)) delete value.responses;
@@ -327,9 +328,14 @@ String.prototype.ParseURL = function () {
 		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
 	});
 };
-String.prototype.ParseUsername = function () {
+String.prototype.ParseGroup = function () {
+	return this.replace(/![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+/g, function (u) {
+		return '<a href="#" class="group-info-popup info-popup" title="'+u.replace("!", "")+'">'+u+'</a>';
+	});
+};
+String.prototype.ParseUsername = function (network) {
 	return this.replace(/@[A-Za-z0-9-_]+/g, function (u) {
-		return '<a href="#" class="twitter-user-info-popup" title="'+u.replace("@", "")+'">'+u+'</a>';
+		return '<a href="#" class="'+network+'-user-info-popup info-popup" title="'+u.replace("@", "")+'">'+u+'</a>';
 	});
 };
 String.prototype.ParseHashtag = function (network) {
@@ -338,7 +344,7 @@ String.prototype.ParseHashtag = function (network) {
 	});
 };
 String.prototype.ParseEverythings = function (network) {
-	return this.ParseURL().ParseUsername().ParseHashtag(network);
+	return this.ParseURL().ParseUsername(network).ParseHashtag(network);
 };
 String.prototype.TruncateString = function (length, more) {
 	var length = length || 140,

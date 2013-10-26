@@ -59,14 +59,14 @@ $icon = elgg_view('output/img', array(
 if ($use_link) {
 	$url = elgg_extract('href', $vars, false);
 	if (!$url) {
-		echo "<div class='user-info-popup' title='$username'>$icon</div>";
+		echo "<div class='elgg-user-info-popup info-popup' title='$username'>$icon</div>";
 	} else {
 		$class = elgg_extract('link_class', $vars, '');
 		echo elgg_view('output/url', array(
 			'href' => $url,
 			'text' => $icon,
 			'is_trusted' => true,
-			'class' => $class . ' user-info-popup',
+			'class' => $class . ' elgg-user-info-popup info-popup',
 			'rel' => 'nofollow',
 			'title' => $username
 		));

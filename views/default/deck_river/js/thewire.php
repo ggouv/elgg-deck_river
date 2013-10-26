@@ -32,7 +32,7 @@ elgg.thewire.init = function() {
 	$('#thewire-textarea').focusin(function() {
 		elgg.thewire.resize();
 	}).droppable({
-		accept: '.user-info-popup, .group-info-popup, .hashtag-info-popup, .twitter-user-info-popup, .linkbox-droppable',
+		accept: '.info-popup, .linkbox-droppable',
 		tolerance: 'touch',
 		drop: function(e, ui) {
 			var txt = prep = '',
@@ -44,7 +44,7 @@ elgg.thewire.init = function() {
 				$('#linkbox').removeClass('hidden').html(Mustache.render($('#linkbox-template').html(), data));
 				elgg.thewire.resize();
 			} else {
-				if ($uih.hasClass('user-info-popup') || $uih.hasClass('twitter-user-info-popup')) prep = '@';
+				if ($uih.hasClass('elgg-user-info-popup') || $uih.hasClass('twitter-user-info-popup')) prep = '@';
 				if ($uih.hasClass('group-info-popup')) prep = '!';
 				elgg.thewire.insertInThewire(prep + $(ui.helper).attr('title'));
 			}

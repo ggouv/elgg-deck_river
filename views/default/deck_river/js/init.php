@@ -134,14 +134,14 @@ elgg.deck_river.init = function() {
 
 		if ($cf.hasClass('elgg-state-active')) {
 			var cfH = $cf.height('auto').height();
-			$cf.css({height: 0, display: 'block'}).animate({height: cfH}, 200);
-			$er.animate({height: '-='+(cfH+15)});
+			$cf.css({height: 0, display: 'block'}).stop(true, true).animate({height: cfH}, 200);
+			$er.stop(true, true).animate({height: '-='+(cfH+15)});
 		} else {
 			var cfH = $cf.height();
-			$cf.animate({height: 0}, 200, function() {
+			$cf.stop(true, true).animate({height: 0}, 200, function() {
 				$(this).css({display: 'none'});
 			});
-			$er.animate({height: '+='+(cfH+15)});
+			$er.stop(true, true).animate({height: '+='+(cfH+15)});
 		}
 		return false;
 	});

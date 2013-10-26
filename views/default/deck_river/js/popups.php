@@ -54,7 +54,7 @@ elgg.deck_river.popups = function() {
 	});
 
 	// user info popup
-	$('.user-info-popup').live('click', function() {
+	$('.elgg-user-info-popup').live('click', function() {
 		elgg.deck_river.userPopup($(this).attr('title'));
 		return false;
 	}).liveDraggable();
@@ -259,7 +259,6 @@ elgg.deck_river.getFBGroups = function(account) {
 								},
 								success: function(json) {
 									elgg.deck_river.network_authorize(json.output);
-									console.log($fgp.find('#'+e.id));
 									$fgp.find('#'+e.id).css('background-color', '#FF7777').fadeOut();
 								}
 							});

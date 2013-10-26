@@ -33,7 +33,7 @@ if ($view === 'in_network_box') {
 		$input_name = '_networks[]';
 	}
 
-	$info = '<div class="elgg-river-summary"><span class="facebook-user-info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
+	$info = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
 	$info .= elgg_view('output/url', array(
 		'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->name : $account->username),
@@ -113,14 +113,14 @@ HTML;
 	<div class="span8">
 		<div class="elgg-image-block clearfix">
 			<div class="elgg-image">
-				<span title="{$account->user_id}" class="facebook-user-info-popup">$avatar</span>
+				<span title="{$account->user_id}" class="facebook-user-info-popup info-popup">$avatar</span>
 			</div>
 			<div class="elgg-body">
 				<ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default">
 					<li class="elgg-menu-item-access">$access</li>
 					<li class="elgg-menu-item-delete">$delete</li>
 				</ul>
-				<h3><span class="facebook-user-info-popup" title="{$account->user_id}">{$account->name}</span></h3>
+				<h3><span class="facebook-user-info-popup info-popup" title="{$account->user_id}">{$account->name}</span></h3>
 				$link
 				<div class="elgg-subtext">$subtitle</div>
 			</div>
