@@ -280,7 +280,7 @@ function deck_river_facebook_authorize() {
 										'view_type' => 'in_network_box',
 									)),
 				'full' => '<li id="elgg-object-' . $fb_guid . '" class="elgg-item">' . elgg_view_entity($facebook_account) . '</li>',
-				'code' => "elgg.deck_river.getFBGroups($fb_guid);"
+				'code' => "elgg.deck_river.getFBGroups('{$facebook_account->user_id}', '{$token}', '{$fb_guid}');"
 			));
 			echo '<script type="text/javascript">$(document).ready(function() {elgg.deck_river.network_authorize(' . $account_output . ');});</script>';
 

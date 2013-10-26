@@ -190,7 +190,12 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:home';
 			break;
 		case 'feed':
-			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:feed';
+			if (!$facebook_account->icon) {
+				$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:feed';
+			} else { // this is a group
+				$user_river_options[$tab][$column]['title'] = $facebook_account->name;
+				$user_river_options[$tab][$column]['subtitle'] = array('deck_river:facebook:feed:group_feed', $facebook_account->username);
+			}
 			break;
 		case 'statuses':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:statuses';

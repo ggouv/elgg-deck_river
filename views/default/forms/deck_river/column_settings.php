@@ -233,11 +233,11 @@ $column_title = $user_river_column_options->title;
 			echo '<div class="tab facebook' . $class . '"><ul class="box-settings phm"><li>';
 
 			// get facebook account
-			$facebook_account = deck_river_get_networks_account('facebook_account');
+			$facebook_account = array_reverse(deck_river_get_networks_account('facebook_account'));
 
 			function displayFacebookAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;
-				$facebook_user = $account->icon ? $account->name : $account->username;
+				$facebook_user = $account->name;
 				$facebook_avatar = $account->icon ? $account->icon : 'https://graph.facebook.com/' . $facebook_user . '/picture';
 
 				// User facebook block
@@ -252,8 +252,8 @@ $column_title = $user_river_column_options->title;
 				$facebook_name = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $facebook_user . '">' . $facebook_user . '</span>';
 				$facebook_name .= '<br/><span class="elgg-river-timestamp">';
 				$facebook_name .= elgg_view('output/url', array(
-					'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $facebook_user : $facebook_user),
-					'text' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $facebook_user : $facebook_user),
+					'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $facebook_user),
+					'text' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $facebook_user),
 					'target' => '_blank',
 					'rel' => 'nofollow'
 				));
@@ -279,9 +279,9 @@ $column_title = $user_river_column_options->title;
 
 			$options_values = array(
 				'home' => elgg_echo('deck_river:facebook:feed:home'),
-				'feed' => elgg_echo('deck_river:facebook:feed:feed'),
-				'statuses' => elgg_echo('deck_river:facebook:statuses'),
-				'search' => elgg_echo('deck_river:facebook:search'),
+				'feed' => elgg_echo('deck_river:facebook:feed'),
+				'statuses' => elgg_echo('deck_river:facebook:feed:statuses'),
+				'search' => elgg_echo('deck_river:facebook:feed:search'),
 			);
 
 			if (!$facebook_account || count($facebook_account) == 0) { // No account registred, send user off to validate account
@@ -310,7 +310,7 @@ $column_title = $user_river_column_options->title;
 					'name' => 'facebook-account',
 					'class' => 'in-module',
 					'value' => $facebook_account[0]->getGUID(),
-					'data-username' => $facebook_account[0]->icon ? $facebook_account[0]->name : $facebook_account[0]->username
+					'data-username' => $facebook_account[0]->name
 				));
 
 			} else { // more than one account
@@ -320,7 +320,7 @@ $column_title = $user_river_column_options->title;
 				$accounts_name = array();
 				foreach ($facebook_account as $account) {
 					echo displayFacebookAccount($account, '', 'mtm mbs multi ' . $account->getGUID());
-					$accounts_name[$account->getGUID()] = $account->icon ? $account->name : $account->username;
+					$accounts_name[$account->getGUID()] = $account->name;
 				}
 				echo elgg_view('input/dropdown', array(
 					'name' => 'facebook-account',
@@ -335,7 +335,7 @@ $column_title = $user_river_column_options->title;
 			echo '<label>' . elgg_echo('deck_river:type') . '</label><br />';
 			echo elgg_view('input/dropdown', array(
 				'name' => 'facebook-type',
-				'value' => $selected == 'facebook' ? $user_river_column_options->type : 'feed',
+				'value' => $selected == 'facebook' ? $user_river_column_options->type : 'home',
 				'class' => 'column-type mts',
 				'options_values' => $options_values
 			));

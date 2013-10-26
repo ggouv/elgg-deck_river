@@ -338,8 +338,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 		$('#column-settings .elgg-body').html($('<div>', {'class': 'elgg-ajax-loader'}));
 	}
 
-	var columnSettings = $('#column-settings'),
-		columnID = TheColumn ? TheColumn.attr('id') : 'new';
+	var columnID = TheColumn ? TheColumn.attr('id') : 'new';
 
 	elgg.post('ajax/view/deck_river/ajax_view/column_settings', {
 		dataType: "html",
@@ -348,35 +347,35 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			column: columnID
 		},
 		success: function(response) {
-			var cs = $('#column-settings');
-			cs.find('.elgg-body').html(response);
+			var $cs = $('#column-settings');
+			$cs.find('.elgg-body').html(response);
 
 			elgg.autocomplete.init();
 
 			// network vertical tabs
-			cs.find('.elgg-tabs.networks a').click(function() {
-				var net = $(this).attr('class');
-				cs.find('.elgg-tabs > li').removeClass('elgg-state-selected');
+			$cs.find('.elgg-tabs.networks a').click(function() {
+				var $etn = $(this).attr('class');
+				$cs.find('.elgg-tabs > li').removeClass('elgg-state-selected');
 				$(this).parent('li').addClass('elgg-state-selected');
-				cs.find('.tab, input.elgg-button-submit').addClass('hidden');
-				cs.find('.tab.'+net+', input.elgg-button-submit.'+net).removeClass('hidden');
-				cs.find('.column-type').trigger('change');
+				$cs.find('.tab, input.elgg-button-submit').addClass('hidden');
+				$cs.find('.tab.'+$etn+', input.elgg-button-submit.'+$etn).removeClass('hidden');
+				$cs.find('.column-type').trigger('change');
 			});
-			if (cs.data('network')) cs.find('.elgg-tabs.networks a.'+cs.data('network')).click(); // used when authorize social network callback
+			if ($cs.data('network')) $cs.find('.elgg-tabs.networks a.'+$cs.data('network')).click(); // used when authorize social network callback
 
 			// dropdown
-			cs.find('.' + cs.find('.tab:visible .column-type').val()+'-options').show();
+			$cs.find('.' + $cs.find('.tab:visible .column-type').val()+'-options').show();
 			$('.column-type').change(function() {
-				var bs = $(this).closest('.box-settings'),
-					select = bs.find('select[name="twitter-lists"]'),
-					network_account = bs.find('.in-module').val(); // * because can be select or input
+				var $bs = $(this).closest('.box-settings'),
+					$stl = $bs.find('select[name="twitter-lists"]'),
+					network_account = $bs.find('.in-module').val(); // * because can be select or input
 
-				bs.find('li').not(':first-child').hide();
-				bs.find('.'+$(this).val()+'-options').show();
+				$bs.find('li').not(':first-child').hide();
+				$bs.find('.'+$(this).val()+'-options').show();
 
 				// Get lists for Twitter
-				if ($(this).val() == 'get_listsStatuses' && !(select.data('list_loaded') == network_account) && select.parent().hasClass('hidden')) {
-					bs.find('.get_listsStatuses-options div').removeClass('hidden');
+				if ($(this).val() == 'get_listsStatuses' && !($stl.data('list_loaded') == network_account) && $stl.parent().hasClass('hidden')) {
+					$bs.find('.get_listsStatuses-options div').removeClass('hidden');
 					elgg.action('deck_river/twitter', {
 						data: {
 							twitter_account: network_account,
@@ -385,33 +384,40 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 						dataType: 'json',
 						success: function(json) {
 							$.each(json.output.result, function(i, e) {
-								if (!select.find('option[value="'+e.id+'"]').length) select.append($('<option>').val(e.id).html(e.full_name));
+								if (!$stl.find('option[value="'+e.id+'"]').length) $stl.append($('<option>').val(e.id).html(e.full_name));
 							});
-							bs.find('.get_listsStatuses-options div').addClass('hidden');
-							select.data('list_loaded', network_account);
+							$bs.find('.get_listsStatuses-options div').addClass('hidden');
+							$stl.data('list_loaded', network_account);
 						},
 						error: function() {
 							return false;
 						}
 					});
 				}
+
+				// Hide every item except feed for group
+				if ($(this).attr('name') == 'facebook-type' && /\/groups\//.test($bs.find('.elgg-module:not(.hidden) .elgg-river-timestamp a').attr('href'))) {
+					$(this).val('feed').find('option[value!="feed"]').attr('disabled','disabled');
+				} else {
+					$(this).find('option').removeAttr('disabled');
+				}
 			}).trigger('change');
-			cs.find('.in-module').change(function() {
+			$cs.find('.in-module').change(function() {
 				var network = $(this).attr('name').replace('-account', '');
 
 				$(this).closest('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
-				cs.find('select[name="'+network+'-lists"]').html('');
-				cs.find('.column-type').trigger('change');
+				$cs.find('select[name="'+network+'-lists"]').html('');
+				$cs.find('.column-type').trigger('change');
 			}).trigger('change');
 
 			$(".elgg-foot .elgg-button").click(function() {
 				var submitType = $(this).attr('name'),
-					CSForm = $(this).closest('.deck-river-form-column-settings');
+					$drfcs = $(this).closest('.deck-river-form-column-settings');
 
 				if (submitType == 'delete' && !confirm(elgg.echo('deck-river:delete:column:confirm'))) return false;
 
 				elgg.action('deck_river/column/settings', {
-					data: CSForm.serialize() + '&submit=' + submitType + '&twitter_list_name=' + CSForm.find('select[name="twitter-lists"] option:selected').text(),
+					data: $drfcs.serialize() + '&submit=' + submitType + '&twitter_list_name=' + $drfcs.find('select[name="twitter-lists"] option:selected').text(),
 					dataType: 'json',
 					success: function(json) {
 						var response = json.output;
@@ -419,11 +425,13 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 						if (response) {
 							deckRiverSettings = response.deck_river_settings;
 							if (columnID == 'new') {
-								$('.deck-river-lists-container').append(Mustache.render($('#column-template').html(), response));
+								var $erl = $('.elgg-river-layout:not(.hidden)');
+								$erl.find('.nofeed').remove();
+								$erl.find('.deck-river-lists-container').append(Mustache.render($('#column-template').html(), response));
 								elgg.deck_river.SetColumnsHeight();
 								elgg.deck_river.SetColumnsWidth();
 								elgg.deck_river.resizeRiverImages();
-								$('.elgg-river-layout:not(.hidden) #deck-river-lists').animate({scrollLeft: $(this).width()});
+								$erl.find('#deck-river-lists').animate({scrollLeft: $(this).width()});
 							}
 
 							var TheColumn = $('.elgg-river-layout:not(.hidden) #'+response.column); // redeclare because maybe it was just created.
@@ -437,7 +445,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 										elgg.deck_river.resizeRiverImages();
 									});
 								});
-								cs.remove();
+								$cs.remove();
 								return false;
 							}
 
@@ -447,7 +455,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 
 							elgg.deck_river.LoadRiver(TheColumn, elgg.deck_river.getColumnSettings(TheColumn));
 
-							cs.remove();
+							$cs.remove();
 						}
 					},
 					error: function() {

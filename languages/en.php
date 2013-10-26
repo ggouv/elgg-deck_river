@@ -100,6 +100,7 @@ $english = array(
 	'deck_river:facebook:groups' => "Facebook groups",
 	'deck_river:facebook:groups:choose' => "Click on a group to add it in yours accounts:",
 	'deck_river:facebook:account:add_groups' => "Add group from this account",
+	'deck_river:facebook:account:group' => "%s associated with %s",
 
 	// user info popup
 	'deck-river:popups:close' => "Close this window",
@@ -140,11 +141,14 @@ $english = array(
 	'deck_river:twitter:feed:users:search' => "Search users",
 
 	//Facebook
+	'deck_river:facebook:feed' => "Activity",
 	'deck_river:facebook:feed:feed' => "Activity",
+	'deck_river:facebook:feed:group_feed' => "Group activity - %s",
 	'deck_river:facebook:feed:home' => "News feed",
 	'deck_river:facebook:feed:statuses' => "My statuses",
+	'deck_river:facebook:feed:search' => "Search",
 	'deck_river:facebook:posted' => "Your message has been posted on Facebook. <a href=\"%s\" target=\"_blank\">See the message</a>.",
-	'deck_river:facebook:posted:error' => "Error with Facebook API",
+	'deck_river:facebook:error' => "Error with Facebook API",
 	'deck_river:thread-not-exist' => "Discussion cannot found",
 );
 

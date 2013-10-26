@@ -36,7 +36,6 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax_json/url_shortener');
 	elgg_register_ajax_view('deck_river/ajax_json/load_discussion');
 	elgg_register_ajax_view('deck_river/ajax_json/twitter_OAuth');
-	elgg_register_ajax_view('deck_river/ajax_json/facebook_API');
 	elgg_register_ajax_view('deck_river/ajax_view/column_settings');
 	elgg_register_ajax_view('deck_river/ajax_view/add_social_network');
 	elgg_register_ajax_view('deck_river/ajax_view/user_info');

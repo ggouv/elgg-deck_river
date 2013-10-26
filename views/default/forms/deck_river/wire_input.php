@@ -22,10 +22,13 @@ foreach($all_accounts as $key => $account) {
 	if (isset($accounts_position[$account->getGUID()])) {
 		$sorted_accounts[$accounts_position[$account->getGUID()]] = $account;
 		unset($all_accounts[$key]);
+	} else if (!in_array($account->getGUID(), $user_deck_river_accounts_in_wire['pinned'])) {
+		$at_last[] = $account;
+		unset($all_accounts[$key]);
 	}
 }
 ksort($sorted_accounts);
-
+$sorted_accounts = array_merge($sorted_accounts, $at_last);
 $position = 0;
 
 ?>

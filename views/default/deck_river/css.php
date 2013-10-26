@@ -755,6 +755,8 @@ li.elgg-menu-item-arrow-left {
 .column-header .subtitle {
 	color: #999;
 	line-height: 10px;
+	height: 11px;
+	overflow: hidden;
 }
 .column-header > li > a {
 	float: right;

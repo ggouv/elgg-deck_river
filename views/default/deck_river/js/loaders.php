@@ -95,7 +95,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
 					if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
 						TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network));
 						TheColumnRiver.append(loadMoreItem).scrollTo(0);
-						TheColumnHeader.data('next_page', response.paging.next).data('refresh_url', response.paging.previous);
+						if (response.paging) TheColumnHeader.data('next_page', response.paging.next).data('refresh_url', response.paging.previous);
 					}
 				} else { // @todo Make error more comprehensible
 					TheColumnRiver.html('error');
@@ -489,3 +489,27 @@ elgg.deck_river.column_error = function(errors, TheColumn, delay) {
 String.prototype.addToLargeInt = function (value) {
 	return this.substr(0, this.length-3)+(parseInt(this.substr(-3)) + value);
 };
+
+
+
+/**
+ * Ajax get to Facebook API
+ * @param {[type]}   account  ID of account
+ * @param {[type]}   query    the query
+ * @param {[type]}   token    the token of the account
+ * @param {Function} callback a function to execute
+ */
+elgg.deck_river.FBget = function(account, query, token, callback) {
+	FB.api(account+'/'+query, 'get', {
+		access_token: token
+	}, function(response) {
+		if (response) {
+			callback(response);
+		} else {
+			elgg.register_error(elgg.echo('deck_river:facebook:error'));
+		}
+	});
+};
+
+
+

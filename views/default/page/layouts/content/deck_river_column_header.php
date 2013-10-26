@@ -42,7 +42,7 @@ if ($has_filter) {
 
 
 $title = elgg_echo($column_settings['title']);
-$subtitle = elgg_echo($column_settings['subtitle']);
+$subtitle = is_array($column_settings['subtitle']) ? elgg_echo($column_settings['subtitle'][0], array($column_settings['subtitle'][1])) : elgg_echo($column_settings['subtitle'], array());
 
 if (isset($column_settings['types_filter']) || isset($column_settings['subtypes_filter'])) {
 	$hidden = '';

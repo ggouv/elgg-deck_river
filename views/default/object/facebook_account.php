@@ -101,11 +101,13 @@ HTML;
 	if (!$account->icon) {
 		$block = elgg_view('output/url', array(
 			'href' => '#',
-			'onclick' => "elgg.deck_river.getFBGroups('{$account->getGUID()}');",
+			'onclick' => "elgg.deck_river.getFBGroups('{$account->user_id}', '{$account->oauth_token}', '{$account->getGUID()}');",
 			'text' => elgg_echo('deck_river:facebook:account:add_groups'),
 			'rel' => 'nofollow'
 		));
+		$name = $account->name;
 	} else {
+		$name = elgg_echo('deck_river:facebook:account:group', array($account->name, $account->username));
 	}
 
 	echo <<<HTML
@@ -120,7 +122,7 @@ HTML;
 					<li class="elgg-menu-item-access">$access</li>
 					<li class="elgg-menu-item-delete">$delete</li>
 				</ul>
-				<h3><span class="facebook-user-info-popup info-popup" title="{$account->user_id}">{$account->name}</span></h3>
+				<h3><span class="facebook-user-info-popup info-popup" title="{$account->user_id}">{$name}</span></h3>
 				$link
 				<div class="elgg-subtext">$subtitle</div>
 			</div>

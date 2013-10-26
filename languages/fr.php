@@ -129,6 +129,7 @@ $french = array(
 	'deck_river:facebook:your_account' => "Votre profil Facebook lié à %s :",
 	'deck_river:facebook:choose:account' => "Choisissez le compte Facebook pour cette colonne :",
 	'deck_river:facebook:account:add_groups' => "Ajouter un groupe à partir de ce compte",
+	'deck_river:facebook:account:group' => "%s <span class=\"elgg-subtext\">associé à %s</span>",
 
 	//info popups
 	'deck-river:popups:close' => "Fermer cette fenêtre",
@@ -209,11 +210,15 @@ $french = array(
 	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", // "Rate limit exceeded",
 
 	//Facebook
-	'deck_river:facebook:feed:feed' => "Activitées",
+	'deck_river:facebook:feed' => "Activité",
+	'deck_river:facebook:feed:feed' => "Mon activité",
+	'deck_river:facebook:feed:group_feed' => "Activité du groupe - %s",
 	'deck_river:facebook:feed:home' => "Fil d'actualités",
 	'deck_river:facebook:feed:statuses' => "Mes status",
+	'deck_river:facebook:feed:search' => "Recherche",
 	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
-	'deck_river:facebook:posted:error' => "Erreur avec l'API de Facebook",
+	'deck_river:facebook:error' => "Erreur avec l'API de Facebook",
+	'deck_river:facebook:error:group:already' => 'Vous avez déjà associé ce groupe !',
 
 );
 
