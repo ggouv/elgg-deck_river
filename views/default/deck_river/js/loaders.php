@@ -417,7 +417,7 @@ elgg.deck_river.displayCount = function(response, TheColumn) {
 		if (TheColumn.position().left < -TheColumn.width()+80) { // hidden at left
 			var c = $('.elgg-page-body .deck-river-scroll-arrow.left div');
 			(c.html() == '') ? c.html(responseLength) : c.html(parseInt(c.html()) + responseLength);
-		} else if (TheColumn.position().left + TheColumn.width()-15 > $('#deck-river-lists').width()) { //hidden at right
+		} else if (TheColumn.position().left + TheColumn.width()-15 > TheColumn.closest('#deck-river-lists').width()) { //hidden at right
 			var c = $('.elgg-page-body .deck-river-scroll-arrow.right div');
 			(c.html() == '') ? c.html(responseLength) : c.html(parseInt(c.html()) + responseLength);
 		}
@@ -493,6 +493,25 @@ String.prototype.addToLargeInt = function (value) {
 
 
 /**
+ * Ajax call to Facebook API
+ * @param {[type]}   account  ID of account
+ * @param {[type]}   query    the query
+ * @param {[type]}   params   params
+ * @param {Function} callback a function to execute
+ */
+elgg.deck_river.FBajax = function(account, query, params, callback, method) {
+	FB.api(account+'/'+query, method, params, function(response) {
+		if (response) {
+			callback(response);
+		} else {
+			elgg.register_error(elgg.echo('deck_river:facebook:error'));
+		}
+	});
+};
+
+
+
+/**
  * Ajax get to Facebook API
  * @param {[type]}   account  ID of account
  * @param {[type]}   query    the query
@@ -500,15 +519,20 @@ String.prototype.addToLargeInt = function (value) {
  * @param {Function} callback a function to execute
  */
 elgg.deck_river.FBget = function(account, query, token, callback) {
-	FB.api(account+'/'+query, 'get', {
-		access_token: token
-	}, function(response) {
-		if (response) {
-			callback(response);
-		} else {
-			elgg.register_error(elgg.echo('deck_river:facebook:error'));
-		}
-	});
+	elgg.deck_river.FBajax(account, query, {access_token: token}, callback, 'GET');
+};
+
+
+
+/**
+ * Ajax get to Facebook API
+ * @param {[type]}   object     ID of object
+ * @param {[type]}   query      the query
+ * @param {[type]}   params     params to pass in POST
+ * @param {Function} callback a function to execute
+ */
+elgg.deck_river.FBpost = function(object, query, params, callback) {
+	elgg.deck_river.FBajax(object, query, params, callback, 'POST');
 };
 
 

@@ -40,6 +40,7 @@ if (deck_river_count_networks_account('all') >= elgg_get_plugin_setting('max_acc
 				$fb_group_account->subtype = 'facebook_account';
 				$fb_group_account->access_id = 0;
 				$fb_group_account->user_id = $result['id']; // we store in user_id but in facebook api this is group_id
+				$fb_group_account->parent_id = $account->user_id; // and parent id are stored here
 				$fb_group_account->name = $result['name'];
 				$fb_group_account->username = $account->name;
 				$fb_group_account->icon = $result['icon'];

@@ -364,27 +364,30 @@
 					{{#shares}}<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span><span class="float shares-popup prm">&nbsp;{{shares.string}}</span>{{/shares}}
 				</div>
 				{{#comments}}
-				{{#comments.before}}
-					<ul class="elgg-list elgg-river-comments">
-						<li><a rel="toggle" href="#comment-part-{{id}}-{{rand}}">{{comments.before}}</a></li>
-					</ul>
-					<ul id="comment-part-{{id}}-{{rand}}" class="elgg-list elgg-river-comments hidden">
-						{{#comments.dataBefore}}
+					{{#comments.before}}
+						<ul class="elgg-list elgg-river-comments">
+							<li><a rel="toggle" href="#comment-part-{{id}}-{{rand}}">{{comments.before}}</a></li>
+						</ul>
+						<ul id="comment-part-{{id}}-{{rand}}" class="elgg-list elgg-river-comments hidden">
+							{{#comments.dataBefore}}
+								{{> erFBt-comment}}
+							{{/comments.dataBefore}}
+						</ul>
+					{{/comments.before}}
+					<ul class="elgg-list elgg-river-comments elgg-list-comments">
+						{{#comments.data}}
 							{{> erFBt-comment}}
-						{{/comments.dataBefore}}
+						{{/comments.data}}
 					</ul>
-				{{/comments.before}}
-				<ul class="elgg-list elgg-river-comments elgg-list-comments">
-					{{#comments.data}}
-						{{> erFBt-comment}}
-					{{/comments.data}}
-				</ul>
+				{{/comments}}
+				{{^comments}}
+				<ul class="elgg-list elgg-river-comments elgg-list-comments"></ul>
 				{{/comments}}
 				<ul class="elgg-list elgg-river-comments pts">
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb prs"></span><a href="#comment-form-{{id}}-{{rand}}" class="prm" rel="toggle"><?php echo elgg_echo('deck_river:facebook:action:comment'); ?></a>
 					<div id="comment-form-{{id}}-{{rand}}" class="facebook-comment-form hidden">
 						<textarea class="comment"></textarea>
-						<a class="elgg-button elgg-button-submit">Commenter</a>
+						<a href="#" class="elgg-button elgg-button-submit">Commenter</a>
 					</div>
 				</ul>
 			</div>

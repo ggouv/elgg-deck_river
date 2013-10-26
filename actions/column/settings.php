@@ -180,6 +180,7 @@ if ($submit == 'delete') {
 		'query' => $facebook_account->user_id . '/' . $facebook_type,
 		'network' => 'facebook',
 		'username' => $facebook_account->username,
+		'user_id' => $facebook_account->icon ? $facebook_account->parent_id : $facebook_account->user_id,
 		'subtitle' => $facebook_account->name,
 		'fields' => 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)',
 	);

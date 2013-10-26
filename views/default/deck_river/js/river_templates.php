@@ -12,7 +12,7 @@
 
 $(document).ready(function() {
 
-	if ($('.net-profile.facebook').length) {
+	if (JSON.stringify(deckRiverSettings).match(/network":"facebook/)) {
 		elgg.deck_river.initFacebook();
 	}
 

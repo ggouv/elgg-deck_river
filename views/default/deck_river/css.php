@@ -732,6 +732,7 @@ li.elgg-menu-item-arrow-left {
 	position: relative;
 	border-left: 1px solid #CCC;
 	border-right: 1px solid #CCC;
+	max-width: 645px;
 }
 .column-placeholder {
 	width: 300px;

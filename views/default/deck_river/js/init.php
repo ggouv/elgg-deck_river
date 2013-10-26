@@ -93,6 +93,35 @@ elgg.deck_river.init = function() {
 			elgg.deck_river.LoadRiver($('.elgg-page .column-river'), $('#json-river-owner').data());
 		}
 
+		$('.facebook-comment-form .elgg-button').die().live('click', function() {
+			var $this = $(this),
+				settings = elgg.deck_river.getColumnSettings($(this).closest('.column-river')),
+				$txt = $this.prev('textarea');
+
+			elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1], 'comments', {
+				message: $this.prev('textarea').val(),
+				access_token: settings.token
+			}, function(response) {
+				if (response.id) {
+					var date = Date(),
+						dateF = date.FormatDate(),
+						data = {
+							id: response.id,
+							from: {
+								name: settings.username,
+								id: settings.user_id
+							},
+							created_time: date,
+							posted: dateF,
+							friendly_time: elgg.friendly_time(dateF),
+							message: $txt.val()
+						};
+					$this.closest('.elgg-body').find('.elgg-list-comments').append(Mustache.render($('#erFBt-comment').html(), data));
+					$txt.val('');
+				}
+			});
+		});
+
 	});
 
 	$(window).bind('resize.deck_river', function() {
@@ -363,12 +392,21 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 			});
 			if ($cs.data('network')) $cs.find('.elgg-tabs.networks a.'+$cs.data('network')).click(); // used when authorize social network callback
 
+			// account modules
+			$cs.find('.in-module').change(function() {
+				var network = $(this).attr('name').replace('-account', '');
+
+				$(this).closest('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
+				$cs.find('select[name="'+network+'-lists"]').html('');
+				$cs.find('.column-type').trigger('change');
+			}).trigger('change');
+
 			// dropdown
 			$cs.find('.' + $cs.find('.tab:visible .column-type').val()+'-options').show();
-			$('.column-type').change(function() {
+			$cs.find('.column-type').change(function() {
 				var $bs = $(this).closest('.box-settings'),
 					$stl = $bs.find('select[name="twitter-lists"]'),
-					network_account = $bs.find('.in-module').val(); // * because can be select or input
+					network_account = $bs.find('.in-module').val();
 
 				$bs.find('li').not(':first-child').hide();
 				$bs.find('.'+$(this).val()+'-options').show();
@@ -396,18 +434,13 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				}
 
 				// Hide every item except feed for group
-				if ($(this).attr('name') == 'facebook-type' && /\/groups\//.test($bs.find('.elgg-module:not(.hidden) .elgg-river-timestamp a').attr('href'))) {
-					$(this).val('feed').find('option[value!="feed"]').attr('disabled','disabled');
-				} else {
-					$(this).find('option').removeAttr('disabled');
+				if ($(this).attr('name') == 'facebook-type') {
+					if (/\/groups\//.test($bs.find('.elgg-module:not(.hidden) .elgg-river-timestamp a').attr('href'))) {
+						$(this).val('feed').find('option[value!="feed"]').attr('disabled','disabled');
+					} else {
+						$(this).find('option').removeAttr('disabled');
+					}
 				}
-			}).trigger('change');
-			$cs.find('.in-module').change(function() {
-				var network = $(this).attr('name').replace('-account', '');
-
-				$(this).closest('.box-settings').find('.multi').addClass('hidden').filter('.' + $(this).val()).removeClass('hidden');
-				$cs.find('select[name="'+network+'-lists"]').html('');
-				$cs.find('.column-type').trigger('change');
 			}).trigger('change');
 
 			$(".elgg-foot .elgg-button").click(function() {
