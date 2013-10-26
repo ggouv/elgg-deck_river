@@ -83,7 +83,7 @@ elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
 			}
 		});
 	} else if (columnSettings.network == 'facebook') {
-		$(window).load(function() { // We need to wait for javascript Facebook SDK finish loaded if first page contains facebook feed
+		var loadColumn = function() {
 			FB.api(columnSettings.query, 'get', {
 				access_token: columnSettings.token,
 				fields: columnSettings.fields,
@@ -101,7 +101,15 @@ elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
 					TheColumnRiver.html('error');
 				}
 			});
-		});
+		};
+
+		if (!FBloaded) {
+			$(window).load(function() { // We need to wait for javascript Facebook SDK finish loaded if first page contains facebook feed
+				loadColumn();
+			});
+		} else {
+			loadColumn();
+		}
 	} else {
 		var river_type = TheColumnHeader.data('river_type') || 'column_river';
 		elgg.post('ajax/view/deck_river/ajax_json/' + river_type, {
@@ -363,15 +371,19 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
  * Initialise Facebook javascript SDK
  * @return void
  */
+var FBloaded = 0; // var to prevent already been called.
 elgg.deck_river.initFacebook = function() {
-	$.ajaxSetup({ cache: true });
-	$.getScript('//connect.facebook.net/en_UK/all.js', function(){
-		FB.init({
-			appId: FBappID,
-			channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
-			oauth: true
+	if (!FBloaded) {
+		$.ajaxSetup({ cache: true });
+		$.getScript('//connect.facebook.net/en_UK/all.js', function(){
+			FBloaded = 1;
+			FB.init({
+				appId: FBappID,
+				channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
+				oauth: true
+			});
 		});
-	});
+	}
 };
 
 

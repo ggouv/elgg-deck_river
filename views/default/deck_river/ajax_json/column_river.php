@@ -66,28 +66,12 @@ if ($column_settings['network'] == 'twitter') {
 		$jsonexport['column_type'] = $column_settings['type'];
 
 		if ($column_settings['type'] == 'get_searchTweets' || $column_settings['type'] == 'get_searchTweets-popular') {
-			$resp = $result->__get('response');
-			$resp = $resp['statuses'];
+			$results = $result->__get('response');
+			$results = $results['statuses'];
 		} else {
-			$resp = $result->__get('response');
+			$results = $result->__get('response');
 		}
 
-		foreach ($resp as $value) {
-			$value['menu'] = array(
-				'default' => array(
-					array(
-						'name' => 'response',
-						'content' => '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
-					),
-					array(
-						'name' => 'retweet',
-						'content' => '<a href="" title="Retweeter" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
-					)
-				),
-				'submenu' => array()
-			);
-			$results[] = $value;
-		}
 		$jsonexport['results'] = $results;
 	} else {
 		$key = 'deck_river:twitter:error:' . $result->code;

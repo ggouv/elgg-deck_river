@@ -21,11 +21,14 @@ $(document).ready(function() {
 		elgg.deck_river.responseToWire(item, '@' + item.data('username') + ' ');
 	});
 
-	$('.elgg-menu-item-retweet a').live('click', function() {
-		var item = $(this).closest('.elgg-list-item');
-		$('#thewire-textarea').val(
-			'RT @' + item.data('username') + ': ' + item.find('.elgg-river-message').first().text().replace(/^rt /i, '')
-		).focus().keydown();
+	$('.elgg-menu-item-share a').live('click', function() {
+		var columnSettings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
+
+		if (columnSettings.network == 'facebook') {
+			console.log('facebo');
+		} else {
+			$('#thewire-textarea').val($(this).closest('.elgg-list-item').data('text').replace(/^rt /i, '')).focus().keydown();
+		}
 	});
 
 	$('.elgg-menu-item-response-all a').live('click', function() {
@@ -217,25 +220,15 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 
 		// add replyall in submenu
 		if (!thread && value.subtype == 'thewire') {
-			var match_users = value.message.match(/@\w{1,}/g);
-			if (match_users && match_users.length > 1) {
-				value.menu.submenu.unshift({
+			if (/@\w{1,}/g.test(value.message)) {
+				value.submenu = [{
 					name: 'response-all',
-					content: '<a href="#">'+'<span class="elgg-icon elgg-icon-response"></span>'+elgg.echo('replyall')+'</a>'
-				});
+					content: elgg.echo('replyall')
+				}];
 			}
 		}
 
-		// make menus
-		var tempMenu = {};
-		$.each(value.menu, function(i, e) {
-			var eHTML = '';
-			$.each(e, function(j, h) {
-				eHTML += '<li class="elgg-menu-item-'+h.name+'">'+h.content+'</li>';
-			});
-			tempMenu[i] = eHTML;
-		});
-		value.menu = tempMenu;
+		value.text = $('<div>').html(value.message).text();
 
 		// Remove responses if in thread
 		if (thread && !elgg.isNull(value.responses)) delete value.responses;
@@ -263,13 +256,6 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 
 		if (!response.column_type) { // direct link. json returned by Twitter is different between twitter search api and twitter main api
 			value.user = {screen_name: value.from_user, profile_image_url_https: value.profile_image_url_https};
-			value.menu = {'default': [{
-				name: 'response',
-				content: '<a href="" title="' + elgg.echo('reply') + '" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
-			},{
-				name: 'retweet',
-				content: '<a href="" title="' + elgg.echo('retweet') + '" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
-			}], submenu: []};
 		} else if (response.column_type == 'get_direct_messages') { // json is different with direct_messages
 			value.user = value.sender;
 		} else if (response.column_type == 'get_direct_messagesSent') { // json is different with direct_messages
@@ -310,23 +296,12 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		// make menus
 		if (!thread) {
 			// add replyall in submenu
-			var match_users = value.text.match(/@\w{1,}/g);
-			if (match_users && match_users.length > 1) {
-				value.menu.submenu.unshift({
+			if (/@\w{1,}/g.test(value.text)) {
+				value.submenu = [{
 					name: 'response-all',
-					content: '<a href="#">'+'<span class="elgg-icon elgg-icon-response"></span>'+elgg.echo('replyall')+'</a>'
-				});
+					content: elgg.echo('replyall')
+				}];
 			}
-
-			var tempMenu = {};
-			$.each(value.menu, function(i, e) {
-				var eHTML = '';
-				$.each(e, function(j, h) {
-					eHTML += '<li class="elgg-menu-item-'+h.name+'">'+h.content+'</li>';
-				});
-				tempMenu[i] = eHTML;
-			});
-			value.menu = tempMenu;
 		}
 
 		// Fill responses (retweet and discussion link)
@@ -336,7 +311,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		};
 
 		// parse tweet text
-		value.text = value.text.ParseEverythings('twitter');
+		value.message = value.text.ParseEverythings('twitter');
 
 		output += elggRiverTemplate(value);
 
@@ -384,7 +359,6 @@ String.prototype.TruncateString = function (length, more) {
 	}
 };
 
-var rpd = [];
 /**
  * Javascript template for river element @todo waiting for Elgg core developers to see wich library they will use (ember.js, ...) in elgg 1.9 or 2 and replace it with a js MVC system.
  *
@@ -396,7 +370,6 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 		elggRiverTemplate = Mustache.compile($('#elgg-river-facebook-template').html());
 		Mustache.compilePartial('erFBt-comment', $('#erFBt-comment').html());
 
-rpd.push(response);
 	$.each(response.data, function(key, value) {
 		// store information about facebook user
 		//elgg.deck_river.storeEntity(value.user, 'twitter');
@@ -405,13 +378,6 @@ rpd.push(response);
 		// format date and add friendly_time
 		value.posted = value.updated_time.FormatDate();
 		value.friendly_time = elgg.friendly_time(value.posted);
-
-		// make menus
-		value.menu = {
-			default: 
-				'<li><a href="#" class="gwfb tooltip s" title="'+elgg.echo('deck_river:facebook:action:like')+'"><span class="elgg-icon elgg-icon-like"></span></a></li>'+
-				'<li><a href="#" class="gwfb tooltip s" title="'+elgg.echo('deck_river:facebook:action:share')+'"><span class="elgg-icon elgg-icon-share"></span></a></li>'
-		};
 
 		// parse tweet text
 		//value.text = value.message.ParseEverythings('facebook');

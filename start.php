@@ -678,7 +678,7 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 
 			$options = array(
-				'name' => 'retweet',
+				'name' => 'share',
 				'text' => elgg_view_icon('share'),
 				'class' => 'gwfb tooltip s',
 				'title' => elgg_echo('retweet'),
@@ -720,7 +720,7 @@ function deck_return_menu(array $vars = array(), $sort_by = 'priority') {
 	foreach ($vars['menu'] as $section => $menu_items) {
 		foreach ($menu_items as $key => $item) {
 			$return[$section][$key]['name'] = $item->getName();
-			$return[$section][$key]['content'] = $item->getContent();
+			$return[$section][$key]['content'] = $section == 'default' ? $item->getTooltip() : $item->getContent();
 			if ($item->getSelected()) $return[$section][$key]['selected'] = true;
 		}
 	}

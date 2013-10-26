@@ -16,7 +16,7 @@ $content = "<div id=\"deck-river-lists\" data-tab=\"{$page_filter}\"><ul class=\
 $loader = elgg_view('graphics/ajax_loader', array('hidden' => false));
 foreach ($user_river_settings[$page_filter] as $key => $column_settings) {
 	// check if this column can filter content
-	if ((!$column_settings['network'] || $column_settings['network'] = 'elgg')
+	if ((!$column_settings['network'] || $column_settings['network'] == 'elgg')
 		&& in_array($column_settings['type'], array('all', 'friends', 'mine', 'mention', 'group', 'group_mention', 'search'))) {
 			$has_filter = true;
 		} else {

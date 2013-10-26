@@ -1002,6 +1002,10 @@ li.elgg-menu-item-arrow-left {
 	height: 90px;
 	margin: 0;
 }
+.elgg-list-item .elgg-image > img.fb {
+	opacity: 0.3;
+	padding: 7px;
+}
 .elgg-river-image.big {
 	height: auto;
 }
@@ -1432,4 +1436,11 @@ a.user-info-popup.ui-draggable-dragging, a.group-info-popup.ui-draggable-draggin
 .resizable-helper {
 	border: 2px dotted red;
 	background: rgba(255, 0, 0, 0.08);
+}
+#video-popup:hover .ui-resizable-handle:before {
+	content: "\ABFE";
+	color: rgba(255, 255, 255, 0.5);
+	font-family: ggouv;
+	font-size: 40px;
+	margin-left: -6px;
 }

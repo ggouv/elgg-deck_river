@@ -32,7 +32,7 @@ $buttons .= elgg_view('output/url', $params);
 
 if ($has_filter) {
 	$params = array(
-		'text' => elgg_view_icon('filter'),
+		'text' => elgg_view_icon('search'),
 		'title' => elgg_echo('deck_river:filter'),
 		'href' => "#",
 		'class' => "elgg-column-filter-button tooltip s",
