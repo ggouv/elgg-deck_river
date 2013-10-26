@@ -10,6 +10,7 @@ $english = array(
 	'deck_river:refresh' => 'Refresh column',
 	'deck_river:refresh-all' => 'Refresh all columns',
 	'deck_river:add-column' => 'Add a new column',
+	'deck_river:column:nofeed' => "Click on + to add new column",
 	'deck_river:add-tab' => 'Add a new tab',
 	'deck_river:limitColumnReached' => 'The maximum number of columns is reached.',
 	'deck_river:limitTabReached' => "The maximum number of tabs is reached.",

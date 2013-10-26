@@ -10,6 +10,7 @@ $french = array(
 	'deck_river:refresh' => "Rafraîchir la colonne",
 	'deck_river:refresh-all' => "Rafraîchir toutes les colonnes",
 	'deck_river:add-column' => "Ajouter une nouvelle colonne",
+	'deck_river:column:nofeed' => "<h2><span class='gwf'><</span>Cliquez sur le + pour ajouter une nouvelle colonne !</h2>",
 	'deck_river:add-tab' => "Ajouter un nouvel onglet",
 	'deck_river:limitColumnReached' => "Le nombre maximum de colonnes est atteint.",
 	'deck_river:limitTabReached' => "Le nombre maximum d'onglets est atteint.",

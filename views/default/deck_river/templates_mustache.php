@@ -13,14 +13,14 @@
 
 <!-- Template for column -->
 <script id="column-template" type="text/template">
-	<li class=​"column-river" id=​"{{column}}">​
-		<ul class=​"column-header">​</ul>​
-		<ul class=​"column-filter">​</ul>​
-		<ul class=​"elgg-river elgg-list">​
+	<li class="column-river" id="{{column}}">
+		<ul class="column-header"></ul>
+		<ul class="column-filter"></ul>
+		<ul class="elgg-river elgg-list">
 			<div class="elgg-ajax-loader"></div>
-		</ul>​
-		<div class=​"river-to-top hidden link t25 gwfb pas">​</div>​
-	</li>​
+		</ul>
+		<div class="river-to-top hidden link t25 gwfb pas"></div>
+	</li>
 </script>
 
 <!-- Template for linkbox -->

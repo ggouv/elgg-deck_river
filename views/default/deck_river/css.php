@@ -709,6 +709,15 @@ li.elgg-menu-item-arrow-left {
 	overflow-y: hidden;
 	width: 100%;
 }
+#deck-river-lists .nofeed {
+	padding: 30px 37px;
+}
+#deck-river-lists .nofeed span {
+	color: #CCC;
+	font-size: 4em;
+	-webkit-transform: rotateY(180deg) rotateZ(90deg);
+	margin: -15px 10px 0;
+}
 .column-river .elgg-river {
 	height: 100%;
 	overflow-y: scroll;
@@ -1278,6 +1287,14 @@ a.info-popup.ui-draggable-dragging {
 	pointer-events: none;
 }
 .info-popup.canDrop:before, .linkbox-droppable.canDrop:before {
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.2);
+	position: absolute;
+	top: 0;
+	content: '';
+}
+.info-popup.canDrop:after, .linkbox-droppable.canDrop:after {
 	background: #51C600;
 	border-radius: 10px;
 	color: white;
