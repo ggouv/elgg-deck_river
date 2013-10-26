@@ -215,6 +215,7 @@ $french = array(
 	'deck_river:facebook:feed:group_feed' => "Activité du groupe - %s",
 	'deck_river:facebook:feed:home' => "Fil d'actualités",
 	'deck_river:facebook:feed:statuses' => "Mes status",
+	'deck_river:facebook:feed:links' => "Mes liens",
 	'deck_river:facebook:feed:search' => "Recherche",
 	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
 	'deck_river:facebook:error' => "Erreur avec l'API de Facebook",

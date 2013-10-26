@@ -382,6 +382,7 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 
 
 		// format date and add friendly_time
+		if (!value.updated_time) value.updated_time = value.created_time;
 		value.posted = value.updated_time.FormatDate();
 		value.friendly_time = elgg.friendly_time(value.posted);
 
@@ -424,6 +425,7 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 			value.typenote = 1;
 		}
 
+		if (!value.full_picture) value.full_picture = value.picture;
 		if (value.full_picture) imgs.push({src: value.full_picture, id: value.id});
 		output += elggRiverTemplate(value);
 

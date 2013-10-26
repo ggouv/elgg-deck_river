@@ -182,7 +182,6 @@ if ($submit == 'delete') {
 		'username' => $facebook_account->username,
 		'subtitle' => $facebook_account->name,
 		'fields' => 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)',
-
 	);
 
 	switch ($facebook_type) {
@@ -200,6 +199,10 @@ if ($submit == 'delete') {
 		case 'statuses':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:statuses';
 			$user_river_options[$tab][$column]['fields'] = '';
+			break;
+		case 'links':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:links';
+			$user_river_options[$tab][$column]['fields'] = 'caption,created_time,from,link,message,id,icon,name,description,via,picture,privacy,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)';
 			break;
 		case 'search':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:search';
