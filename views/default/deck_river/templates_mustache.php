@@ -194,10 +194,10 @@
 			<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
 			{{#menu}}
 			{{^sub}}
-			<li class="elgg-menu-item-{{name}}"><a href="#" title="{{title}}" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-{{name}}"></span></a></li>
+			<li class="elgg-menu-item-{{name}} prs"><a href="#" title="{{title}}" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-{{name}}"></span></a></li>
 			{{/sub}}
 			{{#sub}}
-			<li class="elgg-submenu pls">
+			<li class="elgg-submenu">
 				<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
 				<ul class="elgg-module-popup hidden">
 					{{#childs}}<li class="elgg-menu-item-{{name}}">{{{content}}}</li>{{/childs}}
@@ -206,7 +206,7 @@
 			{{/sub}}
 			{{/menu}}
 			</ul>
-			<div class="elgg-river-summary">
+			<div class="elgg-river-summary prm">
 				{{{summary}}}<br/>
 				<span class="elgg-river-timestamp">
 					<span class="elgg-friendlytime">
@@ -268,7 +268,7 @@
 					</li>
 					{{/submenu}}
 				</ul>
-				<div class="elgg-river-summary">
+				<div class="elgg-river-summary prm">
 					<span class="twitter-user-info-popup info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
 					<span class="elgg-river-timestamp">
 						<a href="https://twitter.com/{{user.screen_name}}/status/{{id_str}}" target="_blank">
@@ -328,7 +328,7 @@
 					</li>
 					{{/submenu}}
 				</ul>
-				<div class="elgg-river-summary">
+				<div class="elgg-river-summary prm">
 					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>{{/via}}
 					{{#properties}}
 						<?php echo elgg_echo('river:facebook:photo:shared_story'); ?>&nbsp;<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>&nbsp;<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;<a target="_blank" href="{{href}}">{{text}}</a>

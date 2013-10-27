@@ -46,13 +46,13 @@ $(document).ready(function() {
 
 	$('.elgg-menu-item-response-all a').live('click', function() {
 		var item = $(this).closest('.elgg-list-item'),
-			match_users = item.find('.elgg-river-message').first().text().match(/\s{1}@\w{1,}/g);
+			match_users = item.find('.elgg-river-message').first().text().match(/(?:\s|^)@\w{1,}/g);
 
 		match_users = $.grep(match_users, function(val, i) { // don't mention himself
-			return val != ' @'+elgg.session.user.username;
+			return $.trim(val) != '@'+elgg.session.user.username;
 		});
-		match_users = '@'+item.data('username') + $.grep(match_users, function(val, i) { // Prepend the username of the item river owner
-			return val != ' @'+item.data('username');
+		match_users = '@'+item.data('username') + ' ' + $.grep(match_users, function(val, i) { // Prepend the username of the item river owner
+			return $.trim(val) != '@'+item.data('username');
 		}).join('') + ' ';
 		elgg.deck_river.responseToWire(item, match_users);
 	});
@@ -244,8 +244,12 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 		// add friendly_time
 		value.friendly_time = elgg.friendly_time(value.posted);
 
-		value.text = $('<div>').html(value.message).text();
-		if (value.type == 'object') value.message = value.text.ParseGroup().ParseEverythings('elgg');
+		value.text = value.message;
+		console.log();
+		if (value.type == 'object' && value.text) {
+			value.message = value.text.ParseGroup().ParseEverythings('elgg');
+			value.text = $('<div>').html(value.text).text();
+		}
 
 		// Remove responses if in thread
 		if (thread && !elgg.isNull(value.responses)) delete value.responses;
@@ -340,23 +344,24 @@ String.prototype.FormatDate = function () {
 	return $.datepicker.formatDate('@', new Date(this))/1000;
 };
 String.prototype.ParseURL = function () {
-	return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=]+/g, function (url) {
-		return '<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
+	return this.replace(/(.{6})?([A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~]+)/g, function (match, pre, url) {
+		if (pre == 'href="') return url;
+		return pre+'<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
 	});
 };
 String.prototype.ParseGroup = function () {
-	return this.replace(/![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+/g, function (u) {
-		return '<a href="#" class="group-info-popup info-popup" title="'+u.replace("!", "")+'">'+u+'</a>';
+	return this.replace(/(\s|^)![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+/g, function (match, pre, group) {
+		return pre+'<a href="#" class="group-info-popup info-popup" title="'+group.replace("!", "")+'">'+group+'</a>';
 	});
 };
 String.prototype.ParseUsername = function (network) {
-	return this.replace(/@[A-Za-z0-9-_]+/g, function (u) {
-		return '<a href="#" class="'+network+'-user-info-popup info-popup" title="'+u.replace("@", "")+'">'+u+'</a>';
+	return this.replace(/(\s|^)(@[A-Za-z0-9-_]+)/g, function (match, pre, user) {
+		return pre+'<a href="#" class="'+network+'-user-info-popup info-popup" title="'+user.replace("@", "")+'">'+user+'</a>';
 	});
 };
 String.prototype.ParseHashtag = function (network) {
-	return this.replace(/([^"]|^)(#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+)/g, function (h, $1, $2) {
-		return $1+'<a href="#" class="hashtag-info-popup" title="'+$2+'" data-network="'+network+'">'+$2+'</a>';
+	return this.replace(/([^"]|^)(#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+)/g, function (h, pre, hashtag) {
+		return pre+'<a href="#" class="hashtag-info-popup" title="'+hashtag+'" data-network="'+network+'">'+hashtag+'</a>';
 	});
 };
 String.prototype.ParseEverythings = function (network) {
