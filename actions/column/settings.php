@@ -48,6 +48,10 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['title'] = '@' . get_entity($owner)->name;
 			$user_river_options[$tab][$column]['subtitle'] = 'river:mentions';
 			break;
+		case 'groups':
+			$user_river_options[$tab][$column]['title'] = 'river:groups_timeline';
+			$user_river_options[$tab][$column]['subtitle'] = 'river:groups_activity';
+			break;
 		case 'group':
 			$user_river_options[$tab][$column]['group'] = $group;
 			$user_river_options[$tab][$column]['title'] = get_entity($group)->name;

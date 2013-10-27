@@ -103,11 +103,16 @@ if ($column_settings['network'] == 'twitter') {
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-			$options['wheres'][] = "((rv.action_type <> 'comment' AND o.description REGEXP '@" . $owner->name . "[[:>:]]') OR (m.string REGEXP '@" . $owner->name . "[[:>:]]'))";
+			$options['wheres'][] = "((rv.action_type <> 'comment' AND o.description REGEXP '"  . $mention . "[[:>:]]') OR (m.string REGEXP '"  . $mention . "[[:>:]]'))";
 			//$options['wheres'][] = "((o.description LIKE '%@" . $owner->name . " %') OR (o.description LIKE '%@" . $owner->name . "') OR (m.string LIKE '%@" . $owner->name . " %') OR (m.string LIKE '%@" . $owner->name . "'))";
 			//$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $owner->name . "([[:blank:]]|$|<)'))"; // FASTEST ? LIKE OR REGEXP ? WHY '<'
 			break;
-		case 'group':
+		case 'groups': // all groups
+			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";//r.guid_two";
+			$options['joins'][] = "LEFT JOIN {$dbprefix}entity_relationships r ON r.guid_one = '" . $owner->guid ."'";// '" . $owner->guid ."'";
+			$options['wheres'][] = "(r.guid_two = e.container_guid AND r.relationship = 'member')";
+			break;
+		case 'group': // one group
 			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
 			$options['wheres'][] = "e.container_guid = " . $column_settings['group'];
 			break;
@@ -117,7 +122,7 @@ if ($column_settings['network'] == 'twitter') {
 			$options['joins'][] = "JOIN {$dbprefix}objects_entity o ON o.guid = rv.object_guid";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}annotations a ON a.id = rv.annotation_id";
 			$options['joins'][] = "LEFT JOIN {$dbprefix}metastrings m ON m.id = a.value_id";
-			$options['wheres'][] = "((rv.action_type <> 'comment' AND o.description REGEXP '!" . $group_name . "[[:>:]]') OR (m.string REGEXP '!" . $group_name . "[[:>:]]'))";
+			$options['wheres'][] = "((rv.action_type <> 'comment' AND o.description REGEXP '"  . $mention . "[[:>:]]') OR (m.string REGEXP '"  . $mention . "[[:>:]]'))";
 			//$options['wheres'][] = "((o.description LIKE '%!" . $group_name . " %') OR (o.description LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "') OR (m.string LIKE '%!" . $group_name . "'))";
 			break;
 		case 'search':

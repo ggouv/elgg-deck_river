@@ -15,6 +15,9 @@ $french = array(
 	'deck_river:limitColumnReached' => "Le nombre maximum de colonnes est atteint.",
 	'deck_river:limitTabReached' => "Le nombre maximum d'onglets est atteint.",
 	'river:mentions' => "Mentions",
+	'river:timeline' => "Le flux",
+	'river:groups_timeline' => "Activité dans mes groupes",
+	'river:groups_activity' => "Groupes dont je suis membre",
 	'river:a_group_activity' => "Activité d'un groupe",
 	'river:group_activity' => "Activité du groupe",
 	'river:a_group_mentions' => "Mentions d'un !groupe",
@@ -51,7 +54,6 @@ $french = array(
 
 	// river menu
 	'replyall' => "Répondre à tous",
-	'river:timeline' => "Le flux",
 	'river:timeline:definition' => "Activité de mes abonnements",
 	'river:group' => "Groupe",
 	'river:filtred' => "filtré",
