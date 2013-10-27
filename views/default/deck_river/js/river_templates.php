@@ -21,7 +21,7 @@ $(document).ready(function() {
 		elgg.deck_river.responseToWire(item, '@' + item.data('username') + ' ');
 	});
 
-	$('.elgg-menu-item-share a').live('click', function() {
+	$('.elgg-menu-item-retweet a').live('click', function() {
 		var $tt = $('#thewire-textarea'),
 			$eli = $(this).closest('.elgg-list-item'),
 			columnSettings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
@@ -40,7 +40,7 @@ $(document).ready(function() {
 			elgg.thewire.resize();
 			$tt.val($eli.find('.elgg-river-message.main').data('message_original'));
 		} else {
-			$tt.val($eli.data('text').replace(/^rt /i, '')).focus().keydown();
+			$tt.val($eli.data('text').replace(/^rt /i, '').replace(/\s+/g, ' ')).focus().keydown();
 		}
 	});
 
@@ -57,6 +57,48 @@ $(document).ready(function() {
 		elgg.deck_river.responseToWire(item, match_users);
 	});
 
+	// share menu
+	$('.elgg-menu-item-share a').live('click', function(e) {
+		var $this = $(this),
+			thisPos = $this.offset();
+
+		if ($('.share-menu').length) $('.share-menu').remove();
+		$this.addClass('elgg-state-active');
+		if ($this.closest('.elgg-menu-river').length) {
+			var $parent = $this.closest('.elgg-list-item'),
+			top = 25,
+			left = $parent.width()-178,
+			sl = site_shorturl + AlphabeticID.encode($parent.data('object_guid')),
+			text = $parent.find('.elgg-river-object').text();
+		} else {
+			var $parent = $('.elgg-page-body'),
+			top = thisPos.top+22,
+			left = ($('.elgg-page-topbar').length ? 0 : 40) + thisPos.left-198,
+			sl = $this.attr('href'),
+			text = $this.data('title');
+		}
+		$parent.append(
+			$(Mustache.render($('#share-menu').html(), {
+				sl: sl,
+				text: text,
+				logged_in: elgg.is_logged_in()
+			})).css({top: top, left: left})
+		);
+
+		$('.share-menu').add($this.closest('.elgg-list-item')).mouseleave(function() {
+			$this.removeClass('elgg-state-active');
+			$('.share-menu').remove();
+			$(document).unbind('click.sharemenu');
+		});
+
+		$(document).unbind('click.sharemenu').bind('click.sharemenu', function() {
+			$this.removeClass('elgg-state-active');
+			$('.share-menu').remove();
+			$(document).unbind('click.sharemenu');
+		});
+		return false;
+	});
+
 	$('.elgg-menu-item-like a').live('click', function() {
 		var $this = $(this),
 			settings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
@@ -70,42 +112,48 @@ $(document).ready(function() {
 		});
 	});
 
-	$('a[data-twitter_action]').live('click', function() {
-		var action = $(this).data('twitter_action'),
-			userId = $(this).data('user_id'),
-			twitterAccount = $(this).data('twitter_account'),
+	$('a[twitter_action]').live('click', function() {
+		var data = $(this).data(),
 			accounts = $('#thewire-network .net-profile.twitter');
 
-		if (accounts.length > 1 && elgg.isUndefined(twitterAccount)) {
+		if (accounts.length > 1 && elgg.isUndefined(data.twitter_account)) {
 			var accountsString = '';
 
 			elgg.deck_river.createPopup('choose-twitter-account-popup', elgg.echo('deck_river:twitter:choose_account'), function() {
 				$('#choose-twitter-account-popup').find('.elgg-icon-push-pin').remove();
 			});
+			console.log(data);
 			$.each(accounts, function(i, e) {
-				accountsString += '<li><a href="#" data-twitter_action="'+action+'" data-user_id="'+userId+'" data-twitter_account="'+$(e).find('input').val()+'">'+$(e).find('.twitter-user-info-popup').attr('title')+'</a></li>';
+				accountsString += Mustache.render($('#choose-twitter-account-template').html(), {
+					method: data.method,
+					user_id: data.options.user_id,
+					account: $(e).find('input').val(),
+					name: $(e).find('.twitter-user-info-popup').attr('title')
+				});
 			});
 			$('#choose-twitter-account-popup > .elgg-body').html('<ul>'+accountsString+'</ul>');
 		} else {
 			elgg.action('deck_river/twitter', {
 				data: {
-					twitter_account: twitterAccount || accounts.find('input').val(),
-					method: action,
-					options: {'user_id': $(this).data('user_id')}
+					twitter_account: data.twitter_account || accounts.find('input').val(),
+					method: data.method,
+					options: data.options
 				},
 				dataType: 'json',
 				success: function(json) {
 					if (!elgg.isUndefined(json.output.result)) {
 						var response = json.output.result;
 
-						if (action == 'post_friendshipsCreate') response.followers_count++;
-						if (action == 'post_friendshipsDestroy') response.followers_count--;
-						elgg.deck_river.storeEntity(response, 'twitter');
-						response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-						response.description = response.description.ParseEverythings('twitter');
-						$('#user-info-popup > .elgg-body').html(Mustache.render($('#twitter-user-profile-template').html(), response));
-						elgg.system_message(elgg.echo('deck_river:twitter:post:'+action, [response.screen_name]));
-						$('#choose-twitter-account-popup').remove();
+						if ($('#user-info-popup').length) {
+							if (data.method == 'post_friendshipsCreate') response.followers_count++; // strange ? Twitter return count before following or unfollowing action ??
+							if (data.method == 'post_friendshipsDestroy') response.followers_count--;
+							elgg.deck_river.storeEntity(response, 'twitter');
+							response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
+							response.description = response.description.ParseEverythings('twitter');
+							$('#user-info-popup > .elgg-body').html(Mustache.render($('#twitter-user-profile-template').html(), response));
+							elgg.system_message(elgg.echo('deck_river:twitter:post:'+data.method, [response.screen_name]));
+							$('#choose-twitter-account-popup').remove();
+						}
 					}
 				},
 				error: function() {
@@ -344,18 +392,19 @@ String.prototype.FormatDate = function () {
 	return $.datepicker.formatDate('@', new Date(this))/1000;
 };
 String.prototype.ParseURL = function () {
-	return this.replace(/(.{6})?([A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~]+)/g, function (match, pre, url) {
+	return this.replace(/\s+/g, ' ').replace(/(.{6})?([A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~]+)/g, function (match, pre, url) {
 		if (pre == 'href="') return url;
+		if (elgg.isUndefined(pre)) pre = '';
 		return pre+'<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
 	});
 };
 String.prototype.ParseGroup = function () {
-	return this.replace(/(\s|^)![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+/g, function (match, pre, group) {
+	return this.replace(/(\s|^|>)(![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+)/g, function (match, pre, group) {
 		return pre+'<a href="#" class="group-info-popup info-popup" title="'+group.replace("!", "")+'">'+group+'</a>';
 	});
 };
 String.prototype.ParseUsername = function (network) {
-	return this.replace(/(\s|^)(@[A-Za-z0-9-_]+)/g, function (match, pre, user) {
+	return this.replace(/(\s|^|>)(@[A-Za-z0-9-_]+)/g, function (match, pre, user) {
 		return pre+'<a href="#" class="'+network+'-user-info-popup info-popup" title="'+user.replace("@", "")+'">'+user+'</a>';
 	});
 };

@@ -54,6 +54,38 @@
 	</div>
 </script>
 
+<!-- Template for share menu -->
+<script id="share-menu" type="text/template">
+	<ul class="elgg-module-popup share-menu elgg-submenu">
+		{{#logged_in}}
+		<li>
+			<a href="#" onclick="javascript:elgg.thewire.insertInThewire('{{sl}}');">
+				<?php echo elgg_echo('thewire:put_shortlink_in_wire'); ?>
+			</a>
+		</li>
+		<li>
+			<a href="#" onclick="javascript:elgg.thewire.insertInThewire('{{text}} {{sl}}');">
+				<?php echo elgg_echo('thewire:put_title_shortlink_in_wire'); ?>
+			</a>
+		</li>
+		{{/logged_in}}
+		<li{{#logged_in}} class="section"{{/logged_in}}>
+			<a href="#" onclick="javascript:(function(){var w=671,h=216,x=Number((window.screen.width-w)/2),y=Number((window.screen.height-h)/2),d=window,u='http://facebook.com/share.php?u={{sl}}';a=function(){d.open(u,'f','scrollbars=0,toolbar=0,location=0,resizable=0,status=0,width='+w+',height='+h+',left='+x+',top='+y)};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else a();void(0);})()">
+				<span class="elgg-icon facebook-icon"></span>&nbsp;<?php echo elgg_echo('share:on'); ?>&nbsp;Facebook
+			</a>
+		</li>
+		<li>
+			<a href="#" onclick="javascript:(function(){var w=671,h=285,x=Number((window.screen.width-w)/2),y=Number((window.screen.height-h)/2),d=window,u='http://twitter.com/home?status={{text}} {{sl}}';a=function(){d.open(u,'t','scrollbars=0,toolbar=0,location=0,resizable=0,status=0,width='+w+',height='+h+',left='+x+',top='+y)};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else a();void(0);})()">
+				<span class="elgg-icon twitter-icon"></span>&nbsp;<?php echo elgg_echo('share:on'); ?>&nbsp;Twitter
+			</a>
+		</li>
+		<li>
+			<a href="#" onclick="javascript:(function(){var w=600,h=200,x=Number((window.screen.width-w)/2),y=Number((window.screen.height-h)/2),d=window,u='https://plus.google.com/share?url={{sl}}';a=function(){d.open(u,'g','scrollbars=0,toolbar=0,location=0,resizable=0,status=0,width='+w+',height='+h+',left='+x+',top='+y)};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else a();void(0);})()">
+				<span class="elgg-icon google-icon"></span>&nbsp;<?php echo elgg_echo('share:on'); ?>&nbsp;Google+
+			</a>
+		</li>
+	</ul>
+</script>
 
 <!-- Template for popups -->
 <script id="popup-template" type="text/template">
@@ -73,6 +105,23 @@
 	</div>
 </script>
 
+<!-- Template to choose twitter accounts -->
+<script id="choose-twitter-account-template" type="text/template">
+	<li>
+	<div class="elgg-image-block elgg-river-item clearfix">
+		<div class="elgg-image">
+			<div class="elgg-avatar elgg-avatar-small">
+				<div class="twitter-user-info-popup info-popup" title="{{name}}">
+					<img title="{{name}}" alt="{{name}}" src="http://twitter.com/api/users/profile_image/{{name}}?size=mini">
+				</div>
+			</div>
+		</div>
+		<div class="elgg-body">
+			<a style="font-weight:bold;" href="#" twitter_action data-method="{{method}}" data-twitter_account="{{account}}" data-options="{&quot;user_id&quot;: &quot;{{user_id}}&quot;}">{{name}}</a>
+		</div>
+	</div>
+	</li>
+</script>
 
 
 <!-- Template for hashtag popup -->
@@ -119,18 +168,25 @@
 				<div>{{{description}}}</div>
 				<div class="output-group mtm">
 					{{^following}}
-					<a class="elgg-button elgg-button-action" href="#" rel="nofollow" data-twitter_action="post_friendshipsCreate" data-user_id="{{id}}">
+					<a class="elgg-button elgg-button-action" href="#" twitter_action data-method="post_friendshipsCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}">
 						<?php echo elgg_echo('deck_river:twitter:follow'); ?>
 					</a>
 					{{/following}}
 					{{#following}}
-					<a class="elgg-button elgg-button-action" href="#" rel="nofollow" data-twitter_action="post_friendshipsDestroy" data-user_id="{{id}}">
+					<a class="elgg-button elgg-button-action" href="#" twitter_action data-method="post_friendshipsDestroy" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}">
 						<?php echo elgg_echo('deck_river:twitter:unfollow'); ?>
 					</a>
 					{{/following}}
 					<ul class="elgg-button elgg-button-dropdown elgg-submenu">
-						<ul class="elgg-menu elgg-module-popup hidden">
-							<li><a href="#" data-twitter_action="post_friendshipsDestroy" data-user_id="{{id}}"><?php echo elgg_echo('deck_river:twitter:unfollow'); ?></a></li>
+						<ul class="elgg-menu elgg-module-popup hidden" style="width: 160px;">
+							{{^following}}
+							<li><a href="#" twitter_action data-method="post_friendshipsDestroy" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}"><?php echo elgg_echo('deck_river:twitter:unfollow'); ?></a></li>
+							{{/following}}
+							{{#following}}
+							<li><a href="#" twitter_action data-method="post_friendshipsCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}"><?php echo elgg_echo('deck_river:twitter:follow'); ?></a></li>
+							{{/following}}
+							<li><a href="#" twitter_action data-method="post_friendshipsCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}"><?php echo elgg_echo('deck_river:twitter:follow'); ?></a></li>
+							<li><a href="#" twitter_action data-method="post_friendshipsCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}"><?php echo elgg_echo('deck_river:twitter:follow'); ?></a></li>
 						</ul>
 					</ul>
 				</div>
@@ -206,7 +262,7 @@
 			{{/sub}}
 			{{/menu}}
 			</ul>
-			<div class="elgg-river-summary prm">
+			<div class="elgg-river-summary prl">
 				{{{summary}}}<br/>
 				<span class="elgg-river-timestamp">
 					<span class="elgg-friendlytime">
@@ -252,10 +308,10 @@
 						<a href="#" title="<?php echo elgg_echo('reply'); ?>" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response"></span></a>
 					</li>
 					<li class="elgg-submenu prs link">
-						<span class="elgg-icon elgg-icon-share float"></span>
+						<span class="elgg-icon elgg-icon-retweet float"></span>
 						<ul class="elgg-module-popup hidden">
-							<li class="elgg-menu-item-share-twitter"><a href="#"><span class="elgg-icon elgg-icon-twitter"></span><?php echo elgg_echo('retweet'); ?></a>
-							<li class="elgg-menu-item-share"><a href="#"><span class="elgg-icon elgg-icon-share"></span><?php echo elgg_echo('retweet_by_wire'); ?></a>
+							<li class="elgg-menu-item-retweet-twitter"><a href="#"><span class="elgg-icon elgg-icon-twitter"></span><?php echo elgg_echo('retweet'); ?></a>
+							<li class="elgg-menu-item-retweet"><a href="#"><span class="elgg-icon elgg-icon-retweet"></span><?php echo elgg_echo('retweet_by_wire'); ?></a>
 						</ul>
 					</li>
 					{{{menu.default}}}
@@ -268,7 +324,7 @@
 					</li>
 					{{/submenu}}
 				</ul>
-				<div class="elgg-river-summary prm">
+				<div class="elgg-river-summary prl">
 					<span class="twitter-user-info-popup info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
 					<span class="elgg-river-timestamp">
 						<a href="https://twitter.com/{{user.screen_name}}/status/{{id_str}}" target="_blank">
@@ -288,7 +344,7 @@
 					{{/responses.retweet}}
 					{{#responses.reply}}
 					{{#responses.retweet}}<br/>{{/responses.retweet}}<div class="response-loader float clearfloat hidden"></div>
-					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb"></span>
+					<span class="elgg-icon elgg-icon-speech-bubble-alt prs float gwfb"></span>
 					<a href="#" class="thread float prm" data-thread="{{id_str}}" data-network="twitter"><?php echo elgg_echo('deck_river:thread'); ?></a>
 					{{/responses.reply}}
 				</div>
@@ -315,8 +371,8 @@
 					<li class="elgg-menu-item-like">
 						<a href="#" class="gwfb tooltip s" title="<?php echo elgg_echo('deck_river:facebook:action:like'); ?>"><span class="elgg-icon elgg-icon-thumbs-up"></span></a>
 					</li>
-					<li class="elgg-menu-item-share pls prm">
-						<a href="#" class="gwfb tooltip s" title="<?php echo elgg_echo('deck_river:facebook:action:share'); ?>"><span class="elgg-icon elgg-icon-share"></span></a>
+					<li class="elgg-menu-item-retweet pls prm">
+						<a href="#" class="gwfb tooltip s" title="<?php echo elgg_echo('deck_river:facebook:action:share'); ?>"><span class="elgg-icon elgg-icon-retweet"></span></a>
 					</li>
 					{{{menu.default}}}
 					{{#submenu}}
@@ -328,7 +384,7 @@
 					</li>
 					{{/submenu}}
 				</ul>
-				<div class="elgg-river-summary prm">
+				<div class="elgg-river-summary prl">
 					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>{{/via}}
 					{{#properties}}
 						<?php echo elgg_echo('river:facebook:photo:shared_story'); ?>&nbsp;<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>&nbsp;<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;<a target="_blank" href="{{href}}">{{text}}</a>
@@ -403,7 +459,7 @@
 				<img alt="{{from.name}}" src="https://graph.facebook.com/{{from.id}}/picture?width=24&height=24" width="24" height="24">
 			</div>
 			<div class="elgg-body">
-				<div class="elgg-river-summary">
+				<div class="elgg-river-summary prl">
 					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>
 					<span class="elgg-river-timestamp">
 					<a target="_blank" href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">

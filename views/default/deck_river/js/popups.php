@@ -119,14 +119,16 @@ elgg.deck_river.popups = function() {
 		vp.resizable({
 			handles: 'se',
 			helper: 'resizable-helper',
-			stop: function( event, ui ) {
+			start: function(event, ui) {
+				$('#video-popup iframe').css('pointer-events','none');
+			},
+			stop: function(event, ui) {
+				$('#video-popup iframe').css('pointer-events','auto');
 				vp.width(ui.size.width);
 				resizeVP();
 			}
 		}).find('.elgg-body').html(
-			$('<div>', {'class': 'overlay hidden'}).after(
-				$('<iframe>', {src: source, width: '100%', height: '100%'}))
-		);
+			$('<iframe>', {src: source, width: '100%', height: '100%'}))
 		resizeVP();
 		return false;
 	});
@@ -203,7 +205,13 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 		);
 		var popup = $('#'+popupID).draggable({
 			handle: '.elgg-head',
-			stack: '.elgg-module-popup'
+			stack: '.elgg-module-popup',
+			iframeFix: true,
+			opacity: 0.9,
+			create: function(e, ui) {
+				$('.elgg-module-popup.deck-popup').css('z-index', '-=1');
+				$('#'+popupID).css('z-index', 500);
+			}
 		});
 		popup.find('.elgg-icon-push-pin').click(function() {
 			$(this).closest('.deck-popup').toggleClass('pinned');

@@ -1342,13 +1342,6 @@ a.info-popup.ui-draggable-dragging {
 	height: 346px;
 	margin: -6px;
 }
-#video-popup.ui-draggable-dragging .overlay {
-	z-index: 999;
-	display: block;
-	height: 100%;
-	width: 100%;
-	position: absolute;
-}
 .linkbox-droppable.ui-draggable.ui-draggable-dragging {
 	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);

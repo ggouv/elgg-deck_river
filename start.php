@@ -651,22 +651,7 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 		$item = $params['item'];
 		$object = $item->getObjectEntity();
 
-		// comments and non-objects cannot be commented on or liked. Annotation id of thewire object return 0
-		if ($item->annotation_id != 0) {
-			// comments
-			if ($object->canComment()) {
-				$options = array(
-					'name' => 'comment',
-					'href' => "#comments-add-$object->guid",
-					'text' => elgg_view_icon('speech-bubble'),
-					'class' => 'gwfb tooltip s',
-					'title' => elgg_echo('comment:this'),
-					'rel' => 'toggle',
-					'priority' => 50,
-				);
-				$return[] = ElggMenuItem::factory($options);
-			}
-		} else if ($object->getSubtype() == 'thewire') {
+		if ($object->getSubtype() == 'thewire') {
 			$options = array(
 				'name' => 'response',
 				'text' => elgg_view_icon('response'),
@@ -677,17 +662,13 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 
 			$options = array(
-				'name' => 'share',
-				'text' => elgg_view_icon('share'),
+				'name' => 'retweet',
+				'text' => elgg_view_icon('retweet'),
 				'class' => 'gwfb tooltip s',
 				'title' => elgg_echo('retweet'),
 				'priority' => 60,
 			);
 			$return[] = ElggMenuItem::factory($options);
-
-		}
-
-		if ($object->getSubtype() == 'thewire') {
 
 			if (preg_match('/@\w{1,}/', $object->description)) {
 				$options = array(
@@ -725,6 +706,31 @@ function deck_river_menu_setup($hook, $type, $return, $params) {
 			if ($del) $submenu->addChild($del);
 
 			$return[] = $submenu;
+
+		} else if ($object->getType() == 'object') {
+
+			// comments
+			if ($object->canComment()) {
+				$options = array(
+					'name' => 'comment',
+					'href' => $object->getURL() . "#comments",
+					'text' => elgg_view_icon('speech-bubble'),
+					'class' => 'gwfb tooltip s',
+					'title' => elgg_echo('comment:this'),
+					'priority' => 50,
+				);
+				$return[] = ElggMenuItem::factory($options);
+			}
+
+			$options = array(
+				'name' => 'share',
+				'text' => elgg_view_icon('share'),
+				'class' => 'gwfb tooltip s',
+				'title' => elgg_echo('menu:shortlink'),
+				'priority' => 50,
+			);
+			$return[] = ElggMenuItem::factory($options);
+
 		}
 	}
 
