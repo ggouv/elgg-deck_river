@@ -22,12 +22,25 @@ $(document).ready(function() {
 	});
 
 	$('.elgg-menu-item-share a').live('click', function() {
-		var columnSettings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
+		var $tt = $('#thewire-textarea'),
+			$eli = $(this).closest('.elgg-list-item'),
+			columnSettings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
 
 		if (columnSettings.network == 'facebook') {
-			console.log('facebo');
+			var data = $eli.find('.elgg-river-image').data();
+
+			data = $.extend({
+				mainimage: '',
+				url: false,
+				description: '',
+				tilte: false
+			}, data);
+
+			$('#linkbox').removeClass('hidden').html(Mustache.render($('#linkbox-template').html(), data));
+			elgg.thewire.resize();
+			$tt.val($eli.find('.elgg-river-message.main').data('message_original'));
 		} else {
-			$('#thewire-textarea').val($(this).closest('.elgg-list-item').data('text').replace(/^rt /i, '')).focus().keydown();
+			$tt.val($eli.data('text').replace(/^rt /i, '')).focus().keydown();
 		}
 	});
 
@@ -42,6 +55,19 @@ $(document).ready(function() {
 			return val != ' @'+item.data('username');
 		}).join('') + ' ';
 		elgg.deck_river.responseToWire(item, match_users);
+	});
+
+	$('.elgg-menu-item-like a').live('click', function() {
+		var $this = $(this),
+			settings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
+
+		elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1], 'likes', {
+			access_token: settings.token
+		}, function(response) {
+			if (response) {
+				elgg.system_message(elgg.echo('deck_river:facebook:liked'));
+			}
+		});
 	});
 
 	$('a[data-twitter_action]').live('click', function() {
@@ -345,13 +371,13 @@ String.prototype.TruncateString = function (length, more) {
 		length++;
 		trunc = this.substring(0, length);
 	} while (trunc.length !== this.length && trunc.slice(-1) != ' ');
-	if (length < this.length) {
+	if (length+100 < this.length) {
 		var rand = (Math.random()+"").replace('.','');
 		return this.substring(0, length-1) +
-				'<span id="text-part-'+rand+'" class="hidden">' + this.substring(length-1, this.length) + '</span>' + 
+				'<span id="text-part-'+rand+'" class="hidden">' + this.substring(length-1, this.length) + '</span>' +
 				'<a rel="toggle" href="#text-part-'+rand+'"> ' + more + '</a>';
 	} else {
-		return trunc;
+		return this;
 	}
 };
 
@@ -379,7 +405,10 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 		// parse tweet text
 		//value.text = value.message.ParseEverythings('facebook');
 		if (!value.message) value.message = value.story; // somes stranges status post doesn't have message but story instead
-		if (value.message) value.message = value.message.TruncateString().ParseEverythings('facebook');
+		if (value.message) {
+			value.message_original = value.message;
+			value.message = value.message.TruncateString().ParseEverythings('facebook');
+		}
 
 		if (value.likes) {
 			var vld = value.likes.data, u = '';

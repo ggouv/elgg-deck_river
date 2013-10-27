@@ -95,7 +95,7 @@ elgg.deck_river.init = function() {
 
 		$('.facebook-comment-form .elgg-button').die().live('click', function() {
 			var $this = $(this),
-				settings = elgg.deck_river.getColumnSettings($(this).closest('.column-river')),
+				settings = elgg.deck_river.getColumnSettings($this.closest('.column-river')),
 				$txt = $this.prev('textarea');
 
 			elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1], 'comments', {

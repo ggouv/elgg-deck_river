@@ -220,6 +220,7 @@ $french = array(
 	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
 	'deck_river:facebook:error' => "Erreur avec l'API de Facebook",
 	'deck_river:facebook:error:group:already' => 'Vous avez déjà associé ce groupe !',
+	'deck_river:facebook:liked' => "Votre like a été pris en compte par Facebook !",
 
 );
 

@@ -207,7 +207,7 @@ if ($submit == 'delete') {
 			break;
 		case 'search':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:search';
-			$user_river_options[$tab][$column]['subtitle'] = $search;
+			$user_river_options[$tab][$column]['subtitle'] = '"' . $search . '" - ' . $facebook_account->name;
 			$user_river_options[$tab][$column]['search'] = $search;
 			$user_river_options[$tab][$column]['query'] = 'search?type=post&q=' . $search;
 			$user_river_options[$tab][$column]['fields'] = '';

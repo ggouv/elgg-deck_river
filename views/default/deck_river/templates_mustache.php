@@ -28,7 +28,7 @@
 	<div class="elgg-image-block clearfix">
 		{{#mainimage}}
 		<ul class="elgg-image">
-			<div class="link_picture image-wrapper center tooltip s t25 gwfb" title="<?php echo elgg_echo('deck_river:linkbox:hidepicture'); ?>">
+			<div class="link_picture image-wrapper center tooltip w t25 gwfb" title="<?php echo elgg_echo('deck_river:linkbox:hidepicture'); ?>">
 				<img height="80px" src="{{mainimage}}">
 			</div>
 			{{#images}}
@@ -315,7 +315,7 @@
 					<li class="elgg-menu-item-like">
 						<a href="#" class="gwfb tooltip s" title="<?php echo elgg_echo('deck_river:facebook:action:like'); ?>"><span class="elgg-icon elgg-icon-thumbs-up"></span></a>
 					</li>
-					<li class="elgg-menu-item-share">
+					<li class="elgg-menu-item-share pls prm">
 						<a href="#" class="gwfb tooltip s" title="<?php echo elgg_echo('deck_river:facebook:action:share'); ?>"><span class="elgg-icon elgg-icon-share"></span></a>
 					</li>
 					{{{menu.default}}}
@@ -341,7 +341,7 @@
 						</a>
 					</span>
 				</div>
-				<div class="elgg-river-message">{{{message}}}{{#typestatus}}&nbsp;<a target="_blank" href="https://facebook.com/{{id}}"><?php echo elgg_echo('river:facebook:show:status'); ?></a>{{/typestatus}}</div>
+				<div class="elgg-river-message main" data-message_original="{{message_original}}">{{{message}}}{{#typestatus}}&nbsp;<a target="_blank" href="https://facebook.com/{{id}}"><?php echo elgg_echo('river:facebook:show:status'); ?></a>{{/typestatus}}</div>
 				{{#link}}
 				{{#typevideo}}
 				<a class="elgg-river-responses linkbox-droppable video-popup" href="{{link}}" data-source="{{source}}">

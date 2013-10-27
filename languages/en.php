@@ -150,6 +150,7 @@ $english = array(
 	'deck_river:facebook:posted' => "Your message has been posted on Facebook. <a href=\"%s\" target=\"_blank\">See the message</a>.",
 	'deck_river:facebook:error' => "Error with Facebook API",
 	'deck_river:thread-not-exist' => "Discussion cannot found",
+	'deck_river:facebook:liked' => "Your like has been posted on Facebook !",
 );
 
 add_translation('en', $english);
