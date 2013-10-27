@@ -9,6 +9,24 @@ $has_filter = elgg_extract('has_filter', $vars, false);
 
 if (!$column_settings['network']) $column_settings['network'] = 'elgg';
 
+// check if this column can filter content
+if ((!$column_settings['network'] || $column_settings['network'] == 'elgg')
+	&& in_array($column_settings['type'], array('all', 'friends', 'mine', 'mention', 'group', 'group_mention', 'search'))) {
+		$has_filter = true;
+	} else {
+		$has_filter = false;
+	}
+
+// set filter
+if ($has_filter) {
+	$filter = elgg_view('page/layouts/content/deck_river_column_filter', array(
+		'column_settings' => $column_settings
+	));
+} else {
+	$filter = '';
+}
+
+
 $params = array(
 	'text' => elgg_view_icon('refresh'),
 	'title' => elgg_echo('deck_river:refresh'),
@@ -63,4 +81,5 @@ echo <<<HTML
 		</div>
 	</li>
 </ul>
+$filter
 HTML;

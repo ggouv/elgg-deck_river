@@ -19,34 +19,15 @@ if (count($user_river_settings[$page_filter]) == 0) {
 
 	$loader = elgg_view('graphics/ajax_loader', array('hidden' => false));
 	foreach ($user_river_settings[$page_filter] as $key => $column_settings) {
-		// check if this column can filter content
-		if ((!$column_settings['network'] || $column_settings['network'] == 'elgg')
-			&& in_array($column_settings['type'], array('all', 'friends', 'mine', 'mention', 'group', 'group_mention', 'search'))) {
-				$has_filter = true;
-			} else {
-				$has_filter = false;
-			}
-
 		// set header
 		$header = elgg_view('page/layouts/content/deck_river_column_header', array(
-				'column_id' => $key,
-				'column_settings' => $column_settings,
-				'has_filter' => $has_filter
+			'column_id' => $key,
+			'column_settings' => $column_settings
 		));
-
-		// set filter
-		if ($has_filter) {
-			$filter = elgg_view('page/layouts/content/deck_river_column_filter', array(
-				'column_settings' => $column_settings
-			));
-		} else {
-			$filter = '';
-		}
 
 		$content .= <<<HTML
 <li class="column-river" id="$key">
 	$header
-	$filter
 	<ul class="elgg-river elgg-list">
 		$loader
 	</ul>

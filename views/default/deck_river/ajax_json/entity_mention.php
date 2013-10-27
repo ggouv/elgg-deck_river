@@ -62,7 +62,7 @@ $items = elgg_get_river($options);
 
 global $jsonexport;
 $jsonexport['results'] = array();
-global $fb; $fb->info($mention);
+
 if (!empty($items)) {
 	foreach ($items as $item) {
 		if (elgg_view_exists($item->view, 'json')) {

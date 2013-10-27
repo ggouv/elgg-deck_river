@@ -223,6 +223,5 @@ set_private_setting($owner, 'deck_river_settings', json_encode($return['deck_riv
 
 $return['column'] = $column;
 $return['header'] = elgg_view('page/layouts/content/deck_river_column_header', array('column_settings' => $user_river_options[$tab][$column]));
-$return['header'] .= elgg_view('page/layouts/content/deck_river_column_filter', array('column_settings' => $user_river_options[$tab][$column]));
 
 echo json_encode($return);
