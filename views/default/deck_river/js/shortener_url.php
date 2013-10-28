@@ -16,8 +16,9 @@
  * @return void
  */
 elgg.deck_river.ShortenerUrlInit = function() {
+	var $thus = $('#thewire-header .url-shortener');
 
-	$('#thewire-header .url-shortener .elgg-input-text').focusin(function() {
+	$thus.find('.elgg-input-text').focusin(function() {
 		if (this.value == elgg.echo('deck-river:reduce_url:string')) {
 			this.value = '';
 		}
@@ -28,11 +29,11 @@ elgg.deck_river.ShortenerUrlInit = function() {
 		}
 	}).keydown(function(e) {
 		if (e.keyCode == 13) {
-			$('#thewire-header .url-shortener .elgg-button-submit').click();
+			$thus.find('.elgg-button-submit').click();
 			return false;
 		}
 	});
-	$('#thewire-header .url-shortener .elgg-button-submit').die().live('click', function() {
+	$thus.find('.elgg-button-submit').live('click', function() {
 		var input = $(this).parent().find('.elgg-input-text'),
 			longUrl = input.val().trim(),
 			shortUrl = false;
@@ -46,13 +47,13 @@ elgg.deck_river.ShortenerUrlInit = function() {
 			});
 		}
 	});
-	$('#thewire-header .url-shortener .elgg-button-action').die().live('click', function() {
+	$thus.find('.elgg-button-action').live('click', function() {
 		var shortUrl = $(this).parent().find('.elgg-input-text').val();
 
 		if (shortUrl == elgg.echo('deck-river:reduce_url:string')) return;
 		elgg.thewire.insertInThewire(shortUrl);
 	});
-	$('#thewire-header .url-shortener .elgg-icon').die().live('click', function() {
+	$thus.find('.elgg-icon').live('click', function() {
 		var urlShortner = $(this).parent();
 		urlShortner.find('.elgg-input-text').val(elgg.echo('deck-river:reduce_url:string'));
 		urlShortner.find('.elgg-button-action, .elgg-icon').addClass('hidden');

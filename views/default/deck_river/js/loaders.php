@@ -9,40 +9,8 @@
  *
  */
 
-// Be carefull ! Tweet IDs are too long for a call with .data('id') ! We need use .attr('data-id')
+// Nots : Be carefull ! Tweet IDs are too long for a call with .data('id') ! We need use .attr('data-id')
 
-
-/**
- * Return column settings for given column
- * @param  {element}   TheColumn    the jQuery element of the column
- * @return {object}                 the user settings
- */
-elgg.deck_river.getColumnSettings = function(TheColumn) {
-	if (TheColumn.attr('id').match(/^column/)) {
-		var tab = TheColumn.closest('#deck-river-lists').data('tab'),
-			column = TheColumn.attr('id') || TheColumn.closest('.column-river').attr('id'),
-			dRS = deckRiverSettings[tab][column];
-
-			// insert tab and column name in column settings. Aka helper.
-			dRS.tab = tab;
-			dRS.column = column;
-		return dRS;
-	} else {
-		return false;
-	}
-};
-
-
-
-/**
- * Set column settings for given column
- * @param  {element}   TheColumn    the jQuery element of the column
- * @param  {object}    Data         object of new settings
- * @return {object}                 the user settings
- */
-elgg.deck_river.setColumnSettings = function(TheColumn, data) {
-	deckRiverSettings[TheColumn.closest('#deck-river-lists').data('tab')][TheColumn.attr('id')] = data;
-};
 
 
 
@@ -367,26 +335,6 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
 
 
 
-/**
- * Initialise Facebook javascript SDK
- * @return void
- */
-var FBloaded = 0; // var to prevent already been called.
-elgg.deck_river.initFacebook = function() {
-	if (!FBloaded) {
-		$.ajaxSetup({ cache: true });
-		$.getScript('//connect.facebook.net/en_UK/all.js', function(){
-			FBloaded = 1;
-			FB.init({
-				appId: FBappID,
-				channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
-				oauth: true
-			});
-		});
-	}
-};
-
-
 
 /*
  * Display number of new items
@@ -482,57 +430,6 @@ elgg.deck_river.column_message = function(msgs, TheColumn, delay) {
  */
 elgg.deck_river.column_error = function(errors, TheColumn, delay) {
 	elgg.deck_river.column_messages(errors, TheColumn, delay, "error");
-};
-
-
-
-String.prototype.addToLargeInt = function (value) {
-	return this.substr(0, this.length-3)+(parseInt(this.substr(-3)) + value);
-};
-
-
-
-/**
- * Ajax call to Facebook API
- * @param {[type]}   account  ID of account
- * @param {[type]}   query    the query
- * @param {[type]}   params   params
- * @param {Function} callback a function to execute
- */
-elgg.deck_river.FBajax = function(account, query, params, callback, method) {
-	FB.api(account+'/'+query, method, params, function(response) {
-		if (response) {
-			callback(response);
-		} else {
-			elgg.register_error(elgg.echo('deck_river:facebook:error'));
-		}
-	});
-};
-
-
-
-/**
- * Ajax get to Facebook API
- * @param {[type]}   account  ID of account
- * @param {[type]}   query    the query
- * @param {[type]}   token    the token of the account
- * @param {Function} callback a function to execute
- */
-elgg.deck_river.FBget = function(account, query, token, callback) {
-	elgg.deck_river.FBajax(account, query, {access_token: token}, callback, 'GET');
-};
-
-
-
-/**
- * Ajax get to Facebook API
- * @param {[type]}   object     ID of object
- * @param {[type]}   query      the query
- * @param {[type]}   params     params to pass in POST
- * @param {Function} callback a function to execute
- */
-elgg.deck_river.FBpost = function(object, query, params, callback) {
-	elgg.deck_river.FBajax(object, query, params, callback, 'POST');
 };
 
 

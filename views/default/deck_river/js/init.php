@@ -10,8 +10,7 @@
  *
  */
 
-// Global var for Entities : users and groups from elgg, users from Twitter
-var DataEntities = DataEntities || {elgg: [], twitter: []};
+
 
 /**
  * Elgg-deck_river initialization
@@ -22,106 +21,18 @@ elgg.provide('elgg.deck_river');
 
 elgg.deck_river.init = function() {
 	$(document).ready(function() {
-		var $erl = $('.elgg-river-layout:not(.hidden)');
-
-		if ( $erl.length ) {
-
-			$('body').addClass('fixed-deck');
-			//$('.elgg-page-default .elgg-page-body > .elgg-inner').css('width','100%');
-			elgg.deck_river.SetColumnsHeight();
-			elgg.deck_river.SetColumnsWidth();
-
-			// load columns
-			$erl.find('.column-river').each(function() {
-				elgg.deck_river.LoadRiver($(this), elgg.deck_river.getColumnSettings($(this)));
-			});
-
-			// arrow to scroll deck columns
-			var $drl = $erl.find('#deck-river-lists');
-
-			$('.deck-river-scroll-arrow.left span').click(function() {
-				$drl.scrollTo(Math.max(0, $drl.scrollLeft()-$(window).width()+40), 500, {easing:'easeOutQuart'});
-				$erl.find('.deck-river-scroll-arrow.right span').removeClass('hidden');
-			});
-			$('.deck-river-scroll-arrow.right span').click(function() {
-				$drl.scrollTo($drl.scrollLeft()+$(window).width()-40, 500, {easing:'easeOutQuart'});
-				$erl.find('.deck-river-scroll-arrow.left span').removeClass('hidden');
-			});
-			$drl.unbind('scroll').scroll(function() {
-				var $this = $(this),
-					containerWidth = $erl.find('.deck-river-lists-container').width() - $this.width()
-					arrows = $erl.find('.deck-river-scroll-arrow');
-
-				if ($this.scrollLeft() == 0) {
-					arrows.filter('.left').find('span').addClass('hidden').next().html('');
-				} else if ($this.scrollLeft() > containerWidth-2) { // -2 cause scroll bar on OSX
-					arrows.filter('.right').find('span').addClass('hidden').prev().html('');
-				} else {
-					arrows.find('span').removeClass('hidden');
-				}
-			});
-			if ($drl.get(0).scrollWidth == $drl.get(0).clientWidth) $erl.find('.deck-river-scroll-arrow span').addClass('hidden');
-
-			// auto scroll columns
-			$erl.find('.elgg-river').bind('scroll.moreItem', function() {
-				var $this = $(this),
-					$rtt = $this.closest('.column-river').find('.river-to-top');
-
-				if ($this.scrollTop()+$this.height() == $this.get(0).scrollHeight) {
-					$this.find('.moreItem').click();
-				}
-				if ($this.scrollTop() > 0) {
-					$rtt.removeClass('hidden');
-				} else {
-					$rtt.addClass('hidden');
-				}
-			});
-			$('.river-to-top').live('click', function() {
-				$(this).closest('.column-river').find('.elgg-river').scrollTo(0, 500, {easing:'easeOutQuart'});
-			});
-
-		} else {
+		if (!$('.elgg-river-layout:not(.hidden)').length) {
 			$('body').removeClass('fixed-deck');
+		} else {
+
+			// hack to see if there is some facebook accounts, and asynchronious load FB SDK
+			if (JSON.stringify(deckRiverSettings).match(/network":"facebook/)) {
+				elgg.deck_river.initFacebook();
+			}
+
+			elgg.deck_river.reload();
+
 		}
-
-		if ($('#json-river-thread').length) { // page for single river item view, displayed in his thread
-			var rThread = $('#json-river-thread');
-			$('.elgg-river.single-view').html(elgg.deck_river.elggDisplayItems($.parseJSON(rThread.text())));
-			$('.single-view .item-elgg-'+rThread.data('message-id')).addClass('viewed');
-		}
-		if ($('#json-river-owner').length) { // page owner river view
-			elgg.deck_river.LoadRiver($('.elgg-page .column-river'), $('#json-river-owner').data());
-		}
-
-		$('.facebook-comment-form .elgg-button').die().live('click', function() {
-			var $this = $(this),
-				settings = elgg.deck_river.getColumnSettings($this.closest('.column-river')),
-				$txt = $this.prev('textarea');
-
-			elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1], 'comments', {
-				message: $this.prev('textarea').val(),
-				access_token: settings.token
-			}, function(response) {
-				if (response.id) {
-					var date = Date(),
-						dateF = date.FormatDate(),
-						data = {
-							id: response.id,
-							from: {
-								name: settings.username,
-								id: settings.user_id
-							},
-							created_time: date,
-							posted: dateF,
-							friendly_time: elgg.friendly_time(dateF),
-							message: $txt.val()
-						};
-					$this.closest('.elgg-body').find('.elgg-list-comments').append(Mustache.render($('#erFBt-comment').html(), data));
-					$txt.val('');
-				}
-			});
-		});
-
 	});
 
 	$(window).bind('resize.deck_river', function() {
@@ -131,222 +42,99 @@ elgg.deck_river.init = function() {
 			elgg.deck_river.resizeRiverImages();
 		}
 	});
-
-	$('.add_social_network').die().live('click', function() {
-		elgg.deck_river.createPopup('add_social_network', elgg.echo('deck-river:add:network'), function() {
-			$('#add_social_network').find('.elgg-icon-push-pin').remove();
-		});
-		elgg.post('ajax/view/deck_river/ajax_view/add_social_network', {
-			dataType: "html",
-			success: function(response) {
-				$('#add_social_network').find('.elgg-body').html(response);
-			}
-		});
-	});
-	$('#authorize-twitter, #authorize-facebook').die().live('click', function(){
-		elgg.action('deck_river/network/getLoginUrl', {
-			data: {
-				network: $(this).attr('id').replace('authorize-', '')
-			},
-			success: function(json) {
-				window.open(json.output, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
-			}
-		});
-		return false;
-	});
-
-	// filter
-	$('.elgg-column-filter-button, .column-header .filtered, .column-filter .close-filter').die().live('click', function() {
-		var $cr = $(this).closest('.column-river'),
-			$cf = $cr.find('.column-filter').toggleClass('elgg-state-active'),
-			$er = $cr.find('.elgg-river');
-
-		if ($cf.hasClass('elgg-state-active')) {
-			var cfH = $cf.height('auto').height();
-			$cf.css({height: 0, display: 'block'}).stop(true, true).animate({height: cfH}, 200);
-			$er.stop(true, true).animate({height: '-='+(cfH+15)});
-		} else {
-			var cfH = $cf.height();
-			$cf.stop(true, true).animate({height: 0}, 200, function() {
-				$(this).css({display: 'none'});
-			});
-			$er.stop(true, true).animate({height: '+='+(cfH+15)});
-		}
-		return false;
-	});
-	$('.column-filter .elgg-input-checkbox').die().live('click', function() {
-		var $cf = $(this).closest('.column-filter');
-		if ( $(this).val() == 'All' ) {
-			$cf.find('.elgg-input-checkbox').not($(this)).prop('checked', $(this).is(':checked'));
-		} else {
-			$cf.find('.elgg-input-checkbox[value="All"]').prop('checked', false);
-		}
-	});
-	$('.column-filter .elgg-button-submit').die().live('click', function() {
-		var TheColumn = $(this).closest('.column-river'),
-			$f = TheColumn.find('.filtered'),
-			fState = $f.hasClass('hidden'),
-			columnSettings = elgg.deck_river.getColumnSettings(TheColumn),
-			count = 0;
-
-			columnSettings.types_filter = [];
-			columnSettings.subtypes_filter = [];
-
-		$.each(TheColumn.find('.column-filter .types:checkbox:checked'), function() {
-			columnSettings.types_filter.push(this.value);
-			if (this.value == 'All') return false;
-			$f.removeClass('hidden');
-		});
-		count += columnSettings.types_filter.length;
-
-		if (columnSettings.types_filter[0] != 'All') {
-			$.each(TheColumn.find('.column-filter .subtypes:checkbox:checked'), function() {
-				columnSettings.subtypes_filter.push(this.value);
-			});
-			$f.removeClass('hidden');
-		} else {
-			$f.addClass('hidden');
-			delete columnSettings.types_filter;
-		}
-		count += columnSettings.subtypes_filter.length;
-
-		if (count == 0) {
-			elgg.system_message(elgg.echo('deck_river:error:no_filter'));
-			fState ? $f.addClass('hidden') : $f.removeClass('hidden');
-		} else {
-			// make call
-			if (columnSettings.direct == false) delete columnSettings.direct;
-			elgg.deck_river.setColumnSettings(TheColumn, columnSettings);
-			var clonedSettings = $.extend(true, {}, columnSettings);
-
-			clonedSettings.save_settings = columnSettings; // we tell we want to save settings
-			delete clonedSettings.save_settings.tab;
-			delete clonedSettings.save_settings.column;
-			delete columnSettings;
-			TheColumn.find('.elgg-river').html('<div class="elgg-ajax-loader"></div>');
-			elgg.deck_river.LoadRiver(TheColumn, clonedSettings);
-		}
-		return false;
-	});
-
-	// refresh column, use 'live' for new column
-	$('.elgg-column-refresh-button').die().live('click', function() {
-		var TheColumn = $(this).closest('.column-river');
-		elgg.deck_river.RefreshColumn(TheColumn, elgg.deck_river.getColumnSettings(TheColumn));
-	});
-
-	// refresh all columns
-	$('.elgg-refresh-all-button').die().live('click', function() {
-		$('.elgg-river-layout:not(.hidden) .deck-river-scroll-arrow div').html('');
-		$('.elgg-river-layout:not(.hidden) .elgg-column-refresh-button').each(function() {
-			$(this).click();
-		});
-	});
-
-	// load more in column
-	$('.moreItem').die().live('click', function() {
-		var TheColumn = $(this).closest('.column-river'),
-			settings = elgg.deck_river.getColumnSettings(TheColumn) || TheColumn.children('.column-header').data();
-		elgg.deck_river.LoadMore(TheColumn, settings);
-	});
-
-	// hide alert or other messages in column
-	$('.column-messages').die().live('click', function() {
-		$(this).stop(true, true).toggle('slide',{direction: 'up'}, 300, function() {$(this).html('')});
-	});
-
-	// Column settings
-	$('.elgg-column-edit-button').die().live('click', function() {
-		elgg.deck_river.ColumnSettings($(this).closest('.column-river'));
-	});
-
-	// Delete tabs
-	$('.delete-tab').die().live('click', function() {
-		var tab = $(this).closest('li').text();
-		var tab_string = tab.charAt(0).toUpperCase() + tab.slice(1);
-		if (confirm(elgg.echo('deck_river:delete:tab:confirm', [tab_string]))) {
-			// delete tab through ajax
-			elgg.action('deck_river/tab/delete', {
-				data: {
-					tab: tab
-				},
-				success: function(response) {
-					if (response.status == 0 ) {
-						deckRiverSettings = response.output;
-						$('li.elgg-menu-item-'+tab).remove();
-					}
-				}
-			});
-		}
-		return false;
-	});
-
-	// rename column button
-	$('.elgg-form-deck-river-tab-rename .elgg-button-submit').die().live('click', function() {
-		elgg.action('deck_river/tab/rename', {
-			data: $(this).closest('.elgg-form').serialize(),
-			success: function(json) {
-				if (json.status != -1) {
-					deckRiverSettings = json.output.user_river_settings;
-					$('#deck-river-lists').data('tab', json.output.tab_name);
-					$('.elgg-menu-item-'+json.output.old_tab_name+' a').text(json.output.tab_name.charAt(0).toUpperCase() + json.output.tab_name.slice(1));
-					$('.elgg-menu-item-'+json.output.old_tab_name).removeClass('elgg-menu-item-'+json.output.old_tab_name).addClass('elgg-menu-item-'+json.output.tab_name);
-				}
-			}
-		});
-		$('body').click();
-		return false;
-	});
-
-	// Add new column
-	$('.elgg-add-new-column').die().live('click', function() {
-		if ($('.elgg-river-layout:not(.hidden) .column-river').length >= deck_river_max_nbr_columns) {
-			elgg.system_message(elgg.echo('deck_river:limitColumnReached'));
-		} else {
-			elgg.deck_river.ColumnSettings();
-		}
-	});
-
-	// make columns sortable
-	$('.deck-river-lists-container').sortable({
-		items: '.column-river',
-		connectWith: '.deck-river-lists-container',
-		handle: '.column-handle',
-		forcePlaceholderSize: true,
-		placeholder: 'column-placeholder',
-		opacity: 0.8,
-		revert: 500,
-		start: function(event, ui) { $('.column-placeholder').css('width', $('.column-header').width()-3); },
-		update: elgg.deck_river.MoveColumn
-	});
-
-	// load discussion
-	$('.elgg-river-responses a.thread').die().live('click', function() {
-		elgg.deck_river.LoadDiscussion($(this));
-	});
-
-	// dropdown menu
-	$('.elgg-submenu').die().live('click', function() {
-		var $this = $(this);
-
-		$this.addClass('elgg-state-active');
-		if (!$this.hasClass('elgg-button-dropdown')) {
-			$this.find('.elgg-module-popup').add($this.closest('.elgg-list-item')).mouseleave(function() {
-				$this.removeClass('elgg-state-active');
-				$(document).unbind('click.submenu');
-			});
-		} else if ($this.hasClass('invert')) {
-			var m = $this.find('.elgg-menu');
-			m.css('top', - m.height() -5);
-		}
-		$(document).unbind('click.submenu').bind('click.submenu', function() {
-			$this.removeClass('elgg-state-active');
-			$(document).unbind('click.submenu');
-		});
-	});
-
 };
 elgg.register_hook_handler('init', 'system', elgg.deck_river.init);
+
+
+
+elgg.deck_river.reload = function() {
+	// Ggouv use HTML5 History capacity. It's make elgg full ajax. So, we can "stack" the deck-river and go back intantanely.
+	// For that, we hidden the deck, and all tabs are stored in DOM.
+	// If user go to a tab not already loaded, we reload only some stuffs, and only DOM of the new tab need to be traited.
+	var $erl = $('.elgg-river-layout:not(.hidden)'); // ... so, we select only visible layout.
+
+	if (!$erl.length) {
+		$('body').removeClass('fixed-deck');
+	} else {
+
+		$('body').addClass('fixed-deck');
+		elgg.deck_river.SetColumnsHeight();
+		elgg.deck_river.SetColumnsWidth();
+
+		// page for single river item view, displayed in his thread
+		if ($('#json-river-thread').length) {
+			var rThread = $('#json-river-thread');
+			$('.elgg-river.single-view').html(elgg.deck_river.elggDisplayItems($.parseJSON(rThread.text())));
+			$('.single-view .item-elgg-'+rThread.data('message-id')).addClass('viewed');
+		}
+
+		// page owner river view
+		if ($('#json-river-owner').length) {
+			elgg.deck_river.LoadRiver($('.elgg-page .column-river'), $('#json-river-owner').data());
+		}
+
+		// make columns sortable
+		$erl.find('.deck-river-lists-container').sortable({
+			items: '.column-river',
+			connectWith: '.deck-river-lists-container',
+			handle: '.column-handle',
+			forcePlaceholderSize: true,
+			placeholder: 'column-placeholder',
+			opacity: 0.8,
+			revert: 500,
+			start: function(event, ui) { $('.column-placeholder').css('width', $('.column-header').width()-3); },
+			update: elgg.deck_river.MoveColumn
+		});
+
+		// load columns
+		$erl.find('.column-river').each(function() {
+			elgg.deck_river.LoadRiver($(this), elgg.deck_river.getColumnSettings($(this)));
+		});
+
+		// arrow to scroll deck columns
+		var $drl = $erl.find('#deck-river-lists');
+
+		$('.deck-river-scroll-arrow.left span').click(function() {
+			$drl.scrollTo(Math.max(0, $drl.scrollLeft()-$(window).width()+40), 500, {easing:'easeOutQuart'});
+			$erl.find('.deck-river-scroll-arrow.right span').removeClass('hidden');
+		});
+		$('.deck-river-scroll-arrow.right span').click(function() {
+			$drl.scrollTo($drl.scrollLeft()+$(window).width()-40, 500, {easing:'easeOutQuart'});
+			$erl.find('.deck-river-scroll-arrow.left span').removeClass('hidden');
+		});
+		$drl.unbind('scroll').scroll(function() {
+			var $this = $(this),
+				containerWidth = $erl.find('.deck-river-lists-container').width() - $this.width()
+				arrows = $erl.find('.deck-river-scroll-arrow');
+
+			if ($this.scrollLeft() == 0) {
+				arrows.filter('.left').find('span').addClass('hidden').next().html('');
+			} else if ($this.scrollLeft() > containerWidth-2) { // -2 cause scroll bar on OSX
+				arrows.filter('.right').find('span').addClass('hidden').prev().html('');
+			} else {
+				arrows.find('span').removeClass('hidden');
+			}
+		});
+		if ($drl.get(0).scrollWidth == $drl.get(0).clientWidth) $erl.find('.deck-river-scroll-arrow span').addClass('hidden');
+
+		// auto scroll columns
+		$erl.find('.elgg-river').bind('scroll.moreItem', function() {
+			var $this = $(this),
+				$rtt = $this.closest('.column-river').find('.river-to-top');
+
+			if ($this.scrollTop()+$this.height() == $this.get(0).scrollHeight) {
+				$this.find('.moreItem').click();
+			}
+			if ($this.scrollTop() > 0) {
+				$rtt.removeClass('hidden');
+			} else {
+				$rtt.addClass('hidden');
+			}
+		});
+
+	}
+
+};
 
 
 
@@ -627,84 +415,6 @@ elgg.deck_river.SetColumnsWidth = function() {
 };
 
 
-/**
- * Update each minute all friendly times
- *
- */
-elgg.provide('elgg.friendly_time');
-
-elgg.friendly_time = function(time) {
-
-	//TODO friendly:time hook
-
-	diff = new Date().getTime()/1000 - parseInt(time);
-
-	minute = 60;
-	hour = minute * 60;
-	day = hour * 24;
-
-	if (diff < minute) {
-			return elgg.echo("friendlytime:justnow");
-	} else if (diff < hour) {
-		diff = Math.round(diff / minute);
-		if (diff == 0) {
-			diff = 1;
-		}
-
-		if (diff > 1) {
-			return elgg.echo("friendlytime:minutes", [diff]);
-		} else {
-			return elgg.echo("friendlytime:minutes:singular", [diff]);
-		}
-	} else if (diff < day) {
-		diff = Math.round(diff / hour);
-		if (diff == 0) {
-			diff = 1;
-		}
-
-		if (diff > 1) {
-			return elgg.echo("friendlytime:hours", [diff]);
-		} else {
-			return elgg.echo("friendlytime:hours:singular", [diff]);
-		}
-	} else {
-		diff = Math.round(diff / day);
-		if (diff == 0) {
-			diff = 1;
-		}
-
-		if (diff > 1) {
-			return elgg.echo("friendlytime:days", [diff]);
-		} else {
-			return elgg.echo("friendlytime:days:singular", [diff]);
-		}
-	}
-}
-
-elgg.friendly_time.update = function() {
-	$('.elgg-page .elgg-friendlytime').each(function(){
-		var acronym = $(this).find('acronym');
-		acronym.html(elgg.friendly_time(acronym.attr('time')));
-	});
-}
-
-elgg.friendly_time.init = function() {
-	elgg.friendly_time.update();
-	setInterval(elgg.friendly_time.update, 1000*60); // each 60 sec
-};
-
-elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
 
 
 
-/**
- * Function serializeObject
- * Copied from https://github.com/macek/jquery-serialize-object
- * Version 1.0.0
- */
-(function(f){return f.fn.serializeObject=function(){var k,l,m,n,p,g,c,h=this;g={};c={};k=/^[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/;l=/[a-zA-Z0-9_]+|(?=\[\])/g;m=/^$/;n=/^\d+$/;p=/^[a-zA-Z0-9_]+$/;this.build=function(d,e,a){d[e]=a;return d};this.push_counter=function(d){void 0===c[d]&&(c[d]=0);return c[d]++};f.each(f(this).serializeArray(),function(d,e){var a,c,b,j;if(k.test(e.name)){c=e.name.match(l);b=e.value;for(j=e.name;void 0!==(a=c.pop());)m.test(a)?(a=RegExp("\\["+a+"\\]$"),j=
-j.replace(a,""),b=h.build([],h.push_counter(j),b)):n.test(a)?b=h.build([],a,b):p.test(a)&&(b=h.build({},a,b));return g=f.extend(!0,g,b)}});return g}})(jQuery);
-
-
-
-// End of js for deck-river plugin

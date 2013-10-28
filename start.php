@@ -21,12 +21,7 @@ function deck_river_init() {
 	elgg_load_library('alphaGUID');
 
 	elgg_extend_view('css/elgg','deck_river/css');
-	elgg_extend_view('js/elgg', 'deck_river/js/init');
-	elgg_extend_view('js/elgg', 'deck_river/js/thewire');
-	elgg_extend_view('js/elgg', 'deck_river/js/popups');
-	elgg_extend_view('js/elgg', 'deck_river/js/loaders');
-	elgg_extend_view('js/elgg', 'deck_river/js/shortener_url');
-	elgg_extend_view('js/elgg', 'deck_river/js/river_templates');
+	elgg_extend_view('js/elgg', 'deck_river/js');
 	elgg_extend_view('page/elements/foot', 'deck_river/templates_mustache', 499);
 	elgg_extend_view('page/elements/foot', 'page/layouts/content/deck_river_add_new_tab', 500);
 
