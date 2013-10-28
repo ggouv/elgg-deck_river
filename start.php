@@ -11,18 +11,23 @@ elgg_register_event_handler('init','system','deck_river_init');
 
 function deck_river_init() {
 
-	elgg_register_library('deck_river:river_loader', elgg_get_plugins_path() . 'elgg-deck_river/lib/river_loader.php');
-	elgg_register_library('deck_river:api', elgg_get_plugins_path() . 'elgg-deck_river/lib/api.php');
-	elgg_register_library('deck_river:authorize', elgg_get_plugins_path() . 'elgg-deck_river/lib/authorize.php');
-	elgg_register_library('deck_river:twitter_async', elgg_get_plugins_path() . 'elgg-deck_river/vendors/load_twitter_async.php');
-	elgg_register_library('deck_river:facebook_sdk', elgg_get_plugins_path() . 'elgg-deck_river/vendors/facebook-php-sdk/src/facebook.php');
-	elgg_register_library('alphaGUID', elgg_get_plugins_path() . 'elgg-deck_river/vendors/alphaID.inc.php');
+	$path = elgg_get_plugins_path() . 'elgg-deck_river/';
+	elgg_register_library('deck_river:river_loader', $path . 'lib/river_loader.php');
+	elgg_register_library('deck_river:api', $path . 'lib/api.php');
+	elgg_register_library('deck_river:authorize', $path . 'lib/authorize.php');
+	elgg_register_library('deck_river:twitter_async', $path . 'vendors/load_twitter_async.php');
+	elgg_register_library('deck_river:facebook_sdk', $path . 'vendors/facebook-php-sdk/src/facebook.php');
+	elgg_register_library('alphaGUID', $path . 'vendors/alphaID.inc.php');
 
 	elgg_load_library('alphaGUID');
 
+	elgg_register_js('jquery.caretposition', '/mod/elgg-deck_river/vendors/jquery.caretposition.js', 'footer');
+
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js');
-	elgg_extend_view('page/elements/foot', 'deck_river/templates_mustache', 499);
+	elgg_extend_view('page/elements/foot', 'deck_river/mustaches_wrapper', 499);
+	elgg_extend_view('deck_river/mustaches/main_templates', 'deck_river/mustaches/linkbox');
+
 	elgg_extend_view('page/elements/foot', 'page/layouts/content/deck_river_add_new_tab', 500);
 
 	elgg_register_ajax_view('deck_river/ajax_json/column_river');
@@ -41,6 +46,7 @@ function deck_river_init() {
 	elgg_register_page_handler('message', 'deck_river_wire_page_handler');
 	elgg_register_page_handler('authorize', 'authorize_page_handler');
 	elgg_register_page_handler('u', 'alphaGUID_page_handler');
+	elgg_register_page_handler('bookmarklet', 'bookmarklet_handler');
 
 	// register actions
 	$action_path = elgg_get_plugins_path() . 'elgg-deck_river/actions';
@@ -204,6 +210,23 @@ function alphaGUID_page_handler($page) {
 
 }
 
+
+/* bookmarklet */
+function bookmarklet_handler($page) {
+
+	switch ($page[0]) {
+		default:
+		case 'popup':
+			require_once(elgg_get_plugins_path() . 'elgg-deck_river/pages/bookmarklet/popup.php');
+			break;
+		case 'install':
+			elgg_push_breadcrumb(elgg_echo('bookmarklet'));
+			include elgg_get_plugins_path() . 'elgg-deck_river/pages/bookmarklet/install.php';
+			break;
+	}
+
+	return true;
+}
 
 
 /* add a menu in user settings page */

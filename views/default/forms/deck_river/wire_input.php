@@ -5,6 +5,8 @@
 
 $user = elgg_get_logged_in_user_entity();
 
+$bookmarklet = elgg_extract('bookmarklet', $vars, false);
+
 if (!$user) {
 	return false;
 }
@@ -33,9 +35,9 @@ $position = 0;
 
 ?>
 
-<div id="thewire-header">
-	<div id="thewire-textarea-border"></div>
-	<textarea id="thewire-textarea" name="body"></textarea>
+<div id="thewire-header"<?php if ($bookmarklet) echo ' class="extended"'; ?>>
+	<?php if (!$bookmarklet) { ?><div id="thewire-textarea-border"></div><?php } ?>
+	<textarea id="thewire-textarea" name="body"><?php echo $bookmarklet; ?></textarea>
 	<div class="options hidden">
 		<div class="responseTo hidden tooltip s" title="<?php echo elgg_echo('responseToHelper:delete');?>"></div>
 		<input class="parent" type="hidden" name="">
@@ -78,7 +80,7 @@ $position = 0;
 	</div>
 </div>
 
-<div id="thewire-network">
+<div id="thewire-network"<?php if ($bookmarklet) echo ' class="extended"'; ?>>
 	<div class="selected-profile">
 		<div class="net-profile float mls elgg ggouv">
 			<input type="hidden" value="<?php echo $user->getGUID(); ?>" name="networks[]" data-network="elgg">
@@ -112,7 +114,7 @@ $position = 0;
 			}
 		?>
 	</div>
-	<div class="more_networks gwf tooltip w t5 phs" title="<?php echo elgg_echo('deck-river:add:network'); ?>">+</div>
+	<?php if (!$bookmarklet) { ?><div class="more_networks gwf tooltip w t5 phs" title="<?php echo elgg_echo('deck-river:add:network'); ?>">+</div><?php } ?>
 	<div class="non-pinned clearfloat hidden">
 		<div class="helper tooltip w" title="<?php echo htmlspecialchars(elgg_echo('deck-river:add:network:helper')); ?>"><div><?php echo elgg_echo('deck-river:add:network:slide'); ?></div></div>
 		<div class="content">
@@ -130,6 +132,7 @@ $position = 0;
 				?>
 				</div>
 			</div>
+			<?php if (!$bookmarklet) { ?>
 			<div class="footer">
 				<ul>
 					<li>
@@ -151,6 +154,7 @@ $position = 0;
 					</li>
 				</ul>
 			</div>
+			<?php } ?>
 		</div>
 	</div>
 </div>

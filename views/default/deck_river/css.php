@@ -134,7 +134,7 @@ body {
 	top: 8px;
 }
 #thewire-header.extended #thewire-textarea {
-	height: 115px !important;
+	height: 129px !important;
 }
 #thewire-header.extended {
 	border-radius: 6px 6px 0 0;

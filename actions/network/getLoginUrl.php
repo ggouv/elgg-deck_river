@@ -1,6 +1,6 @@
 <?php
 /**
- * Action for twitter
+ * Action to send app token access for facebook or twitter.
  */
 
 action_gatekeeper();

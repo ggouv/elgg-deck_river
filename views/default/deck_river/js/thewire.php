@@ -4,8 +4,8 @@
  */
 elgg.provide('elgg.thewire');
 
+var linkParsed = null;
 elgg.thewire.init = function() {
-	var linkParsed = null;
 
 	$('#linkbox div.image-wrapper').live('click', function() {
 		$(this).toggleClass('noimg');
@@ -57,57 +57,16 @@ elgg.thewire.init = function() {
 		}
 	}).live('keyup', function() {
 		var $twF = $(this).closest('form'),
-			$lb = $('#linkbox'),
 			urls = elgg.thewire.textCounter();
 
 		// scrap first url
 		// We check before if there is network which need scrapping with data-scrap
 		if (urls && $twF.find('input[name="networks[]"][data-scrap]').length && linkParsed != urls[0]) {
 			linkParsed = urls[0];
-			elgg.thewire.scrapWebpage(urls[0], {
-				beforeSend: function() {
-					$lb.removeClass('hidden');
-					elgg.thewire.resize();
-				},
-				success: function(data) {
-					if (data) {
-						if (!data.title || elgg.isNull(data.title)) data.title = data.url;
-						data.title = $('<div>').html(data.title).text(); // decode html entities
-						if (data.metatags) {
-							$.grep(data.metatags, function(e) {
-								if (e[0] == 'description') data.description = $('<div>').html(e[1]).text();
-							});
-						}
-						data.mainimage = data.images[0].src;
-						data.images.shift();
-						data.src = function() {
-							return this.src;
-						};
-
-						$lb.html(Mustache.render($('#linkbox-template').html(), data));
-						elgg.thewire.resize();
-
-						$lb.find('li.image-wrapper').click(function() {
-							var $ei = $('#linkbox .elgg-image'),
-								first = $ei.children().first(),
-								firstHtml = first.html();
-
-							first.html(this.innerHTML);
-							$(this).html(firstHtml);
-							return false;
-						});
-
-					} else {
-						$lb.html(elgg.echo('error'));
-					}
-				},
-				error: function() {
-					console.log('erreur');
-				}
-			});
+			elgg.thewire.scrapToLinkBox(linkParsed);
 		}
 	});
-	$('html').die().live('click', function(e) { //Hide thewire menu if visible
+	$('html:not(.bookmarklet)').die().live('click.thewire', function(e) { //Hide thewire menu if visible
 		if (!$(e.target).closest('.elgg-form-deck-river-wire-input').length) {
 			elgg.thewire.resize('close');
 		}
@@ -137,7 +96,7 @@ elgg.thewire.init = function() {
 		return false;
 	});
 	$('#thewire-network .more_networks, #thewire-network .selected-profile').die().live('click', function() {
-		$('#thewire-network').toggleClass('extended');
+		if (!$('html').hasClass('bookmarklet')) $('#thewire-network').toggleClass('extended');
 		return false;
 	});
 	$('#thewire-network .pin').die().live('click', function() {
@@ -223,7 +182,13 @@ elgg.thewire.resize = function(action) {
 		$twH.add($twTB).css({height: 33});
 		$twH.add($twN).removeClass('extended');
 	} else {
-		$twH.add($twTB).css({height: ($twH.addClass('extended').find('.options').height()+117)});
+		$twH.add($twTB).css({height: ($twH.addClass('extended').find('.options').height()+131)});
+		if ($('html').hasClass('bookmarklet')) {
+			var newH = $twH.height() + 98;
+			window.resizeTo($twH.width()+$twN.width()+21, newH);
+			$('.elgg-page-header').height(newH);
+			$('#thewire-network').find('.net-profiles').height(newH-126);
+		}
 	}
 };
 
@@ -381,6 +346,60 @@ elgg.thewire.manageNetworks = function() {
 		}
 	});
 };
+
+
+
+/**
+ * Parse link and add data to linkbox
+ * @param  {[type]} url the url
+ */
+elgg.thewire.scrapToLinkBox = function(url) {
+	var $lb = $('#linkbox');
+	elgg.thewire.scrapWebpage(url, {
+		beforeSend: function() {
+			$lb.removeClass('hidden');
+			elgg.thewire.resize();
+		},
+		success: function(data) {
+			if (data) {
+				if (!data.title || elgg.isNull(data.title)) data.title = data.url;
+				data.title = $('<div>').html(data.title).text(); // decode html entities
+				if (data.metatags) {
+					$.grep(data.metatags, function(e) {
+						if (e[0] == 'description') data.description = $('<div>').html(e[1]).text();
+					});
+				}
+				if (data.images.length) {
+					data.mainimage = data.images[0].src;
+					data.images.shift();
+				}
+				data.src = function() {
+					return this.src;
+				};
+
+				$lb.html(Mustache.render($('#linkbox-template').html(), data));
+
+				$lb.find('li.image-wrapper').click(function() {
+					var $ei = $('#linkbox .elgg-image'),
+						first = $ei.children().first(),
+						firstHtml = first.html();
+
+					first.html(this.innerHTML);
+					$(this).html(firstHtml);
+					return false;
+				});
+
+			} else {
+				$lb.addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
+			}
+			elgg.thewire.resize();
+		},
+		error: function() {
+			console.log('error');
+		}
+	});
+};
+
 
 
 /**
