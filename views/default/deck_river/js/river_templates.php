@@ -224,7 +224,7 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 			var tw = this.width, th = this.height,
 				$eri = $('#img'+e.id).data('img', [tw, th]).parent();
 
-			if (tw >= $eri.width() || tw >= 600) $('#img'+e.id).height(Math.min($eri.addClass('big').width(), '600')/tw*th);
+			if (tw >= $eri.width() || tw >= 600 || $eri.find('.elgg-body').html().replace(/\s+/, '') == '') $('#img'+e.id).height(Math.min($eri.addClass('big').width(), '600')/tw*th);
 			if (tw <= 1) $('#img'+e.id).remove(); // Don' know why, but sometimes facebook return a "safe_image" with 1x1 pixels
 		};
 		img.onerror = function() {$('#img'+e.id).remove()};

@@ -410,9 +410,9 @@
 						<div id="img{{id}}" class="elgg-image float gwfb" style="background-image: url({{full_picture}});"></div>
 						{{/full_picture}}
 						<div class="elgg-body">
-							<h4>{{name}}</h4>
-							<span class="elgg-subtext">{{caption}}</span>
-							<div>{{{description}}}</div>
+							{{#name}}<h4>{{name}}</h4>{{/name}}
+							{{#caption}}<span class="elgg-subtext">{{caption}}</span>{{/caption}}
+							{{#description}}<div>{{{description}}}</div>{{/description}}
 						</div>
 					</div>
 				</a>

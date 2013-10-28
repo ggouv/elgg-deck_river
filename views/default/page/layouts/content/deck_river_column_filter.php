@@ -42,8 +42,8 @@ if (!empty($registered_entities)) {
 	}
 
 	// types
-	// Don't need to show user and group for mention column
-	if (in_array($column_settings['type'], array('mention', 'group_mention'))) $types_label = array_slice($types_label, 0, 1);
+	// Don't need to show user and group for mention column and group column
+	if (in_array($column_settings['type'], array('mention', 'group_mention', 'groups', 'group'))) $types_label = array_slice($types_label, 0, 1);
 
 	$filter .= '<ul class="elgg-input-checkboxes elgg-vertical clearfloat pbs phs">';
 	foreach ($types_label as $label => $type) {

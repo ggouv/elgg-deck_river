@@ -135,7 +135,7 @@ elgg.deck_river.resizeRiverImages = function() {
 		var s = $(e).data('img'),
 			$eri = $(e).parent();
 
-		if (s[0] >= $eri.width() || s[0] >= 600) {
+		if (s[0] >= $eri.width() || s[0] >= 600 || $eri.find('.elgg-body').html().replace(/\s+/, '') == '') {
 			$(e).height(Math.min($eri.addClass('big').width(),'600')/s[0]*s[1]);
 		} else {
 			$eri.removeAttr('big')

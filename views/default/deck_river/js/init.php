@@ -21,14 +21,15 @@ elgg.provide('elgg.deck_river');
 
 elgg.deck_river.init = function() {
 	$(document).ready(function() {
+
+		// hack to see if there is some facebook accounts, and asynchronious load FB SDK
+		if (JSON.stringify(deckRiverSettings).match(/network":"facebook/)) {
+			elgg.deck_river.initFacebook();
+		}
+
 		if (!$('.elgg-river-layout:not(.hidden)').length) {
 			$('body').removeClass('fixed-deck');
 		} else {
-
-			// hack to see if there is some facebook accounts, and asynchronious load FB SDK
-			if (JSON.stringify(deckRiverSettings).match(/network":"facebook/)) {
-				elgg.deck_river.initFacebook();
-			}
 
 			elgg.deck_river.reload();
 
@@ -270,6 +271,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 								return false;
 							}
 
+							elgg.deck_river.SetColumnsHeight();
 							TheColumn.find('.elgg-list').html($('<div>', {'class': 'elgg-ajax-loader'}));
 							TheColumn.find('.column-filter').remove();
 							TheColumn.find('.column-header').replaceWith(response.header);
