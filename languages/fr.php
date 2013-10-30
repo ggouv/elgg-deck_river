@@ -31,6 +31,9 @@ $french = array(
 	'responseToHelper:delete' => "Ne plus répondre à %s",
 	'deck_river:column:gotop' => "⬆ %s éléments non-lus ⬆",
 	'deck_river:linkbox:hidepicture' => "Cliquez pour ne pas ajouter d'image",
+	'deck_river:thewire:pinned' => "Épingler le lanceur de message.<br><span class=\"elgg-text-help\">Il ne se fermera pas après l'envoi et le texte sera conservé.</span>",
+	'deck_river:thewire:bookmarklet:pinned' => "Épingler le ggouvlet.<br><span class=\"elgg-text-help\">Il ne se fermera pas après l'envoi et le texte sera conservé.</span>",
+	'deck_river:thewire:clean_textarea' => "Effacer le contenu du lanceur de message",
 
 	'deck_river:helper:friends' => "<span class='gwf'>w</span><br/>Vous n'avez pas d'abonnement ou les personnes que vous suivez n'ont aucune activité.<br/><br/><a href='" . elgg_get_site_url() . "members'>Suivez des personnes</a> dont l'activité pourrait vous intéresser ou cherchez des personnes <a href='" . elgg_get_site_url() . "groups/members/%s'>de votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/members/%s'>votre département</a>.",
 	'deck_river:helper:mine' => "<span class='gwf'>A</span><br/><a href='#' onclick='$(\"#thewire-textarea\").focus();'>Dites bonjour à tout le monde</a> en envoyant un message de bienvenue, votre humeur ou votre motivation...",
@@ -224,6 +227,14 @@ $french = array(
 	'deck_river:facebook:error' => "Erreur avec l'API de Facebook",
 	'deck_river:facebook:error:group:already' => 'Vous avez déjà associé ce groupe !',
 	'deck_river:facebook:liked' => "Votre like a été pris en compte par Facebook !",
+
+
+	// bookmarklet
+	'bookmarks:bookmarklet:description' => "<h2>Installez le ggouvlet !</h2>Il vous permettra de partager du contenu plus rapidement...<br><br>Le ggouvlet est ce qu'on appel un « bookmarklet ». C'est un lien à installer dans la barre de favoris (ou marque-pages) de son navigateur.<br>En cliquant sur ce lien, une fenêtre popup apparaît avec des informations provenant de la page que vous êtes en train de visiter : le lien, le titre de la page, la description du site, des images...<br><br>Vous visitez une page que vous avez envie de partager ? Rien de plus simple, cliquez sur le lien du ggouvlet, entrez votre texte, choisissez vos réseaux et envoyez !<br>",
+	'bookmarklet:popup' => "Ggouvlet",
+	'bookmarklet:popup:title' => "Popup :",
+	'bookmarklet:popup:install' => "Prennez le gros bouton bleu, et faites-le glisser jusqu'à votre barre de favoris de votre navigateur, la haut ⬆",
+	'bookmarklet:popup:button' => "Glissez moi dans vos favoris",
 
 );
 

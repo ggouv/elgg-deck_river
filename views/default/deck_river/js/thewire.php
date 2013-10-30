@@ -12,6 +12,10 @@ elgg.thewire.init = function() {
 		return false;
 	});
 
+	$('#pin-thewire').live('click', function() {
+		$(this).toggleClass('pinned');
+	});
+
 	$('#linkbox .elgg-menu .elgg-icon-delete').live('click', function() {
 		$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
 		elgg.thewire.resize('open');
@@ -143,12 +147,15 @@ elgg.thewire.init = function() {
 							if (networksCount == 1) {
 								$.data(thisSubmit, 'clicked', false);
 								$('#submit-loader').addClass('hidden');
-								$("#thewire-characters-remaining span").html('0');
-								$('#thewire-textarea').val('').closest('.elgg-form').find('.responseTo').addClass('hidden').next('.parent').val('').removeAttr('name');
-								$('.elgg-list-item').removeClass('responseAt');
-								$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
-								elgg.thewire.resize('close');
-								linkParsed = null;
+								if (json.status == 0 && !$('#pin-thewire').hasClass('pinned')) {
+									if ($('html').hasClass('bookmarklet')) window.close();
+									$("#thewire-characters-remaining span").html('0');
+									$('#thewire-textarea').val('').closest('.elgg-form').find('.responseTo').addClass('hidden').next('.parent').val('').removeAttr('name');
+									$('.elgg-list-item').removeClass('responseAt');
+									$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
+									elgg.thewire.resize('close');
+									linkParsed = null;
+								}
 							} else {
 								networksCount--;
 							}
@@ -185,8 +192,7 @@ elgg.thewire.resize = function(action) {
 		$twH.add($twTB).css({height: ($twH.addClass('extended').find('.options').height()+131)});
 		if ($('html').hasClass('bookmarklet')) {
 			var newH = $twH.height() + 98;
-			window.resizeTo($twH.width()+$twN.width()+21, newH);
-			$('.elgg-page-header').height(newH);
+			window.resizeTo($('.elgg-bookmarklet-header').width(), newH+36 + ($.browser.mozilla ? -2 : 0));
 			$('#thewire-network').find('.net-profiles').height(newH-126);
 		}
 	}
@@ -207,11 +213,11 @@ elgg.thewire.textCounter = function() {
 		expression = /http:\/\/[-a-zA-Z0-9_.~]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+,.~#?&//=]*)?/gi,
 		regex = new RegExp(expression),
 		urls = $twT.val().match(regex),
-		remaining_chars = $twT.val().length;
+		nbr_chars = $twT.val().length;
 
-	$twCR.html(remaining_chars);
+	$twCR.html(nbr_chars);
 
-	if (remaining_chars > 140) {
+	if (nbr_chars > 140) {
 		$twCR.css("color", "#D40D12");
 		$(".thewire-button").addClass('elgg-state-disabled').children().attr('disabled', 'disabled');
 	} else {
@@ -274,7 +280,11 @@ elgg.thewire.move_account = function() {
 			}
 		},
 		update: function(e, ui) {
-			if ($(this).hasClass('net-profiles') && ui.position.top > 0) elgg.thewire.manageNetworks();
+			if ($(this).hasClass('net-profiles') && ui.position.top > 0) { // position > 0 mean network has been moved in .net-profiles
+				elgg.thewire.manageNetworks();
+			} else if ($(this).hasClass('selected-profile') && ui.position.top < 0) {
+				if (ui.item.find('input[name="networks[]"][data-scrap]').length) $('#thewire-textarea').keyup();
+			}
 		}
 	}).droppable({
 		accept:      $('.net-profile').not('.ggouv'),
@@ -388,6 +398,26 @@ elgg.thewire.scrapToLinkBox = function(url) {
 					$(this).html(firstHtml);
 					return false;
 				});
+
+				// in popup
+				if ($('html').hasClass('bookmarklet')) {
+					if (data.description) {
+						$('textarea[name="description"]').val(data.description);
+					}
+					if (data.metatags) {
+						$.grep(data.metatags, function(e) {
+							if (e[0] == 'keywords') data.keywords = $('<div>').html(e[1]).text();
+						});
+						if (data.keywords) {
+							var tags = '';
+							$.each(data.keywords.split(','), function(i, e) {
+								if (i == 10) return false;
+								tags += '<li class="elgg-tag link float"><a href"#" onclick="$(\'.elgg-input-tags\').addTag(\''+$.trim(e)+'\');">'+$.trim(e)+'</a></li>';
+							});
+							$('.tags-in-page').removeClass('hidden').filter('ul').append(tags);
+						}
+					}
+				}
 
 			} else {
 				$lb.addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));

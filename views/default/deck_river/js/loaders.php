@@ -351,7 +351,7 @@ elgg.deck_river.displayCount = function(response, TheColumn) {
 			if (TheColumn.find('.top-message').length) {
 				TheColumn.find('.top-message').html(elgg.echo('deck_river:column:gotop', [responseLength]));
 			} else {
-				$('<li>', {'class': 'top-message'}).html(elgg.echo('deck_river:column:gotop', [responseLength])).click(function() {
+				$('<li>', {'class': 'top-message', text: elgg.echo('deck_river:column:gotop', [responseLength])}).click(function() {
 					TheColumnRiver.scrollTo(0, 500, {easing:'easeOutQuart'});
 				}).appendTo(TheColumn.find('.message-box')).effect('slide',{direction: 'up'}, 300);
 				TheColumnRiver.unbind('scroll.topMessage').bind('scroll.topMessage', function() {

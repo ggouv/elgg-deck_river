@@ -49,7 +49,6 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 		value.friendly_time = elgg.friendly_time(value.posted);
 
 		value.text = value.message;
-		console.log();
 		if (value.type == 'object' && value.text) {
 			value.message = value.text.ParseGroup().ParseEverythings('elgg');
 			value.text = $('<div>').html(value.text).text();

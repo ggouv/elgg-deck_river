@@ -123,15 +123,18 @@ body {
 #thewire-header #submit-loader {
 	background-color: white;
 	background-position: 50% center;
-	left: 573px;
 	padding: 2px 8px;
-	top: -25px;
+	left: inherit;
+	top: 8px;
+	right: 65px;
 	z-index: 7004;
+	position: absolute;
 }
 #thewire-header.extended #submit-loader {
-	background: transparent;
-	left: 526px;
-	top: 8px;
+	background-color: transparent;
+	top: inherit;
+	bottom: -26px;
+	right: 115px;
 }
 #thewire-header.extended #thewire-textarea {
 	height: 129px !important;
@@ -183,11 +186,20 @@ body {
 	-moz-box-shadow: inset 0px -10px 10px 2px rgba(0, 0, 0, 0.1);
 	box-shadow: inset 0px -10px 10px 2px rgba(0, 0, 0, 0.1);
 }
+#thewire-header.extended .thewire-buttons {
+	display: block;
+	position: absolute;
+	right: 130px;
+	bottom: -28px;
+}
+#pin-thewire.pinned:before {
+	color: #00CC00;
+}
 #thewire-header.extended > .thewire-button:before {
 	font-size: 40px;
 	left: 2px;
 	right: auto;
-	top: 2px;
+	top: 3px;
 }
 #thewire-header.extended #thewire-submit-button {
 	color: #333333;
@@ -1458,4 +1470,15 @@ a.info-popup.ui-draggable-dragging {
 	font-family: ggouv;
 	font-size: 40px;
 	margin-left: -6px;
+}
+
+.bookmarklet-link {
+	margin: 30px;
+	background: #4690D6;
+	font-size: 0;
+	padding: 10px 20px;
+}
+.bookmarklet-link:before {
+	content: "<?php echo elgg_echo('bookmarklet:popup:button'); ?>";
+	font-size: 20px;
 }
