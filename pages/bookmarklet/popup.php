@@ -62,7 +62,6 @@ $css .= elgg_view('css/elements/grid', $vars);
 $css .= elgg_view('css/elements/components', $vars);
 $css .= elgg_view('css/elements/layout', $vars);
 //$css .= elgg_view('css/elements/misc', $vars);
-$css .= elgg_view('css/elements/helpers');
 $css .= elgg_view('deck_river/css');
 $css .= elgg_view('ggouv_template/css');
 $css .= elgg_view('markdown_ace_editor/css');
@@ -70,6 +69,7 @@ $css .= elgg_view('markdown_wiki/css');
 $css .= elgg_view('markdown_wiki/markdown_css');
 $css .= elgg_view('markdown_wiki/highlight_css');
 $css .= elgg_view('bookmarks/css');
+$css .= elgg_view('css/elements/helpers');
 
 
 // bookmarklet_js doesn't exist. It's a empty view to be extended
@@ -92,7 +92,7 @@ elgg_register_js('showdownggouv', "/mod/elgg-markdown_wiki/vendors/showdown/comp
 elgg_load_js('showdownggouv');
 elgg_register_js('highlight', "/mod/elgg-markdown_wiki/vendors/highlight/highlight.pack.js", 'head', 100);
 elgg_load_js('highlight');
-elgg_register_js('xoxco.tags',"/mod/elgg-ggouv_template/vendors/xoxco_tags/jquery.tagsinput.js");
+elgg_register_js('xoxco.tags',"/mod/elgg-ggouv_template/vendors/xoxco_tags/jquery.tagsinput.min.js");
 elgg_load_js('xoxco.tags');
 //elgg_register_js('elgg.autocomplete', "/mod/elgg-ggouv_template/views/default/js/lib/ui.autocomplete.js");
 //elgg_load_js('elgg.autocomplete');

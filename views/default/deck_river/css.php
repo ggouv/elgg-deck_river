@@ -160,6 +160,20 @@ body {
 	margin-left: 5px;
 	text-align: left;
 }
+#counters-alert {
+	position: absolute;
+	bottom: -24px;
+	left: 45px;
+	font-size: 2.5em;
+}
+#counters-alert li {
+	display: inline-block;
+	width: 12px;
+}
+#counters-alert span:before {
+	padding: 0;
+	color: red;
+}
 #thewire-header.extended #thewire-textarea-bottom {
 	background: #F4F4F4;
 	border-radius: 0 0 6px 6px;

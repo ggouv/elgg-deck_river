@@ -97,6 +97,7 @@ elgg.thewire.init = function() {
 			net_input.attr('name', 'networks[]');
 			$(this).addClass('hidden');
 		}
+		$('#thewire-textarea').keyup();
 		return false;
 	});
 	$('#thewire-network .more_networks, #thewire-network .selected-profile').die().live('click', function() {
@@ -209,20 +210,47 @@ elgg.thewire.textCounter = function() {
 	var $twT = $('#thewire-textarea'),
 		$twCR = $('#thewire-characters-remaining span'),
 		$twF = $twT.closest('form'),
-		$networks = $twF.find('input[name="networks[]"]'),
-		expression = /http:\/\/[-a-zA-Z0-9_.~]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+,.~#?&//=]*)?/gi,
+		networks = {},
+		expression = /https?:\/\/[-a-zA-Z0-9_.~]{1,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+,.~#?&//=]*)?/gi,
 		regex = new RegExp(expression),
 		urls = $twT.val().match(regex),
-		nbr_chars = $twT.val().length;
+		nbr_chars = $twT.val().length,
+		alert = 0,
+		$ca = $('#counters-alert');
 
+	// update counter
 	$twCR.html(nbr_chars);
+	$ca.find('span').addClass('hidden');
 
-	if (nbr_chars > 140) {
-		$twCR.css("color", "#D40D12");
-		$(".thewire-button").addClass('elgg-state-disabled').children().attr('disabled', 'disabled');
+	// put networks in object
+	$.each($('#thewire-network').find('input[name="networks[]"]'), function(i, e) {
+		networks[$(e).data('network')] = true;
+	});
+
+	if (nbr_chars > 140 && networks.elgg) { // elgg limit
+		$ca.find('.icon-elgg').removeClass('hidden');
+		delete networks.elgg;
+		alert = 1;
+	}
+
+	if (networks.twitter && $twT.val().getTweetLength(urls) > 140) { // twitter limit
+		$ca.find('.twitter-icon').removeClass('hidden');
+		delete networks.twitter;
+		alert = 1;
+	}
+
+	if (nbr_chars > 5000 && networks.facebook) { // facebook limit
+		$ca.find('.facebook-icon').removeClass('hidden');
+		delete networks.facebook;
+		alert = 1;
+	}
+
+	if (alert && Object.size(networks) == 0) {
+		$twCR.css("color", "red");
+	} else if (alert) {
+		$twCR.css("color", "orange");
 	} else {
 		$twCR.css("color", "");
-		$(".thewire-button").removeClass('elgg-state-disabled').children().removeAttr('disabled', 'disabled');
 	}
 
 	return urls;
@@ -282,9 +310,8 @@ elgg.thewire.move_account = function() {
 		update: function(e, ui) {
 			if ($(this).hasClass('net-profiles') && ui.position.top > 0) { // position > 0 mean network has been moved in .net-profiles
 				elgg.thewire.manageNetworks();
-			} else if ($(this).hasClass('selected-profile') && ui.position.top < 0) {
-				if (ui.item.find('input[name="networks[]"][data-scrap]').length) $('#thewire-textarea').keyup();
 			}
+			$('#thewire-textarea').keyup();
 		}
 	}).droppable({
 		accept:      $('.net-profile').not('.ggouv'),

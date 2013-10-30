@@ -67,6 +67,11 @@ $position = 0;
 	<div id="thewire-characters-remaining" class="reverse-border">
 		<span>0</span>
 	</div>
+	<ul id="counters-alert">
+		<li class="elgg-count"><span class="hidden gwfb icon-elgg" style="font-size:9px;"></span></li>
+		<li class="twitter-count"><span class="hidden gwfb twitter-icon"></span></li>
+		<li class="facebook-count"><span class="hidden gwfb facebook-icon"></span></li>
+	</ul>
 	<div class="thewire-buttons hidden">
 		<a href="#" onclick="$('#thewire-textarea').val('').keyup();" class="elgg-icon elgg-icon-trash link tooltip s" title="<?php echo elgg_echo('deck_river:thewire:clean_textarea'); ?>"></a>
 		<?php if (!$bookmarklet) echo '<span id="pin-thewire" class="elgg-icon elgg-icon-push-pin link tooltip s plm" title="'.htmlspecialchars(elgg_echo('deck_river:thewire:pinned')).'"></span>'; ?>

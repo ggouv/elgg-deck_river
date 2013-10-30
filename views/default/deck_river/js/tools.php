@@ -208,6 +208,29 @@ String.prototype.addToLargeInt = function (value) {
 	return this.substr(0, this.length-3)+(parseInt(this.substr(-3)) + value);
 };
 
+/**
+ * Returns the length of Tweet text with consideration to t.co URL replacement
+ * and chars outside the basic multilingual plane that use 2 UTF16 code points
+ * These come from https://api.twitter.com/1/help/configuration.json
+ * described by https://dev.twitter.com/docs/api/1/get/help/configuration
+ *
+ * @param  {array}  urls    an array of urls in the text
+ * @return {integer}        length of the text
+ */
+String.prototype.getTweetLength = function(urls) {
+	var urls_length = 0,
+		tco_urls_length = 0;
+
+	if (urls) {
+		$.each(urls, function(i, e) {
+			urls_length += e.length;
+			/^https/.test(e) ? tco_urls_length += 23 : tco_urls_length += 22;
+		});
+		return this.length - urls_length + tco_urls_length;
+	} else {
+		return this.length;
+	}
+};
 
 
 /**
@@ -399,6 +422,14 @@ FBfql = function(query, callback) { //.replace(/foo/g, "bar")
 (function(f){return f.fn.serializeObject=function(){var k,l,m,n,p,g,c,h=this;g={};c={};k=/^[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/;l=/[a-zA-Z0-9_]+|(?=\[\])/g;m=/^$/;n=/^\d+$/;p=/^[a-zA-Z0-9_]+$/;this.build=function(d,e,a){d[e]=a;return d};this.push_counter=function(d){void 0===c[d]&&(c[d]=0);return c[d]++};f.each(f(this).serializeArray(),function(d,e){var a,c,b,j;if(k.test(e.name)){c=e.name.match(l);b=e.value;for(j=e.name;void 0!==(a=c.pop());)m.test(a)?(a=RegExp("\\["+a+"\\]$"),j=
 j.replace(a,""),b=h.build([],h.push_counter(j),b)):n.test(a)?b=h.build([],a,b):p.test(a)&&(b=h.build({},a,b));return g=f.extend(!0,g,b)}});return g}})(jQuery);
 
+
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
 
 
 
