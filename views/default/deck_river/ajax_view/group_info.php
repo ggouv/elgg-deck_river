@@ -11,13 +11,13 @@ if (!$group) {
 	return;
 }
 ?>
-<ul class="elgg-tabs elgg-htabs">
+<ul class="elgg-tabs elgg-htabs man">
 	<li class="elgg-state-selected"><a href="#<?php echo $group_id; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 	<li><a href="#<?php echo $group_id; ?>-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
 	<li><a href="#<?php echo $group_id; ?>-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
 </ul>
 <ul class="elgg-body">
-	<li id="<?php echo $group_id; ?>-info-profile">
+	<li id="<?php echo $group_id; ?>-info-profile" class="mts">
 		<div class="elgg-avatar elgg-avatar-large float">
 			<a href="<?php echo $group->getURL(); ?>" title="<?php echo $group->title; ?>">
 				<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
@@ -41,7 +41,7 @@ if (!$group) {
 			<?php
 				$profile_actions = '<ul class="elgg-menu profile-action-menu mvm float">';
 				// group members
-				if ($group->isMember($user)) {
+				if ($group->isMember($user) && !$group->canEdit()) {
 					if ($group->getOwnerGUID() != $user->guid && !is_user_group_admin($user, $group)) {
 						$profile_actions .= '<li class="elgg-menu-item-groups-leave">' .
 							'<a href="'. elgg_add_action_tokens_to_url(elgg_get_site_url() . "action/groups/leave?group_id}") . '" class="elgg-button elgg-button-action leave-button gwfb">' .
@@ -102,10 +102,32 @@ if (!$group) {
 	</li>
 	<li id="<?php echo $group_id; ?>-info-activity" class="column-river hidden">
 		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river" data-entity="<?php echo $group_id; ?>"></ul>
+		<?php
+			echo elgg_view('output/url', array(
+				'text' => elgg_view_icon('search'),
+				'title' => elgg_echo('deck_river:filter'),
+				'href' => "#",
+				'class' => "elgg-column-filter-button tooltip s",
+			));
+			echo elgg_view('page/layouts/content/deck_river_column_filter', array(
+				'column_settings' => array('type' => 'group')
+			));
+		?>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
-		<li id="<?php echo $group_id; ?>-info-mentions" class="column-river hidden">
+	<li id="<?php echo $group_id; ?>-info-mentions" class="column-river hidden">
 		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_mention" data-entity="<?php echo $group_id; ?>"></ul>
+		<?php
+			echo elgg_view('output/url', array(
+				'text' => elgg_view_icon('search'),
+				'title' => elgg_echo('deck_river:filter'),
+				'href' => "#",
+				'class' => "elgg-column-filter-button tooltip s",
+			));
+			echo elgg_view('page/layouts/content/deck_river_column_filter', array(
+				'column_settings' => array('type' => 'group_mention')
+			));
+		?>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

@@ -9,13 +9,13 @@ if (!$user) {
 	return;
 }
 ?>
-<ul class="elgg-tabs elgg-htabs">
+<ul class="elgg-tabs elgg-htabs man">
 	<li class="elgg-state-selected"><a href="#<?php echo $user->guid; ?>-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 	<li><a href="#<?php echo $user->guid; ?>-info-activity"><?php echo elgg_echo('activity'); ?></a></li>
 	<li><a href="#<?php echo $user->guid; ?>-info-mentions"><?php echo elgg_echo('river:mentions'); ?></a></li>
 </ul>
 <ul class="elgg-body">
-	<li id="<?php echo $user->guid; ?>-info-profile">
+	<li id="<?php echo $user->guid; ?>-info-profile" class="mts">
 		<div class="elgg-avatar elgg-avatar-large float">
 			<a href="<?php echo $user->getURL(); ?>" title="<?php echo $user->username; ?>">
 				<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
@@ -72,11 +72,33 @@ if (!$user) {
 		</div>
 	</li>
 	<li id="<?php echo $user->guid; ?>-info-activity" class="column-river hidden">
+		<div class="message-box"><div class="column-messages"></div></div>
 		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_river" data-entity="<?php echo $user->guid; ?>"></ul>
+		<?php
+			echo elgg_view('output/url', array(
+				'text' => elgg_view_icon('search'),
+				'title' => elgg_echo('deck_river:filter'),
+				'href' => "#",
+				'class' => "elgg-column-filter-button tooltip s",
+			));
+			echo elgg_view('page/layouts/content/deck_river_column_filter');
+		?>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 	<li id="<?php echo $user->guid; ?>-info-mentions" class="column-river hidden">
+		<div class="message-box"><div class="column-messages"></div></div>
 		<ul class="column-header hidden" data-network="elgg" data-river_type="entity_mention" data-entity="<?php echo $user->guid; ?>"></ul>
+		<?php
+			echo elgg_view('output/url', array(
+				'text' => elgg_view_icon('search'),
+				'title' => elgg_echo('deck_river:filter'),
+				'href' => "#",
+				'class' => "elgg-column-filter-button tooltip s",
+			));
+			echo elgg_view('page/layouts/content/deck_river_column_filter',  array(
+				'column_settings' => array('type' => 'mention')
+			));
+		?>
 		<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
 	</li>
 </ul>

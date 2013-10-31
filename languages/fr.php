@@ -103,6 +103,7 @@ $french = array(
 	'deck_river:search' => 'Recherche :',
 	'deck_river:a_search' => 'Une recherche',
 	'deck_river:filter:all' => 'Tout',
+	'deck_river:error:no_filter' => "Choisissez un filtre ou cliquez sur \"Tout\".",
 
 	// accounts managment
 	'deck_river:network:add:account' => "Ajouter un autre compte",

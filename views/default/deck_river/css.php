@@ -161,7 +161,10 @@ body {
 	text-align: left;
 }
 #counters-alert {
+	bottom: 50px;
 	position: absolute;
+}
+#thewire-header.extended #counters-alert {
 	bottom: -24px;
 	left: 45px;
 	font-size: 2.5em;
@@ -812,6 +815,10 @@ li.elgg-menu-item-arrow-left {
 	z-index: 2;
 	font-size: 0.9em;
 }
+.deck-popup .message-box {
+	top: 64px !important;
+	margin: -5px;
+}
 .column-message, .top-message {
 	color: white;
 	cursor: pointer;
@@ -1355,6 +1362,15 @@ a.info-popup.ui-draggable-dragging {
 	text-align: center;
 	top: 70px;
 	width: 100%;
+}
+.deck-popup .elgg-column-filter-button {
+	position: absolute;
+	right: 10px;
+	top: 35px;
+	color: #999;
+}
+.deck-popup .elgg-column-filter-button:hover {
+	color: #4690D6;
 }
 
 /* facebook popup */

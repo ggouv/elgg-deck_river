@@ -245,7 +245,9 @@ elgg.deck_river.LoadMore = function(TheColumn, columnSettings) {
 				time_method: 'upper',
 				time_posted: LastItem.data('timeid'),
 				entity: columnSettings.entity || null,
-				params: columnSettings.params || null
+				params: columnSettings.params || null,
+				types_filter: columnSettings.types_filter,
+				subtypes_filter: columnSettings.subtypes_filter
 			},
 			success: function(response) {displayItems(response)},
 			error: function() {

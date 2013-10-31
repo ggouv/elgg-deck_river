@@ -108,13 +108,13 @@ if ($column_settings['network'] == 'twitter') {
 			//$options['wheres'][] = "((o.description REGEXP '@" . $owner->name . "([[:blank:]]|$|<)') OR (m.string REGEXP '@" . $owner->name . "([[:blank:]]|$|<)'))"; // FASTEST ? LIKE OR REGEXP ? WHY '<'
 			break;
 		case 'groups': // all groups
-			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";//r.guid_two";
-			$options['joins'][] = "LEFT JOIN {$dbprefix}entity_relationships r ON r.guid_one = '" . $owner->guid ."'";// '" . $owner->guid ."'";
-			$options['wheres'][] = "(r.guid_two = e.container_guid AND r.relationship = 'member')";
+			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
+			$options['joins'][] = "LEFT JOIN {$dbprefix}entity_relationships r ON r.guid_one = '" . $owner->guid ."'";
+			$options['wheres'][] = "((r.guid_two = e.container_guid AND r.relationship = 'member') OR (r.guid_two = e.guid AND r.relationship = 'member' AND rv.action_type = 'join'))";
 			break;
 		case 'group': // one group
 			$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
-			$options['wheres'][] = "e.container_guid = " . $column_settings['group'];
+			$options['wheres'][] = "(e.container_guid = " . $column_settings['group'] . " OR rv.object_guid = " . $column_settings['group'] . ")"; // for join group river object
 			break;
 		case 'group_mention':
 			$group_name = get_entity($column_settings['group'])->name;

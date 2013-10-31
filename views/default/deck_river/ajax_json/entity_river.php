@@ -23,7 +23,7 @@ if (strpos($entity_guid, '#') === 0) {
 	// group, user or object ?
 	if ($entity->type == 'group') {
 		$options['joins'][] = "JOIN {$dbprefix}entities e ON e.guid = rv.object_guid";
-		$options['wheres'][] = "e.container_guid = " . $entity_guid;
+		$options['wheres'][] = "(e.container_guid = " . $entity_guid . " OR rv.object_guid = " . $entity_guid . ")";
 	} else if ($entity->type == 'user') {
 		$options['subject_guid'] = $entity_guid;
 	} else if ($entity->type == 'object') {
