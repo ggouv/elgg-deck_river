@@ -65,7 +65,7 @@ if (empty($body)) {
 							&& $user_mentioned->guid != $parent_owner_guid) // already send mail with send response notification
 						deck_river_thewire_send_mention_notification($guid, $user_mentioned);
 					}
-					system_message(elgg_echo("thewire:posted"));
+					system_message(elgg_echo('thewire:posted:'.rand(0,9)));
 				}
 			}
 

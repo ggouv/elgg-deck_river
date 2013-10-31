@@ -236,6 +236,71 @@ $french = array(
 	'bookmarklet:popup:install' => "Prennez le gros bouton bleu, et faites-le glisser jusqu'à votre barre de favoris de votre navigateur, la haut ⬆",
 	'bookmarklet:popup:button' => "Glissez moi dans vos favoris",
 
+
+/**
+ * The Wire
+ */
+
+	/**
+	 * Menu items and titles
+	 */
+	'thewire' => "Le flux",
+	'thewire:user' => "Les messages de %s",
+	'thewire:friends' => "Messages des abonnements sur le flux",
+	'thewire:reply' => "Répondre",
+	'thewire:thread' => "Flux",
+	'thewire:charleft' => "caractères restant",
+	'thewire:tags' => "Messages du flux avec le tag '%s' :",
+	'thewire:noposts' => "Pas encore de messages sur le flux",
+	'item:object:thewire' => "Messages",
+	'thewire:update' => "Mise à jour",
+	'thewire:by' => 'Message de %s',
+	'thewire:breadcrumb:user' => "Ses messages",
+
+	/**
+	 * The wire river
+	 */
+	'river:create:object:thewire' => "%s a envoyé %s",
+	'thewire:wire' => 'un message',
+
+	/**
+	 * Wire widget
+	 */
+	'thewire:widget:desc' => "Affichez vos derniers messages",
+	'thewire:num' => "Nombre de publications à afficher",
+	'thewire:moreposts' => "Plus de messages",
+
+	/**
+	 * Status messages
+	 */
+	'thewire:posted:0' => "Votre message été envoyé dans le flux.",
+	'thewire:posted:1' => "L'avion est lancé !",
+	'thewire:posted:2' => "Zzzooouuu...",
+	'thewire:posted:3' => "Et un message de plus dans le flux...",
+	'thewire:posted:4' => "Le message est lancé !",
+	'thewire:posted:5' => "Message envoyé...",
+	'thewire:posted:6' => "C'est dans le flux...",
+	'thewire:posted:7' => "Votre avion s'est envolé...",
+	'thewire:posted:8' => "Ça vole !",
+	'thewire:posted:9' => "Votre message est lâché dans le flux.",
+	'thewire:deleted' => "Votre message a bien été supprimé du flux.",
+	'thewire:blank' => "Désolé, vous devez d'abord écrire un message avant de l'envoyer.",
+	'thewire:notfound' => "Désolé, le message spécifié n'a pu être trouvé.",
+	'thewire:notdeleted' => "Désolé, ce message n'a pu être effacé.",
+
+	/**
+	 * Notifications
+	 */
+	'thewire:notify:subject' => "%s a répondu à l'un de vos messages",
+	'thewire:notify:thismessage' => "ce message",
+	'thewire:notify:reply' => "%s a répondu %s :",
+	'thewire:notify:yourmessage' => "votre message",
+	'thewire:notify:atyourmessage' => "à %s :",
+	'thewire:notify:post' => "%s posté sur le flux :",
+
+	'thewire:mention:subject' => "%s vous a mentionné",
+	'thewire:mention:mention' => "%s vous a mentionné dans %s :",
+
 );
 
 add_translation('fr', $french);
