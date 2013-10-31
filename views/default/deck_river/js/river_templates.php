@@ -54,6 +54,8 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 			value.text = $('<div>').html(value.text).text();
 		}
 
+		if (value.method == 'site') delete value.method;
+
 		// Remove responses if in thread
 		if (thread && !elgg.isNull(value.responses)) delete value.responses;
 

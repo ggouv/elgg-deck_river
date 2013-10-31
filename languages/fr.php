@@ -236,6 +236,7 @@ $french = array(
 	'bookmarklet:popup:title' => "Popup :",
 	'bookmarklet:popup:install' => "Prennez le gros bouton bleu, et faites-le glisser jusqu'à votre barre de favoris de votre navigateur, la haut ⬆",
 	'bookmarklet:popup:button' => "Glissez moi dans vos favoris",
+	'via:bookmarklet' => "le ggouvlet",
 
 
 /**

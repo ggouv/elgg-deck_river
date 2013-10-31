@@ -140,6 +140,7 @@ elgg.thewire.init = function() {
 					dataString.link_name = thewireForm.find('.link_name').html();
 					dataString.link_description = thewireForm.find('.link_description').html();
 					dataString.link_picture = thewireForm.find('.link_picture').not('.noimg').children().attr('src');
+					if ($('html').hasClass('bookmarklet')) dataString.method = elgg.echo('via:bookmarklet');
 					dataString = $.param(dataString);
 
 					elgg.action('deck_river/add_message', {

@@ -6,6 +6,7 @@
 // don't filter since we strip and filter escapes some characters
 $body = get_input('body', '', false);
 $networks = (array) get_input('networks');
+$method = get_input('method', false);
 $link_url = get_input('link_url', false);
 $link_name = get_input('link_name', false);
 $link_description = get_input('link_description', false);
@@ -41,7 +42,7 @@ if (empty($body)) {
 				'owner_guid' => $user->guid,
 				'access_id' => ACCESS_PUBLIC,
 				'parent_guid' => $parent_guid,
-				'method' => 'site'
+				'method' => $method
 			);
 
 			$params = elgg_trigger_plugin_hook('deck-river', 'message:before_create:elgg', $params, $params);

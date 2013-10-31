@@ -470,7 +470,7 @@ function deck_river_thewire_save_post(array $params) {
 	$post->owner_guid = $params['owner_guid'];
 	$post->access_id = $params['access_id'];
 	$post->description = $params['body'];
-	$post->method = $params['method']; //method: site, email, api, ...
+	$post->method = $params['method']; //method: site, bookmarklet, email, api, ...
 
 	$tags = deck_river_thewire_get_hashtags($params['body']);
 	if ($tags) {

@@ -33,6 +33,8 @@ if ($mention) $excerpt = deck_river_highlight_mention($excerpt, $mention);
 
 if ($object->reply) $vars['item']->responses = $object->wire_thread;
 
+if ($object->method) $vars['item']->method = $object->method;
+
 $vars['item']->message = $excerpt;
 
 $jsonexport['results'][] = $vars['item'];

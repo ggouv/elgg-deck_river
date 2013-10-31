@@ -237,6 +237,7 @@
 					<span class="elgg-friendlytime">
 						<acronym class="tooltip w" title="{{posted_acronym}}" time="{{posted}}">{{friendly_time}}</acronym>
 					</span>
+					{{#method}}<?php echo elgg_echo('deck_river:via'); ?>&nbsp;{{{method}}}{{/method}}
 				</span>
 			</div>
 			<div class="elgg-river-message">{{{message}}}</div>
@@ -297,11 +298,11 @@
 					<span class="twitter-user-info-popup info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
 					<span class="elgg-river-timestamp">
 						<a href="https://twitter.com/{{user.screen_name}}/status/{{id_str}}" target="_blank">
-						<span class="elgg-friendlytime">
-							<acronym class="tooltip w" title="{{created_at}}" time="{{posted}}">{{friendly_time}}</acronym>
-						</span>
-					</a>
-					{{#source}}<?php echo elgg_echo('deck_river:via'); ?>&nbsp;{{{source}}}{{/source}}
+							<span class="elgg-friendlytime">
+								<acronym class="tooltip w" title="{{created_at}}" time="{{posted}}">{{friendly_time}}</acronym>
+							</span>
+						</a>
+						{{#source}}<?php echo elgg_echo('deck_river:via'); ?>&nbsp;{{{source}}}{{/source}}
 					</span>
 				</div>
 				<div class="elgg-river-message">{{{message}}}</div>
