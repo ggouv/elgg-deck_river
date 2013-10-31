@@ -69,32 +69,51 @@ elgg.register_hook_handler('init', 'system', elgg.deck_river.ShortenerUrlInit);
  * Shortener url
  */
 elgg.deck_river.ShortenUrl = function(url, callback) {
-	var ajaxShort = function (url) {
-		elgg.post('ajax/view/deck_river/ajax_json/url_shortener', {
-			dataType: "html",
-			data: {
-				url: url
-			},
-			success: function(response) {
-				if (response == 'badurl') {
-					elgg.register_error(elgg.echo('deck_river:url-bad-format'));
-					callback(url);
-				} else {
-					callback(response);
+	var guid = url.match(/^[:=](\d+)/) || null,
+		ajaxShort = function (url) {
+			elgg.post('ajax/view/deck_river/ajax_json/url_shortener', {
+				dataType: "html",
+				data: {
+					url: url
+				},
+				success: function(response) {
+					if (response == 'badurl') {
+						elgg.register_error(elgg.echo('deck_river:url-bad-format'));
+						callback(url);
+					} else {
+						callback(response);
+					}
+				},
+				error: function(response) {
+					// error with server
 				}
-			},
-			error: function(response) {
-				// error with server
-			}
-		});
-	};
+			});
+		};
 
 	// check if it's an internal link
-	if (url.indexOf(elgg.get_site_url()) === 0 && site_shorturl) {
-		var guid = elgg.parse_url(url).path.match(/\/\d+/g);
+	if ((guid || url.indexOf(elgg.get_site_url()) === 0) && site_shorturl) {
+		var Purl = elgg.parse_url(url).path;
 
-		if (guid != null) {
-			callback(site_shorturl+AlphabeticID.encode(parseInt(guid.pop().replace('/', ''))));
+		/* Avaible query
+		 * view/GUID
+		 * profile/GUID
+		 * page/GUID
+		 * board/GUID
+		 * card/GUID
+		 * candidat/GUID
+		 * :GUID or = GUID
+		*/
+
+		if (guid || (guid = (
+			Purl.match(/view\/(\d+)/) ||
+			Purl.match(/profile\/(\d+)/) ||
+			Purl.match(/page\/(\d+)/) ||
+			Purl.match(/board\/(\d+)/) ||
+			Purl.match(/card\/(\d+)/) ||
+			Purl.match(/candidat\/(\d+)/) ||
+			Purl.match(/^[:=](\d+)/)
+		))) {
+			callback(site_shorturl+AlphabeticID.encode(parseInt(guid.pop())));
 		} else {
 			ajaxShort(url);
 		}
@@ -102,22 +121,6 @@ elgg.deck_river.ShortenUrl = function(url, callback) {
 		ajaxShort(url);
 	}
 };
-
-
-
-new function($) {
-	$.fn.setCursorPosition = function(pos) {
-		if ($(this).get(0).setSelectionRange) {
-			$(this).get(0).setSelectionRange(pos, pos);
-		} else if ($(this).get(0).createTextRange) {
-			var range = $(this).get(0).createTextRange();
-			range.collapse(true);
-			range.moveEnd('character', pos);
-			range.moveStart('character', pos);
-			range.select();
-		}
-	}
-}(jQuery);
 
 
 

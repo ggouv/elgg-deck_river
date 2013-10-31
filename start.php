@@ -21,8 +21,6 @@ function deck_river_init() {
 
 	elgg_load_library('alphaGUID');
 
-	elgg_register_js('jquery.caretposition', '/mod/elgg-deck_river/vendors/jquery.caretposition.js', 'footer');
-
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js');
 	elgg_extend_view('page/elements/foot', 'deck_river/mustaches_wrapper', 499);

@@ -8,7 +8,12 @@ if (!$longUrl) {
 }
 
 if (filter_var($longUrl, FILTER_VALIDATE_URL)) {
-	echo goo_gl_short_url($longUrl);
+	$shortUrl = goo_gl_short_url($longUrl);
+	if ($shortUrl) {
+		echo $shortUrl;
+	} else {
+		echo $longUrl;
+	}
 } else {
 	echo 'badurl';
 }

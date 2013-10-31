@@ -335,7 +335,6 @@ $('#pin-thewire').live('click', function() { // should add this ??
 });
 		elgg.thewire.resize();
 		elgg.thewire.textCounter();
-		elgg.deck_river.ShortenerUrlInit();
 		if ($('.elgg-form-deck-river-wire-input').find('input[name="networks[]"][data-scrap]').length) {
 			linkParsed = '<?php echo $url; ?>';
 			elgg.thewire.scrapToLinkBox(linkParsed);
@@ -468,6 +467,8 @@ elgg.tags.init = function() {
 };
 
 elgg.register_hook_handler('init', 'system', elgg.tags.init);
+
+
 
 		<?php } ?>
 	</script>
