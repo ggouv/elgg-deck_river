@@ -27,6 +27,7 @@ elgg.deck_river.popups = function() {
 						appendTo: "body",
 						containment: "window",
 						helper: "clone",
+						distance: 20,
 						zIndex: 9999,
 						cursor: "crosshair"
 					}, options);
@@ -212,6 +213,10 @@ elgg.deck_river.createPopup = function(popupID, popupTitle, callback) {
 				$('.elgg-module-popup.deck-popup').css('z-index', '-=1');
 				$('#'+popupID).css('z-index', 500);
 			}
+		});
+		popup.click(function() {
+			$('.deck-popup').css('z-index', '-=1');
+			$(this).closest('.deck-popup').css('z-index', 500);
 		});
 		popup.find('.elgg-icon-push-pin').click(function() {
 			$(this).closest('.deck-popup').toggleClass('pinned');
