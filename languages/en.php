@@ -50,6 +50,7 @@ $english = array(
 	'deck_river:toggle_discussion' => "Toggle discussion",
 	'deck_river:via' => "via",
 	'deck_river:facebook:action:like' => "I like",
+	'deck_river:facebook:action:unlike' => "I don't like",
 	'deck_river:facebook:action:comment' => "Comment",
 	'deck_river:facebook:action:share' => "Share",
 	'deck_river:facebook:like' => "%s person like that.",

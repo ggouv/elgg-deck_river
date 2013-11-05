@@ -432,12 +432,12 @@
 				<div class="elgg-river-summary prl">
 					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>
 					<span class="elgg-river-timestamp">
-					<a target="_blank" href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">
-						<br><span class="elgg-friendlytime">
-							<acronym class="tooltip w" title="{{created_time}}" time="{{posted}}">{{friendly_time}}</acronym>
-						</span>
-					</a>
-				</span>
+						<a target="_blank" href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">
+							<br><span class="elgg-friendlytime">
+								<acronym class="tooltip w" title="{{created_time}}" time="{{posted}}">{{friendly_time}}</acronym>
+							</span>
+						</a>&nbsp;&bull;&nbsp;<a class="comment-item-like" href="#">{{like}}</a>{{#like_count}}&nbsp;&bull;<span class="elgg-icon elgg-icon-thumbs-up"></span>{{like_count}}{{/like_count}}
+					</span>
 				</div>
 				<div class="elgg-river-message">{{{message}}}</div>
 			</div>

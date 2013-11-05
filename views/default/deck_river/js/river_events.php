@@ -361,11 +361,25 @@ $('a[twitter_action]').live('click', function() {
  * Facebook like
  * @return {[type]} [description]
  */
+// like post
 $('.elgg-menu-item-like a').live('click', function() {
 	var $this = $(this),
-		settings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
+		settings = elgg.deck_river.getColumnSettings($this.closest('.column-river'));
 
 	elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1], 'likes', {
+		access_token: settings.token
+	}, function(response) {
+		if (response) {
+			elgg.system_message(elgg.echo('deck_river:facebook:liked'));
+		}
+	});
+});
+// like comment
+$('.comment-item-like').live('click', function() {
+	var $this = $(this),
+		settings = elgg.deck_river.getColumnSettings($this.closest('.column-river'));
+
+	elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1]+'_'+$this.closest('.elgg-item').attr('id'), 'likes', {
 		access_token: settings.token
 	}, function(response) {
 		if (response) {

@@ -908,6 +908,13 @@ li.elgg-menu-item-arrow-left {
 .elgg-river-item .elgg-river-timestamp a {
 	color: #999;
 }
+.elgg-river-item .elgg-river-timestamp .elgg-icon {
+	height: 10px;
+}
+.elgg-river-item .elgg-river-timestamp .elgg-icon:before {
+	font-size: 28px;
+	text-indent: -3px;
+}
 .elgg-river .elgg-module {
 	margin-bottom: 0;
 }

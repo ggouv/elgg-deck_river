@@ -73,6 +73,7 @@ $french = array(
 	'deck_river:thread:hide' => "Masquer ", // !space
 	'deck_river:via' => "via",
 	'deck_river:facebook:action:like' => "J'aime",
+	'deck_river:facebook:action:unlike' => "Je n'aime plus",
 	'deck_river:facebook:action:comment' => "Commenter",
 	'deck_river:facebook:action:share' => "Partager",
 	'deck_river:facebook:like' => "%s personne aime ça.",
