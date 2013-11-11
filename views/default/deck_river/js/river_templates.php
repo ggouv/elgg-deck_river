@@ -137,7 +137,7 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 		};
 
 		// parse tweet text
-		value.message = value.text.ParseEverythings('twitter');
+		value.message = value.text.ParseTwitterURL(value.entities).ParseUsername('twitter').ParseHashtag('twitter');
 
 		output += elggRiverTemplate(value);
 

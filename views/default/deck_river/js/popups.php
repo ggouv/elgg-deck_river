@@ -108,7 +108,7 @@ elgg.deck_river.popups = function() {
 		}
 	}).liveDraggable();
 
-	// video popup
+	// video popup for Facebook
 	$('.video-popup').live('click', function() {
 		var source = $(this).data('source');
 
@@ -133,6 +133,18 @@ elgg.deck_river.popups = function() {
 		resizeVP();
 		return false;
 	});
+
+	// media popup for Twitter
+	$('.twitter-media-popup').live('click', function() {
+		var $this = $(this),
+			type = $this.data('type');
+
+		elgg.deck_river.createPopup('twitter-media-popup', elgg.echo(type));
+		if (type == 'photo') {
+			var $tmp = $('#twitter-media-popup');
+			$tmp.css({width: $this.data('size_width'), height: $this.data('size_height')+$tmp.find('.elgg-head').outerHeight()}).find('.elgg-body').html($('<img>', {src: $this.data('media')}));
+		}
+	})
 
 	// drag and drop linkbox
 	$('.linkbox-droppable').liveDraggable();

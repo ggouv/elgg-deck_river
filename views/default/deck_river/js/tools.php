@@ -152,41 +152,70 @@ elgg.deck_river.resizeRiverImages = function() {
 
 
 
-String.prototype.FormatDate = function () {
+String.prototype.FormatDate = function() {
 	return $.datepicker.formatDate('@', new Date(this))/1000;
 };
 
-String.prototype.ParseURL = function () {
-	return this.replace(/\s+/g, ' ').replace(/(.{6})?(https?:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~]+)/g, function (match, pre, url) {
-		if (pre == 'href="') return pre+url;
+String.prototype.ParseURL = function() {
+	return this.replace(/\s+/g, ' ').replace(/(.{2})?(https?:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~]+)/g, function(match, pre, url) {
+		if (pre == '="') return pre+url;
 		if (elgg.isUndefined(pre)) pre = '';
 		return pre+'<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
 	});
 };
+String.prototype.ParseTwitterURL = function(entities) {
+	var text = this,
+		urls = [],
+		replaceEntities = function(type) {
+			$.each(entities[type], function(i, e) {
+				var token = (Math.random()+'xxxxxxxxxxxxxxxx').replace('.', '').substr(0, e.indices[1]-e.indices[0]),
+					url = '';
 
-String.prototype.ParseGroup = function () {
-	return this.replace(/(\s|^|>)(![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+)/g, function (match, pre, group) {
+				if (type == 'media') {
+					url = '<a class="twitter-media-popup" href="#" data-media="'+e.media_url_https+'" data-type="'+e.type+'" data-size_width="'+e.sizes.medium.w+'" data-size_height="'+e.sizes.medium.h+'">'+e.display_url+'</a>';
+				} else {
+					url = '<a target="_blank" rel="nofollow" href="'+e.expanded_url+'">'+e.display_url+'</a>';
+				}
+
+				urls.push({
+					token: token,
+					url: url
+				});
+				text = text.substr(0, e.indices[0]) + token + text.substr(e.indices[1], text.length);
+			});
+		};
+
+	if (entities.urls) replaceEntities('urls');
+	if (entities.media) replaceEntities('media');
+	$.each(urls, function(i, e) {
+		text = text.replace(e.token, e.url);
+	});
+	return text.ParseURL(); // some link are not in entities
+};
+
+String.prototype.ParseGroup = function() {
+	return this.replace(/(\s|^|>)(![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+)/g, function(match, pre, group) {
 		return pre+'<a href="#" class="group-info-popup info-popup" title="'+group.replace("!", "")+'">'+group+'</a>';
 	});
 };
 
-String.prototype.ParseUsername = function (network) {
-	return this.replace(/(\s|^|>)(@[A-Za-z0-9-_]+)/g, function (match, pre, user) {
+String.prototype.ParseUsername = function(network) {
+	return this.replace(/(\s|^|>)(@[A-Za-z0-9-_]+)/g, function(match, pre, user) {
 		return pre+'<a href="#" class="'+network+'-user-info-popup info-popup" title="'+user.replace("@", "")+'">'+user+'</a>';
 	});
 };
 
-String.prototype.ParseHashtag = function (network) {
-	return this.replace(/([^"]|^)(#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+)/g, function (h, pre, hashtag) {
+String.prototype.ParseHashtag = function(network) {
+	return this.replace(/([^"]|^)(#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+)/g, function(h, pre, hashtag) {
 		return pre+'<a href="#" class="hashtag-info-popup" title="'+hashtag+'" data-network="'+network+'">'+hashtag+'</a>';
 	});
 };
 
-String.prototype.ParseEverythings = function (network) {
+String.prototype.ParseEverythings = function(network) {
 	return this.ParseURL().ParseUsername(network).ParseHashtag(network);
 };
 
-String.prototype.TruncateString = function (length, more) {
+String.prototype.TruncateString = function(length, more) {
 	var length = length || 140,
 		more = more || '[...]',
 		trunc = '';

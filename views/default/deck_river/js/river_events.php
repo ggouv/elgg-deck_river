@@ -293,7 +293,7 @@ $('.elgg-menu-item-retweet a').live('click', function() {
 		elgg.thewire.resize();
 		$tt.val($eli.find('.elgg-river-message.main').data('message_original'));
 	} else {
-		$tt.val($eli.data('text').replace(/^rt /i, '').replace(/\s+/g, ' ')).focus().keydown();
+		$tt.val($('<div>').html($eli.data('text')).text().replace(/^rt /i, '').replace(/\s+/g, ' ')).focus().keydown();
 	}
 });
 
@@ -340,7 +340,7 @@ $('a[twitter_action]').live('click', function() {
 						if (data.method == 'post_friendshipsDestroy') response.followers_count--;
 						elgg.deck_river.storeEntity(response, 'twitter');
 						response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-						response.description = response.description.ParseEverythings('twitter');
+						if (response.description) response.description = response.description.ParseEverythings('twitter');
 						$('#user-info-popup > .elgg-body').html(Mustache.render($('#twitter-user-profile-template').html(), response));
 						elgg.system_message(elgg.echo('deck_river:twitter:post:'+data.method, [response.screen_name]));
 						$('#choose-twitter-account-popup').remove();
