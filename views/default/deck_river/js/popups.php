@@ -113,10 +113,11 @@ elgg.deck_river.popups = function() {
 	}).liveDraggable();
 
 	// video popup for Facebook
-	$('.video-popup').live('click', function() {
-		var source = $(this).data('source');
+	$('.media-video-popup').live('click', function() {
+		var source = $(this).data('source'),
+			title = $(this).find('h4').html() || elgg.echo('video');
 
-		elgg.deck_river.createPopup('video-popup', $(this).find('h4').html());
+		elgg.deck_river.createPopup('video-popup', title);
 		var vp = $('#video-popup'),
 			resizeVP = function() {
 				vp.find('.elgg-body').height(vp.height() - vp.find('.elgg-head').height()+7);
@@ -139,7 +140,7 @@ elgg.deck_river.popups = function() {
 	});
 
 	// media popup for Twitter
-	$('.twitter-media-popup').live('click', function() {
+	$('.media-image-popup').live('click', function() {
 		var $this = $(this),
 			type = $this.data('type');
 
@@ -148,6 +149,7 @@ elgg.deck_river.popups = function() {
 			var $tmp = $('#twitter-media-popup');
 			$tmp.css({width: $this.data('size_width'), height: $this.data('size_height')+$tmp.find('.elgg-head').outerHeight()}).find('.elgg-body').html($('<img>', {src: $this.data('media')}));
 		}
+		return false;
 	})
 
 	// drag and drop linkbox

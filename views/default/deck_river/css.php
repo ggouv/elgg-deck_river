@@ -1074,7 +1074,7 @@ li.elgg-menu-item-arrow-left {
 	clear: both;
 	padding: 3px;
 }
-.elgg-river-responses.video-popup .elgg-image:before {
+.elgg-river-responses.media-video-popup .elgg-image:before {
 	content: "v";
 	height: 100%;
 	width: 100%;
@@ -1086,7 +1086,7 @@ li.elgg-menu-item-arrow-left {
 	display: none;
 	text-indent: 9px;
 }
-.elgg-river-responses.video-popup:hover .elgg-image:before {
+.elgg-river-responses.media-video-popup:hover .elgg-image:before {
 	display: block;
 }
 .elgg-river-message {

@@ -172,7 +172,9 @@ String.prototype.ParseTwitterURL = function(entities) {
 					url = '';
 
 				if (type == 'media') {
-					url = '<a class="twitter-media-popup" href="#" data-media="'+e.media_url_https+'" data-type="'+e.type+'" data-size_width="'+e.sizes.medium.w+'" data-size_height="'+e.sizes.medium.h+'">'+e.display_url+'</a>';
+					url = '<a class="media-image-popup" href="'+e.media_url_https+'" onclick="javascript:void(0)" data-media="'+e.media_url_https+'" data-type="'+e.type+'" data-size_width="'+e.sizes.medium.w+'" data-size_height="'+e.sizes.medium.h+'">'+e.display_url+'</a>';
+				} else if (iframeUrl = elgg.deck_river.setVideoURLToIframe(e.expanded_url)) {
+					url = '<a class="media-video-popup" href="'+e.expanded_url+'" onclick="javascript:void(0)" data-source="'+iframeUrl+'">'+e.display_url+'</a>';
 				} else {
 					url = '<a target="_blank" rel="nofollow" href="'+e.expanded_url+'">'+e.display_url+'</a>';
 				}
@@ -193,6 +195,27 @@ String.prototype.ParseTwitterURL = function(entities) {
 	return text.ParseURL(); // some link are not in entities
 };
 
+/**
+ * Linkify youtube URLs which are not already links.
+ *
+ * http://stackoverflow.com/questions/5830387/how-to-find-all-youtube-video-ids-in-a-string-using-a-regex?lq=1
+ * @param  {[type]} url to check for video
+ * @return {[type]}      url for iframe video
+ */
+elgg.deck_river.setVideoURLToIframe = function(url) {
+	var yt = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-\=]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/i,
+		vo = /https?:\/\/(?:www\.)?(?:vimeo\.com\/)(?:(?:channels\/[A-z]+\/)|(?:groups\/[A-z]+\/videos\/))?(\d+)/,
+		id = null;
+
+	if (id = url.match(yt)) {
+		return '//youtube.com/v/'+id[1]+'?autoplay=1';
+	} if (id = url.match(vo)) {
+		return '//player.vimeo.com/video/'+id[1]+'?autoplay=1';
+	} else {
+		return null;
+	}
+};
+
 String.prototype.ParseGroup = function() {
 	return this.replace(/(\s|^|>)(![A-Za-z0-9-_-àâæéèêëîïôöœùûüç]+)/g, function(match, pre, group) {
 		return pre+'<a href="#" class="group-info-popup info-popup" title="'+group.replace("!", "")+'">'+group+'</a>';
@@ -206,7 +229,7 @@ String.prototype.ParseUsername = function(network) {
 };
 
 String.prototype.ParseHashtag = function(network) {
-	return this.replace(/([^"]|^)(#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+)/g, function(h, pre, hashtag) {
+	return this.replace(/(\s|^)(#[A-Za-z0-9_-àâæéèêëîïôöœùûüç]+)/g, function(h, pre, hashtag) {
 		return pre+'<a href="#" class="hashtag-info-popup" title="'+hashtag+'" data-network="'+network+'">'+hashtag+'</a>';
 	});
 };

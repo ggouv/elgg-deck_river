@@ -380,7 +380,7 @@
 				<div class="elgg-river-message main" data-message_original="{{message_original}}">{{{message}}}{{#typestatus}}&nbsp;<a target="_blank" href="https://facebook.com/{{id}}"><?php echo elgg_echo('river:facebook:show:status'); ?></a>{{/typestatus}}</div>
 				{{#link}}
 				{{#typevideo}}
-				<a class="elgg-river-responses linkbox-droppable video-popup" href="{{link}}" data-source="{{source}}">
+				<a class="elgg-river-responses linkbox-droppable media-video-popup" href="{{link}}" data-source="{{source}}">
 				{{/typevideo}}
 				{{^typevideo}}
 				<a class="elgg-river-responses linkbox-droppable" target="_blank" href="{{link}}">
