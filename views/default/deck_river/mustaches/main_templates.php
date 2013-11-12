@@ -119,7 +119,7 @@
 		<li class="elgg-state-selected"><a target="_blank" href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 		<li><a href="#{{id}}-get_statusesUser_timeline"><?php echo elgg_echo('activity'); ?></a></li>
 		<li><a href="#{{id}}-get_searchTweets"><?php echo elgg_echo('river:mentions'); ?></a></li>
-		<li><a href="#{{id}}-get_favoritesList"><?php echo elgg_echo('favorites'); ?></a></li>
+		<li><a href="#{{id}}-get_favoritesList">{{favourites_count}}&nbsp;<?php echo elgg_echo('favorites'); ?></a></li>
 	</ul>
 	<ul class="elgg-body">
 		<li id="{{id}}-info-profile">
@@ -132,7 +132,7 @@
 				</a>
 			</div>
 			<div class="plm">
-				<h1 class="pts mbm">{{screen_name}}</h1>
+				<h1 class="pts mbm">{{name}}</h1>
 				<h2 class="mbs" style="font-weight:normal;">@{{screen_name}}</h2>
 				<div>{{{description}}}</div>
 				<div class="output-group mtm">
@@ -172,9 +172,19 @@
 				</div>
 				{{#url}}
 				<div class="even">
-					<b><?php echo elgg_echo('site'); ?> :</b> <a class="external" target="_blank" href="{{url}}">{{url}}</a>
+					<b><?php echo elgg_echo('site'); ?> :</b> {{{url}}}
 				</div>
 				{{/url}}
+				{{#location}}
+				<div class="even">
+					<b><?php echo elgg_echo('profile:field:location'); ?> :</b> {{location}}
+				</div>
+				{{/location}}
+				{{#lang}}
+				<div class="even">
+					<b><?php echo elgg_echo('user:set:language'); ?> :</b> {{lang}}
+				</div>
+				{{/lang}}
 				<div class="even">
 					<b><?php echo elgg_echo('profile:time_created'); ?> :</b> {{created_at}}
 				</div>

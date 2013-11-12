@@ -84,9 +84,13 @@ elgg.deck_river.popups = function() {
 		var body = $('#user-info-popup > .elgg-body'),
 			userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
 			templateRender = function(response) {
-				response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-				response.description = response.description.ParseEverythings('twitter');
-				body.html(Mustache.render($('#twitter-user-profile-template').html(), response));
+				var value = $.extend(true, {}, response); // We need cloned var because we make some changes.
+
+				value.profile_image_url = value.profile_image_url.replace(/_normal/, '');
+				if (value.description) value.description = value.description.ParseTwitterURL(value.entities.description).ParseUsername('twitter').ParseHashtag('twitter');
+				if (value.url) value.url = value.url.ParseTwitterURL(value.entities.url);
+				value.created_at = $.datepicker.formatDate(elgg.echo('deck_river:created_at:date_format'), new Date(value.created_at));
+				body.html(Mustache.render($('#twitter-user-profile-template').html(), value));
 			};
 
 		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile

@@ -34,6 +34,7 @@ $french = array(
 	'deck_river:thewire:pinned' => "Épingler le lanceur de message.<br><span class=\"elgg-text-help\">Il ne se fermera pas après l'envoi et le texte sera conservé.</span>",
 	'deck_river:thewire:bookmarklet:pinned' => "Épingler le ggouvlet.<br><span class=\"elgg-text-help\">Il ne se fermera pas après l'envoi et le texte sera conservé.</span>",
 	'deck_river:thewire:clean_textarea' => "Effacer le contenu du lanceur de message",
+	'deck_river:created_at:date_format' => "D dd MM yy",
 
 	'deck_river:helper:friends' => "<span class='gwf'>w</span><br/>Vous n'avez pas d'abonnement ou les personnes que vous suivez n'ont aucune activité.<br/><br/><a href='" . elgg_get_site_url() . "members'>Suivez des personnes</a> dont l'activité pourrait vous intéresser ou cherchez des personnes <a href='" . elgg_get_site_url() . "groups/members/%s'>de votre commune</a> ou <a href='" . elgg_get_site_url() . "groups/members/%s'>votre département</a>.",
 	'deck_river:helper:mine' => "<span class='gwf'>A</span><br/><a href='#' onclick='$(\"#thewire-textarea\").focus();'>Dites bonjour à tout le monde</a> en envoyant un message de bienvenue, votre humeur ou votre motivation...",
