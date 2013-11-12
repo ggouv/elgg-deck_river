@@ -57,22 +57,7 @@ if ($params && $method = $params['method']) {
 			}
 
 			if (!empty($resp)) {
-				foreach ($resp as $value) {
-					$value['menu'] = array(
-						'default' => array(
-							array(
-								'name' => 'response',
-								'content' => '<a href="" title="Répondre" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response "></span></a>'
-							),
-							array(
-								'name' => 'retweet',
-								'content' => '<a href="" title="Retweeter" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-share "></span></a>'
-							)
-						),
-						'submenu' => array()
-					);
-					$jsonexport['results'][] = $value;
-				}
+				$jsonexport['results'] = $resp;
 			} else {
 				$jsonexport['results'] = '<table height="100%" width="100%"><tr><td class="helper">'. elgg_echo('deck_river:twitter:notweet') . '</td></tr></table>';
 			}

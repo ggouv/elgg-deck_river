@@ -80,13 +80,13 @@
 	<div class="elgg-image-block elgg-river-item clearfix">
 		<div class="elgg-image">
 			<div class="elgg-avatar elgg-avatar-small">
-				<div class="twitter-user-info-popup info-popup" title="{{name}}">
-					<img title="{{name}}" alt="{{name}}" src="http://twitter.com/api/users/profile_image/{{name}}?size=mini">
+				<div>
+					<img title="{{name}}" alt="{{name}}" src="http://twitter.com/api/users/profile_image/{{name}}?size=normal">
 				</div>
 			</div>
 		</div>
 		<div class="elgg-body">
-			<a style="font-weight:bold;" href="#" twitter_action data-method="{{method}}" data-twitter_account="{{account}}" data-options="{&quot;user_id&quot;: &quot;{{user_id}}&quot;}">{{name}}</a>
+			<a style="font-weight:bold;" href="#" twitter_action data-method="{{method}}" data-twitter_account="{{account}}" data-options="{{options}}">{{name}}</a>
 		</div>
 	</div>
 	</li>
@@ -290,19 +290,19 @@
 					<li class="elgg-submenu prs link">
 						<span class="elgg-icon elgg-icon-retweet float"></span>
 						<ul class="elgg-module-popup hidden">
-							<li class="elgg-menu-item-retweet-twitter"><a href="#"><span class="elgg-icon elgg-icon-twitter"></span><?php echo elgg_echo('retweet'); ?></a>
+							<li class="elgg-menu-item-retweet-twitter"><a href="#" twitter_action data-method="post_statusesRetweet{{id_str}}" data-options="{&quot;id&quot;: &quot;{{id_str}}&quot;}"><span class="elgg-icon elgg-icon-twitter"></span><?php echo elgg_echo('retweet'); ?></a>
 							<li class="elgg-menu-item-retweet"><a href="#"><span class="elgg-icon elgg-icon-retweet"></span><?php echo elgg_echo('retweet_by_wire'); ?></a>
 						</ul>
 					</li>
 					{{{menu.default}}}
-					{{#submenu}}
 					<li class="elgg-submenu">
 						<span class="elgg-icon elgg-icon-hover-menu link gwf"></span>
 						<ul class="elgg-module-popup hidden">
-							<li class="elgg-menu-item-{{name}}"><a href="#"><span class="elgg-icon elgg-icon-{{name}}"></span>{{{content}}}</a>
+							{{#submenu}}
+							<li class="elgg-menu-item-{{name}}"><a href="#"{{#method}} twitter_action data-method="{{method}}" data-options="{{options}}" {{/method}}><span class="elgg-icon elgg-icon-{{name}}"></span>{{{content}}}</a>
+							{{/submenu}}
 						</ul>
 					</li>
-					{{/submenu}}
 				</ul>
 				<div class="elgg-river-summary prl">
 					<span class="twitter-user-info-popup info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
@@ -320,8 +320,12 @@
 				<div class="elgg-river-responses">
 					{{#responses.retweet}}
 						<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
-						<span class="pls">{{{responses.retweet}}}</span>
+						<span class="pls float">{{{responses.retweet}}}</span>
 					{{/responses.retweet}}
+					{{#responses.favorite}}
+						<span class="elgg-icon elgg-icon-star-sub float gwfb pls{{#favorited}} favorited{{/favorited}}"></span>
+						<span>{{favorite_count}}&nbsp;{{responses.favorite}}</span>
+					{{/responses.favorite}}
 					{{#responses.reply}}
 					{{#responses.retweet}}<br/>{{/responses.retweet}}<div class="response-loader float clearfloat hidden"></div>
 					<span class="elgg-icon elgg-icon-speech-bubble-alt prs float gwfb"></span>

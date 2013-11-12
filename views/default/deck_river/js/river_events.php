@@ -304,7 +304,8 @@ $('.elgg-menu-item-retweet a').live('click', function() {
  * @return {[type]} [description]
  */
 $('a[twitter_action]').live('click', function() {
-	var data = $(this).data(),
+	var $this = $(this),
+		data = $this.data(),
 		accounts = $('#thewire-network .net-profile.twitter');
 
 	if (accounts.length > 1 && elgg.isUndefined(data.twitter_account)) {
@@ -313,11 +314,11 @@ $('a[twitter_action]').live('click', function() {
 		elgg.deck_river.createPopup('choose-twitter-account-popup', elgg.echo('deck_river:twitter:choose_account'), function() {
 			$('#choose-twitter-account-popup').find('.elgg-icon-push-pin').remove();
 		});
-		console.log(data);
+
 		$.each(accounts, function(i, e) {
 			accountsString += Mustache.render($('#choose-twitter-account-template').html(), {
 				method: data.method,
-				user_id: data.options.user_id,
+				options: JSON.stringify(data.options),
 				account: $(e).find('input').val(),
 				name: $(e).find('.twitter-user-info-popup').attr('title')
 			});
@@ -332,19 +333,30 @@ $('a[twitter_action]').live('click', function() {
 			},
 			dataType: 'json',
 			success: function(json) {
-				if (!elgg.isUndefined(json.output.result)) {
-					var response = json.output.result;
+				console.log(json);
+				if (!elgg.isUndefined(json.output.result) && json.status > -1) {
+					var response = json.output.result,
+						echoArray = [];
 
-					if ($('#user-info-popup').length) {
+					if (data.method == 'post_friendshipsCreate' || data.method == 'post_friendshipsCreate') {
 						if (data.method == 'post_friendshipsCreate') response.followers_count++; // strange ? Twitter return count before following or unfollowing action ??
 						if (data.method == 'post_friendshipsDestroy') response.followers_count--;
 						elgg.deck_river.storeEntity(response, 'twitter');
 						response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-						if (response.description) response.description = response.description.ParseEverythings('twitter');
+						if (response.description) response.description = response.ParseTwitterURL(value.entities).ParseUsername('twitter').ParseHashtag('twitter');
 						$('#user-info-popup > .elgg-body').html(Mustache.render($('#twitter-user-profile-template').html(), response));
-						elgg.system_message(elgg.echo('deck_river:twitter:post:'+data.method, [response.screen_name]));
-						$('#choose-twitter-account-popup').remove();
+						echoArray = [response.screen_name];
 					}
+					if (data.method == 'post_favoritesCreate') {
+						$this.data('mothod', 'post_favoritesDestroy').html(elgg.echo('action:unfavorite')).parent().attr('class', 'elgg-menu-item-star-empty');
+						$this.closest('.elgg-list-item').find('.elgg-icon-star-sub').addClass('favorited');
+					}
+					if (data.method == 'post_favoritesDestroy') {
+						$this.data('mothod', 'post_favoritesCreate').html(elgg.echo('action:favorite')).parent().attr('class', 'elgg-menu-item-star');
+						$this.closest('.elgg-list-item').find('.elgg-icon-star-sub').removeClass('favorited');
+					}
+					$('#choose-twitter-account-popup').remove();
+					elgg.system_message(elgg.echo('deck_river:twitter:post:'+data.method.replace(/\d/g, ''), echoArray));
 				}
 			},
 			error: function() {

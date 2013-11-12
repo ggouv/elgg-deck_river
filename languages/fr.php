@@ -15,6 +15,8 @@ $french = array(
 	'deck_river:limitColumnReached' => "Le nombre maximum de colonnes est atteint.",
 	'deck_river:limitTabReached' => "Le nombre maximum d'onglets est atteint.",
 	'river:mentions' => "Mentions",
+	'favorite' => 'favori',
+	'favorites' => 'favoris',
 	'river:timeline' => "Le flux",
 	'river:groups_timeline' => "Activité des groupes",
 	'river:groups_activity' => "Groupes dont je suis membre",
@@ -65,6 +67,10 @@ $french = array(
 
 	// river item
 	'retweet' => "Retweeter",
+	'retweet_by_wire' => "Retweeter avec RT",
+	'action:favorite' => "Mettre en favori",
+	'action:unfavorite' => "Enlever des favoris",
+
 	'retweeted_by' => "Retweeté par %s",
 	'retweeted_which' => "%s retweets dont %s",
 	'retweet:one' => "1 retweet",
@@ -212,9 +218,15 @@ $french = array(
 	'deck_river:twitter:post:error:187' => "Vous avez déjà envoyé ce message. C'est un doublon.", // "Status is a duplicate"
 	'deck_river:twitter:post:post_friendshipsCreate' => "Vous suivez maintenant %s sur Twitter.",
 	'deck_river:twitter:post:post_friendshipsDestroy' => "Vous ne suivez plus %s sur Twitter.",
+	'deck_river:twitter:post:post_favoritesCreate' => "Le tweet a bien été mis en favoris.",
+	'deck_river:twitter:post:post_favoritesDestroy' => "Le tweet a bien été enlevé des favoris.",
+	'deck_river:twitter:post:post_statusesRetweet' => "Le tweet a été retwetté.",
+
 	'deck_river:twitter:error' => "Il y a eu une erreur avec Twitter.<br>Erreur retourné : %s<br/>%s",
 	'deck_river:twitter:error:discussion' => "Twitter indique que ce tweet est inconnu !",
 	'deck_river:twitter:error:34' => "La page ou l'utilisateur n'existe pas sur Twitter.", // "Sorry, that page does not exist",
+	'deck_river:twitter:error:130' => "Twitter est surchargé.", // "Over capacity"
+	'deck_river:twitter:error:139' => "Vous avez déjà mis en favoris ce tweet.", // "You have already favorited this status"
 	'deck_river:twitter:error:215' => "Il y a une erreur d'identification avec Twitter.", // "Bad authentication data"
 	//'deck_river:twitter:error:34' => "Vous avez atteint la limite de requêtes sur Twitter.<br/>Attendez un peu (15 min max).", // "Rate limit exceeded",
 

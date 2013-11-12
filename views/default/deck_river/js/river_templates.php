@@ -121,18 +121,26 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 
 		// make menus
 		if (!thread) {
+			var fav = value.favorited;
+			value.submenu = [{
+				name: fav ? 'star-empty' : 'star',
+				content: elgg.echo('action:'+(fav ? 'unfav' : 'fav')+'orite'),
+				method: fav ? 'post_favoritesDestroy' : 'post_favoritesCreate',
+				options: JSON.stringify({id: value.id_str})
+			}];
 			// add replyall in submenu
 			if (/@\w{1,}/g.test(value.text)) {
-				value.submenu = [{
+				value.submenu.push({
 					name: 'response-all',
 					content: elgg.echo('replyall')
-				}];
+				});
 			}
 		}
 
 		// Fill responses (retweet and discussion link)
 		value.responses = {
 			retweet: retweet ? retweet : false,
+			favorite: value.favorite_count ? elgg.echo('favori'+(value.favorite_count>1?'s':'')) : false,
 			reply: value.in_reply_to_status_id != null && !thread // thread id is filled by id_str in mustache template. Only true/false is sending.
 		};
 

@@ -988,6 +988,7 @@ li.elgg-menu-item-arrow-left {
 	width: 150px;
 	color: #333;
 	padding: 0;
+	font-size: 0.9em;
 }
 .elgg-button-dropdown.elgg-state-active .elgg-module-popup {
 	right: -1px;
