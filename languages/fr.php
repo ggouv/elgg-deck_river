@@ -154,6 +154,7 @@ $french = array(
 	'deck_river:hashtag-info-header' => "Recherche : %s",
 	'deck_river:go_to_profile' => "Aller sur le profil",
 	'deck_river:twitter:choose_account' => "Choisissez le compte Twitter",
+	'deck_river:twitter:choose_list' => "Choisissez la liste Twitter",
 	'deck_river:facebook:groups' => "Groupes Facebook",
 	'deck_river:facebook:groups:choose' => "Cliquez sur un groupe pour l'ajouter dans vos comptes :",
 
@@ -189,6 +190,7 @@ $french = array(
 	'deck_river:twitter:feed:users:search' => "Rechercher des utilisateurs",
 	'deck_river:twitter:list' => "Liste",
 	'deck_river:twitter:lists' => "Listes",
+	'deck_river:twitter:no_lists' => "Vous n'avez pas de listes",
 
 	'deck_river:twitter:feed:home' => "Flux d'accueil",
 	'deck_river:twitter:feed:user' => "Mes tweets",
@@ -197,7 +199,9 @@ $french = array(
 	'deck_river:twitter:feed:favorites' => "Mes tweets favoris",
 	'deck_river:twitter:notweet' => "Pas de tweet.",
 	'deck_river:twitter:follow' => "Suivre sur Twitter",
-	'deck_river:twitter:unfollow' => "Ne plus suivre sur Twitter",
+	'deck_river:twitter:unfollow' => "Ne plus suivre",
+	'deck_river:twitter:add_to_list' => "Ajouter à une liste",
+	'deck_river:twitter:remove_from_list' => "Retirer d'une liste",
 
 	'deck_river:twitter:access:error' => "Impossible d'accéder à Twitter. Erreur retournée :<br/>%s %s",
 
@@ -216,11 +220,13 @@ $french = array(
 	'deck_river:twitter:post:error' => "Votre message n'a pas pu être publié sur Twitter.<br>Erreur retourné : %s<br/>%s",
 	'deck_river:twitter:post:error:150' => "Vous ne pouvez pas envoyer un message privé à quelqu'un qui ne vous suit pas sur Twitter.", // "You cannot send messages to users who are not following you",
 	'deck_river:twitter:post:error:187' => "Vous avez déjà envoyé ce message. C'est un doublon.", // "Status is a duplicate"
-	'deck_river:twitter:post:post_friendshipsCreate' => "Vous suivez maintenant %s sur Twitter.",
-	'deck_river:twitter:post:post_friendshipsDestroy' => "Vous ne suivez plus %s sur Twitter.",
+	'deck_river:twitter:post:post_friendshipsCreate' => "Vous suivez maintenant @%s sur Twitter.",
+	'deck_river:twitter:post:post_friendshipsDestroy' => "Vous ne suivez plus @%s sur Twitter.",
 	'deck_river:twitter:post:post_favoritesCreate' => "Le tweet a bien été mis en favoris.",
 	'deck_river:twitter:post:post_favoritesDestroy' => "Le tweet a bien été enlevé des favoris.",
 	'deck_river:twitter:post:post_statusesRetweet' => "Le tweet a été retwetté.",
+	'deck_river:twitter:post:post_listsMembersCreate' => "@%s a été ajouté à la liste %s.",
+	'deck_river:twitter:post:post_listsMembersDestroy' => "@%s a été retiré de la liste %s.",
 
 	'deck_river:twitter:error' => "Il y a eu une erreur avec Twitter.<br>Erreur retourné : %s<br/>%s",
 	'deck_river:twitter:error:discussion' => "Twitter indique que ce tweet est inconnu !",

@@ -154,8 +154,8 @@
 							{{#following}}
 							<li><a href="#" twitter_action data-method="post_friendshipsCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}"><?php echo elgg_echo('deck_river:twitter:follow'); ?></a></li>
 							{{/following}}
-							<li><a href="#" twitter_action data-method="post_friendshipsCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}"><?php echo elgg_echo('deck_river:twitter:follow'); ?></a></li>
-							<li><a href="#" twitter_action data-method="post_friendshipsCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;}"><?php echo elgg_echo('deck_river:twitter:follow'); ?></a></li>
+							<li><a href="#" twitter_action data-method="post_listsMembersCreate" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;, &quot;list_id&quot;: &quot;&quot;}"><?php echo elgg_echo('deck_river:twitter:add_to_list'); ?></a></li>
+							<li><a href="#" twitter_action data-method="post_listsMembersDestroy" data-options="{&quot;user_id&quot;: &quot;{{id}}&quot;, &quot;list_id&quot;: &quot;&quot;}"><?php echo elgg_echo('deck_river:twitter:remove_from_list'); ?></a></li>
 						</ul>
 					</ul>
 				</div>
@@ -283,6 +283,7 @@
 				</div>
 			</div>
 			<div class="elgg-body">
+				{{^thread}}
 				<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
 					<li class="elgg-menu-item-response">
 						<a href="#" title="<?php echo elgg_echo('reply'); ?>" class="gwfb tooltip s"><span class="elgg-icon elgg-icon-response"></span></a>
@@ -304,6 +305,7 @@
 						</ul>
 					</li>
 				</ul>
+				{{/thread}}
 				<div class="elgg-river-summary prl">
 					<span class="twitter-user-info-popup info-popup" title="{{user.screen_name}}">{{user.screen_name}}</span><br/>
 					<span class="elgg-river-timestamp">
@@ -319,15 +321,15 @@
 				{{#responses}}
 				<div class="elgg-river-responses">
 					{{#responses.retweet}}
-						<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span>
-						<span class="pls float">{{{responses.retweet}}}</span>
+						<span class="elgg-icon elgg-icon-retweet-sub float gwfb{{#retweeted}} retweeted{{/retweeted}}"></span>
+						<span class="phs float">{{{responses.retweet}}}</span>
 					{{/responses.retweet}}
 					{{#responses.favorite}}
-						<span class="elgg-icon elgg-icon-star-sub float gwfb pls{{#favorited}} favorited{{/favorited}}"></span>
+						<span class="elgg-icon elgg-icon-star-sub float gwfb{{#favorited}} favorited{{/favorited}}"></span>
 						<span>{{favorite_count}}&nbsp;{{responses.favorite}}</span>
 					{{/responses.favorite}}
 					{{#responses.reply}}
-					{{#responses.retweet}}<br/>{{/responses.retweet}}<div class="response-loader float clearfloat hidden"></div>
+					{{#responses.retweet}}<br/>{{/responses.retweet}}{{#responses.favorite}}{{^responses.retweet}}<br/>{{/responses.retweet}}{{/responses.favorite}}<div class="response-loader float clearfloat hidden"></div>
 					<span class="elgg-icon elgg-icon-speech-bubble-alt prs float gwfb"></span>
 					<a href="#" class="thread float prm" data-thread="{{id_str}}" data-network="twitter"><?php echo elgg_echo('deck_river:thread'); ?></a>
 					{{/responses.reply}}

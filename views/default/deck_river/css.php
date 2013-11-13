@@ -1099,6 +1099,8 @@ li.elgg-menu-item-arrow-left {
 }
 .elgg-river-responses .thread .elgg-list-item {
 	color: black;
+	margin-left: -30px;
+	padding-top: 5px;
 }
 .elgg-river-responses .thread .elgg-avatar img {
 	height: 24px;
@@ -1482,7 +1484,7 @@ a.info-popup.ui-draggable-dragging {
 }
 
 /* popup choose-twitter-account-popup */
-#choose-twitter-account-popup {
+#choose-twitter-account-popup, #choose-twitter-list-popup {
 	height: auto;
 	width: 300px;
 }

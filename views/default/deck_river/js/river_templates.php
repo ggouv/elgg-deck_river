@@ -58,6 +58,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 
 		// Remove responses if in thread
 		if (thread && !elgg.isNull(value.responses)) delete value.responses;
+		if (thread) delete value.menu;
 
 		output += elggRiverTemplate(value);
 
@@ -135,9 +136,12 @@ elgg.deck_river.twitterDisplayItems = function(response, thread) {
 					content: elgg.echo('replyall')
 				});
 			}
+		} else {
+			value.thread = true;
 		}
 
 		// Fill responses (retweet and discussion link)
+		if (value.favorited && !value.favorite_count) value.favorite_count = 1;
 		value.responses = {
 			retweet: retweet ? retweet : false,
 			favorite: value.favorite_count ? elgg.echo('favori'+(value.favorite_count>1?'s':'')) : false,

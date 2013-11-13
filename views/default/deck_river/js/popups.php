@@ -79,37 +79,7 @@ elgg.deck_river.popups = function() {
 
 	// Twitter user info popup
 	$('.twitter-user-info-popup').live('click', function() {
-		elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [$(this).attr('title')]));
-
-		var body = $('#user-info-popup > .elgg-body'),
-			userInfo = elgg.deck_river.findUser($(this).attr('title'), 'twitter'),
-			templateRender = function(response) {
-				var value = $.extend(true, {}, response); // We need cloned var because we make some changes.
-
-				value.profile_image_url = value.profile_image_url.replace(/_normal/, '');
-				if (value.description) value.description = value.description.ParseTwitterURL(value.entities.description).ParseUsername('twitter').ParseHashtag('twitter');
-				if (value.url) value.url = value.url.ParseTwitterURL(value.entities.url);
-				value.created_at = $.datepicker.formatDate(elgg.echo('deck_river:created_at:date_format'), new Date(value.created_at));
-				body.html(Mustache.render($('#twitter-user-profile-template').html(), value));
-			};
-
-		if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
-			elgg.post('ajax/view/deck_river/ajax_json/twitter_OAuth', {
-				dataType: 'json',
-				data: {
-					params: {method: 'get_usersShow', include_entities: true, screen_name: $(this).attr('title')}
-				},
-				success: function(response) {
-					elgg.deck_river.storeEntity(response, 'twitter');
-					templateRender(response);
-				},
-				error: function() {
-					body.html(elgg.echo('deck_river:ajax:erreur'));
-				}
-			});
-		} else {
-			templateRender(userInfo);
-		}
+		elgg.deck_river.twitterUserPopup($(this).attr('title'));
 	}).liveDraggable();
 
 	// video popup for Facebook
@@ -204,6 +174,46 @@ elgg.deck_river.groupPopup = function(group) {
 			body.html(elgg.echo('deck_river:ajax:erreur'));
 		}
 	});
+};
+
+
+
+/**
+ * show twitter user popup
+ * @param  {[string]} user screen_name
+ */
+elgg.deck_river.twitterUserPopup = function(user) {
+	elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:user-info-header', [user]));
+
+	var body = $('#user-info-popup > .elgg-body'),
+		userInfo = elgg.deck_river.findUser(user, 'twitter'),
+		templateRender = function(response) {
+			var value = $.extend(true, {}, response); // We need cloned var because we make some changes.
+
+			value.profile_image_url = value.profile_image_url.replace(/_normal/, '');
+			if (value.description) value.description = value.description.ParseTwitterURL(value.entities.description).ParseUsername('twitter').ParseHashtag('twitter');
+			if (value.url) value.url = value.url.ParseTwitterURL(value.entities.url);
+			value.created_at = $.datepicker.formatDate(elgg.echo('deck_river:created_at:date_format'), new Date(value.created_at));
+			body.html(Mustache.render($('#twitter-user-profile-template').html(), value));
+		};
+
+	if (elgg.isUndefined(userInfo) || elgg.isUndefined(userInfo.id)) { // Twitter feed from search api doesn't contains user info, only screen_name and image_profile
+		elgg.post('ajax/view/deck_river/ajax_json/twitter_OAuth', {
+			dataType: 'json',
+			data: {
+				params: {method: 'get_usersShow', include_entities: true, screen_name: user}
+			},
+			success: function(response) {
+				elgg.deck_river.storeEntity(response, 'twitter');
+				templateRender(response);
+			},
+			error: function() {
+				body.html(elgg.echo('deck_river:ajax:erreur'));
+			}
+		});
+	} else {
+		templateRender(userInfo);
+	}
 };
 
 

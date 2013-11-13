@@ -303,12 +303,11 @@ $('.elgg-menu-item-retweet a').live('click', function() {
  * Twitter action : follow, unfollow, add to list...
  * @return {[type]} [description]
  */
-$('a[twitter_action]').live('click', function() {
-	var $this = $(this),
-		data = $this.data(),
+$('a[twitter_action]').live('click', function(e) {
+	var data = $(this).data(),
 		accounts = $('#thewire-network .net-profile.twitter');
 
-	if (accounts.length > 1 && elgg.isUndefined(data.twitter_account)) {
+	if (accounts.length > 1 && elgg.isUndefined(data.twitter_account)) { // choose account
 		var accountsString = '';
 
 		elgg.deck_river.createPopup('choose-twitter-account-popup', elgg.echo('deck_river:twitter:choose_account'), function() {
@@ -324,6 +323,37 @@ $('a[twitter_action]').live('click', function() {
 			});
 		});
 		$('#choose-twitter-account-popup > .elgg-body').html('<ul>'+accountsString+'</ul>');
+	} else if (!elgg.isUndefined(data.options.list_id) && data.options.list_id === "") { // choose list
+		elgg.deck_river.createPopup('choose-twitter-list-popup', elgg.echo('deck_river:twitter:choose_list'), function() {
+			$('#choose-twitter-list-popup').find('.elgg-icon-push-pin').remove();
+			elgg.action('deck_river/twitter', {
+				data: {
+					twitter_account: data.twitter_account,
+					method: 'get_listsList'
+				},
+				dataType: 'json',
+				success: function(json) {
+					var listsString = $('<ul>');
+
+					$.each(json.output.result, function(i, e) {
+						listsString.append($('<li>').append($('<a>', {
+							href: '#',
+							text: e.full_name,
+							twitter_action: true,
+							'data-options': JSON.stringify($.extend(data.options, {list_id: e.id}))
+						}).data({
+							method: data.method,
+							twitter_account: data.twitter_account
+						})));
+					});
+					if ($(listsString).html() == '') listsString = elgg.echo('deck_river:twitter:no_lists');
+					$('#choose-twitter-list-popup > .elgg-body').html(listsString);
+				},
+				error: function() {
+					return false;
+				}
+			});
+		});
 	} else {
 		elgg.action('deck_river/twitter', {
 			data: {
@@ -333,30 +363,34 @@ $('a[twitter_action]').live('click', function() {
 			},
 			dataType: 'json',
 			success: function(json) {
-				console.log(json);
 				if (!elgg.isUndefined(json.output.result) && json.status > -1) {
 					var response = json.output.result,
-						echoArray = [];
+						echoArray = [],
+						method = data.method.replace(/\d/g, '');
 
-					if (data.method == 'post_friendshipsCreate' || data.method == 'post_friendshipsCreate') {
-						if (data.method == 'post_friendshipsCreate') response.followers_count++; // strange ? Twitter return count before following or unfollowing action ??
-						if (data.method == 'post_friendshipsDestroy') response.followers_count--;
+					if (method == 'post_friendshipsCreate' || method == 'post_friendshipsDestroy') {
+						// strange ? Twitter return count before following or unfollowing action ?? And following is not populate.
+						if (method == 'post_friendshipsCreate') {
+							//response.followers_count++;
+							response.following = true;
+						} else {
+							//response.followers_count--;
+							response.following = false;
+						}
 						elgg.deck_river.storeEntity(response, 'twitter');
-						response.profile_image_url = response.profile_image_url.replace(/_normal/, '');
-						if (response.description) response.description = response.ParseTwitterURL(value.entities).ParseUsername('twitter').ParseHashtag('twitter');
-						$('#user-info-popup > .elgg-body').html(Mustache.render($('#twitter-user-profile-template').html(), response));
+						elgg.deck_river.twitterUserPopup(response.screen_name);
 						echoArray = [response.screen_name];
 					}
-					if (data.method == 'post_favoritesCreate') {
-						$this.data('mothod', 'post_favoritesDestroy').html(elgg.echo('action:unfavorite')).parent().attr('class', 'elgg-menu-item-star-empty');
-						$this.closest('.elgg-list-item').find('.elgg-icon-star-sub').addClass('favorited');
+					if (method == 'post_favoritesCreate' || method == 'post_favoritesDestroy' || method == 'post_statusesRetweet') {
+						$('.elgg-river > .item-twitter-'+data.options.id).replaceWith(elgg.deck_river.twitterDisplayItems({
+							results: [response],
+							column_type: true
+						}));
+						echoArray = [response.user.screen_name, response.full_name];
 					}
-					if (data.method == 'post_favoritesDestroy') {
-						$this.data('mothod', 'post_favoritesCreate').html(elgg.echo('action:favorite')).parent().attr('class', 'elgg-menu-item-star');
-						$this.closest('.elgg-list-item').find('.elgg-icon-star-sub').removeClass('favorited');
-					}
-					$('#choose-twitter-account-popup').remove();
-					elgg.system_message(elgg.echo('deck_river:twitter:post:'+data.method.replace(/\d/g, ''), echoArray));
+
+					$('#choose-twitter-account-popup, #choose-twitter-list-popup').remove();
+					elgg.system_message(elgg.echo('deck_river:twitter:post:'+method, echoArray));
 				}
 			},
 			error: function() {
