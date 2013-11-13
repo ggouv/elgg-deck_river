@@ -270,8 +270,20 @@ elgg.deck_river.LoadMore = function(TheColumn, columnSettings) {
 elgg.deck_river.LoadDiscussion = function(athread) {
 	var athreadResponses = athread.parent('.elgg-river-responses'),
 		TheColumn = athread.closest('.column-river'),
-		network = athread.data('network'),
-		displayItems = function(response) {
+		network = athread.data('network');
+
+	// if already exist, skip
+	if (athreadResponses.find('div.thread').length) return;
+
+	athreadResponses.find('.response-loader').removeClass('hidden');
+
+	elgg.post('ajax/view/deck_river/ajax_json/load_discussion', {
+		dataType: "json",
+		data: {
+			discussion: athread.attr('data-thread'),
+			network: network
+		},
+		success: function(response) {
 			var riverID = athread.closest('.elgg-list-item').attr('class').match(/\d+/)[0],
 				itemsRiver = $('.item-' + network + '-' + riverID),
 				newItems = elgg.deck_river.displayRiver(response, network, true);
@@ -290,20 +302,7 @@ elgg.deck_river.LoadDiscussion = function(athread) {
 				});
 				athread.click(); // toggle after append
 			}
-		};
-
-	// if already exist, skip
-	if (athreadResponses.find('div.thread').length) return;
-
-	athreadResponses.find('.response-loader').removeClass('hidden');
-
-	elgg.post('ajax/view/deck_river/ajax_json/load_discussion', {
-		dataType: "json",
-		data: {
-			discussion: athread.attr('data-thread'),
-			network: network
 		},
-		success: function(response) {displayItems(response)},
 		error: function(response) {
 			elgg.register_error(response.responseText);
 			athread.parent('.elgg-river-responses').find('.response-loader').addClass('hidden');

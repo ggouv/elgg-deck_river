@@ -223,6 +223,27 @@ $('.elgg-menu-item-response-all a').live('click', function() {
 
 
 /**
+ * Add response of a wire message to thewire form
+ * @param  {[type]} riverItem [description]
+ * @param  {[type]} message   [description]
+ * @return {[type]}           [description]
+ */
+elgg.deck_river.responseToWire = function(riverItem, message) {
+	var network = elgg.deck_river.getColumnSettings(riverItem.closest('.column-river')).network || 'elgg';
+
+	$('.elgg-list-item').removeClass('responseAt');
+	$('.item-'+network+'-'+riverItem.attr('data-id')).addClass('responseAt');
+	$('#thewire-header').find('.responseTo')
+		.removeClass('hidden')
+		.html(elgg.echo('responseToHelper:text', [riverItem.data('username'), riverItem.find('.elgg-river-message').first().text()]))
+		.attr('title', elgg.echo('responseToHelper:delete', [riverItem.data('username')]))
+	.next('.parent').val(riverItem.attr('data-object_guid')).attr('name', network+'_parent');
+	$('#thewire-textarea').val(message).focus().keydown();
+};
+
+
+
+/**
  * Share menu, used in elgg objects except thewire object
  * @param  {[type]} e [description]
  * @return {[type]}   [description]
@@ -543,24 +564,4 @@ $('.elgg-submenu').live('click', function() {
 	});
 });
 
-
-
-
-/**
- * Add response of a wire message to thewire form
- * @param  {[type]} riverItem [description]
- * @param  {[type]} message   [description]
- * @return {[type]}           [description]
- */
-elgg.deck_river.responseToWire = function(riverItem, message) {
-	var network = riverItem.closest('.column-river').find('.column-header').data('network') || 'elgg';
-	$('.elgg-list-item').removeClass('responseAt');
-	$('.item-'+network+'-'+riverItem.attr('data-id')).addClass('responseAt');
-	$('#thewire-header').find('.responseTo')
-		.removeClass('hidden')
-		.html(elgg.echo('responseToHelper:text', [riverItem.data('username'), riverItem.find('.elgg-river-message').first().text()]))
-		.attr('title', elgg.echo('responseToHelper:delete', [riverItem.data('username')]))
-	.next('.parent').val(riverItem.attr('data-object_guid')).attr('name', network+'_parent');
-	$('#thewire-textarea').val(message).focus().keydown();
-};
 
