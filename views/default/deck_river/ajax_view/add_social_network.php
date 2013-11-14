@@ -3,6 +3,8 @@
  * Show modal popup to add networks accounts
  */
 
+gatekeeper();
+
 elgg_load_library('deck_river:authorize');
 $site_name = elgg_get_site_entity()->name;
 

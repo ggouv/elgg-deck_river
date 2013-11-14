@@ -19,6 +19,8 @@ $view = elgg_extract('view_type', $vars, false);
 $pinned = elgg_extract('pinned', $vars, false);
 $position = elgg_extract('position', $vars, false);
 
+$user_guid = elgg_get_logged_in_user_guid();
+
 $avatar = elgg_view('output/img', array(
 	'src' => $account->icon ? $account->icon : 'https://graph.facebook.com/' . $account->username . '/picture', // facebook group use icon, else this is a user account
 	'alt' => $account->name,
@@ -79,15 +81,17 @@ HTML;
 	$author_text = elgg_echo('deck_river:account:createdby', array('Facebook', elgg_get_site_entity()->name, $owner_link));
 	$date = elgg_view_friendly_time($account->time_created);
 
-	$access = elgg_view('output/access', array('entity' => $account));
-	$delete = elgg_view('output/url', array(
-		'href' => "action/deck_river/network/delete?guid={$account->getGUID()}",
-		'text' => elgg_view_icon('delete'),
-		'title' => elgg_echo('delete:this'),
-		'class' => 'tooltip s t elgg-requires-confirmation',
-		'rel' => elgg_echo('deck_river:account:deleteconfirm'),
-		'is_action' => true,
-	));
+	if ($owner->getGUID() == $user_guid) {
+		$access = elgg_view('output/access', array('entity' => $account));
+		$delete = elgg_view('output/url', array(
+			'href' => "action/deck_river/network/delete?guid={$account->getGUID()}",
+			'text' => elgg_view_icon('delete'),
+			'title' => elgg_echo('delete:this'),
+			'class' => 'tooltip s t elgg-requires-confirmation',
+			'rel' => elgg_echo('deck_river:account:deleteconfirm'),
+			'is_action' => true,
+		));
+	}
 
 	$subtitle = "$author_text $date";
 
@@ -99,16 +103,19 @@ HTML;
 	));
 
 	if (!$account->icon) {
-		$block = elgg_view('output/url', array(
-			'href' => '#',
-			'onclick' => "elgg.deck_river.getFBGroups('{$account->user_id}', '{$account->oauth_token}', '{$account->getGUID()}');",
-			'text' => elgg_echo('deck_river:facebook:account:add_groups'),
-			'rel' => 'nofollow'
-		));
-		$name = $account->name;
+		if ($owner->getGUID() == $user_guid) {
+			$block = elgg_view('output/url', array(
+				'href' => '#',
+				'onclick' => "elgg.deck_river.getFBGroups('{$account->user_id}', '{$account->oauth_token}', '{$account->getGUID()}');",
+				'text' => elgg_echo('deck_river:facebook:account:add_groups'),
+				'rel' => 'nofollow'
+			));
+		}
 	} else {
-		$name = elgg_echo('deck_river:facebook:account:group', array($account->name, $account->username));
+		$block = elgg_echo('deck_river:facebook:account:group', array($account->username));
 	}
+
+	$block .= elgg_view('deck_river/account_block', array('account' => $account));
 
 	echo <<<HTML
 <div class="elgg-content row-fluid">
@@ -122,7 +129,7 @@ HTML;
 					<li class="elgg-menu-item-access">$access</li>
 					<li class="elgg-menu-item-delete">$delete</li>
 				</ul>
-				<h3><span class="facebook-user-info-popup info-popup" title="{$account->user_id}">{$name}</span></h3>
+				<h3><span class="facebook-user-info-popup info-popup" title="{$account->user_id}">{$account->name}</span></h3>
 				$link
 				<div class="elgg-subtext">$subtitle</div>
 			</div>

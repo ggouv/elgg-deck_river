@@ -38,6 +38,7 @@ function deck_river_init() {
 	elgg_register_ajax_view('deck_river/ajax_view/add_social_network');
 	elgg_register_ajax_view('deck_river/ajax_view/user_info');
 	elgg_register_ajax_view('deck_river/ajax_view/group_info');
+	elgg_register_ajax_view('deck_river/ajax_view/share_account');
 
 	// register page handlers
 	elgg_register_page_handler('activity', 'deck_river_page_handler');
@@ -57,6 +58,7 @@ function deck_river_init() {
 	elgg_register_action('deck_river/tab/rename', "$action_path/tab/rename.php");
 	elgg_register_action('deck_river/network/manageNetworks', "$action_path/network/manage_network.php");
 	elgg_register_action('deck_river/network/delete', "$action_path/network/delete_network.php");
+	elgg_register_action('deck_river/network/share', "$action_path/network/share_network.php");
 	elgg_register_action('elgg-deck_river/settings/save', "$action_path/plugins/save.php");
 
 	elgg_register_action('deck_river/network/getLoginUrl', "$action_path/network/getLoginUrl.php");
@@ -790,6 +792,8 @@ function deck_return_menu(array $vars = array(), $sort_by = 'priority') {
 	}
 	return $return;
 }
+
+
 
 /**
 * Google url shortener

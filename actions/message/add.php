@@ -72,93 +72,98 @@ if (empty($body)) {
 
 		} else {
 			$network_entity = get_entity($network);
+			if ($network_entity) {
 
-			// twitter
-			if ($network_entity->getSubtype() == 'twitter_account' && $network_entity->getOwnerGUID() == $user->getGUID()) {
-				elgg_load_library('deck_river:twitter_async');
-				$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
-				$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
-				$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $network_entity->oauth_token, $network_entity->oauth_token_secret);
+				// twitter
+				if ($network_entity->getSubtype() == 'twitter_account' && has_access_to_entity($network_entity)) {
+					elgg_load_library('deck_river:twitter_async');
+					$twitter_consumer_key = elgg_get_plugin_setting('twitter_consumer_key', 'elgg-deck_river');
+					$twitter_consumer_secret = elgg_get_plugin_setting('twitter_consumer_secret', 'elgg-deck_river');
+					$twitterObj = new EpiTwitter($twitter_consumer_key, $twitter_consumer_secret, $network_entity->oauth_token, $network_entity->oauth_token_secret);
 
-				//$body = elgg_substr($body, 0, 140); // only 140 characters allowed
+					//$body = elgg_substr($body, 0, 140); // only 140 characters allowed
 
-				// parse message to replace !group by #group
-				$body = preg_replace(
-					'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
-					'$1#$2',
-					$body);
+					// parse message to replace !group by #group
+					$body = preg_replace(
+						'/(^|[^\w])!([\p{L}\p{Nd}._]+)/u',
+						'$1#$2',
+						$body);
 
-				// post to twitter
-				$parent_guid = (int) get_input('twitter_parent', false);
-				try {
-					if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message
-						if (!$matches[2]) {
-							register_error(elgg_echo('deck_river:message:blank'));
-							return true;
-						}
-						$result = $twitterObj->post_direct_messagesNew(array('text' => $matches[2], 'screen_name' => str_replace('@', '', $matches[1])));
-					} else {
-						if ($parent_guid) { // response to a tweet with in_reply_to_status_id
-							$result = $twitterObj->post_statusesUpdate(array('status' => $body, 'in_reply_to_status_id' => $parent_guid));
+					// post to twitter
+					$parent_guid = (int) get_input('twitter_parent', false);
+					try {
+						if (preg_match('/^(?:d|dm)\s+([a-z0-9-_@]+)\s*(.*)/i', $body, $matches)) { // direct message
+							if (!$matches[2]) {
+								register_error(elgg_echo('deck_river:message:blank'));
+								return true;
+							}
+							$result = $twitterObj->post_direct_messagesNew(array('text' => $matches[2], 'screen_name' => str_replace('@', '', $matches[1])));
 						} else {
-							$result = $twitterObj->post_statusesUpdate(array('status' => $body));
+							if ($parent_guid) { // response to a tweet with in_reply_to_status_id
+								$result = $twitterObj->post_statusesUpdate(array('status' => $body, 'in_reply_to_status_id' => $parent_guid));
+							} else {
+								$result = $twitterObj->post_statusesUpdate(array('status' => $body));
+							}
+						}
+					} catch(Exception $e) {
+						$result = json_decode($e->getMessage())->errors[0];
+					}
+
+					// check result
+					if ($result->code == 200) {
+						system_message(elgg_echo('deck_river:twitter:posted'));
+					} else {
+						$key = 'deck_river:twitter:post:error:' . $result->code;
+						if (elgg_echo($key) == $key) { // check if language string exist
+							register_error(elgg_echo('deck_river:twitter:post:error', array($result->code, $result->message)));
+						} else {
+							register_error(elgg_echo($key));
 						}
 					}
-				} catch(Exception $e) {
-					$result = json_decode($e->getMessage())->errors[0];
 				}
 
-				// check result
-				if ($result->code == 200) {
-					system_message(elgg_echo('deck_river:twitter:posted'));
-				} else {
-					$key = 'deck_river:twitter:post:error:' . $result->code;
-					if (elgg_echo($key) == $key) { // check if language string exist
-						register_error(elgg_echo('deck_river:twitter:post:error', array($result->code, $result->message)));
-					} else {
-						register_error(elgg_echo($key));
+				// facebook
+				if (in_array($network_entity->getSubtype(), array('facebook_account', 'fb_group_account')) && has_access_to_entity($network_entity)) {
+					elgg_load_library('deck_river:facebook_sdk');
+					$facebook = new Facebook(array(
+						'appId'  => elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river'),
+						'secret' => elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck_river')
+					));
+					$facebook->setAccessToken($network_entity->oauth_token);
+
+					$params = array(
+						'message' => $body
+					);
+					if ($link_url && !in_array($link_url, array('null', 'undefined'))) {
+						$params['link'] = $params['caption'] = $link_url;
 					}
-				}
-			}
+					if ($link_name && !in_array($link_name, array('null', 'undefined'))) $params['name'] = $link_name;
+					if ($link_description && !in_array($link_description, array('null', 'undefined'))) $params['description'] = $link_description;
+					if ($link_picture && !in_array($link_picture, array('null', 'undefined'))) $params['picture'] = $link_picture;
+					//'privacy' => json_encode(array('value' => 'EVERYONE')) // https://developers.facebook.com/docs/reference/api/privacy-parameter/
 
-			// facebook
-			if (in_array($network_entity->getSubtype(), array('facebook_account', 'fb_group_account')) && $network_entity->getOwnerGUID() == $user->getGUID()) {
-				elgg_load_library('deck_river:facebook_sdk');
-				$facebook = new Facebook(array(
-					'appId'  => elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river'),
-					'secret' => elgg_get_plugin_setting('facebook_app_secret', 'elgg-deck_river')
-				));
-				$facebook->setAccessToken($network_entity->oauth_token);
+					if ($network_entity->getSubtype() == 'facebook_account') {
+						$id = $network_entity->user_id;
+					} else if ($network_entity->getSubtype() == 'fb_group_account') {
+						$id = $network_entity->group_id;
+					}
 
-				$params = array(
-					'message' => $body
-				);
-				if ($link_url && !in_array($link_url, array('null', 'undefined'))) {
-					$params['link'] = $params['caption'] = $link_url;
-				}
-				if ($link_name && !in_array($link_name, array('null', 'undefined'))) $params['name'] = $link_name;
-				if ($link_description && !in_array($link_description, array('null', 'undefined'))) $params['description'] = $link_description;
-				if ($link_picture && !in_array($link_picture, array('null', 'undefined'))) $params['picture'] = $link_picture;
-				//'privacy' => json_encode(array('value' => 'EVERYONE')) // https://developers.facebook.com/docs/reference/api/privacy-parameter/
+					try {
+						$result = $facebook->api($id . '/feed', 'post', $params);
+					} catch(FacebookApiException $e) {
+						$result = json_decode($e);
+					}
 
-				if ($network_entity->getSubtype() == 'facebook_account') {
-					$id = $network_entity->user_id;
-				} else if ($network_entity->getSubtype() == 'fb_group_account') {
-					$id = $network_entity->group_id;
+					if ($result['id']) {
+						system_message(elgg_echo('deck_river:facebook:posted', array("https://facebook.com/{$result['id']}")));
+					} else {
+						register_error(elgg_echo('deck_river:facebook:posted:error'));
+					}
+
 				}
 
-				try {
-					$result = $facebook->api($id . '/feed', 'post', $params);
-				} catch(FacebookApiException $e) {
-					$result = json_decode($e);
-				}
-
-				if ($result['id']) {
-					system_message(elgg_echo('deck_river:facebook:posted', array("https://facebook.com/{$result['id']}")));
-				} else {
-					register_error(elgg_echo('deck_river:facebook:posted:error'));
-				}
-
+			} else {
+				register_error(elgg_echo("thewire:error"));
 			}
 		}
 	}

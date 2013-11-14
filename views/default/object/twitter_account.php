@@ -19,11 +19,7 @@ $view = elgg_extract('view_type', $vars, false);
 $pinned = elgg_extract('pinned', $vars, false);
 $position = elgg_extract('position', $vars, false);
 
-$avatar = elgg_view('output/img', array(
-	'src' => 'http://twitter.com/api/users/profile_image/' . $account->screen_name . '?size=mini', // $account->avatar,
-	'alt' => $account->screen_name,
-	'class' => 'float',
-));
+$user_guid = elgg_get_logged_in_user_guid();
 
 if ($view === 'in_network_box') {
 	if ($pinned) {
@@ -32,6 +28,12 @@ if ($view === 'in_network_box') {
 	} else {
 		$input_name = '_networks[]';
 	}
+
+	$avatar = elgg_view('output/img', array(
+		'src' => 'http://twitter.com/api/users/profile_image/' . $account->screen_name . '?size=mini', // $account->avatar,
+		'alt' => $account->screen_name,
+		'class' => 'float',
+	));
 
 	$info = '<div class="elgg-river-summary"><span class="twitter-user-info-popup info-popup" title="' . $account->screen_name . '">' . $account->screen_name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
@@ -71,6 +73,12 @@ HTML;
 
 	$owner = $account->getOwnerEntity();
 
+	$avatar = elgg_view('output/img', array(
+		'src' => 'http://twitter.com/api/users/profile_image/' . $account->screen_name . '?size=normal', // $account->avatar,
+		'alt' => $account->screen_name,
+		'class' => 'float',
+	));
+
 	$owner_link = elgg_view('output/url', array(
 		'href' => "profile/$owner->username",
 		'text' => $owner->name,
@@ -79,15 +87,17 @@ HTML;
 	$author_text = elgg_echo('deck_river:account:createdby', array('Twitter', elgg_get_site_entity()->name, $owner_link));
 	$date = elgg_view_friendly_time($account->time_created);
 
-	$access = elgg_view('output/access', array('entity' => $account));
-	$delete = elgg_view('output/url', array(
-		'href' => "action/deck_river/network/delete?guid={$account->getGUID()}",
-		'text' => elgg_view_icon('delete'),
-		'title' => elgg_echo('delete:this'),
-		'class' => 'tooltip s t elgg-requires-confirmation',
-		'rel' => elgg_echo('deck_river:account:deleteconfirm'),
-		'is_action' => true,
-	));
+	if ($owner->getGUID() == $user_guid) {
+		$access = elgg_view('output/access', array('entity' => $account));
+		$delete = elgg_view('output/url', array(
+			'href' => "action/deck_river/network/delete?guid={$account->getGUID()}",
+			'text' => elgg_view_icon('delete'),
+			'title' => elgg_echo('delete:this'),
+			'class' => 'tooltip s t elgg-requires-confirmation',
+			'rel' => elgg_echo('deck_river:account:deleteconfirm'),
+			'is_action' => true,
+		));
+	}
 
 	$subtitle = "$author_text $date";
 
@@ -98,21 +108,28 @@ HTML;
 		'target' => '_blank'
 	));
 
+	$block = elgg_view('deck_river/account_block', array('account' => $account));
+
 	echo <<<HTML
-<div class="elgg-content">
-	<div class="elgg-image-block clearfix">
-		<div class="elgg-image">
-			<span title="{$account->screen_name}" class="twitter-user-info-popup info-popup">$avatar</span>
+<div class="elgg-content row-fluid">
+	<div class="span8">
+		<div class="elgg-image-block clearfix">
+			<div class="elgg-image">
+				<span title="{$account->screen_name}" class="twitter-user-info-popup info-popup">$avatar</span>
+			</div>
+			<div class="elgg-body">
+				<ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default">
+					<li class="elgg-menu-item-access">$access</li>
+					<li class="elgg-menu-item-delete">$delete</li>
+				</ul>
+				<h3><span class="twitter-user-info-popup info-popup" title="{$account->screen_name}">{$account->screen_name}</span></h3>
+				$link
+				<div class="elgg-subtext">$subtitle</div>
+			</div>
 		</div>
-		<div class="elgg-body">
-			<ul class="elgg-menu elgg-menu-entity elgg-menu-hz elgg-menu-entity-default">
-				<li class="elgg-menu-item-access">$access</li>
-				<li class="elgg-menu-item-delete">$delete</li>
-			</ul>
-			<h3><span class="twitter-user-info-popup info-popup" title="{$account->screen_name}">{$account->screen_name}</span></h3>
-			$link
-			<div class="elgg-subtext">$subtitle</div>
-		</div>
+	</div>
+	<div class="elgg-heading-basic pam span4">
+		$block
 	</div>
 </div>
 HTML;

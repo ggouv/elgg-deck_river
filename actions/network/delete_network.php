@@ -15,7 +15,7 @@ if (!$network_guid) {
 
 	$network = get_entity($network_guid);
 
-	if ($network->canEdit()) {
+	if ($network->getOwnerGUID() == $user->getGUID()) {
 		elgg_load_library('deck_river:authorize');
 		if ($network->getSubtype() == 'twitter_account') {
 			deck_river_twitter_api_revoke($user->getGUID(), $network->user_id);

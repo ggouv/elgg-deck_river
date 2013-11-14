@@ -125,6 +125,41 @@ elgg.deck_river.popups = function() {
 	// drag and drop linkbox
 	$('.linkbox-droppable').liveDraggable();
 
+	// share account
+	$('.share-account').live('click', function() {
+		elgg.deck_river.createPopup('share-account-popup', elgg.echo('deck_river:account:share_popup'));
+
+		var $body = $('#share-account-popup .elgg-body'),
+			account_guid = $(this).data('account_guid');
+		elgg.post('ajax/view/deck_river/ajax_view/share_account', {
+			dataType: 'html',
+			data: {
+				account_guid: account_guid
+			},
+			success: function(response) {
+				$body.html(response);
+				if ($.isFunction(elgg.markdown_wiki.view)) elgg.markdown_wiki.view();
+				elgg.userpicker.init();
+				$body.find('.elgg-button').click(function() {
+					elgg.action('deck_river/network/share', {
+						data: $body.find('input').serialize(),
+						success: function(json) {
+							if (json.status > -1) {
+								var $account = $('#elgg-object-'+account_guid);
+								$account.find('.shared_users_block').replaceWith(json.output.account_block);
+								$account.find('.elgg-menu-item-access').html(json.output.access);
+							}
+							$('#share-account-popup').remove();
+						}
+					});
+				});
+			},
+			error: function() {
+				$body.html(elgg.echo('deck_river:ajax:erreur'));
+			}
+		});
+	});
+
 }
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);
 
@@ -138,13 +173,13 @@ elgg.deck_river.userPopup = function(user) {
 
 	var body = $('#user-info-popup > .elgg-body');
 	elgg.post('ajax/view/deck_river/ajax_view/user_info', {
-		dataType: "html",
+		dataType: 'html',
 		data: {
 			user: user
 		},
 		success: function(response) {
 			body.html(response);
-			if ($.isFunction(elgg.markdown_wiki.view.init)) elgg.markdown_wiki.view.init();
+			if ($.isFunction(elgg.markdown_wiki.view)) elgg.markdown_wiki.view();
 		},
 		error: function() {
 			body.html(elgg.echo('deck_river:ajax:erreur'));

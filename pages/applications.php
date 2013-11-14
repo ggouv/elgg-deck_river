@@ -100,6 +100,22 @@ if ($facebook_app_id && $facebook_app_secret) {
 	}
 }
 
+
+
+// shared account
+$sharedWithMe = deck_river_get_shared_accounts();
+
+if ($sharedWithMe) {
+	$content .= elgg_view_module(
+			'shared elgg-module-network elgg-module-aside mvl float',
+			'<div class="pbs">' . elgg_echo('deck_river:shared_accounts') . '</div>',
+			elgg_view_entity_list($sharedWithMe), array(
+				'class' => 'mtl',
+			)
+		);
+}
+
+
 $title = elgg_echo('usersettings:authorize:applications');
 
 elgg_push_breadcrumb(elgg_echo('settings'), 'settings/user/' . $user->username);

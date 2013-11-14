@@ -90,7 +90,7 @@ $column_title = $user_river_column_options->title;
 			echo '<div class="tab twitter' . $class . '"><ul class="box-settings phm"><li>';
 
 			// get twitter account
-			$twitter_account = deck_river_get_networks_account('twitter_account');
+			$twitter_account = deck_river_get_networks_account('twitter_account', $user_guid, null, true);
 
 			function displayTwitterAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;
@@ -233,7 +233,7 @@ $column_title = $user_river_column_options->title;
 			echo '<div class="tab facebook' . $class . '"><ul class="box-settings phm"><li>';
 
 			// get facebook account
-			$facebook_account = array_reverse(deck_river_get_networks_account('facebook_account'));
+			$facebook_account = array_reverse(deck_river_get_networks_account('facebook_account', $user_guid, null, true));
 
 			function displayFacebookAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;

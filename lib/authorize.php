@@ -10,7 +10,7 @@
 /**
  * Get networks account for the currently logged in user.
  */
-function deck_river_get_networks_account($network, $user_guid = null, $user_id = null) {
+function deck_river_get_networks_account($network, $user_guid = null, $user_id = null, $shared = false) {
 	if (!$network) return false;
 	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
 
@@ -30,7 +30,11 @@ function deck_river_get_networks_account($network, $user_guid = null, $user_id =
 		));
 	}
 
-	return elgg_get_entities_from_metadata($params);
+	if (!$shared) {
+		return elgg_get_entities_from_metadata($params);
+	} else {
+		return array_merge(elgg_get_entities_from_metadata($params), deck_river_get_shared_accounts($network, $user_guid));
+	}
 }
 
 
@@ -60,6 +64,57 @@ function deck_river_count_networks_account($network, $user_guid = null, $user_id
 	}
 
 	return elgg_get_entities_from_metadata($params);
+}
+
+
+/**
+ * Return all accounts where user is shared with.
+ * @param  [type] $user_guid the user
+ * @return [type]          array of guid of accounts
+ */
+function deck_river_get_shared_accounts($network = 'all', $user_guid = null) {
+	global $CONFIG;
+
+	if (!$user_guid) $user_guid = elgg_get_logged_in_user_guid();
+
+	if ($network == 'all') $network = array('twitter_account', 'facebook_account');
+
+	$site_id = $CONFIG->site_guid;
+
+	$hash = $user_guid . $site_id . 'get_shared_accounts';
+
+	if ($SHARED_ACCOUNTS_CACHE[$hash]) {
+		$access_array = $cache[$hash];
+	} else {
+
+		// Get ACL memberships
+		$query = "SELECT am.access_collection_id"
+			. " FROM {$CONFIG->dbprefix}access_collection_membership am"
+			. " LEFT JOIN {$CONFIG->dbprefix}access_collections ag ON ag.id = am.access_collection_id"
+			. " WHERE am.user_guid = $user_guid AND (ag.site_guid = $site_id OR ag.site_guid = 0) AND ag.name = '" . elgg_echo('deck_river:collection:shared') . "'";
+
+		$collections = get_data($query);
+		if ($collections) {
+			foreach ($collections as $collection) {
+				if (!empty($collection->access_collection_id)) {
+					$access_array[] = (int)$collection->access_collection_id;
+				}
+			}
+
+			$a = elgg_set_ignore_access(true);
+			$account_array = elgg_get_entities(array(
+				'type' => 'object',
+				'subtype' => $network,
+				'limit' => 0,
+				'wheres' => array("(e.access_id IN (" . implode(",", $access_array) . "))")
+			));
+			elgg_set_ignore_access($a);
+		}
+
+		$SHARED_ACCOUNTS_CACHE[$hash] = $account_array;
+	}
+
+	return $account_array;
 }
 
 

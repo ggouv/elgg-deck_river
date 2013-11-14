@@ -17,7 +17,8 @@ elgg_load_library('deck_river:authorize');
 $user_deck_river_accounts_in_wire = json_decode(get_private_setting($user->getGUID(), 'user_deck_river_accounts_in_wire'), true);
 $accounts_position = array_flip($user_deck_river_accounts_in_wire['position']);
 
-$all_accounts = deck_river_get_networks_account('all');
+$all_accounts = deck_river_get_networks_account('all', $user->getGUID(), null, true);
+
 $sorted_accounts = array();
 $at_last = array();
 foreach($all_accounts as $key => $account) {
@@ -30,7 +31,7 @@ foreach($all_accounts as $key => $account) {
 	}
 }
 ksort($sorted_accounts);
-$sorted_accounts = $sorted_accounts + $at_last;
+$sorted_accounts = array_merge($sorted_accounts, $at_last);
 $position = 0;
 
 ?>

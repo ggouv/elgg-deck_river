@@ -1484,9 +1484,19 @@ a.info-popup.ui-draggable-dragging {
 }
 
 /* popup choose-twitter-account-popup */
-#choose-twitter-account-popup, #choose-twitter-list-popup {
+#choose-twitter-account-popup, #choose-twitter-list-popup, #share-account-popup {
 	height: auto;
 	width: 300px;
+}
+#share-account-popup {
+	height: auto;
+	width: 410px;
+}
+#share-account-popup input[type="checkbox"] {
+	display: none;
+}
+#share-account-popup input[type="checkbox"] + label {
+	display: none;
 }
 
 .ui-resizable { position: relative;}

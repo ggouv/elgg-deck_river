@@ -114,8 +114,8 @@ $french = array(
 	'deck_river:error:no_filter' => "Choisissez un filtre ou cliquez sur \"Tout\".",
 
 	// accounts managment
-	'deck_river:network:add:account' => "Ajouter un autre compte",
-	'deck_river:network:manage_account' => "Gérer mes comptes",
+	'deck_river:network:add:account' => "Ajouter un autre réseau",
+	'deck_river:network:manage_account' => "Gérer mes réseaux",
 	'deck_river:network:too_many_accounts' => "Vous avez trop de comptes associés à %s. Vous ne pouvez plus en ajouter d'autres...",
 	'deck_river:network:authorize:already_done' => "Vous avez déjà associé ce compte.",
 	'deck_river:network:authorize:error' => "Le compte n'a pas pu être autorisé.",
@@ -143,7 +143,15 @@ $french = array(
 	'deck_river:facebook:your_account' => "Votre profil Facebook lié à %s :",
 	'deck_river:facebook:choose:account' => "Choisissez le compte Facebook pour cette colonne :",
 	'deck_river:facebook:account:add_groups' => "Ajouter un groupe à partir de ce compte",
-	'deck_river:facebook:account:group' => "%s <span class=\"elgg-subtext\">associé à %s</span>",
+	'deck_river:facebook:account:group' => "Groupe associé depuis le compte %s",
+
+	'deck_river:collection:shared' => "Partagé",
+	'deck_river:account:share:add' => "Ajouter quelqu'un avec qui partager ce compte",
+	'deck_river:account:shared_with' => "Compte partagé avec",
+	'deck_river:account:share_popup' => "Partager ce compte",
+	'deck_river:account:share:warning' => "{4a Partager un compte donne les autorisations de :\n- pulier sur le réseau concerné au nom de ce compte,  \n- supprimer ou éditer toutes les publications sur le réseau concerné,  \n- voir tous les flux liés à ce compte, dont les flux privés.  \n\nLes personnes avec qui ce compte est partagé ne peuvent pas supprimer le compte ni partager le compte avec d'autres personnes.}",
+	'deck_river:account:share:select' => "Entrez le nom de/des personnes avec qui vous souhaitez partager ce compte :",
+	'deck_river:shared_accounts' => "Comptes partagés avec vous",
 
 	//info popups
 	'deck-river:popups:close' => "Fermer cette fenêtre",
