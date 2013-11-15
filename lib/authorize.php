@@ -33,7 +33,11 @@ function deck_river_get_networks_account($network, $user_guid = null, $user_id =
 	if (!$shared) {
 		return elgg_get_entities_from_metadata($params);
 	} else {
-		return array_merge(elgg_get_entities_from_metadata($params), deck_river_get_shared_accounts($network, $user_guid));
+		if ($accounts = elgg_get_entities_from_metadata($params)) {
+			return array_merge($accounts, deck_river_get_shared_accounts($network, $user_guid));
+		} else {
+			return deck_river_get_shared_accounts($network, $user_guid);
+		}
 	}
 }
 
@@ -80,8 +84,8 @@ function deck_river_get_shared_accounts($network = 'all', $user_guid = null) {
 	if ($network == 'all') $network = array('twitter_account', 'facebook_account');
 
 	$site_id = $CONFIG->site_guid;
-
 	$hash = $user_guid . $site_id . 'get_shared_accounts';
+	$account_array = array();
 
 	if ($SHARED_ACCOUNTS_CACHE[$hash]) {
 		$access_array = $cache[$hash];
