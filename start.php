@@ -24,8 +24,6 @@ function deck_river_init() {
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js');
 	elgg_extend_view('page/elements/foot', 'deck_river/mustaches_wrapper', 499);
-	elgg_extend_view('deck_river/mustaches/main_templates', 'deck_river/mustaches/linkbox');
-
 	elgg_extend_view('page/elements/foot', 'page/layouts/content/deck_river_add_new_tab', 500);
 
 	elgg_register_ajax_view('deck_river/ajax_json/column_river');

@@ -194,7 +194,7 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 			value.likes.string = elgg.echo('deck_river:facebook:like'+(vld.length == 1 ? '':'s'), [vld.length]);
 			$.each(vld, function(i, e) {
 				u += ','+e.id;
-				if (e.id == response.columnSettings.user_id) value.liked = true;
+				if (response.columnSettings && e.id == response.columnSettings.user_id) value.liked = true;
 			});
 			value.likes.users = u.substr(1);
 		}
@@ -208,7 +208,7 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 			$.each(vcd, function(i,e) {
 				var ef = value.comments.data[i].posted = e.created_time.FormatDate();
 				value.comments.data[i].friendly_time = elgg.friendly_time(ef);
-				value.comments.data[i].message = e.message.TruncateString().ParseEverythings('facebook');
+				if (e.message) value.comments.data[i].message = e.message.TruncateString().ParseEverythings('facebook');
 				value.comments.data[i].like = e.user_likes ? elgg.echo('deck_river:facebook:action:unlike') : elgg.echo('deck_river:facebook:action:like');
 			});
 			if (vcd.length > 4) {

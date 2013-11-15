@@ -157,7 +157,7 @@ String.prototype.FormatDate = function() {
 };
 
 String.prototype.ParseURL = function() {
-	return this.replace(/\s+/g, ' ').replace(/(.{2})?(https?:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~]+)/g, function(match, pre, url) {
+	return this.replace(/\s+/g, ' ').replace(/(.{2})?(https?:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~+]+)/g, function(match, pre, url) {
 		if (pre == '="') return pre+url;
 		if (elgg.isUndefined(pre)) pre = '';
 		return pre+'<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
