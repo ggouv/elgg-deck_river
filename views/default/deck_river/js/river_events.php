@@ -436,21 +436,39 @@ $('.elgg-menu-item-like a').live('click', function() {
 	elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1], 'likes', {
 		access_token: settings.token
 	}, function(response) {
-		if (response) {
+		if (response === true) {
 			elgg.system_message(elgg.echo('deck_river:facebook:liked'));
+		} else {
+			elgg.deck_river.FBregister_error(response.error.code);
 		}
 	});
 });
 // like comment
 $('.comment-item-like').live('click', function() {
 	var $this = $(this),
-		settings = elgg.deck_river.getColumnSettings($this.closest('.column-river'));
+		settings = elgg.deck_river.getColumnSettings($this.closest('.column-river')),
+		unlike = $this.hasClass('unlike');
 
-	elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1]+'_'+$this.closest('.elgg-item').attr('id'), 'likes', {
+	elgg.deck_river[(unlike  ? 'FBdelete' : 'FBpost')]($this.closest('.elgg-list-item').data('object_guid').split('_')[0]+'_'+$this.closest('.elgg-item').attr('id'), 'likes', {
 		access_token: settings.token
 	}, function(response) {
-		if (response) {
-			elgg.system_message(elgg.echo('deck_river:facebook:liked'));
+		if (response === true) {
+			$this.toggleClass('unlike').html(elgg.echo('deck_river:facebook:action:'+(unlike ? '' : 'un')+'like'));
+			if ($this.next().length) {
+				var $tnc = $this.nextAll('.counter'),
+					count = parseInt($tnc.html()) + (unlike ? -1 : 1);
+
+				if (count == 0) {
+					$this.nextAll('span').remove();
+				} else {
+					$tnc.html(count);
+					$this.nextAll('.elgg-icon').addClass('liked');
+				}
+			} else {
+				$this.after('<span>&bull;</span><span class="elgg-icon elgg-icon-thumbs-up liked"></span><span class="counter">1</span>');
+			}
+		} else {
+			elgg.deck_river.FBregister_error(response.error.code);
 		}
 	});
 });
@@ -481,10 +499,13 @@ $('.facebook-comment-form .elgg-button').live('click', function() {
 					created_time: date,
 					posted: dateF,
 					friendly_time: elgg.friendly_time(dateF),
-					message: $txt.val()
+					message: $txt.val(),
+					like: elgg.echo('deck_river:facebook:action:like')
 				};
 			$this.closest('.elgg-body').find('.elgg-list-comments').append(Mustache.render($('#erFBt-comment').html(), data));
 			$txt.val('');
+		} else {
+			elgg.deck_river.FBregister_error(response.error.code);
 		}
 	});
 });

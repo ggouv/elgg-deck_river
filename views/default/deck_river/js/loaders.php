@@ -58,8 +58,9 @@ elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
 				limit: 30
 			}, function(response) {
 				if (response) {
-					response.results = response.data;
 					response.TheColumn = TheColumn.removeClass('loadingRefresh');
+					response.results = response.data;
+					response.columnSettings = columnSettings;
 					if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
 						TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network));
 						TheColumnRiver.append(loadMoreItem).scrollTo(0);

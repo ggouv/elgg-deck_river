@@ -404,7 +404,7 @@
 				</a>
 				{{/link}}
 				<div class="elgg-river-responses pts">
-					{{#likes}}<span class="elgg-icon elgg-icon-thumbs-up-alt float gwfb prs"></span><span class="float likes-popup prm" data-users="{{likes.users}}">{{likes.string}}</span>{{/likes}}
+					{{#likes}}<span class="elgg-icon elgg-icon-thumbs-up-alt float gwfb prs{{#liked}} liked{{/liked}}"></span><span class="float likes-popup prm" data-users="{{likes.users}}">{{likes.string}}</span>{{/likes}}
 					{{#shares}}<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span><span class="float shares-popup prm">&nbsp;{{shares.string}}</span>{{/shares}}
 				</div>
 				{{#comments}}
@@ -452,7 +452,7 @@
 							<br><span class="elgg-friendlytime">
 								<acronym class="tooltip w" title="{{created_time}}" time="{{posted}}">{{friendly_time}}</acronym>
 							</span>
-						</a>&nbsp;&bull;&nbsp;<a class="comment-item-like" href="#">{{like}}</a>{{#like_count}}&nbsp;&bull;<span class="elgg-icon elgg-icon-thumbs-up"></span>{{like_count}}{{/like_count}}
+						</a>&nbsp;&bull;<a class="comment-item-like phs{{#user_likes}} unlike{{/user_likes}}" href="#">{{like}}</a>{{#like_count}}<span>&bull;</span><span class="elgg-icon elgg-icon-thumbs-up{{#user_likes}} liked{{/user_likes}}"></span><span class="counter">{{like_count}}</span>{{/like_count}}
 					</span>
 				</div>
 				<div class="elgg-river-message">{{{message}}}</div>

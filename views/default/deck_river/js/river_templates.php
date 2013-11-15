@@ -193,7 +193,8 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 
 			value.likes.string = elgg.echo('deck_river:facebook:like'+(vld.length == 1 ? '':'s'), [vld.length]);
 			$.each(vld, function(i, e) {
-				u += ','+e.id
+				u += ','+e.id;
+				if (e.id == response.columnSettings.user_id) value.liked = true;
 			});
 			value.likes.users = u.substr(1);
 		}

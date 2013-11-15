@@ -431,6 +431,37 @@ elgg.deck_river.FBpost = function(object, query, params, callback) {
 };
 
 
+
+/**
+ * Ajax get to Facebook API
+ * @param {[type]}   object     ID of object
+ * @param {[type]}   query      the query
+ * @param {[type]}   params     params to pass in POST
+ * @param {Function} callback a function to execute
+ */
+elgg.deck_river.FBdelete = function(object, query, params, callback) {
+	elgg.deck_river.FBajax(object, query, params, callback, 'DELETE');
+};
+
+
+
+/**
+ * Register facebook error
+ * @param {[type]}   code   facebook code error
+ */
+elgg.deck_river.FBregister_error = function(code) {
+	var echo = '';
+	if (elgg.echo('deck_river:facebook:error:'+code) == 'deck_river:facebook:error:'+code) {
+		echo = elgg.echo('deck_river:facebook:error:code', [code]);
+	} else {
+		echo = elgg.echo('deck_river:facebook:error:'+code);
+	}
+	elgg.register_error(echo);
+};
+
+
+
+
 // functions not used
 FBgraph = function(query, callback) {
 	$.ajax({
