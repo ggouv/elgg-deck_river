@@ -253,7 +253,11 @@ $french = array(
 	'deck_river:facebook:feed:links' => "Mes liens",
 	'deck_river:facebook:feed:search' => "Recherche",
 	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
-	'deck_river:facebook:error' => "Erreur avec l'API de Facebook",
+	'deck_river:facebook:error' => "Erreur avec l'API de Facebook.",
+	'deck_river:facebook:error:code' => "Erreur avec l'API de Facebook : %s",
+	'deck_river:facebook:error:100' => "Facebook ne trouve pas la publication demandée.", // "(#100) Error finding the requested story"
+	'deck_river:facebook:error:200' => "Facebook signale une erreur de permisions.", // "(#200) Permissions error"
+	'deck_river:facebook:error:1705' => "Facebook signale une erreur pendant l'action.", // "(#1705) There was an error during posting."
 	'deck_river:facebook:error:group:already' => 'Vous avez déjà associé ce groupe !',
 	'deck_river:facebook:liked' => "Votre like a été pris en compte par Facebook !",
 

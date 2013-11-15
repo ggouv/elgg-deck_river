@@ -70,11 +70,8 @@ elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
 				}
 			});
 		};
-
 		if (!FBloaded) {
-			$(window).load(function() { // We need to wait for javascript Facebook SDK finish loaded if first page contains facebook feed
-				loadColumn();
-			});
+			FBstackCallback.push(loadColumn);
 		} else {
 			loadColumn();
 		}

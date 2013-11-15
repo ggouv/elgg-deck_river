@@ -367,9 +367,10 @@ elgg.register_hook_handler('init', 'system', elgg.friendly_time.init);
  * @return void
  */
 var FBloaded = 0; // var to prevent already been called.
+var FBstackCallback = []; // an array of functions that will be executed after FB init ready
 elgg.deck_river.initFacebook = function() {
 	if (!FBloaded) {
-		$.ajaxSetup({ cache: true });
+		//$.ajaxSetup({ cache: true });
 		$.getScript('//connect.facebook.net/en_UK/all.js', function(){
 			FBloaded = 1;
 			FB.init({
@@ -377,6 +378,9 @@ elgg.deck_river.initFacebook = function() {
 				channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
 				oauth: true
 			});
+			$.each(FBstackCallback, function(i, e) {
+				e();
+			})
 		});
 	}
 };
