@@ -96,7 +96,7 @@
 <!-- Template for Twitter user profile popup -->
 <script id="twitter-user-profile-template" type="text/template">
 	<ul class="elgg-tabs elgg-htabs">
-		<li class="elgg-state-selected"><a target="_blank" href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+		<li class="elgg-state-selected"><a href="#{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
 		<li><a href="#{{id}}-get_statusesUser_timeline"><?php echo elgg_echo('activity'); ?></a></li>
 		<li><a href="#{{id}}-get_searchTweets"><?php echo elgg_echo('river:mentions'); ?></a></li>
 		<li><a href="#{{id}}-get_favoritesList">{{favourites_count}}&nbsp;<?php echo elgg_echo('favorites'); ?></a></li>

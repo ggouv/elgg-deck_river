@@ -1384,7 +1384,7 @@ a.info-popup.ui-draggable-dragging {
 }
 
 /* facebook popup */
-#facebook-groups-popup li:hover {
+#facebook-groups-popup li:hover, #facebook-pages-popup li:hover {
 	background: #CCC;
 }
 #video-popup {

@@ -63,6 +63,7 @@ function deck_river_init() {
 	elgg_register_action('deck_river/twitter', "$action_path/network/twitter.php");
 	elgg_register_action('deck_river/facebook', "$action_path/network/facebook.php");
 	elgg_register_action('deck_river/add_facebook_group', "$action_path/network/add_facebook_group.php");
+	elgg_register_action('deck_river/add_facebook_page', "$action_path/network/add_facebook_page.php");
 
 	// Register a URL handler for thewire posts
 	elgg_register_entity_url_handler('object', 'thewire', 'deck_river_thewire_url');

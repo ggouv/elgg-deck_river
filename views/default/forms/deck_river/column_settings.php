@@ -238,7 +238,16 @@ $column_title = $user_river_column_options->title;
 			function displayFacebookAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;
 				$facebook_user = $account->name;
-				$facebook_avatar = $account->icon ? $account->icon : 'https://graph.facebook.com/' . $facebook_user . '/picture';
+
+				if ($account->icon) { // this is a group
+					$link = 'groups/' . $account->name;
+				} else if ($account->parent_id) { // this is a page
+					$link = 'pages/' . $account->name . '/' . $account->user_id;
+				} else { // this is a facebook user
+					$link = $account->username;
+				}
+
+				$facebook_avatar = $account->icon ? $account->icon : 'https://graph.facebook.com/' . $account->user_id . '/picture';
 
 				// User facebook block
 				$img = elgg_view('output/img', array(
@@ -252,8 +261,8 @@ $column_title = $user_river_column_options->title;
 				$facebook_name = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $facebook_user . '">' . $facebook_user . '</span>';
 				$facebook_name .= '<br/><span class="elgg-river-timestamp">';
 				$facebook_name .= elgg_view('output/url', array(
-					'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $facebook_user),
-					'text' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $facebook_user),
+					'href' => 'http://facebook.com/' . $link,
+					'text' => 'http://facebook.com/' . $link,
 					'target' => '_blank',
 					'rel' => 'nofollow'
 				));
@@ -282,6 +291,7 @@ $column_title = $user_river_column_options->title;
 				'feed' => elgg_echo('deck_river:facebook:feed'),
 				'statuses' => elgg_echo('deck_river:facebook:feed:statuses'),
 				'links' => elgg_echo('deck_river:facebook:feed:links'),
+				'page' => elgg_echo('deck_river:facebook:feed:page'),
 				'search' => elgg_echo('deck_river:facebook:feed:search'),
 			);
 

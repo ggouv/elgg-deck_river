@@ -339,5 +339,41 @@ elgg.deck_river.getFBGroups = function(account, token, GUID) {
 
 
 
+/**
+ * Show popup to choose facebook pages of a facebook_account object
+ * @param  {[type]} account The facebook_account guid
+ * @return void
+ */
+elgg.deck_river.getFBPages = function(account, token, GUID) {
+	elgg.deck_river.FBget(account, 'accounts', token, function(rep) {
+		var pages = rep.data;
+
+		elgg.deck_river.createPopup('facebook-pages-popup', elgg.echo('deck_river:facebook:pages'));
+		var $fgp = $('#facebook-pages-popup');
+
+		$fgp.find('.elgg-body')
+			.html($('<h3>', {'class': 'pbs'}).html(elgg.echo('deck_river:facebook:pages:choose')))
+			.append($('<ul>').css({'overflow-y': 'scroll', height: '552px'}));
+		$.each(pages, function(i,e) {
+			$fgp.find('.elgg-body ul').append(
+				$('<li>', {'class': 'pas link', id: e.id}).html(e.name).click(function() {
+					elgg.action('deck_river/add_facebook_page', {
+						data: {
+							facebook_account: GUID,
+							page_data : e
+						},
+						success: function(json) {
+							elgg.deck_river.network_authorize(json.output);
+							$fgp.find('#'+e.id).css('background-color', '#FF7777').fadeOut();
+						}
+					});
+				})
+			);
+		});
+	});
+};
+
+
+
 
 

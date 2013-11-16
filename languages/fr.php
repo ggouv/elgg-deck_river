@@ -144,6 +144,8 @@ $french = array(
 	'deck_river:facebook:choose:account' => "Choisissez le compte Facebook pour cette colonne :",
 	'deck_river:facebook:account:add_groups' => "Ajouter un groupe à partir de ce compte",
 	'deck_river:facebook:account:group' => "Groupe associé depuis le compte %s",
+	'deck_river:facebook:account:add_pages' => "Ajouter une page à partir de ce compte",
+	'deck_river:facebook:account:page' => "Page associée depuis le compte %s",
 
 	'deck_river:collection:shared' => "Partagé",
 	'deck_river:account:share:add' => "Ajouter quelqu'un avec qui partager ce compte",
@@ -165,6 +167,8 @@ $french = array(
 	'deck_river:twitter:choose_list' => "Choisissez la liste Twitter",
 	'deck_river:facebook:groups' => "Groupes Facebook",
 	'deck_river:facebook:groups:choose' => "Cliquez sur un groupe pour l'ajouter dans vos comptes :",
+	'deck_river:facebook:pages' => "Pages Facebook",
+	'deck_river:facebook:pages:choose' => "Cliquez sur une page pour l'ajouter dans vos comptes :",
 
 	// plugin settings
 	'deck_river:settings:min_width_column' => "Largeur minimum des colonnes",
@@ -248,6 +252,7 @@ $french = array(
 	'deck_river:facebook:feed' => "Activité",
 	'deck_river:facebook:feed:feed' => "Mon activité",
 	'deck_river:facebook:feed:group_feed' => "Activité du groupe - %s",
+	'deck_river:facebook:feed:page_feed' => "Activité de la page",
 	'deck_river:facebook:feed:home' => "Fil d'actualités",
 	'deck_river:facebook:feed:statuses' => "Mes status",
 	'deck_river:facebook:feed:links' => "Mes liens",
@@ -255,7 +260,9 @@ $french = array(
 	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
 	'deck_river:facebook:error' => "Erreur avec l'API de Facebook.",
 	'deck_river:facebook:error:code' => "Erreur avec l'API de Facebook : %s",
+	'deck_river:facebook:error:1' => "Facebook indique qu'il y a une erreur inconue, impossible d'en savoir plus...", // "(#1) An unknown error occurred"
 	'deck_river:facebook:error:100' => "Facebook ne trouve pas la publication demandée.", // "(#100) Error finding the requested story"
+	'deck_river:facebook:error:190' => "Facebook indique que vous avez changé de mot de passe !?", // "Error validating access token: The session has been invalidated because the user has changed the password."
 	'deck_river:facebook:error:200' => "Facebook signale une erreur de permisions.", // "(#200) Permissions error"
 	'deck_river:facebook:error:1705' => "Facebook signale une erreur pendant l'action.", // "(#1705) There was an error during posting."
 	'deck_river:facebook:error:group:already' => 'Vous avez déjà associé ce groupe !',
