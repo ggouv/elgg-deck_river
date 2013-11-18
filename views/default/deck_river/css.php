@@ -969,6 +969,10 @@ li.elgg-menu-item-arrow-left {
 	height: 32px;
 	border-radius: 0;
 }
+.elgg-river-comments .elgg-avatar-small > div > img {
+	width: 24px;
+	height: 24px;
+}
 .elgg-menu-river .elgg-icon:hover:before {
 	cursor: pointer;
 	color: #555;
@@ -1232,17 +1236,9 @@ a.elgg-river-responses:hover h4 {
 	position: relative;
 	padding: 0 5px;
 }
-#column-settings select.in-module {
-	position: absolute;
-	right: 44px;
-	top: 42px;
-}
-#column-settings .elgg-module-info .add_social_network {
+#column-settings .add_social_network {
 	font-size: 1.4em;
 	font-weight: bold;
-	position: absolute;
-	right: 7px;
-	top: 8px;
 	cursor: pointer;
 }
 #column-settings .add_social_network:hover {
@@ -1295,22 +1291,30 @@ a.elgg-river-responses:hover h4 {
 	clear: both;
 	padding: 5px 0 0 0;
 }
+.deck-popup h1 {
+	line-height: 1em;
+}
 .user-stats {
 	background: none repeat scroll 0 0 #EEEEEE;
 	border-radius: 5px 5px 5px 5px;
 	clear: both;
 	display: inline-block;
-	padding: 5px 0;
 	width: 100%;
 }
 .user-stats li {
-	color: #333333;
 	font-weight: bold;
 	display: block;
 	float: left;
-	margin: 0 10px;
+	margin: 0 10px 5px;
 	min-width: 100px;
 	vertical-align: top;
+}
+.user-stats li a {
+	color: #333333;
+}
+.user-stats li a:hover {
+	color: #0054A7;
+	text-decoration: none;
 }
 .user-stats .stats {
 	font-size: 200%;
@@ -1354,24 +1358,24 @@ a.info-popup.ui-draggable-dragging {
 	line-height: 1.1em;
 	font-size: 17px;
 }
-.elgg-module-popup .elgg-avatar a:hover .avatar-wrapper {
+.elgg-module-popup .elgg-avatar a:hover .avatar-wrapper img {
 	opacity: 0.3;
 }
 .elgg-module-popup .elgg-avatar span:before {
 	content: "o";
 	float: none;
 	font-size: 10em;
-	color: #CCC;
 }
 .elgg-module-popup .elgg-avatar a:hover span {
 	display: block;
-	font-size: 1.2em;
+	font-size: 1.4em;
 	font-weight: bold;
 	line-height: 0;
 	position: absolute;
 	text-align: center;
-	top: 70px;
-	width: 100%;
+	top: 80px;
+	width: 200px;
+	color: white;
 }
 .deck-popup .elgg-column-filter-button {
 	position: absolute;
@@ -1398,6 +1402,48 @@ a.info-popup.ui-draggable-dragging {
 	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	cursor: crosshair;
+}
+
+#group-info-popup .cover-block {
+	position: relative;
+	padding-bottom: 1px;
+}
+#group-info-popup .cover-wrapper {
+	width: 480px;
+	height: 200px;
+	overflow: hidden;
+}
+#group-info-popup .cover-wrapper span {
+	display: block;
+	width: 1000px;
+	margin-left: -260px;
+	text-align: center;
+}
+#group-info-popup .cover-wrapper img {
+	height: 200px;
+	display: inline-block;
+}
+#group-info-popup .cover-wrapper + .elgg-avatar {
+	position: absolute;
+	bottom: 0;
+	left: -4px;
+}
+#group-info-popup .cover-wrapper + .elgg-avatar .avatar-wrapper {
+	height: 100px;
+	line-height: 100px;
+	width: 100px;
+	border: 4px solid white;
+}
+#group-info-popup .cover-wrapper + .elgg-avatar span {
+	font-size: 0.8em;
+	top: 40px;
+	width: 108px;
+}
+#group-info-popup .cover-wrapper + .elgg-avatar img {
+	width: 100px;
+}
+#group-info-popup .cover-wrapper + .elgg-avatar + div > h1 {
+	margin-left: 100px;
 }
 
 /* single view */
@@ -1446,11 +1492,11 @@ a.info-popup.ui-draggable-dragging {
 }
 
 /* popup links */
-.elgg-river-summary .twitter-user-info-popup, .elgg-river-summary .facebook-user-info-popup {
+.elgg-river-summary .twitter-user-info-popup, .elgg-river-summary .facebook-user-info-popup, .elgg-river-summary .facebook-page-info-popup {
 	color: #4690D6;
 	font-weight: bold;
 }
-.twitter-user-info-popup:hover, .facebook-user-info-popup:hover {
+.twitter-user-info-popup:hover, .facebook-user-info-popup:hover, .facebook-page-info-popup:hover {
 	color: #555;
 	text-decoration: underline;
 	cursor: pointer;

@@ -104,7 +104,7 @@
 	<ul class="elgg-body">
 		<li id="{{id}}-info-profile">
 			<div class="elgg-avatar elgg-avatar-large float prm">
-				<a href="http://twitter.com/{{screen_name}}" title="{{screen_name}}" rel="nofollow">
+				<a href="http://twitter.com/{{screen_name}}" title="{{screen_name}}" rel="nofollow" target="_blank">
 					<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
 					<div class="avatar-wrapper center">
 						<img width="200px" title="{{screen_name}}" alt="{{screen_name}}" src="{{profile_image_url}}">
@@ -112,8 +112,8 @@
 				</a>
 			</div>
 			<div class="plm">
-				<h1 class="pts mbm">{{name}}</h1>
-				<h2 class="mbs" style="font-weight:normal;">@{{screen_name}}</h2>
+				<h1 class="pts mbs">{{name}}</h1>
+				<h2><a href="#" class="twitter-user-info-popup info-popup mbs" style="font-weight:normal;" title="{{screen_name}}">@{{screen_name}}</a></h2>
 				<div>{{{description}}}</div>
 				<div class="output-group mtm">
 					{{^following}}
@@ -141,7 +141,7 @@
 				</div>
 			</div>
 			<div id="profile-details" class="elgg-body pll">
-				<ul class="user-stats mbm">
+				<ul class="user-stats mbs pts">
 					<li><div class="stats">{{followers_count}}</div><?php echo elgg_echo('friends:followers'); ?></li>
 					<li><div class="stats">{{friends_count}}</div><?php echo elgg_echo('friends:following'); ?></li>
 					<li><div class="stats">{{listed_count}}</div><?php echo elgg_echo('deck_river:twitter:lists'); ?></li>

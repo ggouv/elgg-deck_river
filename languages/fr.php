@@ -14,6 +14,7 @@ $french = array(
 	'deck_river:add-tab' => "Ajouter un nouvel onglet",
 	'deck_river:limitColumnReached' => "Le nombre maximum de colonnes est atteint.",
 	'deck_river:limitTabReached' => "Le nombre maximum d'onglets est atteint.",
+	'deck_river:account' => "Compte : %s",
 	'river:mentions' => "Mentions",
 	'favorite' => 'favori',
 	'favorites' => 'favoris',
@@ -80,6 +81,10 @@ $french = array(
 	'deck_river:thread:hide' => "Masquer ", // !space
 	'deck_river:via' => "via",
 	'deck_river:facebook:action:like' => "J'aime",
+	'deck_river:facebook:count:likes' => "mentions j'aime",
+	'deck_river:facebook:count:talking_about' => "personnes en parlent",
+	'deck_river:facebook:count:checkins' => "personnes y ont étés",
+	'deck_river:facebook:category_list' => "Catégorie",
 	'deck_river:facebook:action:unlike' => "Je n'aime plus",
 	'deck_river:facebook:action:comment' => "Commenter",
 	'deck_river:facebook:action:share' => "Partager",
@@ -159,6 +164,7 @@ $french = array(
 	'deck-river:popups:close' => "Fermer cette fenêtre",
 	'deck-river:popups:pin' => "<div style=\"text-align: left;\">Épingler cette fenêtre<br><span class=\"elgg-text-help\">Elle ne disparaîtra pas lors des changements de page.</span></div>",
 	'deck_river:user-not-exist' => "Cet utilisateur ne semble pas exister.",
+	'deck_river:info' => "Informations",
 	'deck_river:user-info-header' => "Informations sur %s",
 	'deck_river:group-info-header' => "Informations sur le groupe %s",
 	'deck_river:hashtag-info-header' => "Recherche : %s",
@@ -167,7 +173,7 @@ $french = array(
 	'deck_river:twitter:choose_list' => "Choisissez la liste Twitter",
 	'deck_river:facebook:groups' => "Groupes Facebook",
 	'deck_river:facebook:groups:choose' => "Cliquez sur un groupe pour l'ajouter dans vos comptes :",
-	'deck_river:facebook:pages' => "Pages Facebook",
+	'deck_river:facebook:pages' => "Pages",
 	'deck_river:facebook:pages:choose' => "Cliquez sur une page pour l'ajouter dans vos comptes :",
 
 	// plugin settings
@@ -251,8 +257,8 @@ $french = array(
 	//Facebook
 	'deck_river:facebook:feed' => "Activité",
 	'deck_river:facebook:feed:feed' => "Mon activité",
-	'deck_river:facebook:feed:group_feed' => "Activité du groupe - %s",
-	'deck_river:facebook:feed:page_feed' => "Activité de la page",
+	'deck_river:facebook:feed:group_feed' => "Activité du groupe %s",
+	'deck_river:facebook:feed:page_feed' => "Activité de la page %s",
 	'deck_river:facebook:feed:home' => "Fil d'actualités",
 	'deck_river:facebook:feed:statuses' => "Mes status",
 	'deck_river:facebook:feed:links' => "Mes liens",

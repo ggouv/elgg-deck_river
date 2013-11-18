@@ -117,17 +117,10 @@ $column_title = $user_river_column_options->title;
 				$twitter_name .= '</span></div>';
 				$twitter_name = elgg_view_image_block($img, $twitter_name);
 
-				$add_account = elgg_view('output/url', array(
-					'href' => '#',
-					'text' => '+',
-					'class' => 'add_social_network tooltip s t',
-					'title' => elgg_echo('deck_river:network:add:account')
-				));
-
 				return elgg_view_module(
 					'info',
 					'<span class="elgg-river-timestamp">' . $phrase . '</span>',
-					$twitter_name . $add_account,
+					$twitter_name,
 					array(
 						'class' => 'float ' . $class
 					)
@@ -145,6 +138,13 @@ $column_title = $user_river_column_options->title;
 				'get_direct_messagesSent' => elgg_echo('deck_river:twitter:feed:dm:sent'),
 				'get_favoritesList' => elgg_echo('deck_river:twitter:feed:favorites'),
 			);
+
+			$add_account = elgg_view('output/url', array(
+				'href' => '#',
+				'text' => '+',
+				'class' => 'add_social_network tooltip s t',
+				'title' => elgg_echo('deck_river:network:add:account')
+			));
 
 			if (!$twitter_account || count($twitter_account) == 0) { // No account registred, send user off to validate account
 
@@ -168,7 +168,7 @@ $column_title = $user_river_column_options->title;
 
 			} else if (count($twitter_account) == 1) { // One account registred
 
-				$output = displayTwitterAccount($twitter_account[0], elgg_echo('deck_river:twitter:your_account', array($site_name)), 'mtl');
+				$output = $add_account . displayTwitterAccount($twitter_account[0], elgg_echo('deck_river:twitter:your_account', array($site_name)), 'mtl');
 				$output .= elgg_view('input/hidden', array(
 					'name' => 'twitter-account',
 					'class' => 'in-module',
@@ -179,9 +179,9 @@ $column_title = $user_river_column_options->title;
 			} else { // more than one account
 
 				if (!isset($user_river_column_options->account)) $user_river_column_options->account = $twitter_account[0]->getGUID();
-				echo '<label>' . elgg_echo('deck_river:twitter:choose:account') . '</label><br />';
+				echo '<label  class="clearfloat float">' . elgg_echo('deck_river:twitter:choose:account') . '</label><br />';
 				foreach ($twitter_account as $account) {
-					echo displayTwitterAccount($account, '', 'mtm mbs multi ' . $account->getGUID());
+					$accounts .= displayTwitterAccount($account, '', 'mtm mbs multi ' . $account->getGUID());
 					$accounts_name[$account->getGUID()] = $account->screen_name;
 				}
 				echo elgg_view('input/dropdown', array(
@@ -189,27 +189,28 @@ $column_title = $user_river_column_options->title;
 					'value' => $user_river_column_options->account,
 					'class' => 'in-module',
 					'options_values' => $accounts_name
-				));
+				)) . $add_account;
+				echo $accounts;
 
 			}
 
 			// select feed
-			echo '<label>' . elgg_echo('deck_river:type') . '</label><br />';
+			echo '<label class="clearfloat float">' . elgg_echo('deck_river:type') . '</label>';
 			echo elgg_view('input/dropdown', array(
 				'name' => 'twitter-type',
 				'value' => $selected == 'twitter' ? $user_river_column_options->type : 'twitter:search/tweets',
-				'class' => 'column-type mts',
+				'class' => 'column-type mts clearfloat float',
 				'options_values' => $options_values
 			));
 
-			echo '<li class="get_searchTweets-options get_searchTweets-popular-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
+			echo '<li class="get_searchTweets-options get_searchTweets-popular-options hidden pts clearfloat"><label>' . elgg_echo('deck_river:search') . '</label><br />';
 			echo elgg_view('input/text', array(
 				'name' => 'twitter-search',
 				'value' => $user_river_column_options->search
 			));
 			echo '</li>';
 
-			echo '<li class="get_listsStatuses-options hidden pts"><label>' . elgg_echo('deck_river:twitter:lists') . '</label><br />';
+			echo '<li class="get_listsStatuses-options hidden pts clearfloat"><label>' . elgg_echo('deck_river:twitter:lists') . '</label><br />';
 			echo elgg_view('input/dropdown', array(
 				'name' => 'twitter-lists',
 				'value' => $user_river_column_options->list_id,
@@ -241,10 +242,13 @@ $column_title = $user_river_column_options->title;
 
 				if ($account->icon) { // this is a group
 					$link = 'groups/' . $account->name;
+					$limited = ' limited';
 				} else if ($account->parent_id) { // this is a page
 					$link = 'pages/' . $account->name . '/' . $account->user_id;
+					$limited = ' limited';
 				} else { // this is a facebook user
 					$link = $account->username;
+					$limited = '';
 				}
 
 				$facebook_avatar = $account->icon ? $account->icon : 'https://graph.facebook.com/' . $account->user_id . '/picture';
@@ -258,7 +262,7 @@ $column_title = $user_river_column_options->title;
 					'width' => '24',
 					'height' => '24',
 				));
-				$facebook_name = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $facebook_user . '">' . $facebook_user . '</span>';
+				$facebook_name = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $account->user_id . '">' . $facebook_user . '</span>';
 				$facebook_name .= '<br/><span class="elgg-river-timestamp">';
 				$facebook_name .= elgg_view('output/url', array(
 					'href' => 'http://facebook.com/' . $link,
@@ -269,17 +273,10 @@ $column_title = $user_river_column_options->title;
 				$facebook_name .= '</span></div>';
 				$facebook_name = elgg_view_image_block($img, $facebook_name);
 
-				$add_account = elgg_view('output/url', array(
-					'href' => '#',
-					'text' => '+',
-					'class' => 'add_social_network tooltip s t',
-					'title' => elgg_echo('deck_river:network:add:account')
-				));
-
 				return elgg_view_module(
 					'info',
-					'<span class="elgg-river-timestamp">' . $phrase . '</span>',
-					$facebook_name . $add_account,
+					"<span class=\"elgg-river-timestamp$limited\">$phrase</span>",
+					$facebook_name,
 					array(
 						'class' => 'float ' . $class
 					)
@@ -294,6 +291,13 @@ $column_title = $user_river_column_options->title;
 				'page' => elgg_echo('deck_river:facebook:feed:page'),
 				'search' => elgg_echo('deck_river:facebook:feed:search'),
 			);
+
+			$add_account = elgg_view('output/url', array(
+				'href' => '#',
+				'text' => '+',
+				'class' => 'add_social_network tooltip s t',
+				'title' => elgg_echo('deck_river:network:add:account')
+			));
 
 			if (!$facebook_account || count($facebook_account) == 0) { // No account registred, send user off to validate account
 
@@ -316,7 +320,7 @@ $column_title = $user_river_column_options->title;
 
 			} else if (count($facebook_account) == 1) { // One account registred
 
-				$output = displayFacebookAccount($facebook_account[0], elgg_echo('deck_river:facebook:your_account', array($site_name)), 'mtl');
+				$output = $add_account . displayFacebookAccount($facebook_account[0], elgg_echo('deck_river:facebook:your_account', array($site_name)), 'mtl');
 				$output .= elgg_view('input/hidden', array(
 					'name' => 'facebook-account',
 					'class' => 'in-module',
@@ -327,31 +331,38 @@ $column_title = $user_river_column_options->title;
 			} else { // more than one account
 
 				if (!isset($user_river_column_options->account)) $user_river_column_options->account = $facebook_account[0]->getGUID();
-				echo '<label>' . elgg_echo('deck_river:facebook:choose:account') . '</label><br />';
+				echo '<label class="clearfloat float">' . elgg_echo('deck_river:facebook:choose:account') . '</label><br />';
 				$accounts_name = array();
 				foreach ($facebook_account as $account) {
-					echo displayFacebookAccount($account, '', 'mtm mbs multi ' . $account->getGUID());
-					$accounts_name[$account->getGUID()] = $account->name;
+					$accounts .= displayFacebookAccount($account, '', 'mts mbm multi ' . $account->getGUID());
+					if ($account->icon) { // this is a group
+						$accounts_name[$account->getGUID()] = elgg_echo('river:group') . ' ' . $account->name;
+					} else if ($account->parent_id) { // this is a page
+						$accounts_name[$account->getGUID()] = elgg_echo('deck_river:facebook:pages') . ' ' . $account->name;
+					} else { // this is a facebook user
+						$accounts_name[$account->getGUID()] = $account->name;
+					}
 				}
 				echo elgg_view('input/dropdown', array(
 					'name' => 'facebook-account',
 					'value' => $user_river_column_options->account,
 					'class' => 'in-module',
 					'options_values' => $accounts_name
-				));
+				)) . $add_account;
+				echo $accounts;
 
 			}
 
 			// select feed
-			echo '<label>' . elgg_echo('deck_river:type') . '</label><br />';
+			echo '<label class="clearfloat float">' . elgg_echo('deck_river:type') . '</label><br />';
 			echo elgg_view('input/dropdown', array(
 				'name' => 'facebook-type',
 				'value' => $selected == 'facebook' ? $user_river_column_options->type : 'home',
-				'class' => 'column-type mts',
+				'class' => 'column-type mts clearfloat float',
 				'options_values' => $options_values
 			));
 
-			echo '<li class="search-options hidden pts"><label>' . elgg_echo('deck_river:search') . '</label><br />';
+			echo '<li class="search-options hidden pts clearfloat"><label>' . elgg_echo('deck_river:search') . '</label><br />';
 			echo elgg_view('input/text', array(
 				'name' => 'facebook-search',
 				'value' => $user_river_column_options->search

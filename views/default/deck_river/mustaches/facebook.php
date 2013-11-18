@@ -3,7 +3,7 @@
 		<div class="elgg-image-block elgg-river-item clearfix">
 			<div class="elgg-image">
 				<div class="elgg-avatar elgg-avatar-small">
-					<div class="facebook-user-info-popup info-popup" title="{{from.id}}">
+					<div class="facebook-{{#from.category}}page{{/from.category}}{{^from.category}}user{{/from.category}}-info-popup info-popup link" title="{{from.id}}">
 						<img title="{{from.name}}" alt="{{from.name}}" src="http://graph.facebook.com/{{from.id}}/picture">
 					</div>
 				</div>
@@ -28,7 +28,7 @@
 					{{/submenu}}
 				</ul>
 				<div class="elgg-river-summary prl">
-					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a href="https://facebook.com/{{id}}" target="_blank">{{name}}</a>{{/via}}
+					<span class="facebook-{{#from.category}}page{{/from.category}}{{^from.category}}user{{/from.category}}-info-popup info-popup" title="{{from.id}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a class="facebook-{{#category}}page{{/category}}{{^category}}user{{/category}}-info-popup info-popup link" title="{{id}}" href="#">{{name}}</a>{{/via}}
 					{{#properties}}
 						<?php echo elgg_echo('river:facebook:photo:shared_story'); ?>&nbsp;<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>&nbsp;<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;<a target="_blank" href="{{href}}">{{text}}</a>
 					{{/properties}}
@@ -102,11 +102,15 @@
 	<li class="elgg-item" id="{{id}}">
 		<div class="elgg-image-block clearfix">
 			<div class="elgg-image">
-				<img alt="{{from.name}}" src="https://graph.facebook.com/{{from.id}}/picture?width=24&height=24" width="24" height="24">
+				<div class="elgg-avatar elgg-avatar-small">
+					<div class="facebook-user-info-popup info-popup" title="{{from.id}}">
+						<img title="{{from.name}}" alt="{{from.name}}" src="http://graph.facebook.com/{{from.id}}/picture?width=24&height=24" width="24" height="24">
+					</div>
+				</div>
 			</div>
 			<div class="elgg-body">
 				<div class="elgg-river-summary prl">
-					<span class="facebook-user-info-popup info-popup" title="{{from.name}}">{{from.name}}</span>
+					<span class="facebook-user-info-popup info-popup" title="{{from.id}}">{{from.name}}</span>
 					<span class="elgg-river-timestamp">
 						<a target="_blank" href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">
 							<br><span class="elgg-friendlytime">
@@ -120,3 +124,142 @@
 		</div>
 	</li>
 </script>
+
+
+
+<!-- Template for Facebook user profile popup -->
+<script id="facebook-user-profile-template" type="text/template">
+	<ul class="elgg-tabs elgg-htabs">
+		<li class="elgg-state-selected"><a href="#fb-{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+		<li><a href="#fb-{{id}}-feed"><?php echo elgg_echo('activity'); ?></a></li>
+	</ul>
+	<ul class="elgg-body">
+		<li id="fb-{{id}}-info-profile">
+			<div class="elgg-avatar elgg-avatar-large float prm">
+				<a href="http://www.facebook.com/{{username}}" title="{{first_name}} {{last_name}}" rel="nofollow" target="_blank">
+					<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
+					<div class="avatar-wrapper center">
+						<img width="200px" title="{{first_name}} {{last_name}}" alt="{{first_name}} {{last_name}}" src="https://graph.facebook.com/{{id}}/picture?width=200&height=200">
+					</div>
+				</a>
+			</div>
+			<div class="plm">
+				<h1 class="pts mbm">{{first_name}} {{last_name}}</h1>
+				<h2 class="mbs" style="font-weight:normal;">{{username}}</h2>
+				<div>{{{bio}}}</div>
+			</div>
+			<div id="profile-details" class="elgg-body pll">
+				<div class="even">
+					<b><?php echo elgg_echo('Facebook'); ?> :</b> <a class="external" target="_blank" href="https://facebook.com/{{username}}">https://facebook.com/{{username}}</a>
+				</div>
+				{{#website}}
+				<div class="even">
+					<b><?php echo elgg_echo('site'); ?> :</b> {{{website}}}
+				</div>
+				{{/website}}
+				{{#location}}
+				<div class="even">
+					<b><?php echo elgg_echo('profile:field:location'); ?> :</b> {{location}}
+				</div>
+				{{/location}}
+				{{#lang}}
+				<div class="even">
+					<b><?php echo elgg_echo('user:set:language'); ?> :</b> {{lang}}
+				</div>
+				{{/lang}}
+				{{#updated_time}}
+				<div class="even">
+					<b><?php echo elgg_echo('usersettings:statistics:label:lastaction'); ?> :</b> {{updated_time}}
+				</div>
+				{{/updated_time}}
+			</div>
+		</li>
+		<li id="fb-{{id}}-feed" class="column-river hidden" >
+			<ul class="column-header hidden" data-network="facebook" data-query="{{id}}/feed" data-token="{{token}}"></ul>
+			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
+		</li>
+	</ul>
+</script>
+
+
+
+<!-- Template for Facebook page profile popup -->
+<script id="facebook-page-profile-template" type="text/template">
+	<ul class="elgg-tabs elgg-htabs">
+		<li class="elgg-state-selected"><a href="#fb-{{id}}-info-profile"><?php echo elgg_echo('profile'); ?></a></li>
+		<li><a href="#fb-{{id}}-feed"><?php echo elgg_echo('activity'); ?></a></li>
+	</ul>
+	<ul class="elgg-body">
+		<li id="fb-{{id}}-info-profile">
+			<div class="cover-block">
+				{{#cover.source}}
+				<div class="cover-wrapper center pbs">
+					<span><img src="{{cover.source}}"></span>
+				</div>
+				{{/cover.source}}
+				<div class="elgg-avatar elgg-avatar-large float prm">
+					<a href="{{link}}" title="{{name}}" rel="nofollow" target="_blank">
+						<span class="gwfb hidden"><br><?php echo elgg_echo('deck_river:go_to_profile'); ?></span>
+						<div class="avatar-wrapper center">
+							<img width="200px" title="{{name}}" alt="{{name}}" src="https://graph.facebook.com/{{id}}/picture?width=100&height=100">
+						</div>
+					</a>
+				</div>
+				<div class="plm">
+					<h1 class="pts mbm">{{name}}</h1>
+				</div>
+			</div>
+			<div id="profile-details" class="elgg-body pll">
+				<ul class="user-stats mbs pts">
+					<li><div class="stats">{{likes}}</div><?php echo elgg_echo('deck_river:facebook:count:likes'); ?></li>
+					<li><div class="stats">{{talking_about_count}}</div><?php echo elgg_echo('deck_river:facebook:count:talking_about'); ?></li>
+					{{#checkins}}<li><div class="stats">{{checkins}}</div><?php echo elgg_echo('deck_river:facebook:count:checkins'); ?></li>{{/checkins}}
+				</ul>
+				{{#about}}
+				<div class="even">
+					<b><?php echo elgg_echo('about'); ?> :</b><p style="white-space:pre-line;">{{{about}}}</p>
+				</div>
+				{{/about}}
+				<div class="even">
+					<b><?php echo elgg_echo('Facebook'); ?> :</b> <a class="external" target="_blank" href="{{link}}">{{link}}</a>
+				</div>
+				{{#website}}
+				<div class="even">
+					<b><?php echo elgg_echo('site'); ?> :</b> {{{website}}}
+				</div>
+				{{/website}}
+				{{#category_list}}
+				<div class="even">
+					<b><?php echo elgg_echo('deck_river:facebook:category_list'); ?> :</b> {{{name}}}
+				</div>
+				{{/category_list}}
+				{{#phone}}
+				<div class="even">
+					<b><?php echo elgg_echo('phone'); ?> :</b> {{{phone}}}
+				</div>
+				{{/phone}}
+				{{#location}}
+				<div class="even">
+					<b><?php echo elgg_echo('profile:field:location'); ?> :</b> {{location}}
+				</div>
+				{{/location}}
+				{{#lang}}
+				<div class="even">
+					<b><?php echo elgg_echo('user:set:language'); ?> :</b> {{lang}}
+				</div>
+				{{/lang}}
+				{{#updated_time}}
+				<div class="even">
+					<b><?php echo elgg_echo('usersettings:statistics:label:lastaction'); ?> :</b> {{updated_time}}
+				</div>
+				{{/updated_time}}
+			</div>
+		</li>
+		<li id="fb-{{id}}-feed" class="column-river hidden" >
+			<ul class="column-header hidden" data-network="facebook" data-query="{{id}}/feed" data-token="{{token}}"></ul>
+			<ul class="elgg-river elgg-list"><div class="elgg-ajax-loader"></div></ul>
+		</li>
+	</ul>
+</script>
+
+

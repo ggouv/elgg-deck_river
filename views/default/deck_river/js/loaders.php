@@ -149,7 +149,7 @@ elgg.deck_river.RefreshColumn = function(TheColumn, columnSettings) {
 	} else if (columnSettings.network == 'facebook') {
 		FB.api(columnSettings.query, 'get', {
 			access_token: columnSettings.token,
-			fields: columnSettings.fields,
+			fields: FBdefaultFields,
 			__previous: 1,
 			since: TheColumnHeader.data('refresh_url').match(/.*since=(\d*)/)[1],
 			limit: 30
@@ -221,7 +221,7 @@ elgg.deck_river.LoadMore = function(TheColumn, columnSettings) {
 	} else if (columnSettings.network == 'facebook') {
 		FB.api(columnSettings.query, 'get', {
 			access_token: columnSettings.token,
-			fields: columnSettings.fields,
+			fields: FBdefaultFields,
 			until: TheColumnHeader.data('next_page').match(/.*until=(\d*)/)[1],
 			limit: 30
 		}, function(response) {

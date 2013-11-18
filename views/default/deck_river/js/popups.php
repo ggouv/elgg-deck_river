@@ -82,6 +82,22 @@ elgg.deck_river.popups = function() {
 		elgg.deck_river.twitterUserPopup($(this).attr('title'));
 	}).liveDraggable();
 
+	// Facebook user info popup
+	$('.facebook-user-info-popup').live('click', function() {
+		var columnRiver = $(this).closest('.column-river'),
+			token = columnRiver.length ? elgg.deck_river.getColumnSettings($(this).closest('.column-river')).token : null;
+
+		elgg.deck_river.facebookUserPopup($(this).attr('title'), token);
+	}).liveDraggable();
+
+	// Facebook page info popup
+	$('.facebook-page-info-popup').live('click', function() {
+		var columnRiver = $(this).closest('.column-river'),
+			token = columnRiver.length ? elgg.deck_river.getColumnSettings($(this).closest('.column-river')).token : null;
+
+		elgg.deck_river.facebookPagePopup($(this).attr('title'), token);
+	}).liveDraggable();
+
 	// video popup for Facebook
 	$('.media-video-popup').live('click', function() {
 		var source = $(this).data('source'),
@@ -254,6 +270,90 @@ elgg.deck_river.twitterUserPopup = function(user) {
 
 
 /**
+ * show twitter user popup
+ * @param  {[string]} user screen_name
+ */
+elgg.deck_river.facebookUserPopup = function(user, token) {
+	elgg.deck_river.createPopup('user-info-popup', elgg.echo('deck_river:info'));
+
+	var body = $('#user-info-popup > .elgg-body'),
+		userInfo = elgg.deck_river.findUser(user, 'facebook'),
+		token = token || elgg.deck_river.FBgetToken(),
+		templateRender = function(response) {
+			var value = $.extend(true, {}, response); // We need cloned var because we make some changes.
+			body.html(Mustache.render($('#facebook-user-profile-template').html(), value));
+			$('#user-info-popup > .elgg-head h3').html(elgg.echo('deck_river:user-info-header', [response.name]));
+		};
+
+	if (elgg.isUndefined(userInfo)) {
+		FB.api(user, 'GET', {
+				token: token,
+				fields: "id,link,first_name,quotes,name,hometown,bio,middle_name,about,is_verified,gender,third_party_id,relationship_status,last_name,locale,name_format,website,location,username,updated_time"
+			}, function (response) {
+			if (response && !response.error) {
+				response.token = token;
+				if (response.updated_time) response.updated_time = $.datepicker.formatDate(elgg.echo('deck_river:created_at:date_format'), new Date(response.updated_time));
+				if (response.website) {
+					if (/^www/.test(response.website)) response.website = 'http://'+response.website;
+					response.website = response.website.ParseURL();
+				}
+				elgg.deck_river.storeEntity(response, 'facebook');
+				templateRender(response);
+			} else {
+				body.html(elgg.echo('deck_river:ajax:erreur'));
+			}
+		});
+	} else {
+		templateRender(userInfo);
+	}
+};
+
+
+
+/**
+ * show twitter page popup. Stacked in group-info-popup
+ * @param  {[string]} user screen_name
+ */
+elgg.deck_river.facebookPagePopup = function(page, token) {
+	elgg.deck_river.createPopup('group-info-popup', elgg.echo('deck_river:info'));
+
+	var body = $('#group-info-popup > .elgg-body'),
+		userInfo = elgg.deck_river.findUser(page, 'facebook'),
+		token = token || elgg.deck_river.FBgetToken(),
+		templateRender = function(response) {
+			var value = $.extend(true, {}, response); // We need cloned var because we make some changes.
+			body.html(Mustache.render($('#facebook-page-profile-template').html(), value));
+			$('#group-info-popup > .elgg-head h3').html(elgg.echo('deck_river:user-info-header', [response.name]));
+		};
+
+	if (elgg.isUndefined(userInfo)) {
+		FB.api(page, 'GET', {
+				token: token,
+				fields: "id,name,link,category_list,is_published,can_post,likes,location,phone,checkins,picture,cover,website,talking_about_count,about"
+			}, function (response) {
+			if (response && !response.error) {
+				response.token = token;
+				if (response.updated_time) response.updated_time = $.datepicker.formatDate(elgg.echo('deck_river:created_at:date_format'), new Date(response.updated_time));
+				if (response.website) {
+					if (/^www/.test(response.website)) response.website = 'http://'+response.website;
+					response.website = response.website.ParseURL();
+				}
+				if (!response.likes) response.likes = 0;
+				if (response.about) response.about = response.about.ParseURL();
+				elgg.deck_river.storeEntity(response, 'facebook');
+				templateRender(response);
+			} else {
+				body.html(elgg.echo('deck_river:ajax:erreur'));
+			}
+		});
+	} else {
+		templateRender(userInfo);
+	}
+};
+
+
+
+/**
  * Elgg-deck_river plugin
  *
  * Create a new popup
@@ -348,7 +448,7 @@ elgg.deck_river.getFBPages = function(account, token, GUID) {
 	elgg.deck_river.FBget(account, 'accounts', token, function(rep) {
 		var pages = rep.data;
 
-		elgg.deck_river.createPopup('facebook-pages-popup', elgg.echo('deck_river:facebook:pages'));
+		elgg.deck_river.createPopup('facebook-pages-popup', elgg.echo('deck_river:facebook:pages')+' Facebook');
 		var $fgp = $('#facebook-pages-popup');
 
 		$fgp.find('.elgg-body')

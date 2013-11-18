@@ -225,7 +225,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 
 				// Hide every item except feed for group
 				if ($(this).attr('name') == 'facebook-type') {
-					if (/\/groups\//.test($bs.find('.elgg-module:not(.hidden) .elgg-river-timestamp a').attr('href'))) {
+					if ($bs.find('.elgg-module:not(.hidden) .elgg-river-timestamp').hasClass('limited')) {
 						$(this).val('feed').find('option[value!="feed"]').attr('disabled','disabled');
 					} else {
 						$(this).find('option').removeAttr('disabled');

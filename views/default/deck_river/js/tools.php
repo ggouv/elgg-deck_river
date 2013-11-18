@@ -50,7 +50,7 @@ elgg.deck_river.setColumnSettings = function(TheColumn, data) {
 
 
 // Global var for Entities : users and groups from elgg, users from Twitter
-var DataEntities = DataEntities || {elgg: [], twitter: []};
+var DataEntities = DataEntities || {elgg: [], twitter: [], facebook: []};
 
 /**
  * Put users and groups in global var DataEntities
@@ -78,6 +78,8 @@ elgg.deck_river.storeEntity = function(entity, network) {
 		} else {
 			DataEntities.twitter.push(entity); // new
 		}
+	} else if (network == 'facebook') {
+		if (!$.grep(DataEntities.facebook, function(e){ return e.id === entity.id; }).length) DataEntities.facebook.push(entity);
 	}
 };
 
@@ -91,7 +93,15 @@ elgg.deck_river.storeEntity = function(entity, network) {
  */
 elgg.deck_river.findUser = function(name, network, key) {
 	var network = network || 'elgg',
-		key = key || (network == 'twitter') ? 'screen_name' : 'username';
+		key = key || null;
+
+	if (!key && network == 'elgg') {
+		key = 'username';
+	} else if (!key && network == 'twitter') {
+		key = 'screen_name';
+	} else if (!key && network == 'facebook') {
+		key = 'id';
+	}
 
 	return $.grep(DataEntities[network], function(e) {
 		return e[key] == name;
@@ -370,13 +380,14 @@ var FBloaded = 0; // var to prevent already been called.
 var FBstackCallback = []; // an array of functions that will be executed after FB init ready
 elgg.deck_river.initFacebook = function() {
 	if (!FBloaded) {
-		//$.ajaxSetup({ cache: true });
+		$.ajaxSetup({ cache: true });
 		$.getScript('//connect.facebook.net/en_UK/all.js', function(){
 			FBloaded = 1;
 			FB.init({
 				appId: FBappID,
 				channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
-				oauth: true
+				oauth: true,
+				cookie: true
 			});
 			$.each(FBstackCallback, function(i, e) {
 				e();
@@ -461,6 +472,20 @@ elgg.deck_river.FBregister_error = function(code) {
 
 
 
+/**
+ * Ugly way to get facebook token. Used in popup.
+ */
+elgg.deck_river.FBgetToken = function() {
+	var token;
+	$.each(deckRiverSettings, function(i, e) {
+		$.each(e, function(j,f) {
+			if (f.network == 'facebook' && (token = f.token)) return false;
+		});
+	});
+	return token;
+};
+
+
 
 // functions not used
 FBgraph = function(query, callback) {
@@ -488,6 +513,9 @@ FBfql = function(query, callback) { //.replace(/foo/g, "bar")
 		return false;
 	});
 };
+
+
+
 
 
 

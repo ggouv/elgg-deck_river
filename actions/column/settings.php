@@ -186,7 +186,7 @@ if ($submit == 'delete') {
 		'username' => $facebook_account->username,
 		'user_id' => $facebook_account->icon ? $facebook_account->parent_id : $facebook_account->user_id,
 		'subtitle' => $facebook_account->name,
-		'fields' => 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)',
+		//'fields' => 'caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)',
 	);
 
 	switch ($facebook_type) {
@@ -195,10 +195,11 @@ if ($submit == 'delete') {
 			break;
 		case 'feed':
 			if ($facebook_account->icon) { // this is a group
-				$user_river_options[$tab][$column]['title'] = $facebook_account->name;
-				$user_river_options[$tab][$column]['subtitle'] = array('deck_river:facebook:feed:group_feed', $facebook_account->username);
+				$user_river_options[$tab][$column]['title'] = array('deck_river:facebook:feed:group_feed', $facebook_account->name);
+				$user_river_options[$tab][$column]['subtitle'] = array('deck_river:account', $facebook_account->username);
 			} else if ($facebook_account->parent_id) { // this is a page
-				$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:page_feed';
+				$user_river_options[$tab][$column]['title'] = array('deck_river:facebook:feed:page_feed', $facebook_account->name);
+				$user_river_options[$tab][$column]['subtitle'] = array('deck_river:account', $facebook_account->name);
 				$user_river_options[$tab][$column]['username'] = $facebook_account->name;
 			} else { // this is a facebook user
 				$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:feed';
