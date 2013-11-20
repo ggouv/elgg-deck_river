@@ -213,6 +213,14 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:links';
 			$user_river_options[$tab][$column]['fields'] = 'caption,created_time,from,link,message,id,icon,name,description,via,picture,privacy,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)';
 			break;
+		case 'page':
+			$user_river_options[$tab][$column]['title'] = array('deck_river:facebook:feed:page_feed', get_input('facebook-page_name'));
+			$user_river_options[$tab][$column]['subtitle'] = array('deck_river:account', $facebook_account->name);
+			$user_river_options[$tab][$column]['username'] = $facebook_account->name;
+			$user_river_options[$tab][$column]['query'] = get_input('facebook-page_id'). '/feed';
+			$user_river_options[$tab][$column]['page_name'] = get_input('facebook-page_name');
+			$user_river_options[$tab][$column]['page_id'] = get_input('facebook-page_id');
+			break;
 		case 'search':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:search';
 			$user_river_options[$tab][$column]['subtitle'] = '"' . $search . '" - ' . $facebook_account->name;

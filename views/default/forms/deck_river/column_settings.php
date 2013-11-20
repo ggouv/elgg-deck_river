@@ -362,10 +362,25 @@ $column_title = $user_river_column_options->title;
 				'options_values' => $options_values
 			));
 
+			// search input
 			echo '<li class="search-options hidden pts clearfloat"><label>' . elgg_echo('deck_river:search') . '</label><br />';
 			echo elgg_view('input/text', array(
 				'name' => 'facebook-search',
 				'value' => $user_river_column_options->search
+			));
+			echo '</li>';
+
+			// select page
+			echo '<li class="page-options hidden pts clearfloat"><label>' . elgg_echo('deck_river:select:page') . '</label><br />';
+			echo elgg_view('input/text', array(
+				'name' => 'facebook-page_name',
+				'placeholder' => elgg_echo('Entrez le nom de la page'),
+				'value' => $user_river_column_options->page_name,
+				'data-original_value' => $user_river_column_options->page_id
+			));
+			echo elgg_view('input/hidden', array(
+				'name' => 'facebook-page_id',
+				'value' => $user_river_column_options->page_id
 			));
 			echo '</li>';
 
