@@ -11,12 +11,14 @@
 			</div>
 			<div class="elgg-body">
 				<ul class="elgg-menu elgg-menu-river elgg-menu-hz elgg-menu-river-default">
+					{{#can_like}}
 					<li class="elgg-menu-item-like">
 						<a href="#" class="gwfb tooltip s" title="<?php echo elgg_echo('deck_river:facebook:action:like'); ?>"><span class="elgg-icon elgg-icon-thumbs-up"></span></a>
 					</li>
 					<li class="elgg-menu-item-retweet pls prm">
 						<a href="#" class="gwfb tooltip s" title="<?php echo elgg_echo('deck_river:facebook:action:share'); ?>"><span class="elgg-icon elgg-icon-retweet"></span></a>
 					</li>
+					{{/can_like}}
 					{{{menu.default}}}
 					{{#submenu}}
 					<li class="elgg-submenu">

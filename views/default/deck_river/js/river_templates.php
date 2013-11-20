@@ -168,7 +168,16 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 	var output = '',
 		imgs = [],
 		elggRiverTemplate = Mustache.compile($('#elgg-river-facebook-template').html());
-		Mustache.compilePartial('erFBt-comment', $('#erFBt-comment').html());
+		Mustache.compilePartial('erFBt-comment', $('#erFBt-comment').html()),
+		checkAction = function(actions, action) {
+			var ret = false;
+
+			if (elgg.isUndefined(actions)) return false;
+			$.each(actions, function(i,e) {
+				if (e.name == action) ret = true;
+			});
+			return ret;
+		};
 
 	$.each(response.data, function(key, value) {
 		// store information about facebook user
@@ -219,10 +228,15 @@ elgg.deck_river.facebookDisplayItems = function(response, thread) {
 
 		value.rand = (Math.random()+"").replace('.','');
 
+		if (value.type == 'swf' && (value.source = elgg.deck_river.setVideoURLToIframe(decodeURIComponent(value.link)))) value.type = 'video';
+
 		value['type'+value.type] = true; // used for mustache
 		if (value.status_type == 'created_note') {
 			value.typenote = 1;
 		}
+
+		value.can_comment = checkAction(value.actions, 'Comment');
+		value.can_like = checkAction(value.actions, 'Like');
 
 		if (!value.full_picture) value.full_picture = value.picture;
 		if (value.full_picture) imgs.push({src: value.full_picture, id: value.id});
