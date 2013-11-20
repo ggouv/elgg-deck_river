@@ -345,7 +345,7 @@ body {
 #linkbox .elgg-image:hover li {
 	display: block;
 }
-#linkbox .link_name:hover, #linkbox .link_description:hover, #linkbox .link_name:focus, #linkbox .link_description:focus {
+#linkbox .link_name[contenteditable]:hover, #linkbox .link_description[contenteditable]:hover, #linkbox .link_name[contenteditable]:focus, #linkbox .link_description[contenteditable]:focus {
 	background: #e4ecf5;
 }
 #linkbox .link_description {

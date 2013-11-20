@@ -134,6 +134,7 @@ if (empty($body)) {
 					$params = array(
 						'message' => $body
 					);
+
 					if ($link_url && !in_array($link_url, array('null', 'undefined'))) {
 						$params['link'] = $params['caption'] = $link_url;
 					}
@@ -141,6 +142,12 @@ if (empty($body)) {
 					if ($link_description && !in_array($link_description, array('null', 'undefined'))) $params['description'] = $link_description;
 					if ($link_picture && !in_array($link_picture, array('null', 'undefined'))) $params['picture'] = $link_picture;
 					//'privacy' => json_encode(array('value' => 'EVERYONE')) // https://developers.facebook.com/docs/reference/api/privacy-parameter/
+
+					$share = get_input('facebook_parent', false);
+					if ($share) {
+						$params['link'] = 'https://www.facebook.com/' . preg_replace('/_/', '/posts/', $share);
+						$params['feature'] = 'share';
+					}
 
 					try {
 						$result = $facebook->api($network_entity->user_id . '/feed', 'post', $params);

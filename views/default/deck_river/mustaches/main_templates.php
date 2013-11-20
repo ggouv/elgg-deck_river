@@ -37,7 +37,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="#" onclick="javascript:elgg.thewire.insertInThewire('{{text}} {{sl}}');">
+			<a href="#" onclick="javascript:elgg.thewire.insertInThewire('{{{text}}} {{sl}}');">
 				<?php echo elgg_echo('thewire:put_title_shortlink_in_wire'); ?>
 			</a>
 		</li>
@@ -85,7 +85,7 @@
 <!-- Template for hashtag popup -->
 <script id="hashtag-popup-template" type="text/template">
 	<ul class="elgg-tabs elgg-htabs">
-		<li><a class="elgg" href="#{{hashtag}}-elgg">Elgg</a></li>
+		<li><a class="elgg" href="#{{hashtag}}-elgg"><?php echo elgg_get_site_entity()->name; ?></a></li>
 		<li><a class="twitter" href="#{{hashtag}}-twitter">Twitter</a></li>
 	</ul>
 	<ul class="elgg-body">

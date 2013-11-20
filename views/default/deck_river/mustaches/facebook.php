@@ -1,5 +1,5 @@
 <!-- Templates for elgg river facebook item -->
-<script id="elgg-river-facebook-template" type="text/template"><li class="elgg-list-item item-facebook-{{id}}" data-object_guid="{{id}}">
+<script id="elgg-river-facebook-template" type="text/template"><li class="elgg-list-item item-facebook-{{id}}" data-object_id="{{object_id}}" data-id="{{id}}" data-username="{{from.name}}">
 		<div class="elgg-image-block elgg-river-item clearfix">
 			<div class="elgg-image">
 				<div class="elgg-avatar elgg-avatar-small">
@@ -50,7 +50,7 @@
 				{{^typevideo}}
 				<a class="elgg-river-responses linkbox-droppable" target="_blank" href="{{link}}">
 				{{/typevideo}}
-					<div class="elgg-river-image" data-mainimage="{{full_picture}}" data-title="{{name}}" data-url="{{caption}}" data-description="{{description}}">
+					<div class="elgg-river-image" data-mainimage="{{full_picture}}" data-title="{{name}}" data-url="{{link}}" data-description="{{description}}" data-editable="true">
 						{{#full_picture}}
 						<div id="img{{id}}" class="elgg-image float gwfb" style="background-image: url({{full_picture}});"></div>
 						{{/full_picture}}
@@ -62,9 +62,9 @@
 					</div>
 				</a>
 				{{/link}}
-				<div class="elgg-river-responses pts">
-					{{#likes}}<span class="elgg-icon elgg-icon-thumbs-up-alt float gwfb prs{{#liked}} liked{{/liked}}"></span><span class="float likes-popup prm" data-users="{{likes.users}}">{{likes.string}}</span>{{/likes}}
-					{{#shares}}<span class="elgg-icon elgg-icon-retweet-sub float gwfb"></span><span class="float shares-popup prm">&nbsp;{{shares.string}}</span>{{/shares}}
+				<div class="elgg-river-responses sharelike-count">
+					{{#likes}}<span class="elgg-icon elgg-icon-thumbs-up-alt float pts gwfb prs{{#liked}} liked{{/liked}}"></span><span class="float likes-popup prm pts" data-users="{{likes.users}}">{{likes.string}}</span>{{/likes}}
+					{{#shares}}<span class="elgg-icon elgg-icon-retweet-sub float pts gwfb"></span><span class="float shares-popup prm pts">&nbsp;{{shares.string}}</span>{{/shares}}
 				</div>
 				{{#comments}}
 					{{#comments.before}}
@@ -86,6 +86,7 @@
 				{{^comments}}
 				<ul class="elgg-list elgg-river-comments elgg-list-comments"></ul>
 				{{/comments}}
+				{{#can_comment}}
 				<ul class="elgg-list elgg-river-comments pts">
 					<span class="elgg-icon elgg-icon-speech-bubble-alt float gwfb prs"></span><a href="#comment-form-{{id}}-{{rand}}" class="prm" rel="toggle"><?php echo elgg_echo('deck_river:facebook:action:comment'); ?></a>
 					<div id="comment-form-{{id}}-{{rand}}" class="facebook-comment-form hidden">
@@ -93,6 +94,7 @@
 						<a href="#" class="elgg-button elgg-button-submit">Commenter</a>
 					</div>
 				</ul>
+				{{/can_comment}}
 			</div>
 		</div>
 </li></script>

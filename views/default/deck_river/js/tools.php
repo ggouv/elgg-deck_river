@@ -25,8 +25,8 @@ elgg.deck_river.getColumnSettings = function(TheColumn) {
 			dRS.tab = tab;
 			dRS.column = column;
 		return dRS;
-	} else {
-		return false;
+	} else { // this is a popup or other.
+		return TheColumn.find('.column-header').data();
 	}
 };
 
