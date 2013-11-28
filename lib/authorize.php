@@ -95,7 +95,7 @@ function deck_river_get_shared_accounts($network = 'all', $user_guid = null) {
 		$query = "SELECT am.access_collection_id"
 			. " FROM {$CONFIG->dbprefix}access_collection_membership am"
 			. " LEFT JOIN {$CONFIG->dbprefix}access_collections ag ON ag.id = am.access_collection_id"
-			. " WHERE am.user_guid = $user_guid AND (ag.site_guid = $site_id OR ag.site_guid = 0) AND ag.name = '" . elgg_echo('deck_river:collection:shared') . "'";
+			. " WHERE am.user_guid = $user_guid AND (ag.site_guid = $site_id OR ag.site_guid = 0) AND ag.name = 'shared_network_acl'";
 
 		$collections = get_data($query);
 		if ($collections) {

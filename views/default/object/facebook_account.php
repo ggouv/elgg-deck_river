@@ -91,7 +91,11 @@ HTML;
 	$date = elgg_view_friendly_time($account->time_created);
 
 	if ($owner->getGUID() == $user_guid) {
-		$access = elgg_view('output/access', array('entity' => $account));
+		if (get_readable_access_level($account->access_id) == 'shared_network_acl') {
+			$access = '<span title="' . elgg_echo('access:help') . '" class="elgg-access elgg-access-private tooltips s">' . elgg_echo('deck_river:collection:shared') . '</span>';
+		} else {
+			$access = elgg_view('output/access', array('entity' => $account));
+		}
 		$delete = elgg_view('output/url', array(
 			'href' => "action/deck_river/network/delete?guid={$account->getGUID()}",
 			'text' => elgg_view_icon('delete'),

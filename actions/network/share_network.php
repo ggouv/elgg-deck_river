@@ -25,15 +25,21 @@ if (!$account_guid) {
 		} else {
 			// check if account has acl collection, if not create it
 			if ($account->access_id == ACCESS_PRIVATE) {
-				$account->access_id = create_access_collection(elgg_echo('deck_river:collection:shared'), $account->getOwnerGUID());
+				$account->access_id = create_access_collection('shared_network_acl', $account->getOwnerGUID());
 				$account->save();
 			}
 			update_access_collection($account->access_id, $members);
 		}
 
+		if (get_readable_access_level($account->access_id) == 'shared_network_acl') {
+			$access = '<span title="' . elgg_echo('access:help') . '" class="elgg-access elgg-access-private tooltips s">' . elgg_echo('deck_river:collection:shared') . '</span>';
+		} else {
+			$access = elgg_view('output/access', array('entity' => $account));
+		}
+
 		echo json_encode(array(
 			'account_block' => elgg_view('deck_river/account_block', array('account' => $account)),
-			'access' => elgg_view('output/access', array('entity' => $account))
+			'access' => $access
 		));
 
 	} else {

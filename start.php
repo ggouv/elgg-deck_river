@@ -84,6 +84,9 @@ function deck_river_init() {
 	// autofollow twitter account
 	elgg_register_event_handler('authorize', 'deck_river:twitter', 'deck_river_autofollow_twitter_account');
 
+	// register acces hook
+	elgg_register_plugin_hook_handler('access:collections:write', 'user', 'deck_river_access_collections');
+
 }
 
 
@@ -862,5 +865,12 @@ function deck_river_autofollow_twitter_account($event, $type, $params) {
 
 }
 
+
+function deck_river_access_collections($hook, $type, $return, $params) {
+	foreach($return as $access_id => $access_name) {
+		if ($access_name == 'shared_network_acl') unset($return[$access_id]);
+	}
+	return $return;
+}
 
 
