@@ -4,14 +4,12 @@
  **/
 
 $column_settings = elgg_extract('column_settings', $vars);
-$column_id = elgg_extract('column_id', $vars);
-$has_filter = elgg_extract('has_filter', $vars, false);
 
 if (!$column_settings['network']) $column_settings['network'] = 'elgg';
 
 // check if this column can filter content
-if ((!$column_settings['network'] || $column_settings['network'] == 'elgg')
-	&& in_array($column_settings['type'], array('all', 'friends', 'mine', 'mention', 'groups', 'group', 'group_mention', 'search'))) {
+if ($column_settings['network'] == 'elgg' &&
+	in_array($column_settings['type'], array('all', 'friends', 'mine', 'mention', 'groups', 'group', 'group_mention', 'search'))) {
 		$has_filter = true;
 	} else {
 		$has_filter = false;
@@ -70,9 +68,11 @@ if (isset($column_settings['types_filter']) || isset($column_settings['subtypes_
 }
 $subtitle .= '<span class="filtered pls mls link '.$hidden.'">' . elgg_echo('river:filtred'). '</span>';
 
+$data = elgg_format_attributes($column_settings['data']);
+
 echo <<<HTML
 <div class="message-box"><div class="column-messages"></div></div>
-<ul class="column-header gwfb {$column_settings['network']}">
+<ul class="column-header gwfb {$column_settings['network']}" $data>
 	<li>
 		$buttons
 		<div class="count hidden"></div>

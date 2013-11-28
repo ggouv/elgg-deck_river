@@ -39,8 +39,8 @@ elgg.deck_river.popups = function() {
 	}($));
 
 	// tabs popups
-	$('.deck-popup .elgg-tabs a').live('click', function() {
-		var popup = $(this).closest('.deck-popup'),
+	$('.deck-popup .elgg-tabs a, #group_activity_module .elgg-tabs a').live('click', function() {
+		var popup = $(this).closest('.elgg-body'),
 			tab = $(this).attr('href');
 
 		if (popup.find($(tab)).hasClass('hidden')) {

@@ -82,7 +82,7 @@ $('.column-filter .elgg-button-submit').live('click', function() {
 	var TheColumn = $(this).closest('.column-river'),
 		loader = '<div class="elgg-ajax-loader"></div>';
 
-	if ($(this).closest('.deck-popup').length) { // filter in popup
+	if ($(this).closest('.deck-popup').length || $(this).closest('#group_activity_module').length) { // filter in popup
 		elgg.deck_river.getFilters(TheColumn, TheColumn.find('.column-header').data(), function(data) {
 			TheColumn.find('.elgg-river').html(loader);
 			elgg.deck_river.LoadRiver(TheColumn, data);

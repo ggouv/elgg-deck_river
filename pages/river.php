@@ -21,7 +21,6 @@ if (count($user_river_settings[$page_filter]) == 0) {
 	foreach ($user_river_settings[$page_filter] as $key => $column_settings) {
 		// set header
 		$header = elgg_view('page/layouts/content/deck_river_column_header', array(
-			'column_id' => $key,
 			'column_settings' => $column_settings
 		));
 
