@@ -60,13 +60,14 @@ if ($has_filter) {
 $title = elgg_echo($column_settings['title']);
 $title = is_array($column_settings['title']) ? elgg_echo($column_settings['title'][0], array($column_settings['title'][1])) : elgg_echo($column_settings['title'], array());
 $subtitle = is_array($column_settings['subtitle']) ? elgg_echo($column_settings['subtitle'][0], array($column_settings['subtitle'][1])) : elgg_echo($column_settings['subtitle'], array());
+if ($subtitle) $subtitle = '<span>' . $subtitle . '</span>';
 
 if (isset($column_settings['types_filter']) || isset($column_settings['subtypes_filter'])) {
 	$hidden = '';
 } else {
 	$hidden = 'hidden';
 }
-$subtitle .= '<span class="filtered pls mls link '.$hidden.'">' . elgg_echo('river:filtred'). '</span>';
+$filtered = '<span class="filtered link '.$hidden.'">' . elgg_echo('river:filtred'). '</span>';
 
 $data = elgg_format_attributes($column_settings['data']);
 
@@ -78,7 +79,7 @@ echo <<<HTML
 		<div class="count hidden"></div>
 		<div class="column-handle">
 			<h3 class="title">$title</h3><br/>
-			<h6 class="subtitle">$subtitle</h6>
+			<h6 class="subtitle">{$subtitle}{$filtered}</h6>
 		</div>
 	</li>
 </ul>

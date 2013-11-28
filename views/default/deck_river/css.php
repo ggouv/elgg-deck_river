@@ -792,8 +792,10 @@ li.elgg-menu-item-arrow-left {
 	float: right;
 	margin: 6px 7px 0 0;
 }
-.column-header .filtered {
+.column-header  span + .filtered {
 	border-left: 1px solid #CCC;
+	margin-left: 5px;
+	padding-left: 5px;
 }
 .column-handle {
 	margin-right: 85px;
