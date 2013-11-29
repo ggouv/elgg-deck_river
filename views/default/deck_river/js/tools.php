@@ -147,10 +147,17 @@ elgg.deck_river.resizeRiverImages = function() {
 		var s = $(e).data('img'),
 			$eri = $(e).parent();
 
+		if (!s) {
+			var url = $(e).css('background-image').slice(4, -1),
+				img = new Image();
+
+			img.src = url;
+			s = [img.width, img.height];
+		}
 		//if (s && (s[0] >= $eri.width() || s[0] >= 600 || $eri.find('.elgg-body').html().replace(/\s+/, '') == '')) {
-		if (s && (s[0] >= $eri.width() || s[0] >= 600)) {
+		if ((s[0] >= $eri.width() || s[0] >= 600)) {
 			$(e).height(Math.min($eri.addClass('big').width(),'600')/s[0]*s[1]);
-		} else if (s) {
+		} else {
 			$eri.removeAttr('big')
 		}
 	});

@@ -22,21 +22,10 @@ elgg.thewire.init = function() {
 	$('#linkbox .elgg-menu .elgg-icon-delete').live('click', function() {
 		$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
 		elgg.thewire.removeResponseTo();
-		elgg.thewire.resize('open');
+		elgg.thewire.resize();
 		return false;
 	});
 
-	$(document).mousedown(function(e) {
-		$(document).bind('mousemove.thewire', function(e){
-			if ($(e.target).attr('id') == 'thewire-textarea') {
-				elgg.thewire.resize();
-				$('.ui-draggable-dragging').addClass('canDrop');
-			}
-		});
-	})
-	.mouseup(function() {
-		$(document).unbind('mousemove.thewire');
-	});
 	$('#thewire-textarea').focusin(function() {
 		elgg.thewire.resize();
 	}).droppable({
@@ -56,10 +45,12 @@ elgg.thewire.init = function() {
 			} else {
 				if ($uih.hasClass('elgg-user-info-popup') || $uih.hasClass('twitter-user-info-popup')) prep = '@';
 				if ($uih.hasClass('group-info-popup')) prep = '!';
+				if ($uih.hasClass('hashtag-info-popup')) prep = '#';
 				elgg.thewire.insertInThewire(prep + $(ui.helper).attr('title'));
 			}
 		},
 		over: function(e, ui) {
+			elgg.thewire.resize();
 			ui.helper.addClass('canDrop');
 		},
 		out: function(e, ui) {
@@ -232,7 +223,7 @@ elgg.thewire.textCounter = function() {
 		networks[$(e).data('network')] = true;
 	});
 
-	if (nbr_chars > 140 && networks.elgg) { // elgg limit
+	if (networks.elgg && $twT.val().getWireLength(urls) > 140) { // elgg limit
 		$ca.find('.icon-elgg').removeClass('hidden');
 		delete networks.elgg;
 		alert = 1;
@@ -315,7 +306,7 @@ elgg.thewire.move_account = function() {
 		helper: 'clone',
 		revert: 300,
 		dropOnEmpty: true,
-		revert: 500,
+		distance: 20,
 		zIndex: 9999,
 		opacity: 0.8,
 		receive: function(e, ui) {
@@ -349,6 +340,9 @@ elgg.thewire.move_account = function() {
 		},
 		activate: function(e, ui) {
 			ui.draggable.parent().addClass('ui-start');
+		},
+		deactivate: function(e, ui) {
+			ui.draggable.parent().removeClass('ui-start');
 		}
 	});
 };
