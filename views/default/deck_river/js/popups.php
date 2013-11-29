@@ -289,28 +289,27 @@ elgg.deck_river.facebookUserPopup = function(user, token) {
 		token = token || elgg.deck_river.FBgetToken(),
 		templateRender = function(response) {
 			var value = $.extend(true, {}, response); // We need cloned var because we make some changes.
+			response.token = token;
 			body.html(Mustache.render($('#facebook-user-profile-template').html(), value));
 			$('#user-info-popup > .elgg-head h3').html(elgg.echo('deck_river:user-info-header', [response.name]));
 		};
 
 	if (elgg.isUndefined(userInfo)) {
-		FB.api(user, 'GET', {
-				token: token,
-				fields: "id,link,first_name,quotes,name,hometown,bio,middle_name,about,is_verified,gender,third_party_id,relationship_status,last_name,locale,name_format,website,location,username,updated_time"
-			}, function (response) {
+		elgg.deck_river.FBfql(token, {
+			select: FbUserFields,
+			from: 'user',
+			where: 'uid='+user
+		}, function(response) {
 			if (response && !response.error) {
-				response.token = token;
-				if (response.updated_time) response.updated_time = $.datepicker.formatDate(elgg.echo('deck_river:created_at:date_format'), new Date(response.updated_time));
-				if (response.website) {
-					if (/^www/.test(response.website)) response.website = 'http://'+response.website;
-					response.website = response.website.ParseURL();
-				}
+				response = elgg.deck_river.FBformatUser(response[0]);
 				elgg.deck_river.storeEntity(response, 'facebook');
 				templateRender(response);
 			} else {
 				body.html(elgg.echo('deck_river:ajax:erreur'));
 			}
 		});
+
+
 	} else {
 		templateRender(userInfo);
 	}

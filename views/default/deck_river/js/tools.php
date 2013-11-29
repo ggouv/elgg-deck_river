@@ -79,7 +79,7 @@ elgg.deck_river.storeEntity = function(entity, network) {
 			DataEntities.twitter.push(entity); // new
 		}
 	} else if (network == 'facebook') {
-		if (!$.grep(DataEntities.facebook, function(e){ return e.id === entity.id; }).length) DataEntities.facebook.push(entity);
+		if (!$.grep(DataEntities.facebook, function(e){ return e.uid === entity.uid; }).length) DataEntities.facebook.push(entity);
 	}
 };
 
@@ -95,12 +95,14 @@ elgg.deck_river.findUser = function(name, network, key) {
 	var network = network || 'elgg',
 		key = key || null;
 
-	if (!key && network == 'elgg') {
-		key = 'username';
-	} else if (!key && network == 'twitter') {
-		key = 'screen_name';
-	} else if (!key && network == 'facebook') {
-		key = 'id';
+	if (!key) {
+		if (network == 'elgg') {
+			key = 'username';
+		} else if (network == 'twitter') {
+			key = 'screen_name';
+		} else if (network == 'facebook') {
+			key = 'uid';
+		}
 	}
 
 	return $.grep(DataEntities[network], function(e) {
@@ -478,6 +480,27 @@ elgg.deck_river.FBdelete = function(object, query, params, callback) {
 };
 
 
+/**
+ * Ajax get to Facebook API
+ * @param {[string]}   token      facebook token
+ * @param {[object]}   query      object containing select, from and where clauses
+ * @param {Function}   callback   a function to execute
+ */
+elgg.deck_river.FBfql = function(token, query, callback) {
+	FB.api({
+		method: 'fql.query',
+		query: 'SELECT '+query.select+' FROM '+query.from+' WHERE '+query.where+(query.limit?' LIMIT '+query.limit:''),
+		access_token: token
+	}, function(data) {
+		if (data) {
+			callback(data);
+		} else {
+			elgg.register_error(elgg.echo('deck_river:facebook:error'));
+		}
+	});
+};
+
+
 
 /**
  * Register facebook error
@@ -508,6 +531,26 @@ elgg.deck_river.FBgetToken = function() {
 	return token;
 };
 
+
+
+/**
+ * Clean some data from FB user. Store cleaned user's data, store it and return it.
+ * @param {[type]} userData [description]
+ */
+elgg.deck_river.FBformatUser = function(userData) {
+	$.each(['friend_count', 'mutual_friend_count', 'subscriber_count', 'likes_count', 'wall_count', 'notes_count'], function(i, e) {
+		if (elgg.isNullOrUndefined(userData[e])) userData[e] = '-';
+	});
+	if (userData.profile_update_time) userData.profile_update_time = elgg.friendly_time(userData.profile_update_time);
+	if (userData.friend_count == userData.mutual_friend_count) delete userData.mutual_friend_count; // this is owner profile
+	if (userData.website) {
+		if (/^www/.test(userData.website)) userData.website = 'http://'+userData.website;
+		userData.website = userData.website.ParseURL();
+	}
+	elgg.deck_river.storeEntity(userData, 'facebook');
+
+	return userData;
+}
 
 
 // functions not used
