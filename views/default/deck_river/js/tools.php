@@ -166,13 +166,23 @@ String.prototype.FormatDate = function() {
 	return $.datepicker.formatDate('@', new Date(this))/1000;
 };
 
-String.prototype.ParseURL = function() {
-	return this.replace(/\s+/g, ' ').replace(/(.{2})?(https?:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~+]+)/g, function(match, pre, url) {
+String.prototype.ParseURL = function(reduce) {
+	return this.replace(/\s+/g, ' ').replace(/(.{2})?((?:https?:\/\/|www\.)[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~+]+)/g, function(match, pre, url) {
 		if (pre == '="') return pre+url;
 		if (elgg.isUndefined(pre)) pre = '';
-		return pre+'<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
+		if (/^www/.test(url)) {
+			var href = 'http://'+url;
+		} else {
+			var href = url;
+		}
+		if (reduce) {
+			url = url.replace(/https?:\/\//, '');
+			if (url.length > 35) url = url.substr(0, 32)+'…';
+		}
+		return pre+'<a target="_blank" rel="nofollow" href="'+href+'">'+url+'</a>';
 	});
 };
+
 String.prototype.ParseTwitterURL = function(entities) {
 	var text = this,
 		urls = [],

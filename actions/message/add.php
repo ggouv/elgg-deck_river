@@ -34,7 +34,10 @@ if (empty($body)) {
 	foreach ($networks as $network) {
 		if ($network == $user->getGUID()) { // network is elgg
 
-			$body = elgg_substr($body, 0, 140); // only 140 characters allowed
+			// only 140 characters allowed without links
+			$body_temp = preg_replace('/https?:\/\/.*(?:\s|$)/Um', '', trim($body));
+			$links_length = mb_strlen(trim($body)) - mb_strlen($body_temp);
+			$body = elgg_substr(trim($body), 0, 140+$links_length);
 
 			$parent_guid = (int) get_input('elgg_parent', false);
 			$params = array(
