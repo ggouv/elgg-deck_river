@@ -193,6 +193,11 @@ if ($submit == 'delete') {
 		case 'home':
 			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:home';
 			break;
+		case 'home_fql':
+			$user_river_options[$tab][$column]['title'] = 'deck_river:facebook:feed:home_fql';
+			$user_river_options[$tab][$column]['type'] = 'stream';
+			$user_river_options[$tab][$column]['query'] = "filter_key='others'";
+			break;
 		case 'feed':
 			if ($facebook_account->icon) { // this is a group
 				$user_river_options[$tab][$column]['title'] = array('deck_river:facebook:feed:group_feed', $facebook_account->name);

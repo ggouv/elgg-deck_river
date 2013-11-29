@@ -12,9 +12,9 @@
 // Nots : Be carefull ! Tweet IDs are too long for a call with .data('id') ! We need use .attr('data-id')
 
 var //complete : FbRiverFields = "action_links,actor_id,app_data,app_id,attachment,attribution,claim_count,comment_info,created_time,description,description_tags,expiration_timestamp,feed_targeting,filter_key,impressions,is_exportable,is_hidden,is_published,like_info,message,message_tags,parent_post_id,permalink,place,post_id,privacy,description,promotion_status,scheduled_publish_time,share_count,share_info,source_id,subscribed,tagged_ids,target_id,targeting,timeline_visibility,type,updated_time,via_id,viewer_id,with_location,with_tags,xid",
-	FbRiverFields = "attachment,comments,comment_info,description,description_tags,likes,like_info,message,message_tags,parent_post_id,post_id,share_count,share_info,source_id,type,updated_time,via_id",
+	FbRiverFields = "actor_id,attachment,comments,comment_info,description,description_tags,likes,like_info,message,message_tags,parent_post_id,post_id,share_count,share_info,source_id,type,updated_time,via_id",
 	// All fields from Facebook : "about_me,activities,affiliations,age_range,allowed_restrictions,birthday,birthday_date,books,can_message,can_post,contact_email,currency,current_address,current_location,devices,education,email,email_hashes,first_name,friend_count,friend_request_count,has_timeline,hometown_location,inspirational_people,install_type,interests,is_app_user,is_blocked,is_verified,languages,last_name,likes_count,locale,meeting_for,meeting_sex,middle_name,movies,music,mutual_friend_count,name,name_format,notes_count,online_presence,pic,pic_big,pic_big_with_logo,pic_cover,pic_small,pic_small_with_logo,pic_square,pic_square_with_logo,pic_with_logo,political,profile_blurb,profile_update_time,profile_url,proxied_email,quotes,relationship_status,religion,search_tokens,security_settings,sex,significant_other_id,sort_first_name,sort_last_name,sports,status,subscriber_count,third_party_id,timezone,tv,uid,username,verified,video_upload_limits,viewer_can_send_gift,wall_count,website,work",
-	FbUserFields = "about_me,activities,affiliations,books,first_name,friend_count,inspirational_people,interests,languages,last_name,likes_count,locale,movies,music,mutual_friend_count,notes_count,online_presence,profile_update_timeprofile_url,sex,status,subscriber_count,tv,uid,username,wall_count,website,",
+	FbUserFields = "about_me,activities,affiliations,books,first_name,friend_count,inspirational_people,interests,languages,last_name,likes_count,locale,movies,music,mutual_friend_count,notes_count,online_presence,profile_update_time,profile_url,sex,status,subscriber_count,tv,uid,username,wall_count,website",
 	FbPageFields = "";
 
 
@@ -57,25 +57,50 @@ elgg.deck_river.LoadRiver = function(TheColumn, columnSettings) {
 		});
 	} else if (columnSettings.network == 'facebook') {
 		var loadColumn = function() {
-			FB.api(columnSettings.query, 'get', {
-				access_token: columnSettings.token,
-				fields: columnSettings.fields,
-				limit: 30
-			}, function(response) {
-				if (response) {
-					response.TheColumn = TheColumn.removeClass('loadingRefresh');
-					response.results = response.data;
-					response.columnSettings = columnSettings;
-					if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
-						TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network));
-						TheColumnRiver.append(loadMoreItem).scrollTo(0);
-						if (response.paging) TheColumnHeader.data('next_page', response.paging.next).data('refresh_url', response.paging.previous);
-					}
-				} else { // @todo Make error more comprehensible
-					TheColumnRiver.html('error');
+				if (columnSettings.type == 'stream') {
+					elgg.deck_river.FBfql(columnSettings.token, {
+						select: FbRiverFields,
+						from: columnSettings.type,
+						where: columnSettings.query,
+						limit: 30
+					}, function(response) {
+						if (response && !response.error) {
+							var rep = {};
+							rep.TheColumn = TheColumn.removeClass('loadingRefresh');
+							rep.results = ['1'];
+							rep.data = response;
+							rep.columnSettings = columnSettings;
+							if (elgg.trigger_hook('deck-river', 'load:column:'+rep.column_type, rep, true)) {
+								TheColumnRiver.html(elgg.deck_river.displayRiver(rep, columnSettings.network));
+								TheColumnRiver.append(loadMoreItem).scrollTo(0);
+								if (rep.paging) TheColumnHeader.data('next_page', rep.paging.next).data('refresh_url', rep.paging.previous);
+							}
+						} else { // @todo Make error more comprehensible
+							TheColumnRiver.html('error');
+						}
+					});
+				} else {
+					FB.api(columnSettings.query, 'get', {
+						access_token: columnSettings.token,
+						fields: columnSettings.fields ? columnSettings.fields : FBdefaultFields,//(typeof(columnSettings) != 'undefined') ? columnSettings.fields : FBdefaultFields,
+						limit: 30
+					}, function(response) {
+						if (response) {
+							response.TheColumn = TheColumn.removeClass('loadingRefresh');
+							response.results = ['1'];
+							response.columnSettings = columnSettings;
+							if (elgg.trigger_hook('deck-river', 'load:column:'+response.column_type, response, true)) {
+								TheColumnRiver.html(elgg.deck_river.displayRiver(response, columnSettings.network));
+								TheColumnRiver.append(loadMoreItem).scrollTo(0);
+								if (response.paging) TheColumnHeader.data('next_page', response.paging.next).data('refresh_url', response.paging.previous);
+							}
+						} else { // @todo Make error more comprehensible
+							TheColumnRiver.html('error');
+						}
+					});
 				}
-			});
-		};
+			};
+
 		if (!FBloaded) {
 			FBstackCallback.push(loadColumn);
 		} else {
@@ -152,21 +177,43 @@ elgg.deck_river.RefreshColumn = function(TheColumn, columnSettings) {
 			}
 		});
 	} else if (columnSettings.network == 'facebook') {
-		FB.api(columnSettings.query, 'get', {
-			access_token: columnSettings.token,
-			fields: FBdefaultFields,
-			__previous: 1,
-			since: TheColumnHeader.data('refresh_url').match(/.*since=(\d*)/)[1],
-			limit: 30
-		}, function(response) {
-			if (response) {
-				response.results = response.data;
-				displayItems(response);
-				if (response.paging) TheColumnHeader.data('refresh_url', response.paging.previous);
-			} else { // @todo Make error more comprehensible
-				TheColumnRiver.html('error');
-			}
-		});
+		if (columnSettings.type == 'stream') {
+			elgg.deck_river.FBfql(columnSettings.token, {
+				select: FbRiverFields,
+				from: 'stream',
+				where: "filter_key='others' AND created_time>"+TheColumn.find('.elgg-list-item').first().attr('data-timeid'),
+				limit: 30
+			}, function(response) {
+				if (response) {
+					response.TheColumn = TheColumn;
+					response.results = ['1'];
+					response.data = response;
+					response.columnSettings = columnSettings;
+					displayItems(response);
+					if (response.paging) TheColumnHeader.data('refresh_url', response.paging.previous);
+				} else { // @todo Make error more comprehensible
+					TheColumnRiver.html('error');
+				}
+			});
+		} else {
+			FB.api(columnSettings.query, 'get', {
+				access_token: columnSettings.token,
+				fields: (typeof(columnSettings) != 'undefined') ? columnSettings.fields : FBdefaultFields,
+				__previous: 1,
+				since: TheColumnHeader.data('refresh_url').match(/.*since=(\d*)/)[1],
+				limit: 30
+			}, function(response) {
+				if (response) {
+					response.TheColumn = TheColumn;
+					response.results = ['1'];
+					response.columnSettings = columnSettings;
+					displayItems(response);
+					if (response.paging) TheColumnHeader.data('refresh_url', response.paging.previous);
+				} else { // @todo Make error more comprehensible
+					TheColumnRiver.html('error');
+				}
+			});
+		}
 	} else {
 		var river_type = TheColumnHeader.data('river_type') || 'column_river';
 		elgg.post('ajax/view/deck_river/ajax_json/' + river_type, {
@@ -224,20 +271,42 @@ elgg.deck_river.LoadMore = function(TheColumn, columnSettings) {
 			}
 		});
 	} else if (columnSettings.network == 'facebook') {
-		FB.api(columnSettings.query, 'get', {
-			access_token: columnSettings.token,
-			fields: FBdefaultFields,
-			until: TheColumnHeader.data('next_page').match(/.*until=(\d*)/)[1],
-			limit: 30
-		}, function(response) {
-			if (response) {
-				response.results = response.data;
-				displayItems(response);
-				TheColumnHeader.data('next_page', response.paging.next);
-			} else { // @todo Make error more comprehensible
-				TheColumnRiver.html('error');
-			}
-		});
+		if (columnSettings.type == 'stream') {
+			elgg.deck_river.FBfql(columnSettings.token, {
+				select: FbRiverFields,
+				from: 'stream',
+				where: "filter_key='others' AND created_time<"+LastItem.data('timeid'),
+				limit: 30
+			}, function(response) {
+				if (response) {
+					response.TheColumn = TheColumn;
+					response.results = ['1'];
+					response.data = response;
+					response.columnSettings = columnSettings;
+					displayItems(response);
+					TheColumnHeader.data('next_page', response.paging.next);
+				} else { // @todo Make error more comprehensible
+					TheColumnRiver.html('error');
+				}
+			});
+		} else {
+			FB.api(columnSettings.query, 'get', {
+				access_token: columnSettings.token,
+				fields: (typeof(columnSettings) != 'undefined') ? columnSettings.fields : FBdefaultFields,
+				until: TheColumnHeader.data('next_page').match(/.*until=(\d*)/)[1],
+				limit: 30
+			}, function(response) {
+				if (response) {
+					response.TheColumn = TheColumn;
+					response.results = ['1'];
+					response.columnSettings = columnSettings;
+					displayItems(response);
+					TheColumnHeader.data('next_page', response.paging.next);
+				} else { // @todo Make error more comprehensible
+					TheColumnRiver.html('error');
+				}
+			});
+		}
 	} else {
 		var river_type = TheColumnHeader.data('river_type') || 'column_river';
 		elgg.post('ajax/view/deck_river/ajax_json/' + river_type, {

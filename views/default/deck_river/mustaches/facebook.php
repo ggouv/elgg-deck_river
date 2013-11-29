@@ -30,7 +30,7 @@
 					{{/submenu}}
 				</ul>
 				<div class="elgg-river-summary prl">
-					<span class="facebook-{{#from.category}}page{{/from.category}}{{^from.category}}user{{/from.category}}-info-popup info-popup" title="{{from.id}}">{{from.name}}</span>{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a class="facebook-{{#category}}page{{/category}}{{^category}}user{{/category}}-info-popup info-popup link" title="{{id}}" href="#">{{name}}</a>{{/via}}
+					<span class="facebook-{{#from.category}}page{{/from.category}}{{^from.category}}user{{/from.category}}-info-popup info-popup" title="{{from.id}}">{{from.name}}</span>{{#summary}}&nbsp;{{{summary}}}{{/summary}}{{#via}}&nbsp;<?php echo elgg_echo('deck_river:via'); ?>&nbsp;<a class="facebook-{{#category}}page{{/category}}{{^category}}user{{/category}}-info-popup info-popup link" title="{{id}}" href="#">{{name}}</a>{{/via}}
 					{{#properties}}
 						<?php echo elgg_echo('river:facebook:photo:shared_story'); ?>&nbsp;<a target="_blank" href="{{link}}"><?php echo elgg_echo('river:facebook:photo:shared_story:photo'); ?></a>&nbsp;<?php echo elgg_echo('river:facebook:photo:shared_story:of'); ?>&nbsp;<a target="_blank" href="{{href}}">{{text}}</a>
 					{{/properties}}
@@ -42,23 +42,25 @@
 						</a>
 					</span>
 				</div>
-				<div class="elgg-river-message main" data-message_original="{{message_original}}">{{{message}}}{{#typestatus}}&nbsp;<a target="_blank" href="https://facebook.com/{{id}}"><?php echo elgg_echo('river:facebook:show:status'); ?></a>{{/typestatus}}</div>
+				<div class="elgg-river-message main" data-message_original="{{message_original}}">{{{message}}}{{#showOnFacebook}}&nbsp;<a target="_blank" href="https://facebook.com/{{id}}">{{showOnFacebook}}</a>{{/showOnFacebook}}</div>
 				{{#link}}
 				{{#typevideo}}
 				<a class="elgg-river-responses linkbox-droppable media-video-popup" href="{{link}}" data-source="{{source}}">
 				{{/typevideo}}
 				{{^typevideo}}
-				<a class="elgg-river-responses linkbox-droppable" target="_blank" href="{{link}}">
+				<a class="elgg-river-responses {{^typephoto}}linkbox-droppable{{/typephoto}}" target="_blank" href="{{link}}">
 				{{/typevideo}}
 					<div class="elgg-river-image" data-mainimage="{{full_picture}}" data-title="{{name}}" data-url="{{link}}" data-description="{{description}}" data-editable="true">
 						{{#full_picture}}
 						<div id="img{{id}}" class="elgg-image float gwfb" style="background-image: url({{full_picture}});"></div>
 						{{/full_picture}}
+						{{^typephoto}}
 						<div class="elgg-body">
 							{{#name}}<h4>{{name}}</h4>{{/name}}
 							{{#caption}}<span class="elgg-subtext">{{caption}}</span>{{/caption}}
 							{{#description}}<div>{{{description}}}</div>{{/description}}
 						</div>
+						{{/typephoto}}
 					</div>
 				</a>
 				{{/link}}
@@ -107,14 +109,14 @@
 		<div class="elgg-image-block clearfix">
 			<div class="elgg-image">
 				<div class="elgg-avatar elgg-avatar-small">
-					<div class="facebook-user-info-popup info-popup" title="{{from.id}}">
+					<div class="facebook-{{#from.category}}page{{/from.category}}{{^from.category}}user{{/from.category}}-info-popup info-popup" title="{{from.id}}">
 						<img title="{{from.name}}" alt="{{from.name}}" src="http://graph.facebook.com/{{from.id}}/picture?width=24&height=24" width="24" height="24">
 					</div>
 				</div>
 			</div>
 			<div class="elgg-body">
 				<div class="elgg-river-summary prl">
-					<span class="facebook-user-info-popup info-popup" title="{{from.id}}">{{from.name}}</span>
+					<span class="facebook-{{#from.category}}page{{/from.category}}{{^from.category}}user{{/from.category}}-info-popup info-popup" title="{{from.id}}">{{from.name}}</span>
 					<span class="elgg-river-timestamp">
 						<a target="_blank" href="https://facebook.com/{{from.id}}/status/{{id}}" target="_blank">
 							<br><span class="elgg-friendlytime">

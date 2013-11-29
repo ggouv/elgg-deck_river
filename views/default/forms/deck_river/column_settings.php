@@ -285,6 +285,7 @@ $column_title = $user_river_column_options->title;
 
 			$options_values = array(
 				'home' => elgg_echo('deck_river:facebook:feed:home'),
+				'home_fql' => elgg_echo('deck_river:facebook:feed:home_fql'),
 				'feed' => elgg_echo('deck_river:facebook:feed'),
 				'statuses' => elgg_echo('deck_river:facebook:feed:statuses'),
 				'links' => elgg_echo('deck_river:facebook:feed:links'),

@@ -276,10 +276,17 @@ $french = array(
 	'deck_river:facebook:feed:group_feed' => "Activité du groupe %s",
 	'deck_river:facebook:feed:page_feed' => "Activité de la page %s",
 	'deck_river:facebook:feed:home' => "Fil d'actualités",
+	'deck_river:facebook:feed:home_fql' => "Fil d'actualités avec groupes (expérimental)",
 	'deck_river:facebook:feed:statuses' => "Mes status",
 	'deck_river:facebook:feed:links' => "Mes liens",
 	'deck_river:facebook:feed:search' => "Recherche",
 	'deck_river:facebook:feed:page' => "Une page",
+
+	'deck_river:facebook:summary:shared_link' => "a partagé un <a target=\"_blank\" href=\"%s\">lien</a>",
+	'deck_river:facebook:summary:shared_status' => "a partagé un <a target=\"_blank\" href=\"%s\">status</a>",
+	'deck_river:facebook:summary:shared_event' => "a partagé un <a target=\"_blank\" href=\"%s\">évènement</a>",
+	'deck_river:facebook:summary:updated_cover_photo' => "a changé son avatar",
+
 	'deck_river:facebook:posted' => "Votre message a été publié sur Facebook. <a href=\"%s\" target=\"_blank\">Voir le message</a>.",
 	'deck_river:facebook:error' => "Erreur avec l'API de Facebook.",
 	'deck_river:facebook:error:code' => "Erreur avec l'API de Facebook : %s",
