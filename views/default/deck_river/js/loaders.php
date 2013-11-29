@@ -341,7 +341,7 @@ elgg.deck_river.LoadTwitter_activity = function(twitterID, OutputElem) {
 elgg.deck_river.displayCount = function(response, TheColumn) {
 	var TheColumnHeader = TheColumn.find('.column-header'),
 		TheColumnRiver = TheColumn.find('.elgg-river'),
-		responseLength = response['results'].length,
+		responseLength = elgg.isUndefined(response['data']) ? response['results'].length : response['data'].length,
 		countSpan = TheColumnHeader.find('.count').addClass('hidden');
 
 	if (responseLength > 0) {

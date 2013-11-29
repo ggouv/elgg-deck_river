@@ -243,7 +243,7 @@ String.prototype.ParseGroup = function() {
 };
 
 String.prototype.ParseUsername = function(network) {
-	return this.replace(/(\s|^|>)(@[A-Za-z0-9-_]+)/g, function(match, pre, user) {
+	return this.replace(/(\W|^)(@[A-Za-z0-9-_]+)/g, function(match, pre, user) {
 		return pre+'<a href="#" class="'+network+'-user-info-popup info-popup" title="'+user.replace("@", "")+'">'+user+'</a>';
 	});
 };
@@ -279,6 +279,19 @@ String.prototype.TruncateString = function(length, more) {
 
 String.prototype.addToLargeInt = function (value) {
 	return this.substr(0, this.length-3)+(parseInt(this.substr(-3)) + value);
+};
+
+String.prototype.getWireLength = function(urls) {
+	var urls_length = 0;
+
+	if (urls) {
+		$.each(urls, function(i, e) {
+			urls_length += e.length;
+		});
+		return this.length - urls_length;
+	} else {
+		return this.length;
+	}
 };
 
 /**

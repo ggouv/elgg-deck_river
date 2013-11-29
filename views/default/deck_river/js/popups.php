@@ -64,7 +64,15 @@ elgg.deck_river.popups = function() {
 	$('.group-info-popup').live('click', function() {
 		elgg.deck_river.groupPopup($(this).attr('title'));
 		return false;
-	}).liveDraggable();
+	}).liveDraggable({
+		connectToSortable: '.elgg-widget-instance-favorites_groups .elgg-list',
+		start: function() {
+			$('.elgg-widget-instance-favorites_groups > .elgg-body').addClass('ui-state-highlight');
+		},
+		stop: function() {
+			$('.elgg-widget-instance-favorites_groups > .elgg-body').removeClass('ui-state-highlight');
+		}
+	});
 
 	// hashtag info popup
 	$('.hashtag-info-popup').live('click', function() {

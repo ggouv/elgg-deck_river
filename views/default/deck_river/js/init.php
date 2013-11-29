@@ -258,7 +258,8 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 							}
 						}
 					);
-				}
+				},
+				autoFocus: true
 			}).data('autocomplete')._renderItem = function( ul, item) {
 				return $('<li>').data('item.autocomplete', item)
 					.append($('<a>')[ this.options.html ? "html" : "text" ](

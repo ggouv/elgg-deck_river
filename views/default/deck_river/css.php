@@ -1037,7 +1037,7 @@ li.elgg-menu-item-arrow-left {
 }
 
 .elgg-river-image {
-	height: 90px;
+	max-height: 90px;
 	overflow: hidden;
 	background: #EEE;
 	max-width: 590px;
@@ -1049,7 +1049,7 @@ li.elgg-menu-item-arrow-left {
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
 	box-sizing: border-box;
-	height: inherit;
+	max-height: inherit;
 }
 .elgg-river-image .elgg-image {
 	background-position: 50% 50%;
@@ -1065,7 +1065,7 @@ li.elgg-menu-item-arrow-left {
 	padding: 7px;
 }
 .elgg-river-image.big {
-	height: auto;
+	max-height: none;
 }
 .elgg-river-image.big .elgg-image {
 	background-position: 50% 50%;
