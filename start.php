@@ -308,7 +308,7 @@ function deck_river_wire_filter($text) {
  */
 function deck_river_highlight_mention($text, $mention) {
 	$len = mb_strlen($mention);
-	$match = preg_split('/'.$mention.'(?=\s|$)/Ums', $text);
+	$match = preg_split('/'.$mention.'/Umis', $text);
 
 	if (count($match) >= 1) {
 		$a = array_shift($match);
