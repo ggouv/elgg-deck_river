@@ -142,10 +142,10 @@
 			</div>
 			<div id="profile-details" class="elgg-body pll">
 				<ul class="user-stats mbs pts">
-					<li><div class="stats">{{followers_count}}</div><?php echo elgg_echo('friends:followers'); ?></li>
-					<li><div class="stats">{{friends_count}}</div><?php echo elgg_echo('friends:following'); ?></li>
-					<li><div class="stats">{{listed_count}}</div><?php echo elgg_echo('deck_river:twitter:lists'); ?></li>
-					<li><div class="stats">{{statuses_count}}</div><?php echo elgg_echo('item:object:thewire'); ?></li>
+					<li><a target="_blank" href="http://twitter.com/{{screen_name}}/followers"><div class="stats">{{followers_count}}</div><?php echo elgg_echo('friends:followers'); ?></a></li>
+					<li><a target="_blank" href="http://twitter.com/{{screen_name}}/following"><div class="stats">{{friends_count}}</div><?php echo elgg_echo('friends:following'); ?></a></li>
+					<li><a target="_blank" href="http://twitter.com/{{screen_name}}/lists"><div class="stats">{{listed_count}}</div><?php echo elgg_echo('deck_river:twitter:lists'); ?></a></li>
+					<li><a target="_blank" href="http://twitter.com/{{screen_name}}"><div class="stats">{{statuses_count}}</div><?php echo elgg_echo('item:object:thewire'); ?></a></li>
 				</ul>
 				<div class="even">
 					<b><?php echo elgg_echo('Twitter'); ?> :</b> <a class="external" target="_blank" href="http://twitter.com/{{screen_name}}">http://twitter.com/{{screen_name}}</a>
