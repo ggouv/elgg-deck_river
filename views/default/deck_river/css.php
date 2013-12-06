@@ -607,6 +607,9 @@ body {
 #thewire-network .non-pinned .triangle, #thewire-network .non-pinned .elgg-icon-delete, #thewire-network .non-pinned .elgg-river-timestamp {
 	display: none !important;
 }
+#thewire-network .non-pinned .elgg-module-popup span {
+	pointer-events: none;
+}
 #thewire-network .non-pinned .elgg-module-popup span:hover {
 	color: #555;
 }
@@ -1494,11 +1497,11 @@ a.info-popup.ui-draggable-dragging {
 }
 
 /* popup links */
-.elgg-river-summary .twitter-user-info-popup, .elgg-river-summary .facebook-user-info-popup, .elgg-river-summary .facebook-page-info-popup {
+.elgg-river-summary .info-popup {
 	color: #4690D6;
 	font-weight: bold;
 }
-.twitter-user-info-popup:hover, .facebook-user-info-popup:hover, .facebook-page-info-popup:hover {
+.elgg-river-summary .info-popup:hover {
 	color: #555;
 	text-decoration: underline;
 	cursor: pointer;

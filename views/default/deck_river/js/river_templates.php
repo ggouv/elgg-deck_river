@@ -50,7 +50,7 @@ elgg.deck_river.elggDisplayItems = function(response, thread) {
 
 		value.text = elgg.isArray(value.message) ? null : value.message;
 		if (value.type == 'object' && value.text) {
-			value.message = value.text.ParseGroup().ParseURL(true).ParseUsername('elgg').ParseHashtag('elgg');
+			value.message = value.text.ParseGroup().ParseURL(true, true).ParseUsername('elgg').ParseHashtag('elgg');
 			value.text = $('<div>').html(value.text).text();
 		}
 

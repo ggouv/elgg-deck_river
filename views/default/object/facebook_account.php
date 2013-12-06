@@ -28,11 +28,14 @@ $avatar = elgg_view('output/img', array(
 ));
 
 if ($account->icon) { // this is a group
-	$link = 'groups/' . $account->name;
+	$link = 'groups/' . $account->user_id;
+	$type = 'group';
 } else if ($account->parent_id) { // this is a page
 	$link = 'pages/' . $account->name . '/' . $account->user_id;
+	$type = 'page';
 } else { // this is a facebook user
 	$link = $account->username;
+	$type = 'user';
 }
 
 if ($view === 'in_network_box') {
@@ -44,7 +47,7 @@ if ($view === 'in_network_box') {
 	}
 
 
-	$info = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
+	$info = '<div class="elgg-river-summary"><span class="facebook-' . $type . '-info-popup info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
 	$info .= elgg_view('output/url', array(
 		'href' => 'http://facebook.com/' . $link,
@@ -148,7 +151,7 @@ HTML;
 					<li class="elgg-menu-item-access">$access</li>
 					<li class="elgg-menu-item-delete">$delete</li>
 				</ul>
-				<h3><span class="facebook-user-info-popup info-popup" title="{$account->user_id}">{$account->name}</span></h3>
+				<h3><span class="facebook-{$type}-info-popup info-popup" title="{$account->user_id}">{$account->name}</span></h3>
 				$link
 				<div class="elgg-subtext">$subtitle</div>
 			</div>

@@ -175,7 +175,7 @@ String.prototype.FormatDate = function() {
 	return $.datepicker.formatDate('@', new Date(this))/1000;
 };
 
-String.prototype.ParseURL = function(reduce) {
+String.prototype.ParseURL = function(reduce, videopopup) {
 	return this.replace(/\s+/g, ' ').replace(/(.{2})?((?:https?:\/\/|www\.)[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~+]+)/g, function(match, pre, url) {
 		if (pre == '="') return pre+url;
 		if (elgg.isUndefined(pre)) pre = '';
@@ -188,7 +188,12 @@ String.prototype.ParseURL = function(reduce) {
 			url = url.replace(/https?:\/\//, '');
 			if (url.length > 35) url = url.substr(0, 32)+'…';
 		}
-		return pre+'<a target="_blank" rel="nofollow" href="'+href+'">'+url+'</a>';
+		var iframeUrl = null;
+		if (videopopup && (iframeUrl = elgg.deck_river.setVideoURLToIframe(href))) {
+			return pre+'<a class="media-video-popup" href="'+href+'" onclick="javascript:void(0)" data-source="'+iframeUrl+'">'+url+'</a>';
+		} else {
+			return pre+'<a target="_blank" rel="nofollow" href="'+href+'">'+url+'</a>';
+		}
 	});
 };
 
@@ -198,7 +203,8 @@ String.prototype.ParseTwitterURL = function(entities) {
 		replaceEntities = function(type) {
 			$.each(entities[type], function(i, e) {
 				var token = (Math.random()+'xxxxxxxxxxxxxxxx').replace('.', '').substr(0, e.indices[1]-e.indices[0]),
-					url = '';
+					url = '',
+					iframeUrl = null;
 
 				if (type == 'media') {
 					url = '<a class="media-image-popup" href="'+e.media_url_https+'" onclick="javascript:void(0)" data-media="'+e.media_url_https+'" data-type="'+e.type+'" data-size_width="'+e.sizes.medium.w+'" data-size_height="'+e.sizes.medium.h+'">'+e.display_url+'</a>';

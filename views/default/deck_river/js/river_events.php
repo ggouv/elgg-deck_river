@@ -121,9 +121,12 @@ $('.add_social_network').live('click', function() {
 
 // Get url of networks to authorize user
 $('#authorize-twitter, #authorize-facebook').live('click', function(){
+	var network = $(this).attr('id').replace('authorize-', '');
+
+	if (network == 'facebook') elgg.deck_river.initFacebook(); // we load facebook before authorize to prevent error on column load.
 	elgg.action('deck_river/network/getLoginUrl', {
 		data: {
-			network: $(this).attr('id').replace('authorize-', '')
+			network: network
 		},
 		success: function(json) {
 			window.open(json.output, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
