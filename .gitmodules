@@ -1,6 +1,6 @@
 [submodule "vendors/facebook-php-sdk"]
 	path = vendors/facebook-php-sdk
-	url = git@github.com:facebook/facebook-php-sdk.git
+	url = https://github.com/facebook/facebook-php-sdk.git
 [submodule "vendors/url-scraper-php"]
 	path = vendors/url-scraper-php
-	url = git@github.com:ManUtopiK/url-scraper-php.git
+	url = https://github.com/ManUtopiK/url-scraper-php.git

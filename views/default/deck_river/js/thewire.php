@@ -7,32 +7,25 @@ elgg.provide('elgg.thewire');
 var linkParsed = null;
 elgg.thewire.init = function() {
 
+	// don't add image in data sended by linkbox
 	$('#linkbox div.image-wrapper').live('click', function() {
 		$(this).toggleClass('noimg');
 		return false;
 	});
 
+	// pin thewire form. When message are sended, text and thewire form stay in place
 	$('#pin-thewire').live('click', function() {
 		$(this).toggleClass('pinned');
 	});
 
+	// remove all content in linkbox and hide it
 	$('#linkbox .elgg-menu .elgg-icon-delete').live('click', function() {
 		$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
-		elgg.thewire.resize('open');
+		elgg.thewire.removeResponseTo();
+		elgg.thewire.resize();
 		return false;
 	});
 
-	$(document).mousedown(function(e) {
-		$(document).bind('mousemove.thewire', function(e){
-			if ($(e.target).attr('id') == 'thewire-textarea') {
-				elgg.thewire.resize();
-				$('.ui-draggable-dragging').addClass('canDrop');
-			}
-		});
-	})
-	.mouseup(function() {
-		$(document).unbind('mousemove.thewire');
-	});
 	$('#thewire-textarea').focusin(function() {
 		elgg.thewire.resize();
 	}).droppable({
@@ -46,14 +39,18 @@ elgg.thewire.init = function() {
 				var data = $uih.find('.elgg-river-image').data();
 
 				$('#linkbox').removeClass('hidden').html(Mustache.render($('#linkbox-template').html(), data));
+				elgg.thewire.removeResponseTo();
 				elgg.thewire.resize();
+				linkParsed = data.url;
 			} else {
 				if ($uih.hasClass('elgg-user-info-popup') || $uih.hasClass('twitter-user-info-popup')) prep = '@';
 				if ($uih.hasClass('group-info-popup')) prep = '!';
+				if ($uih.hasClass('hashtag-info-popup')) prep = '#';
 				elgg.thewire.insertInThewire(prep + $(ui.helper).attr('title'));
 			}
 		},
 		over: function(e, ui) {
+			elgg.thewire.resize();
 			ui.helper.addClass('canDrop');
 		},
 		out: function(e, ui) {
@@ -79,11 +76,9 @@ elgg.thewire.init = function() {
 		elgg.thewire.resize();
 	});
 
-	// response to a wire post
+	// remove response to a wire post
 	$('#thewire-header .responseTo').die().live('click', function() {
-		$(this).addClass('hidden').next('.parent').val('').removeAttr('name');
-		$('.tipsy').remove();
-		$('.elgg-list-item').removeClass('responseAt');
+		elgg.thewire.removeResponseTo();
 		elgg.thewire.resize();
 	});
 
@@ -152,8 +147,8 @@ elgg.thewire.init = function() {
 								if (json.status == 0 && !$('#pin-thewire').hasClass('pinned')) {
 									if ($('html').hasClass('bookmarklet')) window.close();
 									$("#thewire-characters-remaining span").html('0');
-									$('#thewire-textarea').val('').closest('.elgg-form').find('.responseTo').addClass('hidden').next('.parent').val('').removeAttr('name');
-									$('.elgg-list-item').removeClass('responseAt');
+									$('#thewire-textarea').val('');
+									elgg.thewire.removeResponseTo();
 									$('#linkbox').addClass('hidden').html($('<div>', {'class': 'elgg-ajax-loader'}));
 									elgg.thewire.resize('close');
 									linkParsed = null;
@@ -228,7 +223,7 @@ elgg.thewire.textCounter = function() {
 		networks[$(e).data('network')] = true;
 	});
 
-	if (nbr_chars > 140 && networks.elgg) { // elgg limit
+	if (networks.elgg && $twT.val().getWireLength(urls) > 140) { // elgg limit
 		$ca.find('.icon-elgg').removeClass('hidden');
 		delete networks.elgg;
 		alert = 1;
@@ -255,6 +250,18 @@ elgg.thewire.textCounter = function() {
 	}
 
 	return urls;
+};
+
+
+/**
+ * Remove responseTo in thewire form, and remove all responseAt class
+ * @return {[type]} [description]
+ */
+elgg.thewire.removeResponseTo = function() {
+	$('#thewire-header .responseTo').addClass('hidden').next('.parent').val('').removeAttr('name');
+	$('.tipsy').remove();
+	$('.elgg-list-item').removeClass('responseAt');
+	$('#linkbox').find('.link_name, .link_description').attr('contenteditable','true');
 };
 
 
@@ -299,7 +306,7 @@ elgg.thewire.move_account = function() {
 		helper: 'clone',
 		revert: 300,
 		dropOnEmpty: true,
-		revert: 500,
+		distance: 20,
 		zIndex: 9999,
 		opacity: 0.8,
 		receive: function(e, ui) {
@@ -333,6 +340,9 @@ elgg.thewire.move_account = function() {
 		},
 		activate: function(e, ui) {
 			ui.draggable.parent().addClass('ui-start');
+		},
+		deactivate: function(e, ui) {
+			ui.draggable.parent().removeClass('ui-start');
 		}
 	});
 };
@@ -414,6 +424,7 @@ elgg.thewire.scrapToLinkBox = function(url) {
 				data.src = function() {
 					return this.src;
 				};
+				data.editable = true;
 
 				$lb.html(Mustache.render($('#linkbox-template').html(), data));
 

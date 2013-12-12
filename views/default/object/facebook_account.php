@@ -22,10 +22,21 @@ $position = elgg_extract('position', $vars, false);
 $user_guid = elgg_get_logged_in_user_guid();
 
 $avatar = elgg_view('output/img', array(
-	'src' => $account->icon ? $account->icon : 'https://graph.facebook.com/' . $account->username . '/picture', // facebook group use icon, else this is a user account
+	'src' => $account->icon ? $account->icon : 'https://graph.facebook.com/' . $account->user_id . '/picture', // facebook group use icon, else this is a user account
 	'alt' => $account->name,
 	'class' => 'float',
 ));
+
+if ($account->icon) { // this is a group
+	$link = 'groups/' . $account->user_id;
+	$type = 'group';
+} else if ($account->parent_id) { // this is a page
+	$link = 'pages/' . $account->name . '/' . $account->user_id;
+	$type = 'page';
+} else { // this is a facebook user
+	$link = $account->username;
+	$type = 'user';
+}
 
 if ($view === 'in_network_box') {
 	if ($pinned) {
@@ -35,11 +46,12 @@ if ($view === 'in_network_box') {
 		$input_name = '_networks[]';
 	}
 
-	$info = '<div class="elgg-river-summary"><span class="facebook-user-info-popup info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
+
+	$info = '<div class="elgg-river-summary"><span class="facebook-' . $type . '-info-popup info-popup" title="' . $account->user_id . '">' . $account->name . '</span>';
 	$info .= '<br/><span class="elgg-river-timestamp">';
 	$info .= elgg_view('output/url', array(
-		'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->name : $account->username),
-		'text' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->name : $account->username),
+		'href' => 'http://facebook.com/' . $link,
+		'text' => 'http://facebook.com/' . $link,
 		'target' => '_blank',
 		'rel' => 'nofollow'
 	));
@@ -82,7 +94,11 @@ HTML;
 	$date = elgg_view_friendly_time($account->time_created);
 
 	if ($owner->getGUID() == $user_guid) {
-		$access = elgg_view('output/access', array('entity' => $account));
+		if (get_readable_access_level($account->access_id) == 'shared_network_acl') {
+			$access = '<span title="' . elgg_echo('access:help') . '" class="elgg-access elgg-access-private tooltips s">' . elgg_echo('deck_river:collection:shared') . '</span>';
+		} else {
+			$access = elgg_view('output/access', array('entity' => $account));
+		}
 		$delete = elgg_view('output/url', array(
 			'href' => "action/deck_river/network/delete?guid={$account->getGUID()}",
 			'text' => elgg_view_icon('delete'),
@@ -96,13 +112,13 @@ HTML;
 	$subtitle = "$author_text $date";
 
 	$link = elgg_view('output/url', array(
-		'href' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $account->username),
-		'text' => 'http://facebook.com/' . ($account->icon ? 'groups/' . $account->user_id : $account->username),
+		'href' => 'http://facebook.com/' . $link,
+		'text' => 'http://facebook.com/' . $link,
 		'class' => 'external',
 		'target' => '_blank'
 	));
 
-	if (!$account->icon) {
+	if (!$account->icon && !$account->parent_id) {
 		if ($owner->getGUID() == $user_guid) {
 			$block = elgg_view('output/url', array(
 				'href' => '#',
@@ -110,9 +126,15 @@ HTML;
 				'text' => elgg_echo('deck_river:facebook:account:add_groups'),
 				'rel' => 'nofollow'
 			));
+			$block .= '<br>' . elgg_view('output/url', array(
+				'href' => '#',
+				'onclick' => "elgg.deck_river.getFBPages('{$account->user_id}', '{$account->oauth_token}', '{$account->getGUID()}');",
+				'text' => elgg_echo('deck_river:facebook:account:add_pages'),
+				'rel' => 'nofollow'
+			));
 		}
 	} else {
-		$block = elgg_echo('deck_river:facebook:account:group', array($account->username));
+		$block = elgg_echo('deck_river:facebook:account:' . ($account->icon ? 'group' : 'page'), array($account->username));
 	}
 
 	$block .= elgg_view('deck_river/account_block', array('account' => $account));
@@ -129,7 +151,7 @@ HTML;
 					<li class="elgg-menu-item-access">$access</li>
 					<li class="elgg-menu-item-delete">$delete</li>
 				</ul>
-				<h3><span class="facebook-user-info-popup info-popup" title="{$account->user_id}">{$account->name}</span></h3>
+				<h3><span class="facebook-{$type}-info-popup info-popup" title="{$account->user_id}">{$account->name}</span></h3>
 				$link
 				<div class="elgg-subtext">$subtitle</div>
 			</div>

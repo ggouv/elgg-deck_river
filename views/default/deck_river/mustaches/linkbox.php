@@ -16,14 +16,14 @@
 				<span class="elgg-icon elgg-icon-delete link"></span>
 			</ul>
 			<div class="">
-				<h4 class="link_name pas mrl" contenteditable="true">{{title}}</h4>
+				<h4 class="link_name pas mrl" {{#editable}}contenteditable="true"{{/editable}}>{{title}}</h4>
 				{{#url}}
-				<span class="elgg-subtext pls">
+				<div class="elgg-subtext pls">
 					{{url}}
-				</span>
+				</div>
 				{{/url}}
 				<input type="hidden" name="link_url" value="{{url}}">
-				<div class="link_description pas" contenteditable="true">{{description}}</div>
+				<div class="link_description pas" {{#editable}}contenteditable="true"{{/editable}}>{{description}}</div>
 			</div>
 		</div>
 	</div>

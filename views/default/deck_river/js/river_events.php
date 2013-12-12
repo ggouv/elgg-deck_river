@@ -82,7 +82,7 @@ $('.column-filter .elgg-button-submit').live('click', function() {
 	var TheColumn = $(this).closest('.column-river'),
 		loader = '<div class="elgg-ajax-loader"></div>';
 
-	if ($(this).closest('.deck-popup').length) { // filter in popup
+	if ($(this).closest('.deck-popup').length || $(this).closest('#group_activity_module').length) { // filter in popup
 		elgg.deck_river.getFilters(TheColumn, TheColumn.find('.column-header').data(), function(data) {
 			TheColumn.find('.elgg-river').html(loader);
 			elgg.deck_river.LoadRiver(TheColumn, data);
@@ -121,9 +121,12 @@ $('.add_social_network').live('click', function() {
 
 // Get url of networks to authorize user
 $('#authorize-twitter, #authorize-facebook').live('click', function(){
+	var network = $(this).attr('id').replace('authorize-', '');
+
+	if (network == 'facebook') elgg.deck_river.initFacebook(); // we load facebook before authorize to prevent error on column load.
 	elgg.action('deck_river/network/getLoginUrl', {
 		data: {
-			network: $(this).attr('id').replace('authorize-', '')
+			network: network
 		},
 		success: function(json) {
 			window.open(json.output, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=400');
@@ -229,15 +232,16 @@ $('.elgg-menu-item-response-all a').live('click', function() {
  * @return {[type]}           [description]
  */
 elgg.deck_river.responseToWire = function(riverItem, message) {
-	var network = elgg.deck_river.getColumnSettings(riverItem.closest('.column-river')).network || 'elgg';
+	var network = elgg.deck_river.getColumnSettings(riverItem.closest('.column-river')).network || 'elgg',
+		id = riverItem.attr('data-object_guid') || riverItem.attr('data-id');
 
 	$('.elgg-list-item').removeClass('responseAt');
 	$('.item-'+network+'-'+riverItem.attr('data-id')).addClass('responseAt');
 	$('#thewire-header').find('.responseTo')
 		.removeClass('hidden')
-		.html(elgg.echo('responseToHelper:text', [riverItem.data('username'), riverItem.find('.elgg-river-message').first().text()]))
-		.attr('title', elgg.echo('responseToHelper:delete', [riverItem.data('username')]))
-	.next('.parent').val(riverItem.attr('data-object_guid')).attr('name', network+'_parent');
+		.html(elgg.echo('responseToHelper:text:'+network, [riverItem.data('username'), riverItem.find('.elgg-river-message').first().text()]))
+		.attr('title', elgg.echo('responseToHelper:delete:'+network, [riverItem.data('username')]))
+	.next('.parent').val(id).attr('name', network+'_parent');
 	$('#thewire-textarea').val(message).focus().keydown();
 };
 
@@ -296,8 +300,7 @@ $('.elgg-menu-item-share a').live('click', function(e) {
  * @return {[type]} [description]
  */
 $('.elgg-menu-item-retweet a').live('click', function() {
-	var $tt = $('#thewire-textarea'),
-		$eli = $(this).closest('.elgg-list-item'),
+	var $eli = $(this).closest('.elgg-list-item'),
 		columnSettings = elgg.deck_river.getColumnSettings($(this).closest('.column-river'));
 
 	if (columnSettings.network == 'facebook') {
@@ -309,12 +312,18 @@ $('.elgg-menu-item-retweet a').live('click', function() {
 			description: '',
 			tilte: false
 		}, data);
+		//data.editable = false;
 
 		$('#linkbox').removeClass('hidden').html(Mustache.render($('#linkbox-template').html(), data));
+		linkParsed = data.url.replace(/\/$/, '');
 		elgg.thewire.resize();
-		$tt.val($eli.find('.elgg-river-message.main').data('message_original'));
+
+		// Facebook API doesn't have a share method. I find somethings that provide a way to share post. But it seem it doesn't realy work...
+		// Here the link that explain share method : http://stackoverflow.com/questions/13149854/facebook-api-share-a-post-already-posted-on-a-pages-wall#13250197
+		// See actions/message/add too.
+		// elgg.deck_river.responseToWire($eli, $eli.find('.elgg-river-message.main').data('message_original'));
 	} else {
-		$tt.val($('<div>').html($eli.data('text')).text().replace(/^rt /i, '').replace(/\s+/g, ' ')).focus().keydown();
+		$('#thewire-textarea').val('RT @'+$eli.data('username')+' '+$('<div>').html($eli.data('text')).text().replace(/^rt /i, '').replace(/\s+/g, ' ')).focus().keydown();
 	}
 });
 
@@ -431,13 +440,22 @@ $('a[twitter_action]').live('click', function(e) {
 // like post
 $('.elgg-menu-item-like a').live('click', function() {
 	var $this = $(this),
-		settings = elgg.deck_river.getColumnSettings($this.closest('.column-river'));
+		$cl = $this.closest('.column-river'),
+		$eli = $this.closest('.elgg-list-item'),
+		id = $eli.data('object_id') || $eli.data('id');
 
-	elgg.deck_river.FBpost($this.closest('.elgg-list-item').data('object_guid').split('_')[1], 'likes', {
-		access_token: settings.token
+	elgg.deck_river.FBpost(id, 'likes', {
+		access_token: elgg.deck_river.getColumnSettings($cl).token
 	}, function(response) {
 		if (response === true) {
 			elgg.system_message(elgg.echo('deck_river:facebook:liked'));
+			var $lp = $eli.find('.likes-popup');
+			if ($lp.length) {
+				$lp.html(elgg.echo('deck_river:facebook:likes', [parseInt($lp.html().match(/\d+/))+1]))
+					.prev().addClass('liked');
+			} else {
+				$eli.find('.elgg-river-responses.sharelike-count').append('<span class="elgg-icon elgg-icon-thumbs-up-alt float gwfb prs liked"></span><span class="float likes-popup prm">'+elgg.echo('deck_river:facebook:like', [1])+'</span>');
+			}
 		} else {
 			elgg.deck_river.FBregister_error(response.error.code);
 		}
@@ -446,11 +464,13 @@ $('.elgg-menu-item-like a').live('click', function() {
 // like comment
 $('.comment-item-like').live('click', function() {
 	var $this = $(this),
-		settings = elgg.deck_river.getColumnSettings($this.closest('.column-river')),
+		$cl = $this.closest('.column-river'),
+		$eli = $this.closest('.elgg-list-item'),
+		id = $eli.data('object_id') || $eli.data('id'),
 		unlike = $this.hasClass('unlike');
 
-	elgg.deck_river[(unlike  ? 'FBdelete' : 'FBpost')]($this.closest('.elgg-list-item').data('object_guid').split('_')[0]+'_'+$this.closest('.elgg-item').attr('id'), 'likes', {
-		access_token: settings.token
+	elgg.deck_river[(unlike  ? 'FBdelete' : 'FBpost')](id.split('_')[0]+'_'+$this.closest('.elgg-item').attr('id'), 'likes', {
+		access_token: elgg.deck_river.getColumnSettings($cl).token
 	}, function(response) {
 		if (response === true) {
 			$this.toggleClass('unlike').html(elgg.echo('deck_river:facebook:action:'+(unlike ? '' : 'un')+'like'));

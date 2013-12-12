@@ -33,8 +33,8 @@ if (!$user) {
 		</div>
 
 		<div class="elgg-body plm">
-			<h1 class="pts mbm"><?php echo $user->realname; ?></h1>
-			<h2 class="mbs" style="font-weight:normal;"><?php echo '@' . $user->username; ?></h2>
+			<h1 class="pts mbs"><?php echo $user->realname; ?></h1>
+			<h2><a href="#" class="elgg-user-info-popup info-popup mbs" style="font-weight:normal;" title="<?php echo $user->username; ?>"><?php echo '@' . $user->username; ?></a></h2>
 			<div><?php echo deck_river_wire_filter($user->briefdescription); ?></div>
 
 			<?php

@@ -25,8 +25,8 @@ elgg.deck_river.getColumnSettings = function(TheColumn) {
 			dRS.tab = tab;
 			dRS.column = column;
 		return dRS;
-	} else {
-		return false;
+	} else { // this is a popup or other.
+		return TheColumn.find('.column-header').data();
 	}
 };
 
@@ -50,7 +50,7 @@ elgg.deck_river.setColumnSettings = function(TheColumn, data) {
 
 
 // Global var for Entities : users and groups from elgg, users from Twitter
-var DataEntities = DataEntities || {elgg: [], twitter: []};
+var DataEntities = DataEntities || {elgg: [], twitter: [], facebook: []};
 
 /**
  * Put users and groups in global var DataEntities
@@ -78,6 +78,8 @@ elgg.deck_river.storeEntity = function(entity, network) {
 		} else {
 			DataEntities.twitter.push(entity); // new
 		}
+	} else if (network == 'facebook') {
+		if (!$.grep(DataEntities.facebook, function(e){ return e.uid === entity.uid; }).length) DataEntities.facebook.push(entity);
 	}
 };
 
@@ -91,7 +93,17 @@ elgg.deck_river.storeEntity = function(entity, network) {
  */
 elgg.deck_river.findUser = function(name, network, key) {
 	var network = network || 'elgg',
-		key = key || (network == 'twitter') ? 'screen_name' : 'username';
+		key = key || null;
+
+	if (!key) {
+		if (network == 'elgg') {
+			key = 'username';
+		} else if (network == 'twitter') {
+			key = 'screen_name';
+		} else if (network == 'facebook') {
+			key = 'uid';
+		}
+	}
 
 	return $.grep(DataEntities[network], function(e) {
 		return e[key] == name;
@@ -135,10 +147,17 @@ elgg.deck_river.resizeRiverImages = function() {
 		var s = $(e).data('img'),
 			$eri = $(e).parent();
 
+		if (!s) {
+			var url = $(e).css('background-image').slice(4, -1),
+				img = new Image();
+
+			img.src = url;
+			s = [img.width, img.height];
+		}
 		//if (s && (s[0] >= $eri.width() || s[0] >= 600 || $eri.find('.elgg-body').html().replace(/\s+/, '') == '')) {
-		if (s && (s[0] >= $eri.width() || s[0] >= 600)) {
+		if ((s[0] >= $eri.width() || s[0] >= 600)) {
 			$(e).height(Math.min($eri.addClass('big').width(),'600')/s[0]*s[1]);
-		} else if (s) {
+		} else {
 			$eri.removeAttr('big')
 		}
 	});
@@ -156,20 +175,36 @@ String.prototype.FormatDate = function() {
 	return $.datepicker.formatDate('@', new Date(this))/1000;
 };
 
-String.prototype.ParseURL = function() {
-	return this.replace(/\s+/g, ' ').replace(/(.{2})?(https?:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~]+)/g, function(match, pre, url) {
+String.prototype.ParseURL = function(reduce, videopopup) {
+	return this.replace(/\s+/g, ' ').replace(/(.{2})?((?:https?:\/\/|www\.)[A-Za-z0-9-_]+\.[A-Za-z0-9-_:,%&\?\/.=~+]+)/g, function(match, pre, url) {
 		if (pre == '="') return pre+url;
 		if (elgg.isUndefined(pre)) pre = '';
-		return pre+'<a target="_blank" rel="nofollow" href="'+url+'">'+url+'</a>';
+		if (/^www/.test(url)) {
+			var href = 'http://'+url;
+		} else {
+			var href = url;
+		}
+		if (reduce) {
+			url = url.replace(/https?:\/\//, '');
+			if (url.length > 35) url = url.substr(0, 32)+'…';
+		}
+		var iframeUrl = null;
+		if (videopopup && (iframeUrl = elgg.deck_river.setVideoURLToIframe(href))) {
+			return pre+'<a class="media-video-popup" href="'+href+'" onclick="javascript:void(0)" data-source="'+iframeUrl+'">'+url+'</a>';
+		} else {
+			return pre+'<a target="_blank" rel="nofollow" href="'+href+'">'+url+'</a>';
+		}
 	});
 };
+
 String.prototype.ParseTwitterURL = function(entities) {
 	var text = this,
 		urls = [],
 		replaceEntities = function(type) {
 			$.each(entities[type], function(i, e) {
 				var token = (Math.random()+'xxxxxxxxxxxxxxxx').replace('.', '').substr(0, e.indices[1]-e.indices[0]),
-					url = '';
+					url = '',
+					iframeUrl = null;
 
 				if (type == 'media') {
 					url = '<a class="media-image-popup" href="'+e.media_url_https+'" onclick="javascript:void(0)" data-media="'+e.media_url_https+'" data-type="'+e.type+'" data-size_width="'+e.sizes.medium.w+'" data-size_height="'+e.sizes.medium.h+'">'+e.display_url+'</a>';
@@ -223,7 +258,7 @@ String.prototype.ParseGroup = function() {
 };
 
 String.prototype.ParseUsername = function(network) {
-	return this.replace(/(\s|^|>)(@[A-Za-z0-9-_]+)/g, function(match, pre, user) {
+	return this.replace(/(\W|^)(@[A-Za-z0-9-_]+)/g, function(match, pre, user) {
 		return pre+'<a href="#" class="'+network+'-user-info-popup info-popup" title="'+user.replace("@", "")+'">'+user+'</a>';
 	});
 };
@@ -259,6 +294,19 @@ String.prototype.TruncateString = function(length, more) {
 
 String.prototype.addToLargeInt = function (value) {
 	return this.substr(0, this.length-3)+(parseInt(this.substr(-3)) + value);
+};
+
+String.prototype.getWireLength = function(urls) {
+	var urls_length = 0;
+
+	if (urls) {
+		$.each(urls, function(i, e) {
+			urls_length += e.length;
+		});
+		return this.length - urls_length;
+	} else {
+		return this.length;
+	}
 };
 
 /**
@@ -370,13 +418,14 @@ var FBloaded = 0; // var to prevent already been called.
 var FBstackCallback = []; // an array of functions that will be executed after FB init ready
 elgg.deck_river.initFacebook = function() {
 	if (!FBloaded) {
-		//$.ajaxSetup({ cache: true });
+		$.ajaxSetup({ cache: true });
 		$.getScript('//connect.facebook.net/en_UK/all.js', function(){
 			FBloaded = 1;
 			FB.init({
 				appId: FBappID,
 				channelUrl: elgg.get_site_url()+'mod/elgg-deck_river/lib/channel.php',
-				oauth: true
+				oauth: true,
+				cookie: true
 			});
 			$.each(FBstackCallback, function(i, e) {
 				e();
@@ -444,6 +493,27 @@ elgg.deck_river.FBdelete = function(object, query, params, callback) {
 };
 
 
+/**
+ * Ajax get to Facebook API
+ * @param {[string]}   token      facebook token
+ * @param {[object]}   query      object containing select, from and where clauses
+ * @param {Function}   callback   a function to execute
+ */
+elgg.deck_river.FBfql = function(token, query, callback) {
+	FB.api({
+		method: 'fql.query',
+		query: 'SELECT '+query.select+' FROM '+query.from+' WHERE '+query.where+(query.limit?' LIMIT '+query.limit:''),
+		access_token: token
+	}, function(data) {
+		if (data) {
+			callback(data);
+		} else {
+			elgg.register_error(elgg.echo('deck_river:facebook:error'));
+		}
+	});
+};
+
+
 
 /**
  * Register facebook error
@@ -460,6 +530,40 @@ elgg.deck_river.FBregister_error = function(code) {
 };
 
 
+
+/**
+ * Ugly way to get facebook token. Used in popup.
+ */
+elgg.deck_river.FBgetToken = function() {
+	var token;
+	$.each(deckRiverSettings, function(i, e) {
+		$.each(e, function(j,f) {
+			if (f.network == 'facebook' && (token = f.token)) return false;
+		});
+	});
+	return token;
+};
+
+
+
+/**
+ * Clean some data from FB user. Store cleaned user's data, store it and return it.
+ * @param {[type]} userData [description]
+ */
+elgg.deck_river.FBformatUser = function(userData) {
+	$.each(['friend_count', 'mutual_friend_count', 'subscriber_count', 'likes_count', 'wall_count', 'notes_count'], function(i, e) {
+		if (elgg.isNullOrUndefined(userData[e])) userData[e] = '-';
+	});
+	if (userData.profile_update_time) userData.profile_update_time = elgg.friendly_time(userData.profile_update_time);
+	if (userData.friend_count == userData.mutual_friend_count) delete userData.mutual_friend_count; // this is owner profile
+	if (userData.website) {
+		if (/^www/.test(userData.website)) userData.website = 'http://'+userData.website;
+		userData.website = userData.website.ParseURL();
+	}
+	elgg.deck_river.storeEntity(userData, 'facebook');
+
+	return userData;
+}
 
 
 // functions not used
@@ -488,6 +592,9 @@ FBfql = function(query, callback) { //.replace(/foo/g, "bar")
 		return false;
 	});
 };
+
+
+
 
 
 

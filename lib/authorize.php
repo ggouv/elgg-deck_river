@@ -95,7 +95,7 @@ function deck_river_get_shared_accounts($network = 'all', $user_guid = null) {
 		$query = "SELECT am.access_collection_id"
 			. " FROM {$CONFIG->dbprefix}access_collection_membership am"
 			. " LEFT JOIN {$CONFIG->dbprefix}access_collections ag ON ag.id = am.access_collection_id"
-			. " WHERE am.user_guid = $user_guid AND (ag.site_guid = $site_id OR ag.site_guid = 0) AND ag.name = '" . elgg_echo('deck_river:collection:shared') . "'";
+			. " WHERE am.user_guid = $user_guid AND (ag.site_guid = $site_id OR ag.site_guid = 0) AND ag.name = 'shared_network_acl'";
 
 		$collections = get_data($query);
 		if ($collections) {
@@ -215,14 +215,19 @@ function deck_river_twitter_api_revoke($user_guid = null, $user_id = null, $echo
 
 	if ($user_guid && elgg_instanceof(get_entity($user_guid), 'user')) {
 
-		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
+		$user_deck_river_accounts_in_wire = json_decode(get_private_setting($user_guid, 'user_deck_river_accounts_in_wire'), true);
 
 		$entities = deck_river_get_networks_account('twitter_account', $user_guid, $user_id);
 		foreach ($entities as $entity) {
 			if ($entity->canEdit()) {
 				// remove account from pinned accounts
-				$arr = array_diff($user_deck_river_pinned_accounts, array($entity->getGUID()));
-				set_private_setting($user_guid, 'deck_river_pinned_accounts', serialize($arr));
+				$user_deck_river_accounts_in_wire['position'] = array_diff($user_deck_river_accounts_in_wire['position'], array($entity->getGUID()));
+				$user_deck_river_accounts_in_wire['pinned'] = array_diff($user_deck_river_accounts_in_wire['pinned'], array($entity->getGUID()));
+				set_private_setting($user_guid, 'user_deck_river_accounts_in_wire', json_encode($user_deck_river_accounts_in_wire));
+
+				if (get_readable_access_level($entity->access_id) == 'shared_network_acl') {
+					delete_access_collection($entity->access_id);
+				}
 
 				// remove account
 				$entity->delete();
@@ -365,15 +370,20 @@ function deck_river_facebook_revoke($user_guid = null, $user_id = null, $echo = 
 
 	if ($user_guid && elgg_instanceof(get_entity($user_guid), 'user')) {
 
-		$user_deck_river_pinned_accounts = unserialize(get_private_setting($user_guid, 'deck_river_pinned_accounts'));
+		$user_deck_river_accounts_in_wire = json_decode(get_private_setting($user_guid, 'user_deck_river_accounts_in_wire'), true);
 
 		$entities = deck_river_get_networks_account('facebook_account', $user_guid, $user_id);
 
 		foreach ($entities as $entity) {
 			if ($entity->canEdit()) {
 				// remove account from pinned accounts
-				$arr = array_diff($user_deck_river_pinned_accounts, array($entity->getGUID()));
-				set_private_setting($user_guid, 'deck_river_pinned_accounts', serialize($arr));
+				$user_deck_river_accounts_in_wire['position'] = array_diff($user_deck_river_accounts_in_wire['position'], array($entity->getGUID()));
+				$user_deck_river_accounts_in_wire['pinned'] = array_diff($user_deck_river_accounts_in_wire['pinned'], array($entity->getGUID()));
+				set_private_setting($user_guid, 'user_deck_river_accounts_in_wire', json_encode($user_deck_river_accounts_in_wire));
+
+				if (get_readable_access_level($entity->access_id) == 'shared_network_acl') {
+					delete_access_collection($entity->access_id);
+				}
 
 				// remove account
 				$entity->delete();

@@ -225,7 +225,7 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 
 				// Hide every item except feed for group
 				if ($(this).attr('name') == 'facebook-type') {
-					if (/\/groups\//.test($bs.find('.elgg-module:not(.hidden) .elgg-river-timestamp a').attr('href'))) {
+					if ($bs.find('.elgg-module:not(.hidden) .elgg-river-timestamp').hasClass('limited')) {
 						$(this).val('feed').find('option[value!="feed"]').attr('disabled','disabled');
 					} else {
 						$(this).find('option').removeAttr('disabled');
@@ -233,7 +233,42 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
 				}
 			}).trigger('change');
 
-			$(".elgg-foot .elgg-button").click(function() {
+			$('.page-options input[name="facebook-page_name"]').autocomplete({
+				html: "html",
+				select: function(event, ui) {
+					$(this).val(ui.item.name);
+					$(this).next().val(ui.item.value);
+					return false;
+				},
+				source: function(request, response) {
+					FB.api('search', 'GET', {
+						access_token: elgg.deck_river.FBgetToken(),
+						q: request.term,
+						limit: 30,
+						type: 'page'
+					},
+						function (rep) {
+							if (rep && !rep.error) {
+								var items = [];
+								$.each(rep.data, function(i,e) {
+									e.value = e.id;
+									items.push(e);
+								});
+								response(items);
+							}
+						}
+					);
+				},
+				autoFocus: true
+			}).data('autocomplete')._renderItem = function( ul, item) {
+				return $('<li>').data('item.autocomplete', item)
+					.append($('<a>')[ this.options.html ? "html" : "text" ](
+						'<div class="elgg-image-block elgg-autocomplete-item clearfix"><div class="elgg-image"><img src="https://graph.facebook.com/'+
+						item.value+'/picture?width=25&height=25" width="25" height="25"></div><div class="elgg-body"><h3>'+item.name+'</h3></div></div>'))
+					.appendTo(ul);
+			};
+
+			$('.elgg-foot .elgg-button').click(function() {
 				var submitType = $(this).attr('name'),
 					$drfcs = $(this).closest('.deck-river-form-column-settings');
 

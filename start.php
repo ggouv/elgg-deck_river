@@ -24,8 +24,6 @@ function deck_river_init() {
 	elgg_extend_view('css/elgg','deck_river/css');
 	elgg_extend_view('js/elgg', 'deck_river/js');
 	elgg_extend_view('page/elements/foot', 'deck_river/mustaches_wrapper', 499);
-	elgg_extend_view('deck_river/mustaches/main_templates', 'deck_river/mustaches/linkbox');
-
 	elgg_extend_view('page/elements/foot', 'page/layouts/content/deck_river_add_new_tab', 500);
 
 	elgg_register_ajax_view('deck_river/ajax_json/column_river');
@@ -65,6 +63,7 @@ function deck_river_init() {
 	elgg_register_action('deck_river/twitter', "$action_path/network/twitter.php");
 	elgg_register_action('deck_river/facebook', "$action_path/network/facebook.php");
 	elgg_register_action('deck_river/add_facebook_group', "$action_path/network/add_facebook_group.php");
+	elgg_register_action('deck_river/add_facebook_page', "$action_path/network/add_facebook_page.php");
 
 	// Register a URL handler for thewire posts
 	elgg_register_entity_url_handler('object', 'thewire', 'deck_river_thewire_url');
@@ -84,6 +83,9 @@ function deck_river_init() {
 
 	// autofollow twitter account
 	elgg_register_event_handler('authorize', 'deck_river:twitter', 'deck_river_autofollow_twitter_account');
+
+	// register acces hook
+	elgg_register_plugin_hook_handler('access:collections:write', 'user', 'deck_river_access_collections');
 
 }
 
@@ -306,7 +308,7 @@ function deck_river_wire_filter($text) {
  */
 function deck_river_highlight_mention($text, $mention) {
 	$len = mb_strlen($mention);
-	$match = preg_split('/'.$mention.'(?=\s|$)/Ums', $text);
+	$match = preg_split('/'.$mention.'/Umis', $text);
 
 	if (count($match) >= 1) {
 		$a = array_shift($match);
@@ -863,5 +865,12 @@ function deck_river_autofollow_twitter_account($event, $type, $params) {
 
 }
 
+
+function deck_river_access_collections($hook, $type, $return, $params) {
+	foreach($return as $access_id => $access_name) {
+		if ($access_name == 'shared_network_acl') unset($return[$access_id]);
+	}
+	return $return;
+}
 
 

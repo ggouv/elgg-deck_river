@@ -34,7 +34,10 @@ if (empty($body)) {
 	foreach ($networks as $network) {
 		if ($network == $user->getGUID()) { // network is elgg
 
-			$body = elgg_substr($body, 0, 140); // only 140 characters allowed
+			// only 140 characters allowed without links
+			$body_temp = preg_replace('/https?:\/\/.*(?:\s|$)/Um', '', trim($body));
+			$links_length = mb_strlen(trim($body)) - mb_strlen($body_temp);
+			$body = elgg_substr(trim($body), 0, 140+$links_length);
 
 			$parent_guid = (int) get_input('elgg_parent', false);
 			$params = array(
@@ -123,7 +126,7 @@ if (empty($body)) {
 				}
 
 				// facebook
-				if (in_array($network_entity->getSubtype(), array('facebook_account', 'fb_group_account')) && has_access_to_entity($network_entity)) {
+				if ($network_entity->getSubtype() == 'facebook_account' && has_access_to_entity($network_entity)) {
 					elgg_load_library('deck_river:facebook_sdk');
 					$facebook = new Facebook(array(
 						'appId'  => elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river'),
@@ -134,6 +137,7 @@ if (empty($body)) {
 					$params = array(
 						'message' => $body
 					);
+
 					if ($link_url && !in_array($link_url, array('null', 'undefined'))) {
 						$params['link'] = $params['caption'] = $link_url;
 					}
@@ -142,22 +146,22 @@ if (empty($body)) {
 					if ($link_picture && !in_array($link_picture, array('null', 'undefined'))) $params['picture'] = $link_picture;
 					//'privacy' => json_encode(array('value' => 'EVERYONE')) // https://developers.facebook.com/docs/reference/api/privacy-parameter/
 
-					if ($network_entity->getSubtype() == 'facebook_account') {
-						$id = $network_entity->user_id;
-					} else if ($network_entity->getSubtype() == 'fb_group_account') {
-						$id = $network_entity->group_id;
+					$share = get_input('facebook_parent', false);
+					if ($share) {
+						$params['link'] = 'https://www.facebook.com/' . preg_replace('/_/', '/posts/', $share);
+						$params['feature'] = 'share';
 					}
 
 					try {
-						$result = $facebook->api($id . '/feed', 'post', $params);
+						$result = $facebook->api($network_entity->user_id . '/feed', 'post', $params);
 					} catch(FacebookApiException $e) {
-						$result = json_decode($e);
+						$result = $e;
 					}
 
-					if ($result['id']) {
+					if (is_array($result) && $result['id']) {
 						system_message(elgg_echo('deck_river:facebook:posted', array("https://facebook.com/{$result['id']}")));
 					} else {
-						register_error(elgg_echo('deck_river:facebook:posted:error'));
+						register_error(elgg_echo('deck_river:facebook:error:code', array($result)));
 					}
 
 				}
