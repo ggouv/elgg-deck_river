@@ -5,8 +5,8 @@
 
 
 // Get the settings of the current user. If not, set it to defaults.
-$user_guid = elgg_get_logged_in_user_guid();
-$user_river_settings = json_decode(get_private_setting($user_guid, 'deck_river_settings'), true);
+$user = elgg_get_logged_in_user_entity();
+$user_river_settings = json_decode($user->getPrivateSetting('deck_river_settings'), true);
 
 //get page for tabs
 $page_filter = elgg_get_context();
