@@ -9,8 +9,8 @@ if (!$submit || !$tab || !$column) {
 }
 
 // Get the settings of the current column of the current user
-$owner = elgg_get_logged_in_user_guid();
-$user_river_options = json_decode(get_private_setting($owner, 'deck_river_settings'), true);
+$owner = elgg_get_logged_in_user_entity();
+$user_river_options = json_decode($owner->getPrivateSetting('deck_river_settings'), true);
 
 // reset some settings
 $user_river_options[$tab][$column]['direct'] = false;
@@ -42,10 +42,10 @@ if ($submit == 'delete') {
 			break;
 		case 'mine':
 			$user_river_options[$tab][$column]['title'] = 'river:mine';
-			$user_river_options[$tab][$column]['subtitle'] = get_entity($owner)->name;
+			$user_river_options[$tab][$column]['subtitle'] = $owner->name;
 			break;
 		case 'mention':
-			$user_river_options[$tab][$column]['title'] = '@' . get_entity($owner)->name;
+			$user_river_options[$tab][$column]['title'] = '@' . $owner->name;
 			$user_river_options[$tab][$column]['subtitle'] = 'river:mentions';
 			break;
 		case 'groups':
@@ -68,7 +68,7 @@ if ($submit == 'delete') {
 			$user_river_options[$tab][$column]['subtitle'] = elgg_echo('river:search', array(elgg_get_site_entity()->name));
 			break;
 		default:
-			$params = array('owner' => $owner, 'query' => 'settings');
+			$params = array('owner' => $owner->guid, 'query' => 'settings');
 			$hook = elgg_trigger_plugin_hook('deck-river', "column:$type", $params);
 			$user_river_options[$tab][$column] = array_merge($user_river_options[$tab][$column], $hook);
 			break;
@@ -240,7 +240,7 @@ if ($submit == 'delete') {
 }
 
 $return['deck_river_settings'] = $user_river_options;
-set_private_setting($owner, 'deck_river_settings', json_encode($return['deck_river_settings']));
+$owner->setPrivateSetting('deck_river_settings', json_encode($return['deck_river_settings']));
 
 $return['column'] = $column;
 $return['header'] = elgg_view('page/layouts/content/deck_river_column_header', array('column_settings' => $user_river_options[$tab][$column]));

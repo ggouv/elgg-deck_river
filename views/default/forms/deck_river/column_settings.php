@@ -11,8 +11,8 @@ if (!$tab || !$column) {
 elgg_load_library('deck_river:authorize');
 
 // Get the settings of the current user
-$user_guid = elgg_get_logged_in_user_guid();
-$user_river_options = json_decode(get_private_setting($user_guid, 'deck_river_settings'));
+$user = elgg_get_logged_in_user_entity();
+$user_river_options = json_decode($user->getPrivateSetting('deck_river_settings'));
 
 $site_name = elgg_get_site_entity()->name;
 
@@ -90,7 +90,7 @@ $column_title = $user_river_column_options->title;
 			echo '<div class="tab twitter' . $class . '"><ul class="box-settings phm"><li>';
 
 			// get twitter account
-			$twitter_account = deck_river_get_networks_account('twitter_account', $user_guid, null, true);
+			$twitter_account = deck_river_get_networks_account('twitter_account', $user->getGUID(), null, true);
 
 			function displayTwitterAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;
@@ -234,7 +234,7 @@ $column_title = $user_river_column_options->title;
 			echo '<div class="tab facebook' . $class . '"><ul class="box-settings phm"><li>';
 
 			// get facebook account
-			$facebook_account = array_reverse(deck_river_get_networks_account('facebook_account', $user_guid, null, true));
+			$facebook_account = array_reverse(deck_river_get_networks_account('facebook_account', $user->getGUID(), null, true));
 
 			function displayFacebookAccount($account, $phrase, $class = null) {
 				$site_name = elgg_get_site_entity()->name;
