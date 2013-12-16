@@ -128,7 +128,7 @@ elgg.deck_river.popups = function() {
 				resizeVP();
 			}
 		}).find('.elgg-body').html(
-			$('<iframe>', {src: source, width: '100%', height: '100%'}))
+			$('<iframe>', {src: source, width: '100%', height: '100%', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}))
 		resizeVP();
 		return false;
 	});
