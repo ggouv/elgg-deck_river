@@ -5,8 +5,8 @@ $column = get_input('column');
 $position = get_input('position');
 
 // Get the settings of the current column of the current user
-$owner = elgg_get_logged_in_user_guid();
-$user_river_options = json_decode(get_private_setting($owner, 'deck_river_settings'), true);
+$owner = elgg_get_logged_in_user_entity();
+$user_river_options = json_decode($owner->getPrivateSetting('deck_river_settings'), true);
 
 if ($tab && $column) {
 
@@ -26,6 +26,6 @@ if ($tab && $column) {
 
 	// save new order
 	$user_river_options[$tab] = $columns;
-	set_private_setting($owner, 'deck_river_settings', json_encode($user_river_options));
+	$owner->setPrivateSetting('deck_river_settings', json_encode($user_river_options));
 
 }
