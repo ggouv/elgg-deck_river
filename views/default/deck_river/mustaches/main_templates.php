@@ -1,12 +1,12 @@
-<?php 
-$user= elgg_get_logged_in_user_entity();
+<?php
+	$user= elgg_get_logged_in_user_entity();
 ?>
 <!-- Templates deck_river -->
 
 
 <!-- Pass var from php to client -->
 <script type="text/javascript">
-	var deckRiverSettings = <?php echo elgg_is_logged_in() ? $user->getPrivateSetting('deck_river_settings')?:'null' : 'null'; ?>;
+	var deckRiverSettings = <?php echo elgg_is_logged_in() ? $user->getPrivateSetting('deck_river_settings') : 'null'; ?>;
 	var FBappID = <?php $FBappID = elgg_get_plugin_setting('facebook_app_id', 'elgg-deck_river'); echo json_encode($FBappID ? $FBappID : 'null'); ?>;
 	var FBdefaultFields = "actions,caption,created_time,from,link,message,story,story_tags,id,full_picture,icon,name,object_id,parent_id,type,with_tags,description,shares,via,feed_targeting,to,source,properties,subscribed,updated_time,picture,is_published,privacy,status_type,targeting,timeline_visibility,comments.fields(parent,id,like_count,message,created_time,from,attachment,can_comment,can_remove,comment_count,message_tags,user_likes),likes.fields(username)";
 	var site_shorturl = <?php $site_shorturl = elgg_get_plugin_setting('site_shorturl', 'elgg-deck_river'); echo json_encode($site_shorturl ? $site_shorturl : false); ?>;

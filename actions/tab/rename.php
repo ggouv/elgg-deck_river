@@ -4,7 +4,7 @@ $tab = sanitise_string(strtolower(get_input('tab_name')));
 $tab_old = sanitise_string(get_input('old_tab_name'));
 
 // Get the settings of the current user
-$owner = elgg_get_logged_in_user_guid();
+$owner = elgg_get_logged_in_user_entity();
 $user_river_options = json_decode($owner->getPrivateSetting('deck_river_settings'), true);
 
 if ($tab && isset($user_river_options[$tab_old]) && $tab_old != 'default') {
