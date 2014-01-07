@@ -14,17 +14,20 @@ $types_label[elgg_echo('deck_river:filter:all')] = 'All';
 if (!$column_settings['types_filter'] && !$column_settings['subtypes_filter'] || $column_settings['types_filter'] == 'All' ) $types_value[] = 'All';
 
 if (!empty($registered_entities)) {
+	$types_value = array();
+	$subtypes_value = array();
+
 	foreach ($registered_entities as $type => $subtypes) {
 		// subtype will always be an array.
 		if (!count($subtypes)) {
 			$label = elgg_echo("item:$type");
 			$types_label[$label] .= $type;
-			if (in_array($type, $column_settings['types_filter'])) $types_value[] = $type;
+			if ($column_settings['types_filter'] && in_array($type, $column_settings['types_filter'])) $types_value[] = $type;
 		} else {
 			foreach ($subtypes as $subtype) {
 				$label = elgg_echo("item:$type:$subtype");
 				$subtypes_label[$label] .= $subtype;
-				if (in_array($subtype, $column_settings['subtypes_filter'])) $subtypes_value[] = $subtype;
+				if ($column_settings['subtypes_filter'] && in_array($subtype, $column_settings['subtypes_filter'])) $subtypes_value[] = $subtype;
 			}
 		}
 	}
