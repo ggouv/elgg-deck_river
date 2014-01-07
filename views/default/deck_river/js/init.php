@@ -338,6 +338,8 @@ elgg.deck_river.ColumnSettings = function(TheColumn) {
  * @return void
  */
 elgg.deck_river.network_authorize = function(token) {
+	document.domain = elgg.parse_url(elgg.get_site_url()).host; // set it to prevent iframe conflict
+
 	var p = window.opener || window; // function called from a popup window on from main window
 
 	if (token == false) {

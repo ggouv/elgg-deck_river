@@ -79,9 +79,7 @@ elgg.deck_river.popups = function() {
 		var hashtag = $(this).attr('title'),
 			network = $(this).data('network') || 'elgg';
 
-		elgg.deck_river.createPopup('hashtag-info-popup', elgg.echo('deck_river:hashtag-info-header', [hashtag]));
-		$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#hashtag-popup-template').html(), {hashtag: hashtag.replace('#', '')}));
-		$('#hashtag-info-popup .elgg-tabs .'+network).click();
+		elgg.deck_river.hashtagPopup(hashtag, network);
 		return false;
 	}).liveDraggable();
 
@@ -188,6 +186,7 @@ elgg.deck_river.popups = function() {
 elgg.register_hook_handler('init', 'system', elgg.deck_river.popups);
 
 
+
 /**
  * show user popup
  * @param  {[string]} user username
@@ -233,6 +232,19 @@ elgg.deck_river.groupPopup = function(group) {
 			body.html(elgg.echo('deck_river:ajax:erreur'));
 		}
 	});
+};
+
+
+
+/**
+ * show hashtag popup
+ * @param  {[string]} hashtag
+ * @param  {[string]} network
+ */
+elgg.deck_river.hashtagPopup = function(hashtag, network) {
+	elgg.deck_river.createPopup('hashtag-info-popup', elgg.echo('deck_river:hashtag-info-header', [hashtag]));
+	$('#hashtag-info-popup > .elgg-body').html(Mustache.render($('#hashtag-popup-template').html(), {hashtag: hashtag.replace('#', '')}));
+	$('#hashtag-info-popup .elgg-tabs .'+network).click();
 };
 
 
